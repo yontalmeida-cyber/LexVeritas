@@ -35,8 +35,8 @@ export default async function handler(req, res) {
   if (!texto || typeof texto !== 'string' || texto.trim().length < 100) {
     return res.status(400).json({ erro: 'Texto demasiado curto (mínimo 100 caracteres).' });
   }
-  if (texto.length > 12000) {
-    return res.status(400).json({ erro: 'Texto demasiado longo (máximo 12 000 caracteres).' });
+  if (texto.length > 30000) {
+    return res.status(400).json({ erro: 'Texto demasiado longo (máximo 30 000 caracteres).' });
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
