@@ -1,29 +1,5 @@
 // api/analisar.js — LexVeritas
 // Usa Claude Haiku: o modelo mais económico da Anthropic
-// Custo aproximado: 0.001€ por análise
-
-const SYSTEM_PROMPT = `És um especialista forense em análise linguística de textos jurídicos portugueses. Detecta se um documento judicial foi elaborado com IA ou por um magistrado humano.
-
-Conheces os tribunais portugueses: STJ, STA, TRL, TRP, TRC, TRG, TRE, Tribunal Constitucional, TCAS, TCAN e tribunais de primeira instância.
-
-Responde APENAS com JSON válido, sem texto antes ou depois:
-{
-  "veredicto": "IA_DETECTADA" | "PROVAVELMENTE_IA" | "INCONCLUSIVO" | "PROVAVELMENTE_HUMANO" | "HUMANO",
-  "confianca": 0-100,
-  "indicadores": {
-    "perplexidade": 0-100,
-    "burstiness": 0-100,
-    "coesao_artificial": 0-100,
-    "uniformidade_sintatica": 0-100,
-    "riqueza_lexical": 0-100,
-    "marcadores_formulaicos": 0-100
-  },
-  "narrativa": "Explicação em português europeu (2-3 parágrafos)",
-  "marcadores": [{"tipo": "ai|ok", "texto": "descrição"}]
-}
-
-Sinais de IA: fórmulas excessivas ("cumpre apreciar", "por todo o exposto"), sem idiossincrasias do relator, citações sem número de processo, parágrafos uniformes, português do Brasil.
-Sinais humanos: processos concretos, doutrina portuguesa específica, estilo telegráfico, irregularidades naturais.`;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -47,6 +23,40 @@ export default async function handler(req, res) {
   const tribunalCtx = tribunal ? `\nTribunal: ${tribunal}` : '';
   const textoLimitado = texto.substring(0, 3000);
 
+  // Prompt separado em partes para evitar problemas com JSON dentro de strings
+  const systemPrompt = [
+    'És um especialista forense em análise linguística de textos jurídicos portugueses.',
+    'Detecta se um documento judicial foi elaborado com IA ou por um magistrado humano.',
+    '',
+    'Tribunais: STJ, STA, TRL, TRP, TRC, TRG, TRE, TC, TCAS, TCAN.',
+    '',
+    'IMPORTANTE: Responde APENAS com JSON puro e válido. Sem texto antes ou depois. Sem markdown.',
+    '',
+    'Formato obrigatório:',
+    '{',
+    '  "veredicto": "IA_DETECTADA",',
+    '  "confianca": 85,',
+    '  "indicadores": {',
+    '    "perplexidade": 80,',
+    '    "burstiness": 70,',
+    '    "coesao_artificial": 75,',
+    '    "uniformidade_sintatica": 80,',
+    '    "riqueza_lexical": 60,',
+    '    "marcadores_formulaicos": 90',
+    '  },',
+    '  "narrativa": "Texto explicativo em duas frases.",',
+    '  "marcadores": [',
+    '    {"tipo": "ai", "texto": "Descricao do marcador 1"},',
+    '    {"tipo": "ok", "texto": "Descricao do marcador 2"}',
+    '  ]',
+    '}',
+    '',
+    'Valores possiveis para veredicto: IA_DETECTADA, PROVAVELMENTE_IA, INCONCLUSIVO, PROVAVELMENTE_HUMANO, HUMANO',
+    'Inclui entre 3 a 5 marcadores. Nao uses aspas dentro dos textos dos marcadores.',
+    'Sinais de IA: formulas excessivas, sem idiossincrasias do relator, citacoes sem numero de processo, paragrafos uniformes.',
+    'Sinais humanos: processos concretos, doutrina portuguesa especifica, estilo telegrafico, irregularidades naturais.'
+  ].join('\n');
+
   try {
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -58,42 +68,38 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model:      'claude-haiku-4-5-20251001',
         max_tokens: 800,
-        system:     SYSTEM_PROMPT,
+        system:     systemPrompt,
         messages: [{
           role:    'user',
-          content: `Analisa este documento judicial português:${tribunalCtx}\n\n${textoLimitado}`
+          content: 'Analisa este documento judicial portugues:' + tribunalCtx + '\n\n' + textoLimitado
         }]
       })
     });
 
     if (!anthropicRes.ok) {
       const err = await anthropicRes.json().catch(() => ({}));
-      console.error('Erro Anthropic:', anthropicRes.status, err);
+      console.error('Erro Anthropic:', anthropicRes.status, JSON.stringify(err));
       return res.status(502).json({ erro: 'Erro no serviço de análise. Tente novamente.' });
     }
 
-    const data   = await anthropicRes.json();
-    const raw    = data.content?.map(i => i.text || '').join('') || '{}';
+    const data = await anthropicRes.json();
+    const raw  = data.content?.map(i => i.text || '').join('') || '{}';
 
-    // Tenta extrair JSON mesmo que venha com texto à volta
+    console.log('Resposta raw:', raw.substring(0, 200));
+
+    // Extrai o JSON da resposta
     let result;
-    try {
-      const clean = raw.replace(/```json|```/g, '').trim();
-      result = JSON.parse(clean);
-    } catch {
-      // Tenta encontrar o JSON dentro do texto
-      const match = raw.match(/\{[\s\S]*\}/);
-      if (match) {
-        result = JSON.parse(match[0]);
-      } else {
-        throw new Error('Resposta inválida da API');
-      }
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      console.error('Sem JSON na resposta:', raw);
+      return res.status(500).json({ erro: 'Resposta inválida. Tente novamente.' });
     }
 
+    result = JSON.parse(jsonMatch[0]);
     return res.status(200).json(result);
 
   } catch (err) {
-    console.error('Erro interno:', err.message);
-    return res.status(500).json({ erro: 'Erro interno. Tente novamente.' });
+    console.error('Erro interno:', err.message, err.stack);
+    return res.status(500).json({ erro: 'Erro interno: ' + err.message });
   }
 }
