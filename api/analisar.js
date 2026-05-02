@@ -74,8 +74,21 @@ export default async function handler(req, res) {
 
     const data   = await anthropicRes.json();
     const raw    = data.content?.map(i => i.text || '').join('') || '{}';
-    const clean  = raw.replace(/```json|```/g, '').trim();
-    const result = JSON.parse(clean);
+
+    // Tenta extrair JSON mesmo que venha com texto à volta
+    let result;
+    try {
+      const clean = raw.replace(/```json|```/g, '').trim();
+      result = JSON.parse(clean);
+    } catch {
+      // Tenta encontrar o JSON dentro do texto
+      const match = raw.match(/\{[\s\S]*\}/);
+      if (match) {
+        result = JSON.parse(match[0]);
+      } else {
+        throw new Error('Resposta inválida da API');
+      }
+    }
 
     return res.status(200).json(result);
 
