@@ -685,7 +685,7 @@
     <span class="masthead-eyebrow">Sistema de Análise Forense Jurídica</span>
     <h1>Lex<em>Veritas</em></h1>
     <div class="ornament"><span class="ornament-icon">⚖</span></div>
-    <p class="masthead-sub">Identificação de Inteligência Artificial em Decisões Judiciais Brasileiras</p>
+    <p class="masthead-sub">Identificação de Inteligência Artificial em Decisões Judiciais Portuguesas</p>
   </div>
 
   <nav>
@@ -851,7 +851,7 @@ Exemplo: ementa, relatório, fundamentação, dispositivo..."></textarea>
 // Set current date
 const now = new Date();
 document.getElementById('current-date').textContent =
-  now.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
+  now.toLocaleDateString('pt-PT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
 
 // Char count
 const textarea = document.getElementById('decision-text');
@@ -918,7 +918,7 @@ async function analyzeDecision() {
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
         max_tokens: 1000,
-        system: `Você é um especialista forense em análise linguística de textos jurídicos brasileiros. Sua tarefa é detectar se uma decisão judicial foi elaborada com auxílio de inteligência artificial (ex: ChatGPT, Claude, Gemini) ou escrita por um juiz humano.
+        system: `Você é um especialista forense em análise linguística de textos jurídicos portugueses. Sua tarefa é detectar se uma decisão judicial foi elaborada com auxílio de inteligência artificial (ex: ChatGPT, Claude, Gemini) ou escrita por um juiz humano.
 
 Analise o texto e retorne APENAS um JSON válido, sem markdown, sem explicações fora do JSON, com esta estrutura exata:
 {
