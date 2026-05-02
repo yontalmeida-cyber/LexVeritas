@@ -714,16 +714,14 @@ async function fazerLogin() {
 
     if (data?.user) {
       currentUser = data.user;
-      // Perfil com timeout — se demorar mais de 3s entra na mesma
-      const profileTimeout = new Promise(resolve => setTimeout(resolve, 3000));
-      await Promise.race([loadProfile(), profileTimeout]);
-      if (!userProfile) {
-        userProfile = {
-          nome: currentUser.email.split('@')[0],
-          plano: 'gratuito',
-          analises_mes: 0
-        };
-      }
+      // Perfil mínimo — não depende da base de dados para entrar
+      userProfile = {
+        nome: data.user.user_metadata?.nome || data.user.email.split('@')[0],
+        plano: 'gratuito',
+        analises_mes: 0
+      };
+      // Tenta carregar perfil completo em background sem bloquear
+      loadProfile().catch(() => {});
       initApp();
       showPage('app');
     }
