@@ -6,6 +6,7 @@
 <title>LexVeritas — Detector de IA em Jurisprudência Portuguesa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@400;500&family=Libre+Franklin:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
   :root {
     --ink: #0d0d0d;
@@ -717,7 +718,7 @@ Exemplo: sumário, relatório, fundamentação, dispositivo — STJ, TRL, TRP, T
       <div class="input-card-footer">
         <span class="file-hint">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Aceita .txt e .pdf
+          Aceita .pdf e .txt
         </span>
         <button class="btn-analyze" id="btn-analyze" onclick="analyzeDecision()">
           <div class="spinner" id="spinner"></div>
@@ -730,8 +731,8 @@ Exemplo: sumário, relatório, fundamentação, dispositivo — STJ, TRL, TRP, T
 
     <!-- Drop zone -->
     <div class="drop-zone" id="drop-zone">
-      <div class="drop-zone-text">📎 Arraste um arquivo .txt aqui, ou clique para selecionar</div>
-      <input type="file" id="file-input" accept=".txt" style="display:none" onchange="handleFile(event)">
+      <div class="drop-zone-text" id="drop-zone-text">📎 Carregue um ficheiro <strong>.pdf</strong> ou <strong>.txt</strong> — ou arraste aqui</div>
+      <input type="file" id="file-input" accept=".txt,.pdf" style="display:none" onchange="handleFile(event)">
     </div>
 
     <!-- Results -->
@@ -911,17 +912,69 @@ dropZone.addEventListener('drop', e => {
   e.preventDefault();
   dropZone.classList.remove('drag-over');
   const file = e.dataTransfer.files[0];
-  if (file) readFile(file);
+  if (file) handleFile({ target: { files: [file] } });
 });
 
-function handleFile(e) { readFile(e.target.files[0]); }
-function readFile(file) {
+function handleFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+    extractPDF(file);
+  } else {
+    readTxt(file);
+  }
+}
+
+function readTxt(file) {
   const reader = new FileReader();
   reader.onload = ev => {
     textarea.value = ev.target.result;
     textarea.dispatchEvent(new Event('input'));
+    setDropZoneText('✅ ' + file.name + ' carregado');
   };
   reader.readAsText(file);
+}
+
+async function extractPDF(file) {
+  setDropZoneText('⏳ A extrair texto do PDF...');
+  try {
+    // Configure PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const totalPages = pdf.numPages;
+    let fullText = '';
+
+    setDropZoneText('⏳ A ler ' + totalPages + ' páginas...');
+
+    for (let i = 1; i <= totalPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const pageText = content.items.map(item => item.str).join(' ');
+      fullText += pageText + '\n\n';
+    }
+
+    fullText = fullText.trim();
+
+    if (!fullText || fullText.length < 50) {
+      setDropZoneText('⚠️ PDF sem texto extraível (pode ser imagem). Copie o texto manualmente.');
+      return;
+    }
+
+    textarea.value = fullText;
+    textarea.dispatchEvent(new Event('input'));
+    setDropZoneText('✅ ' + file.name + ' — ' + totalPages + ' páginas extraídas');
+
+  } catch (err) {
+    console.error('Erro PDF:', err);
+    setDropZoneText('❌ Erro ao ler o PDF. Tente copiar o texto manualmente.');
+  }
+}
+
+function setDropZoneText(text) {
+  document.getElementById('drop-zone-text').innerHTML = text;
 }
 
 // Session stats
