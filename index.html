@@ -714,7 +714,16 @@ async function fazerLogin() {
 
     if (data?.user) {
       currentUser = data.user;
-      await loadProfile();
+      // Perfil com timeout — se demorar mais de 3s entra na mesma
+      const profileTimeout = new Promise(resolve => setTimeout(resolve, 3000));
+      await Promise.race([loadProfile(), profileTimeout]);
+      if (!userProfile) {
+        userProfile = {
+          nome: currentUser.email.split('@')[0],
+          plano: 'gratuito',
+          analises_mes: 0
+        };
+      }
       initApp();
       showPage('app');
     }
@@ -862,20 +871,44 @@ if (hash && (hash.includes('access_token') || hash.includes('error'))) {
 }
 
 async function loadProfile() {
-  const mes = new Date().toISOString().substring(0, 7);
-  let { data } = await sb.from('perfis').select('*').eq('id', currentUser.id).single();
+  try {
+    const mes = new Date().toISOString().substring(0, 7);
+    let { data } = await sb.from('perfis').select('*').eq('id', currentUser.id).single();
 
-  if (!data) {
-    const meta = currentUser.user_metadata || {};
-    await sb.from('perfis').insert({ id: currentUser.id, email: currentUser.email, nome: meta.nome || 'Utilizador', profissao: meta.profissao || '', mes_atual: mes, analises_mes: 0 });
-    ({ data } = await sb.from('perfis').select('*').eq('id', currentUser.id).single());
-  }
+    if (!data) {
+      const meta = currentUser.user_metadata || {};
+      await sb.from('perfis').upsert({
+        id: currentUser.id,
+        email: currentUser.email,
+        nome: meta.nome || currentUser.email.split('@')[0],
+        profissao: meta.profissao || '',
+        mes_atual: mes,
+        analises_mes: 0,
+        plano: 'gratuito'
+      });
+      ({ data } = await sb.from('perfis').select('*').eq('id', currentUser.id).single());
+    }
 
-  if (data && data.mes_atual !== mes) {
-    await sb.from('perfis').update({ analises_mes: 0, mes_atual: mes }).eq('id', currentUser.id);
-    data.analises_mes = 0; data.mes_atual = mes;
+    if (data && data.mes_atual !== mes) {
+      await sb.from('perfis').update({ analises_mes: 0, mes_atual: mes }).eq('id', currentUser.id);
+      data.analises_mes = 0;
+      data.mes_atual = mes;
+    }
+
+    userProfile = data || {
+      nome: currentUser.email.split('@')[0],
+      plano: 'gratuito',
+      analises_mes: 0
+    };
+  } catch (e) {
+    console.error('Erro ao carregar perfil:', e);
+    // Perfil por defeito se falhar
+    userProfile = {
+      nome: currentUser.email.split('@')[0],
+      plano: 'gratuito',
+      analises_mes: 0
+    };
   }
-  userProfile = data;
 }
 
 function getLimite() { return userProfile?.plano === 'profissional' ? 100 : 5; }
