@@ -695,42 +695,37 @@ async function fazerLogin() {
   btn.disabled = true;
   btn.textContent = 'A entrar...';
 
-  try {
-    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
 
-    if (error) {
-      if (error.message.includes('Email not confirmed')) {
-        errEl.textContent = 'Confirme o seu email primeiro. Verifique o Gmail incluindo Spam.';
-      } else if (error.message.includes('Invalid login') || error.message.includes('invalid_credentials')) {
-        errEl.textContent = 'Email ou password incorrectos.';
-      } else {
-        errEl.textContent = 'Erro: ' + error.message;
-      }
-      errEl.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Entrar';
-      return;
-    }
-
-    if (data?.user) {
-      currentUser = data.user;
-      // Perfil mínimo — não depende da base de dados para entrar
-      userProfile = {
-        nome: data.user.user_metadata?.nome || data.user.email.split('@')[0],
-        plano: 'gratuito',
-        analises_mes: 0
-      };
-      // Tenta carregar perfil completo em background sem bloquear
-      loadProfile().catch(() => {});
-      initApp();
-      showPage('app');
-    }
-  } catch (e) {
-    errEl.textContent = 'Erro de ligacao: ' + e.message;
+  if (error) {
+    errEl.textContent = 'Email ou password incorrectos.';
     errEl.style.display = 'block';
     btn.disabled = false;
     btn.textContent = 'Entrar';
+    return;
   }
+
+  // Login bem sucedido — entrar directamente
+  currentUser = data.user;
+  userProfile = {
+    nome: data.user.user_metadata?.nome || email.split('@')[0],
+    plano: 'gratuito',
+    analises_mes: 0
+  };
+
+  // Mostrar app imediatamente
+  document.getElementById('page-login').classList.add('hidden');
+  document.getElementById('page-app').classList.remove('hidden');
+  
+  // Inicializar app
+  const now = new Date();
+  document.getElementById('current-date').textContent = now.toLocaleDateString('pt-PT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
+  document.getElementById('user-name-display').textContent = userProfile.nome;
+  document.getElementById('user-plan-display').innerHTML = '<span class="plan-badge plan-gratuito">gratuito</span>';
+  document.getElementById('usage-count').textContent = '0 / 5';
+  document.getElementById('stat-plano').textContent = 'Gratuito';
+  document.getElementById('stat-mes').textContent = '0 / 5';
+  document.getElementById('stat-total').textContent = '0';
 }
 
 async function fazerRegisto() {
