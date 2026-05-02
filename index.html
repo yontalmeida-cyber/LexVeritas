@@ -686,17 +686,37 @@ document.getElementById('btn-login').onclick = async () => {
   const errEl = document.getElementById('login-error');
   errEl.style.display = 'none';
 
-  if (!email || !pass) { errEl.textContent = 'Preencha todos os campos.'; errEl.style.display = 'block'; return; }
-
-  document.getElementById('btn-login').disabled = true;
-  document.getElementById('btn-login').textContent = 'A entrar...';
-
-  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-  if (error) {
-    errEl.textContent = 'Email ou password incorrectos.';
+  if (!email || !pass) {
+    errEl.textContent = 'Preencha todos os campos.';
     errEl.style.display = 'block';
-    document.getElementById('btn-login').disabled = false;
-    document.getElementById('btn-login').textContent = 'Entrar';
+    return;
+  }
+
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true;
+  btn.textContent = 'A entrar...';
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+
+  if (error) {
+    if (error.message.includes('Email not confirmed')) {
+      errEl.textContent = 'Email ainda nao confirmado. Verifique o seu Gmail e clique no link de confirmacao.';
+    } else if (error.message.includes('Invalid login')) {
+      errEl.textContent = 'Email ou password incorrectos.';
+    } else {
+      errEl.textContent = 'Erro: ' + error.message;
+    }
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+    return;
+  }
+
+  if (data.session) {
+    currentUser = data.session.user;
+    await loadProfile();
+    initApp();
+    showPage('app');
   }
 };
 
@@ -743,15 +763,41 @@ async function logout() {
 
 // Auth state listener
 sb.auth.onAuthStateChange(async (event, session) => {
+  console.log('Auth event:', event, session?.user?.email);
   if (session?.user) {
     currentUser = session.user;
     await loadProfile();
     initApp();
     showPage('app');
-  } else {
+  } else if (event === 'SIGNED_OUT') {
     showPage('login');
   }
 });
+
+// Check for auth tokens in URL (email confirmation redirect)
+const hash = window.location.hash;
+if (hash && (hash.includes('access_token') || hash.includes('error'))) {
+  sb.auth.getSession().then(({ data }) => {
+    if (data.session) {
+      currentUser = data.session.user;
+      loadProfile().then(() => { initApp(); showPage('app'); });
+    } else {
+      showPage('login');
+    }
+  });
+  // Clean URL
+  history.replaceState(null, '', window.location.pathname);
+} else {
+  // Check existing session
+  sb.auth.getSession().then(({ data }) => {
+    if (data.session) {
+      currentUser = data.session.user;
+      loadProfile().then(() => { initApp(); showPage('app'); });
+    } else {
+      showPage('login');
+    }
+  });
+}
 
 async function loadProfile() {
   const mes = new Date().toISOString().substring(0, 7);
