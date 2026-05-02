@@ -959,186 +959,248 @@ function renderResults(result) {
 function gerarPDF() {
   if (!lastResult) { alert('Faça primeiro uma análise.'); return; }
 
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-  const W = 210; // page width mm
-  const margin = 20;
-  const contentW = W - margin * 2;
-  let y = 0;
+    const W = 210;
+    const margin = 20;
+    const contentW = W - margin * 2;
+    let y = 0;
 
-  const gold    = [201, 168, 76];
-  const ink     = [13, 13, 13];
-  const light   = [245, 240, 232];
-  const midgrey = [130, 130, 130];
-  const red     = [139, 26, 26];
-  const green   = [26, 92, 58];
+    // Cores
+    const cGold   = [201, 168, 76];
+    const cInk    = [13,  13,  13];
+    const cLight  = [245, 240, 232];
+    const cGrey   = [140, 140, 140];
+    const cRed    = [139, 26,  26];
+    const cGreen  = [26,  92,  58];
+    const cOrange = [180, 100, 40];
 
-  const labels = { 'IA_DETECTADA': 'Inteligência Artificial Detectada', 'PROVAVELMENTE_IA': 'Provavelmente Gerado por IA', 'INCONCLUSIVO': 'Análise Inconclusiva', 'PROVAVELMENTE_HUMANO': 'Provavelmente Autoria Humana', 'HUMANO': 'Autoria Humana Confirmada' };
-  const indLabels = { perplexidade: 'Perplexidade', burstiness: 'Burstiness', coesao_artificial: 'Coesão Artificial', uniformidade_sintatica: 'Uniformidade Sintáctica', riqueza_lexical: 'Riqueza Lexical', marcadores_formulaicos: 'Marcadores Formulaicos' };
+    const labels = {
+      'IA_DETECTADA':      'IA Detectada',
+      'PROVAVELMENTE_IA':  'Provavelmente Gerado por IA',
+      'INCONCLUSIVO':      'Analise Inconclusiva',
+      'PROVAVELMENTE_HUMANO': 'Provavelmente Autoria Humana',
+      'HUMANO':            'Autoria Humana Confirmada'
+    };
 
-  function newPage() {
-    doc.addPage();
-    y = 20;
-    // Footer on each page
-    doc.setFontSize(7); doc.setTextColor(...midgrey);
-    doc.text('LexVeritas · Análise Forense de IA em Jurisprudência Portuguesa · ' + lastRef, margin, 287);
-    doc.text('Este relatório é de carácter auxiliar e não constitui prova jurídica definitiva.', W - margin, 287, { align: 'right' });
-    doc.setDrawColor(...gold); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283);
-  }
+    const indLabels = {
+      perplexidade:          'Perplexidade',
+      burstiness:            'Burstiness',
+      coesao_artificial:     'Coesao Artificial',
+      uniformidade_sintatica:'Uniformidade Sintatica',
+      riqueza_lexical:       'Riqueza Lexical',
+      marcadores_formulaicos:'Marcadores Formulaicos'
+    };
 
-  function checkY(needed) { if (y + needed > 270) newPage(); }
+    const vCls = lastResult.veredicto;
+    const vColor = (vCls === 'IA_DETECTADA' || vCls === 'PROVAVELMENTE_IA')
+      ? cRed : (vCls === 'INCONCLUSIVO') ? cGrey : cGreen;
 
-  // ---- HEADER ----
-  // Gold bar top
-  doc.setFillColor(...gold); doc.rect(0, 0, W, 28, 'F');
+    const now     = new Date();
+    const dateStr = now.toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
 
-  // Title
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(28); doc.setFont('helvetica', 'bold');
-  doc.text('LexVeritas', margin, 16);
-  doc.setFontSize(9); doc.setFont('helvetica', 'normal');
-  doc.text('RELATÓRIO FORENSE DE ANÁLISE DE INTELIGÊNCIA ARTIFICIAL', margin, 23);
+    function setColor(arr, type) {
+      if (type === 'text')   doc.setTextColor(arr[0], arr[1], arr[2]);
+      if (type === 'fill')   doc.setFillColor(arr[0], arr[1], arr[2]);
+      if (type === 'draw')   doc.setDrawColor(arr[0], arr[1], arr[2]);
+    }
 
-  // Date top right
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' });
-  doc.setFontSize(8); doc.text(dateStr.toUpperCase(), W - margin, 16, { align: 'right' });
-  doc.text(lastRef, W - margin, 23, { align: 'right' });
+    function addFooter() {
+      setColor(cGold, 'draw'); doc.setLineWidth(0.3);
+      doc.line(margin, 283, W - margin, 283);
+      doc.setFontSize(7); setColor(cGrey, 'text'); doc.setFont('helvetica', 'normal');
+      doc.text('LexVeritas - Analise Forense de IA em Jurisprudencia Portuguesa - ' + lastRef, margin, 287);
+      doc.text('Documento auxiliar. Nao constitui prova juridica definitiva.', W - margin, 287, { align: 'right' });
+    }
 
-  y = 38;
+    function checkY(needed) {
+      if (y + needed > 275) {
+        addFooter();
+        doc.addPage();
+        y = 24;
+        // Mini header nas páginas seguintes
+        setColor(cGold, 'fill'); doc.rect(0, 0, W, 10, 'F');
+        setColor([255,255,255], 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
+        doc.text('LEXVERITAS - RELATORIO FORENSE', margin, 7);
+        doc.text(lastRef, W - margin, 7, { align: 'right' });
+      }
+    }
 
-  // ---- META INFO ----
-  doc.setFillColor(...light); doc.rect(margin, y, contentW, 22, 'F');
-  doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
-  doc.text('TRIBUNAL', margin + 4, y + 6);
-  doc.text('RELATOR', margin + 70, y + 6);
-  doc.text('UTILIZADOR', margin + 140, y + 6);
-  doc.setTextColor(...ink); doc.setFontSize(9); doc.setFont('helvetica', 'bold');
-  doc.text(lastResult._tribunal || 'Não indicado', margin + 4, y + 14);
-  doc.text(lastResult._relator  || 'Não indicado', margin + 70, y + 14);
-  doc.text(userProfile?.nome || '—', margin + 140, y + 14);
+    function sectionHeader(title) {
+      checkY(12);
+      setColor(cLight, 'fill'); doc.rect(margin, y, contentW, 7, 'F');
+      setColor(cGrey, 'draw'); doc.setLineWidth(0.1);
+      doc.rect(margin, y, contentW, 7, 'S');
+      setColor(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
+      doc.text(title, margin + 3, y + 5);
+      y += 11;
+    }
 
-  y += 30;
+    function bodyText(text, indent) {
+      const lines = doc.splitTextToSize(text, contentW - (indent || 0));
+      lines.forEach(line => {
+        checkY(6);
+        setColor(cInk, 'text'); doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+        doc.text(line, margin + (indent || 0), y);
+        y += 5.5;
+      });
+    }
 
-  // ---- VERDICT ----
-  const vCls = lastResult.veredicto;
-  const vColor = (vCls === 'IA_DETECTADA' || vCls === 'PROVAVELMENTE_IA') ? red : (vCls === 'INCONCLUSIVO') ? midgrey : green;
-  doc.setDrawColor(...vColor); doc.setLineWidth(0.8); doc.line(margin, y, margin, y + 20);
-  doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
-  doc.text('VEREDICTO FORENSE', margin + 5, y + 5);
-  doc.setTextColor(...vColor); doc.setFontSize(18); doc.setFont('helvetica', 'bold');
-  doc.text(labels[lastResult.veredicto] || lastResult.veredicto, margin + 5, y + 14);
+    // ============================================================
+    // PAGINA 1
+    // ============================================================
 
-  // Confidence circle
-  const cx = W - margin - 20, cy = y + 10, r = 12;
-  doc.setDrawColor(...vColor); doc.setLineWidth(2);
-  doc.circle(cx, cy, r);
-  doc.setFontSize(14); doc.setFont('helvetica', 'bold'); doc.setTextColor(...vColor);
-  doc.text(lastResult.confianca + '%', cx, cy + 4, { align: 'center' });
-  doc.setFontSize(6); doc.setFont('helvetica', 'normal'); doc.setTextColor(...midgrey);
-  doc.text('CONFIANÇA', cx, cy + 10, { align: 'center' });
+    // Cabeçalho dourado
+    setColor(cGold, 'fill'); doc.rect(0, 0, W, 32, 'F');
+    setColor([255,255,255], 'text');
+    doc.setFontSize(30); doc.setFont('helvetica', 'bold');
+    doc.text('LexVeritas', margin, 18);
+    doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+    doc.text('RELATORIO FORENSE DE ANALISE DE INTELIGENCIA ARTIFICIAL', margin, 26);
+    doc.setFontSize(8);
+    doc.text(dateStr.toUpperCase() + ' - ' + timeStr, W - margin, 18, { align: 'right' });
+    doc.text(lastRef, W - margin, 26, { align: 'right' });
 
-  y += 28;
+    y = 42;
 
-  // ---- INDICATORS ----
-  doc.setFillColor(...light); doc.rect(margin, y, contentW, 6, 'F');
-  doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
-  doc.text('INDICADORES FORENSES', margin + 3, y + 4);
-  y += 10;
+    // Faixa de metadados
+    setColor(cLight, 'fill'); doc.rect(margin, y, contentW, 24, 'F');
+    setColor(cGold, 'draw'); doc.setLineWidth(0.5);
+    doc.rect(margin, y, contentW, 24, 'S');
 
-  const inds = Object.entries(lastResult.indicadores || {});
-  const colW = contentW / 2 - 4;
+    const col1 = margin + 4;
+    const col2 = margin + 60;
+    const col3 = margin + 120;
 
-  inds.forEach(([key, val], i) => {
-    const col = i % 2;
-    const x0 = margin + col * (colW + 8);
-    checkY(14);
+    setColor(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
+    doc.text('TRIBUNAL', col1, y + 6);
+    doc.text('RELATOR', col2, y + 6);
+    doc.text('UTILIZADOR', col3, y + 6);
 
-    doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
-    doc.text(indLabels[key] || key, x0, y);
-    doc.setTextColor(...ink); doc.setFontSize(10); doc.setFont('helvetica', 'bold');
-    doc.text(String(val) + '/100', x0, y + 6);
+    setColor(cInk, 'text'); doc.setFontSize(9); doc.setFont('helvetica', 'bold');
+    const tribText = (lastResult._tribunal || 'Nao indicado').substring(0, 28);
+    const relText  = (lastResult._relator  || 'Nao indicado').substring(0, 22);
+    const nomeText = (userProfile?.nome    || 'Utilizador').substring(0, 20);
+    doc.text(tribText, col1, y + 15);
+    doc.text(relText,  col2, y + 15);
+    doc.text(nomeText, col3, y + 15);
 
-    // Bar
-    const barW = colW - 30;
-    doc.setFillColor(220, 220, 210); doc.rect(x0 + 32, y + 2, barW, 3, 'F');
-    const fillColor = val > 70 ? red : val > 40 ? gold : green;
-    doc.setFillColor(...fillColor); doc.rect(x0 + 32, y + 2, barW * val / 100, 3, 'F');
+    y += 32;
 
-    if (col === 1) y += 14;
-  });
-  if (inds.length % 2 !== 0) y += 14;
+    // ---- VEREDICTO ----
+    setColor(vColor, 'draw'); doc.setLineWidth(1.2);
+    doc.line(margin, y, margin, y + 22);
 
-  y += 6;
+    setColor(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
+    doc.text('VEREDICTO FORENSE', margin + 5, y + 5);
 
-  // ---- NARRATIVE ----
-  checkY(30);
-  doc.setFillColor(...light); doc.rect(margin, y, contentW, 6, 'F');
-  doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
-  doc.text('FUNDAMENTAÇÃO DA ANÁLISE', margin + 3, y + 4);
-  y += 10;
+    setColor(vColor, 'text'); doc.setFontSize(20); doc.setFont('helvetica', 'bold');
+    doc.text(labels[lastResult.veredicto] || lastResult.veredicto, margin + 5, y + 16);
 
-  const narrativa = lastResult.narrativa || '';
-  doc.setTextColor(...ink); doc.setFontSize(9); doc.setFont('helvetica', 'normal');
-  const narrativaLines = doc.splitTextToSize(narrativa, contentW);
-  narrativaLines.forEach(line => { checkY(6); doc.text(line, margin, y); y += 5.5; });
-  y += 6;
+    // Caixa de confiança
+    const bx = W - margin - 36, by = y + 1, bw = 34, bh = 20;
+    setColor(cLight, 'fill'); doc.rect(bx, by, bw, bh, 'F');
+    setColor(vColor, 'draw'); doc.setLineWidth(0.8); doc.rect(bx, by, bw, bh, 'S');
+    setColor(vColor, 'text'); doc.setFontSize(18); doc.setFont('helvetica', 'bold');
+    doc.text(lastResult.confianca + '%', bx + bw / 2, by + 12, { align: 'center' });
+    setColor(cGrey, 'text'); doc.setFontSize(6); doc.setFont('helvetica', 'normal');
+    doc.text('CONFIANCA', bx + bw / 2, by + 18, { align: 'center' });
 
-  // ---- RELATOR ANALYSIS ----
-  if (lastResult.relator_analise && !lastResult.relator_analise.includes('nao indicado') && !lastResult.relator_analise.includes('não indicado')) {
-    checkY(20);
-    doc.setFillColor(...light); doc.rect(margin, y, contentW, 6, 'F');
-    doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
-    doc.text('ANÁLISE DO ESTILO DO RELATOR', margin + 3, y + 4);
-    y += 10;
-    doc.setTextColor(...ink); doc.setFontSize(9); doc.setFont('helvetica', 'normal');
-    const relLines = doc.splitTextToSize(lastResult.relator_analise, contentW);
-    relLines.forEach(line => { checkY(6); doc.text(line, margin, y); y += 5.5; });
+    y += 30;
+
+    // ---- INDICADORES ----
+    sectionHeader('INDICADORES FORENSES');
+
+    const inds = Object.entries(lastResult.indicadores || {});
+    const halfW = contentW / 2 - 3;
+
+    inds.forEach(([key, val], i) => {
+      const isLeft = i % 2 === 0;
+      const x0 = isLeft ? margin : margin + halfW + 6;
+      checkY(16);
+
+      setColor(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
+      doc.text(indLabels[key] || key, x0, y);
+
+      setColor(cInk, 'text'); doc.setFontSize(11); doc.setFont('helvetica', 'bold');
+      doc.text(String(val), x0, y + 7);
+
+      setColor(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
+      doc.text('/100', x0 + 9, y + 7);
+
+      // Barra
+      const barX = x0 + 22;
+      const barW2 = halfW - 26;
+      setColor([220, 215, 205], 'fill'); doc.rect(barX, y + 3, barW2, 3, 'F');
+      const fillC = val > 70 ? cRed : val > 40 ? cOrange : cGreen;
+      setColor(fillC, 'fill'); doc.rect(barX, y + 3, barW2 * val / 100, 3, 'F');
+
+      if (!isLeft) y += 16;
+    });
+    if (inds.length % 2 !== 0) y += 16;
+    y += 4;
+
+    // ---- FUNDAMENTAÇÃO ----
+    sectionHeader('FUNDAMENTACAO DA ANALISE');
+    bodyText(lastResult.narrativa || 'Sem narrativa disponivel.');
+    y += 4;
+
+    // ---- ANÁLISE DO RELATOR ----
+    const rel = lastResult.relator_analise || '';
+    if (rel && !rel.toLowerCase().includes('nao indicado') && !rel.toLowerCase().includes('não indicado')) {
+      sectionHeader('ANALISE DO ESTILO DO RELATOR');
+      bodyText(rel);
+      y += 4;
+    }
+
+    // ---- MARCADORES ----
+    sectionHeader('MARCADORES IDENTIFICADOS');
+
+    (lastResult.marcadores || []).forEach(m => {
+      checkY(12);
+      const isAI = m.tipo === 'ai';
+      const bgC  = isAI ? [255, 242, 230] : [230, 245, 235];
+      const txtC = isAI ? cRed : cGreen;
+      const icon = isAI ? '[!]' : '[OK]';
+
+      setColor(bgC, 'fill'); doc.rect(margin, y - 3, contentW, 9, 'F');
+      setColor(txtC, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+      doc.text(icon, margin + 2, y + 3);
+
+      setColor(cInk, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+      const mLines = doc.splitTextToSize(m.texto || '', contentW - 16);
+      doc.text(mLines[0] || '', margin + 14, y + 3);
+      y += 11;
+      if (mLines.length > 1) {
+        mLines.slice(1).forEach(l => { checkY(6); doc.text(l, margin + 14, y); y += 5.5; });
+      }
+    });
+
+    y += 8;
+
+    // ---- DISCLAIMER ----
+    checkY(24);
+    setColor(cGold, 'draw'); doc.setLineWidth(0.3);
+    doc.line(margin, y, W - margin, y);
     y += 6;
+    setColor(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'italic');
+    const disc = 'Este relatorio foi gerado automaticamente pelo sistema LexVeritas com base em analise linguistica por inteligencia artificial. Os resultados tem caracter auxiliar e probabilistico, nao constituindo prova juridica definitiva. A interpretacao deve ser feita por profissional especializado. Ref: ' + lastRef + '. Data: ' + dateStr + ' ' + timeStr + '.';
+    const discLines = doc.splitTextToSize(disc, contentW);
+    discLines.forEach(l => { doc.text(l, margin, y); y += 4; });
+
+    addFooter();
+
+    doc.save('LexVeritas-' + lastRef + '.pdf');
+
+  } catch (err) {
+    console.error('Erro PDF:', err);
+    alert('Erro ao gerar PDF: ' + err.message);
   }
-
-  // ---- MARKERS ----
-  checkY(20);
-  doc.setFillColor(...light); doc.rect(margin, y, contentW, 6, 'F');
-  doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
-  doc.text('MARCADORES IDENTIFICADOS', margin + 3, y + 4);
-  y += 10;
-
-  (lastResult.marcadores || []).forEach(m => {
-    checkY(10);
-    const isAI = m.tipo === 'ai';
-    doc.setFillColor(...(isAI ? [255, 240, 220] : [220, 240, 220]));
-    doc.rect(margin, y - 3, contentW, 8, 'F');
-    doc.setTextColor(...(isAI ? red : green)); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
-    doc.text(isAI ? '⚠' : '✓', margin + 3, y + 2);
-    doc.setTextColor(...ink); doc.setFont('helvetica', 'normal'); doc.setFontSize(8);
-    const mLines = doc.splitTextToSize(m.texto, contentW - 12);
-    doc.text(mLines[0] || '', margin + 10, y + 2);
-    y += 10;
-  });
-
-  y += 8;
-
-  // ---- DISCLAIMER ----
-  checkY(30);
-  doc.setDrawColor(...gold); doc.setLineWidth(0.3); doc.line(margin, y, W - margin, y);
-  y += 6;
-  doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'italic');
-  const disclaimer = 'Este relatório foi gerado automaticamente pelo sistema LexVeritas com base em análise linguística por inteligência artificial. Os resultados têm carácter auxiliar e probabilístico, não constituindo prova jurídica definitiva. A interpretação dos resultados deve ser feita por profissional especializado. Referência: ' + lastRef + '. Data: ' + dateStr + '.';
-  const discLines = doc.splitTextToSize(disclaimer, contentW);
-  discLines.forEach(line => { doc.text(line, margin, y); y += 4; });
-
-  // Footer on first page
-  doc.setFontSize(7); doc.setTextColor(...midgrey);
-  doc.text('LexVeritas · Análise Forense de IA em Jurisprudência Portuguesa · ' + lastRef, margin, 287);
-  doc.text('Este relatório é de carácter auxiliar e não constitui prova jurídica definitiva.', W - margin, 287, { align: 'right' });
-  doc.setDrawColor(...gold); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283);
-
-  // Save
-  const filename = 'LexVeritas-' + lastRef + '.pdf';
-  doc.save(filename);
 }
+
 
 async function loadHistory() {
   const listEl = document.getElementById('history-list');
