@@ -380,7 +380,7 @@
       <label>Password</label>
       <input type="password" id="login-password" placeholder="••••••••">
     </div>
-    <button class="btn-primary" id="btn-login">Entrar</button>
+    <button class="btn-primary" id="btn-login" onclick="fazerLogin()">Entrar</button>
     <div class="auth-switch">Não tem conta? <a onclick="showPage('register')">Registe-se grátis</a></div>
   </div>
 </div>
@@ -420,7 +420,7 @@
       <label>Password</label>
       <input type="password" id="register-password" placeholder="Mínimo 6 caracteres">
     </div>
-    <button class="btn-primary" id="btn-register">Criar Conta Gratuita</button>
+    <button class="btn-primary" id="btn-register" onclick="fazerRegisto()">Criar Conta Gratuita</button>
     <div class="auth-switch">Já tem conta? <a onclick="showPage('login')">Entrar</a></div>
   </div>
 </div>
@@ -652,8 +652,141 @@ let currentUser = null;
 let userProfile = null;
 let lastResult  = null;
 let lastRef     = null;
-let lastResult  = null;  // Guarda o último resultado para o PDF
-let lastRef     = '';    // Número de referência do relatório
+
+// ============================================================
+// PAGE ROUTING
+// ============================================================
+function showPage(page) {
+  ['login','register','app'].forEach(p => {
+    document.getElementById('page-' + p).classList.add('hidden');
+  });
+  document.getElementById('page-' + page).classList.remove('hidden');
+}
+
+function showTab(tab) {
+  ['analise','historico'].forEach(t => {
+    document.getElementById('tab-content-' + t).classList.add('hidden');
+    document.getElementById('tab-' + t).classList.remove('active');
+  });
+  document.getElementById('tab-content-' + tab).classList.remove('hidden');
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'historico') loadHistory();
+}
+
+function showModal(id) { document.getElementById('modal-' + id).classList.add('visible'); }
+function closeModal(id) { document.getElementById('modal-' + id).classList.remove('visible'); }
+
+// ============================================================
+// AUTH FUNCTIONS — chamadas directamente pelo HTML
+// ============================================================
+async function fazerLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  const btn   = document.getElementById('btn-login');
+  errEl.style.display = 'none';
+
+  if (!email || !pass) {
+    errEl.textContent = 'Preencha email e password.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'A entrar...';
+
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+
+    if (error) {
+      if (error.message.includes('Email not confirmed')) {
+        errEl.textContent = 'Confirme o seu email primeiro. Verifique o Gmail incluindo Spam.';
+      } else if (error.message.includes('Invalid login') || error.message.includes('invalid_credentials')) {
+        errEl.textContent = 'Email ou password incorrectos.';
+      } else {
+        errEl.textContent = 'Erro: ' + error.message;
+      }
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+      return;
+    }
+
+    if (data?.user) {
+      currentUser = data.user;
+      await loadProfile();
+      initApp();
+      showPage('app');
+    }
+  } catch (e) {
+    errEl.textContent = 'Erro de ligacao: ' + e.message;
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+  }
+}
+
+async function fazerRegisto() {
+  const nome   = document.getElementById('register-nome').value.trim();
+  const prof   = document.getElementById('register-profissao').value;
+  const email  = document.getElementById('register-email').value.trim();
+  const pass   = document.getElementById('register-password').value;
+  const errEl  = document.getElementById('register-error');
+  const succEl = document.getElementById('register-success');
+  const btn    = document.getElementById('btn-register');
+  errEl.style.display = 'none';
+  succEl.style.display = 'none';
+
+  if (!nome || !email || !pass) {
+    errEl.textContent = 'Preencha todos os campos.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (pass.length < 6) {
+    errEl.textContent = 'Password com minimo 6 caracteres.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'A criar conta...';
+
+  try {
+    const { data, error } = await sb.auth.signUp({
+      email, password: pass,
+      options: { data: { nome, profissao: prof } }
+    });
+
+    if (error) {
+      errEl.textContent = 'Erro: ' + error.message;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Criar Conta Gratuita';
+      return;
+    }
+
+    if (data?.user) {
+      await sb.from('perfis').upsert({ id: data.user.id, email, nome, profissao: prof, mes_atual: new Date().toISOString().substring(0,7), analises_mes: 0 });
+    }
+
+    succEl.textContent = 'Conta criada! Verifique o Gmail e clique no link de confirmacao. Depois entre aqui.';
+    succEl.style.display = 'block';
+    btn.textContent = 'Conta criada!';
+  } catch (e) {
+    errEl.textContent = 'Erro: ' + e.message;
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Criar Conta Gratuita';
+  }
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  currentUser = null;
+  userProfile = null;
+  showPage('login');
+}
+// Resultado e referência guardados globalmente para o PDF
 
 // ============================================================
 // PAGE ROUTING
@@ -680,80 +813,9 @@ function closeModal(id) { document.getElementById('modal-' + id).classList.remov
 // ============================================================
 // AUTH
 // ============================================================
-document.getElementById('btn-login').onclick = async () => {
-  const email = document.getElementById('login-email').value.trim();
-  const pass  = document.getElementById('login-password').value;
-  const errEl = document.getElementById('login-error');
-  errEl.style.display = 'none';
-
-  if (!email || !pass) {
-    errEl.textContent = 'Preencha todos os campos.';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  const btn = document.getElementById('btn-login');
-  btn.disabled = true;
-  btn.textContent = 'A entrar...';
-
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-
-  if (error) {
-    if (error.message.includes('Email not confirmed')) {
-      errEl.textContent = 'Email ainda nao confirmado. Verifique o seu Gmail e clique no link de confirmacao.';
-    } else if (error.message.includes('Invalid login')) {
-      errEl.textContent = 'Email ou password incorrectos.';
-    } else {
-      errEl.textContent = 'Erro: ' + error.message;
-    }
-    errEl.style.display = 'block';
-    btn.disabled = false;
-    btn.textContent = 'Entrar';
-    return;
-  }
-
-  if (data.session) {
-    currentUser = data.session.user;
-    await loadProfile();
-    initApp();
-    showPage('app');
-  }
-};
-
-document.getElementById('btn-register').onclick = async () => {
-  const nome     = document.getElementById('register-nome').value.trim();
-  const prof     = document.getElementById('register-profissao').value;
-  const email    = document.getElementById('register-email').value.trim();
-  const pass     = document.getElementById('register-password').value;
-  const errEl    = document.getElementById('register-error');
-  const succEl   = document.getElementById('register-success');
-  errEl.style.display = 'none'; succEl.style.display = 'none';
-
-  if (!nome || !email || !pass) { errEl.textContent = 'Preencha todos os campos obrigatórios.'; errEl.style.display = 'block'; return; }
-  if (pass.length < 6) { errEl.textContent = 'A password deve ter pelo menos 6 caracteres.'; errEl.style.display = 'block'; return; }
-
-  document.getElementById('btn-register').disabled = true;
-  document.getElementById('btn-register').textContent = 'A criar conta...';
-
-  const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data: { nome, profissao: prof } } });
-
-  if (error) {
-    errEl.textContent = 'Erro ao criar conta: ' + error.message;
-    errEl.style.display = 'block';
-    document.getElementById('btn-register').disabled = false;
-    document.getElementById('btn-register').textContent = 'Criar Conta Gratuita';
-    return;
-  }
-
-  // Create profile
-  if (data.user) {
-    await sb.from('perfis').insert({ id: data.user.id, email, nome, profissao: prof });
-  }
-
-  succEl.textContent = 'Conta criada! Verifique o seu email para confirmar.';
-  succEl.style.display = 'block';
-  document.getElementById('btn-register').textContent = 'Conta criada!';
-};
+// ============================================================
+// SESSION CHECK ON LOAD
+// ============================================================
 
 async function logout() {
   await sb.auth.signOut();
