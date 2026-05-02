@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@400;500&family=Libre+Franklin:wght@300;400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root {
     --ink: #0d0d0d;
@@ -303,10 +305,58 @@
   .plan-features { font-size: 11px; color: #888; line-height: 1.6; }
   .btn-close-modal { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: #aaa; }
 
-  @media (max-width: 750px) {
+  .btn-pdf {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    padding: 11px 20px;
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 16px;
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-pdf:hover { background: var(--parchment); border-color: var(--gold); color: var(--gold); }
+  .ref-number { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 6px; }
     main { grid-template-columns: 1fr; }
     .indicators-grid { grid-template-columns: 1fr; }
     .plans-grid { grid-template-columns: 1fr; }
+  }
+
+  .btn-pdf {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    padding: 11px 20px;
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 16px;
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-pdf:hover { background: var(--parchment); border-color: var(--gold); color: var(--gold); }
+  .pdf-ref {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #aaa;
+    text-align: center;
+    margin-top: 6px;
   }
 
   .hidden { display: none !important; }
@@ -467,6 +517,18 @@ Exemplo: sumário, relatório, fundamentação, dispositivo — STJ, TRL, TRP, T
         <h3>Marcadores Identificados</h3>
         <ul class="evidence-list" id="evidence-list"></ul>
       </div>
+
+      <!-- PDF Download -->
+      <button class="btn-pdf" onclick="gerarPDF()">
+        📄 Descarregar Relatório PDF Profissional
+      </button>
+      <div class="ref-number" id="ref-number"></div>
+
+      <!-- PDF Download -->
+      <button class="btn-pdf" onclick="gerarPDF()">
+        📄 <span>Descarregar Relatório PDF Profissional</span>
+      </button>
+      <div class="pdf-ref" id="pdf-ref"></div>
     </div>
   </div>
 
@@ -588,6 +650,10 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
 let userProfile = null;
+let lastResult  = null;
+let lastRef     = null;
+let lastResult  = null;  // Guarda o último resultado para o PDF
+let lastRef     = '';    // Número de referência do relatório
 
 // ============================================================
 // PAGE ROUTING
@@ -810,6 +876,14 @@ async function analyzeDecision() {
     }
 
     const result = await response.json();
+
+    // Guardar resultado e referência
+    lastResult = result;
+    lastResult._tribunal = document.getElementById('tribunal-select').value;
+    lastResult._relator  = document.getElementById('relator-input').value;
+    lastRef = 'LV-' + Date.now().toString(36).toUpperCase();
+    document.getElementById('ref-number').textContent = 'Referência: ' + lastRef;
+
     renderResults(result);
 
     // Save to DB
@@ -880,8 +954,192 @@ function renderResults(result) {
 }
 
 // ============================================================
-// HISTORY
+// PDF REPORT GENERATION
 // ============================================================
+function gerarPDF() {
+  if (!lastResult) { alert('Faça primeiro uma análise.'); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+  const W = 210; // page width mm
+  const margin = 20;
+  const contentW = W - margin * 2;
+  let y = 0;
+
+  const gold    = [201, 168, 76];
+  const ink     = [13, 13, 13];
+  const light   = [245, 240, 232];
+  const midgrey = [130, 130, 130];
+  const red     = [139, 26, 26];
+  const green   = [26, 92, 58];
+
+  const labels = { 'IA_DETECTADA': 'Inteligência Artificial Detectada', 'PROVAVELMENTE_IA': 'Provavelmente Gerado por IA', 'INCONCLUSIVO': 'Análise Inconclusiva', 'PROVAVELMENTE_HUMANO': 'Provavelmente Autoria Humana', 'HUMANO': 'Autoria Humana Confirmada' };
+  const indLabels = { perplexidade: 'Perplexidade', burstiness: 'Burstiness', coesao_artificial: 'Coesão Artificial', uniformidade_sintatica: 'Uniformidade Sintáctica', riqueza_lexical: 'Riqueza Lexical', marcadores_formulaicos: 'Marcadores Formulaicos' };
+
+  function newPage() {
+    doc.addPage();
+    y = 20;
+    // Footer on each page
+    doc.setFontSize(7); doc.setTextColor(...midgrey);
+    doc.text('LexVeritas · Análise Forense de IA em Jurisprudência Portuguesa · ' + lastRef, margin, 287);
+    doc.text('Este relatório é de carácter auxiliar e não constitui prova jurídica definitiva.', W - margin, 287, { align: 'right' });
+    doc.setDrawColor(...gold); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283);
+  }
+
+  function checkY(needed) { if (y + needed > 270) newPage(); }
+
+  // ---- HEADER ----
+  // Gold bar top
+  doc.setFillColor(...gold); doc.rect(0, 0, W, 28, 'F');
+
+  // Title
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(28); doc.setFont('helvetica', 'bold');
+  doc.text('LexVeritas', margin, 16);
+  doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+  doc.text('RELATÓRIO FORENSE DE ANÁLISE DE INTELIGÊNCIA ARTIFICIAL', margin, 23);
+
+  // Date top right
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' });
+  doc.setFontSize(8); doc.text(dateStr.toUpperCase(), W - margin, 16, { align: 'right' });
+  doc.text(lastRef, W - margin, 23, { align: 'right' });
+
+  y = 38;
+
+  // ---- META INFO ----
+  doc.setFillColor(...light); doc.rect(margin, y, contentW, 22, 'F');
+  doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
+  doc.text('TRIBUNAL', margin + 4, y + 6);
+  doc.text('RELATOR', margin + 70, y + 6);
+  doc.text('UTILIZADOR', margin + 140, y + 6);
+  doc.setTextColor(...ink); doc.setFontSize(9); doc.setFont('helvetica', 'bold');
+  doc.text(lastResult._tribunal || 'Não indicado', margin + 4, y + 14);
+  doc.text(lastResult._relator  || 'Não indicado', margin + 70, y + 14);
+  doc.text(userProfile?.nome || '—', margin + 140, y + 14);
+
+  y += 30;
+
+  // ---- VERDICT ----
+  const vCls = lastResult.veredicto;
+  const vColor = (vCls === 'IA_DETECTADA' || vCls === 'PROVAVELMENTE_IA') ? red : (vCls === 'INCONCLUSIVO') ? midgrey : green;
+  doc.setDrawColor(...vColor); doc.setLineWidth(0.8); doc.line(margin, y, margin, y + 20);
+  doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
+  doc.text('VEREDICTO FORENSE', margin + 5, y + 5);
+  doc.setTextColor(...vColor); doc.setFontSize(18); doc.setFont('helvetica', 'bold');
+  doc.text(labels[lastResult.veredicto] || lastResult.veredicto, margin + 5, y + 14);
+
+  // Confidence circle
+  const cx = W - margin - 20, cy = y + 10, r = 12;
+  doc.setDrawColor(...vColor); doc.setLineWidth(2);
+  doc.circle(cx, cy, r);
+  doc.setFontSize(14); doc.setFont('helvetica', 'bold'); doc.setTextColor(...vColor);
+  doc.text(lastResult.confianca + '%', cx, cy + 4, { align: 'center' });
+  doc.setFontSize(6); doc.setFont('helvetica', 'normal'); doc.setTextColor(...midgrey);
+  doc.text('CONFIANÇA', cx, cy + 10, { align: 'center' });
+
+  y += 28;
+
+  // ---- INDICATORS ----
+  doc.setFillColor(...light); doc.rect(margin, y, contentW, 6, 'F');
+  doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
+  doc.text('INDICADORES FORENSES', margin + 3, y + 4);
+  y += 10;
+
+  const inds = Object.entries(lastResult.indicadores || {});
+  const colW = contentW / 2 - 4;
+
+  inds.forEach(([key, val], i) => {
+    const col = i % 2;
+    const x0 = margin + col * (colW + 8);
+    checkY(14);
+
+    doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
+    doc.text(indLabels[key] || key, x0, y);
+    doc.setTextColor(...ink); doc.setFontSize(10); doc.setFont('helvetica', 'bold');
+    doc.text(String(val) + '/100', x0, y + 6);
+
+    // Bar
+    const barW = colW - 30;
+    doc.setFillColor(220, 220, 210); doc.rect(x0 + 32, y + 2, barW, 3, 'F');
+    const fillColor = val > 70 ? red : val > 40 ? gold : green;
+    doc.setFillColor(...fillColor); doc.rect(x0 + 32, y + 2, barW * val / 100, 3, 'F');
+
+    if (col === 1) y += 14;
+  });
+  if (inds.length % 2 !== 0) y += 14;
+
+  y += 6;
+
+  // ---- NARRATIVE ----
+  checkY(30);
+  doc.setFillColor(...light); doc.rect(margin, y, contentW, 6, 'F');
+  doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
+  doc.text('FUNDAMENTAÇÃO DA ANÁLISE', margin + 3, y + 4);
+  y += 10;
+
+  const narrativa = lastResult.narrativa || '';
+  doc.setTextColor(...ink); doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+  const narrativaLines = doc.splitTextToSize(narrativa, contentW);
+  narrativaLines.forEach(line => { checkY(6); doc.text(line, margin, y); y += 5.5; });
+  y += 6;
+
+  // ---- RELATOR ANALYSIS ----
+  if (lastResult.relator_analise && !lastResult.relator_analise.includes('nao indicado') && !lastResult.relator_analise.includes('não indicado')) {
+    checkY(20);
+    doc.setFillColor(...light); doc.rect(margin, y, contentW, 6, 'F');
+    doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
+    doc.text('ANÁLISE DO ESTILO DO RELATOR', margin + 3, y + 4);
+    y += 10;
+    doc.setTextColor(...ink); doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+    const relLines = doc.splitTextToSize(lastResult.relator_analise, contentW);
+    relLines.forEach(line => { checkY(6); doc.text(line, margin, y); y += 5.5; });
+    y += 6;
+  }
+
+  // ---- MARKERS ----
+  checkY(20);
+  doc.setFillColor(...light); doc.rect(margin, y, contentW, 6, 'F');
+  doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
+  doc.text('MARCADORES IDENTIFICADOS', margin + 3, y + 4);
+  y += 10;
+
+  (lastResult.marcadores || []).forEach(m => {
+    checkY(10);
+    const isAI = m.tipo === 'ai';
+    doc.setFillColor(...(isAI ? [255, 240, 220] : [220, 240, 220]));
+    doc.rect(margin, y - 3, contentW, 8, 'F');
+    doc.setTextColor(...(isAI ? red : green)); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+    doc.text(isAI ? '⚠' : '✓', margin + 3, y + 2);
+    doc.setTextColor(...ink); doc.setFont('helvetica', 'normal'); doc.setFontSize(8);
+    const mLines = doc.splitTextToSize(m.texto, contentW - 12);
+    doc.text(mLines[0] || '', margin + 10, y + 2);
+    y += 10;
+  });
+
+  y += 8;
+
+  // ---- DISCLAIMER ----
+  checkY(30);
+  doc.setDrawColor(...gold); doc.setLineWidth(0.3); doc.line(margin, y, W - margin, y);
+  y += 6;
+  doc.setTextColor(...midgrey); doc.setFontSize(7); doc.setFont('helvetica', 'italic');
+  const disclaimer = 'Este relatório foi gerado automaticamente pelo sistema LexVeritas com base em análise linguística por inteligência artificial. Os resultados têm carácter auxiliar e probabilístico, não constituindo prova jurídica definitiva. A interpretação dos resultados deve ser feita por profissional especializado. Referência: ' + lastRef + '. Data: ' + dateStr + '.';
+  const discLines = doc.splitTextToSize(disclaimer, contentW);
+  discLines.forEach(line => { doc.text(line, margin, y); y += 4; });
+
+  // Footer on first page
+  doc.setFontSize(7); doc.setTextColor(...midgrey);
+  doc.text('LexVeritas · Análise Forense de IA em Jurisprudência Portuguesa · ' + lastRef, margin, 287);
+  doc.text('Este relatório é de carácter auxiliar e não constitui prova jurídica definitiva.', W - margin, 287, { align: 'right' });
+  doc.setDrawColor(...gold); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283);
+
+  // Save
+  const filename = 'LexVeritas-' + lastRef + '.pdf';
+  doc.save(filename);
+}
+
 async function loadHistory() {
   const listEl = document.getElementById('history-list');
   listEl.innerHTML = '<div class="empty-history">A carregar...</div>';
