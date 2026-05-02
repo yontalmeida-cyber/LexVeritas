@@ -766,6 +766,12 @@ Exemplo: sumário, relatório, fundamentação, dispositivo — STJ, TRL, TRP, T
         <p id="analysis-narrative">—</p>
       </div>
 
+      <!-- Relator analysis -->
+      <div class="analysis-card" id="relator-card" style="display:none;border-left:3px solid var(--gold)">
+        <h3>Análise do Estilo do Relator</h3>
+        <p id="relator-analise-text">—</p>
+      </div>
+
       <!-- Evidence -->
       <div class="analysis-card">
         <h3>Marcadores Identificados</h3>
@@ -828,9 +834,10 @@ Exemplo: sumário, relatório, fundamentação, dispositivo — STJ, TRL, TRP, T
             <option>Tribunal Administrativo e Fiscal</option>
           </optgroup>
         </select>
+        <input id="relator-input" type="text" placeholder="Nome do relator (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
         <div class="info-box note" style="margin:0;font-size:11.5px">
           <strong>Porquê indicar?</strong>
-          Cada tribunal tem um estilo redactorial distinto. Indicar a origem melhora a precisão da análise.
+          Cada tribunal e relator têm um estilo próprio. Indicar melhora a precisão da análise.
         </div>
       </div>
     </div>
@@ -1008,11 +1015,12 @@ async function analyzeDecision() {
 
   try {
     const tribunal = document.getElementById('tribunal-select').value;
+    const relator  = document.getElementById('relator-input').value;
 
     const response = await fetch('/api/analisar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ texto: text, tribunal: tribunal || null })
+      body: JSON.stringify({ texto: text, tribunal: tribunal || null, relator: relator || null })
     });
 
     if (!response.ok) {
@@ -1101,6 +1109,15 @@ function renderResults(result, text) {
   // Narrative
   document.getElementById('analysis-narrative').innerHTML =
     result.narrativa.replace(/\n/g, '<br><br>');
+
+  // Relator analysis
+  const relatorCard = document.getElementById('relator-card');
+  if (result.relator_analise && result.relator_analise !== 'Relator nao indicado' && result.relator_analise !== 'Relator não indicado') {
+    relatorCard.style.display = 'block';
+    document.getElementById('relator-analise-text').textContent = result.relator_analise;
+  } else {
+    relatorCard.style.display = 'none';
+  }
 
   // Evidence
   const list = document.getElementById('evidence-list');
