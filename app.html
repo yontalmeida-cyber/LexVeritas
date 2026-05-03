@@ -403,56 +403,9 @@
   .plan-features { font-size: 11px; color: #888; line-height: 1.6; }
   .btn-close-modal { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: #aaa; }
 
-  .btn-pdf {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: white;
-    color: var(--ink);
-    border: 1px solid var(--rule);
-    padding: 11px 20px;
-    font-family: var(--sans);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 16px;
-    width: 100%;
-    justify-content: center;
-  }
+  .btn-pdf { display: flex; align-items: center; gap: 8px; background: white; color: var(--ink); border: 1px solid var(--rule); padding: 11px 20px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 16px; width: 100%; justify-content: center; }
   .btn-pdf:hover { background: var(--parchment); border-color: var(--gold); color: var(--gold); }
-  .ref-number { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 6px; }
-
-
-  .btn-pdf {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: white;
-    color: var(--ink);
-    border: 1px solid var(--rule);
-    padding: 11px 20px;
-    font-family: var(--sans);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 16px;
-    width: 100%;
-    justify-content: center;
-  }
-  .btn-pdf:hover { background: var(--parchment); border-color: var(--gold); color: var(--gold); }
-  .pdf-ref {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: #aaa;
-    text-align: center;
-    margin-top: 6px;
-  }
+  .ref-number { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 6px; text-align: center; }
 
   .hidden { display: none !important; }
 </style>
@@ -463,6 +416,20 @@
 <div id="page-login" class="auth-page">
   <div class="auth-logo">Lex<em>Veritas</em></div>
   <div class="auth-tagline">Detector de IA em Jurisprudência Portuguesa</div>
+
+  <!-- Ponto 1: mensagem explicativa para quem vem da landing -->
+  <div style="display:flex;gap:20px;justify-content:center;margin-bottom:20px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em">
+      <span style="color:var(--gold)">⚖</span> 6 INDICADORES FORENSES
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em">
+      <span style="color:var(--gold)">📄</span> RELATÓRIO PDF
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em">
+      <span style="color:var(--gold)">🏛</span> 9+ TRIBUNAIS
+    </div>
+  </div>
+
   <div class="auth-card">
     <h2>Entrar na conta</h2>
     <p>Aceda à sua conta para continuar a análise forense.</p>
@@ -476,7 +443,7 @@
       <input type="password" id="login-password" placeholder="••••••••">
     </div>
     <button class="btn-primary" id="btn-login" onclick="fazerLogin()">Entrar</button>
-    <div class="auth-switch">Não tem conta? <a onclick="showPage('register')">Registe-se grátis</a></div>
+    <div class="auth-switch">Não tem conta? <a onclick="showPage('register')">Crie uma gratuitamente →</a></div>
   </div>
 </div>
 
@@ -484,9 +451,22 @@
 <div id="page-register" class="auth-page hidden">
   <div class="auth-logo">Lex<em>Veritas</em></div>
   <div class="auth-tagline">Detector de IA em Jurisprudência Portuguesa</div>
+
+  <!-- Ponto 2: destaque dos benefícios -->
+  <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);padding:16px 20px;margin-bottom:20px;max-width:400px;width:100%">
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--gold);margin-bottom:10px">CONTA GRATUITA INCLUI</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> 5 análises por mês sem custos</div>
+      <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> 6 indicadores forenses calibrados para PT</div>
+      <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> Relatório PDF profissional com referência única</div>
+      <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> Histórico das suas análises</div>
+      <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> Sem cartão de crédito</div>
+    </div>
+  </div>
+
   <div class="auth-card">
-    <h2>Criar conta</h2>
-    <p>Registe-se gratuitamente. Inclui 5 análises por mês.</p>
+    <h2>Criar conta gratuita</h2>
+    <p>Comece a analisar decisões judiciais em segundos.</p>
     <div class="auth-error" id="register-error"></div>
     <div class="auth-success" id="register-success"></div>
     <div class="form-group">
@@ -516,7 +496,7 @@
       <input type="password" id="register-password" placeholder="Mínimo 6 caracteres">
     </div>
     <button class="btn-primary" id="btn-register" onclick="fazerRegisto()">Criar Conta Gratuita</button>
-    <div class="auth-switch">Já tem conta? <a onclick="showPage('login')">Entrar</a></div>
+    <div class="auth-switch">Já tem conta? <a onclick="showPage('login')">Entrar →</a></div>
   </div>
 </div>
 
@@ -541,9 +521,8 @@
     <p class="masthead-sub">Identificação de Inteligência Artificial em Jurisprudência dos Tribunais Portugueses</p>
   </div>
   <nav>
-    <a onclick="showTab('analise')" id="tab-analise" class="active">Análise</a>
-    <a onclick="showTab('historico')" id="tab-historico">Histórico</a>
-    <a onclick="showModal('upgrade')">Actualizar Plano</a>
+    <a onclick="showTab('analise')" id="tab-analise" class="active">⚖ Análise</a>
+    <a onclick="showTab('historico')" id="tab-historico">📋 Histórico</a>
   </nav>
 </header>
 
@@ -1194,6 +1173,14 @@ async function analyzeDecision() {
     hideOverlay(result);
     renderResults(result);
 
+    // Ponto 5: scroll automático para resultados em mobile
+    if (window.innerWidth <= 760) {
+      setTimeout(() => {
+        const resultsEl = document.getElementById('results-area');
+        if (resultsEl) resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 900);
+    }
+
     // Save to DB
     await sb.from('analises').insert({
       user_id:   currentUser.id,
@@ -1518,7 +1505,15 @@ async function loadHistory() {
   const { data, error } = await sb.from('analises').select('*').eq('user_id', currentUser.id).order('criado_em', { ascending: false }).limit(50);
 
   if (error || !data || data.length === 0) {
-    listEl.innerHTML = '<div class="empty-history">Ainda não fez nenhuma análise.</div>';
+    listEl.innerHTML = `
+      <div style="text-align:center;padding:48px 20px">
+        <div style="font-size:48px;margin-bottom:16px">⚖️</div>
+        <div style="font-family:var(--serif);font-size:20px;font-style:italic;color:#888;margin-bottom:8px">Ainda não fez nenhuma análise</div>
+        <div style="font-family:var(--sans);font-size:13px;color:#bbb;margin-bottom:24px;line-height:1.6">Cole o texto de um acórdão, sentença ou despacho<br>e descubra se foi elaborado com IA.</div>
+        <button onclick="showTab('analise')" style="background:var(--ink);color:var(--cream);border:none;padding:12px 28px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer">
+          Fazer primeira análise →
+        </button>
+      </div>`;
     return;
   }
 
