@@ -221,6 +221,31 @@
   .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .btn-analyze.loading .spinner { display: block; }
+
+  /* ANALYSIS OVERLAY */
+  .analysis-overlay { position: fixed; inset: 0; background: rgba(13,13,13,0.93); z-index: 500; display: none; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(8px); }
+  .analysis-overlay.visible { display: flex; animation: overlayIn 0.4s ease; }
+  @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+  .overlay-inner { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 40px 32px; max-width: 380px; width: 100%; }
+  .overlay-logo { font-family: var(--serif); font-size: 28px; color: var(--cream); }
+  .overlay-logo em { font-style: italic; color: var(--gold); }
+  .scales-anim { width: 64px; height: 64px; animation: scalesTilt 2s ease-in-out infinite; }
+  @keyframes scalesTilt { 0%,100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
+  .overlay-progress-track { width: 100%; height: 2px; background: rgba(255,255,255,0.08); overflow: hidden; }
+  .overlay-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), #e8c96a); width: 0%; transition: width 0.6s ease; }
+  .overlay-status { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); text-align: center; min-height: 18px; }
+  .overlay-subtext { font-family: var(--sans); font-size: 11px; color: rgba(255,255,255,0.3); text-align: center; line-height: 1.6; }
+  .scanning-dots { display: flex; gap: 6px; align-items: center; justify-content: center; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); animation: dotPulse 1.4s ease-in-out infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; } .dot:nth-child(3) { animation-delay: 0.4s; } .dot:nth-child(4) { animation-delay: 0.6s; } .dot:nth-child(5) { animation-delay: 0.8s; }
+  @keyframes dotPulse { 0%,80%,100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1.3); } }
+  .overlay-indicators { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+  .overlay-ind { display: flex; align-items: center; gap: 8px; opacity: 0; transform: translateX(-8px); transition: opacity 0.4s, transform 0.4s; }
+  .overlay-ind.active { opacity: 1; transform: translateX(0); }
+  .overlay-ind-name { font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); text-transform: uppercase; width: 110px; flex-shrink: 0; }
+  .overlay-ind-track { flex: 1; height: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
+  .overlay-ind-fill { height: 100%; background: var(--gold); width: 0%; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+  .overlay-ind-val { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.3); width: 24px; text-align: right; }
   .drop-zone { border: 2px dashed var(--rule); padding: 16px; text-align: center; margin-top: 10px; cursor: pointer; transition: all 0.2s; }
   .drop-zone:hover { border-color: var(--gold); background: #fffbf0; }
   .drop-zone-text { font-family: var(--sans); font-size: 12px; color: #bbb; }
@@ -613,6 +638,40 @@ Exemplo: sumário, relatório, fundamentação, dispositivo — STJ, TRL, TRP, T
   <div class="footer-copy">© 2026 · Jurisprudência Portuguesa · Uso Profissional</div>
 </footer>
 
+<!-- ANALYSIS OVERLAY -->
+<div class="analysis-overlay" id="analysis-overlay">
+  <div class="overlay-inner">
+    <div class="overlay-logo">Lex<em>Veritas</em></div>
+    <svg class="scales-anim" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="32" y1="8" x2="32" y2="56" stroke="#c9a84c" stroke-width="2"/>
+      <line x1="8" y1="16" x2="56" y2="16" stroke="#c9a84c" stroke-width="2"/>
+      <circle cx="32" cy="8" r="3" fill="#c9a84c"/>
+      <line x1="8" y1="16" x2="16" y2="36" stroke="#c9a84c" stroke-width="1.5"/>
+      <line x1="56" y1="16" x2="48" y2="28" stroke="#c9a84c" stroke-width="1.5"/>
+      <ellipse cx="12" cy="37" rx="8" ry="3" stroke="#c9a84c" stroke-width="1.5" fill="rgba(201,168,76,0.15)"/>
+      <ellipse cx="52" cy="29" rx="8" ry="3" stroke="#c9a84c" stroke-width="1.5" fill="rgba(201,168,76,0.15)"/>
+      <line x1="20" y1="56" x2="44" y2="56" stroke="#c9a84c" stroke-width="2"/>
+    </svg>
+    <div class="scanning-dots">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      <div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="overlay-status" id="overlay-status">A iniciar análise...</div>
+    <div class="overlay-progress-track">
+      <div class="overlay-progress-fill" id="overlay-progress"></div>
+    </div>
+    <div class="overlay-indicators" id="overlay-indicators">
+      <div class="overlay-ind" id="oi-1"><div class="overlay-ind-name">Perplexidade</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-1"></div></div><div class="overlay-ind-val" id="ov-1">—</div></div>
+      <div class="overlay-ind" id="oi-2"><div class="overlay-ind-name">Burstiness</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-2"></div></div><div class="overlay-ind-val" id="ov-2">—</div></div>
+      <div class="overlay-ind" id="oi-3"><div class="overlay-ind-name">Coesão Artificial</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-3"></div></div><div class="overlay-ind-val" id="ov-3">—</div></div>
+      <div class="overlay-ind" id="oi-4"><div class="overlay-ind-name">Uniformidade Sint.</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-4"></div></div><div class="overlay-ind-val" id="ov-4">—</div></div>
+      <div class="overlay-ind" id="oi-5"><div class="overlay-ind-name">Riqueza Lexical</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-5"></div></div><div class="overlay-ind-val" id="ov-5">—</div></div>
+      <div class="overlay-ind" id="oi-6"><div class="overlay-ind-name">Marc. Formulaicos</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-6"></div></div><div class="overlay-ind-val" id="ov-6">—</div></div>
+    </div>
+    <div class="overlay-subtext">A analisar padrões linguísticos forenses<br>calibrados para os tribunais portugueses</div>
+  </div>
+</div>
+
 </div><!-- end page-app -->
 
 <!-- UPGRADE MODAL -->
@@ -802,7 +861,75 @@ function closeModal(id) { document.getElementById('modal-' + id).classList.remov
 // AUTH
 // ============================================================
 // ============================================================
-// SESSION CHECK ON LOAD
+// ANALYSIS OVERLAY
+// ============================================================
+const overlayMessages = [
+  { text: 'A extrair padrões linguísticos...', pct: 15 },
+  { text: 'A calcular perplexidade textual...', pct: 30 },
+  { text: 'A analisar burstiness...', pct: 45 },
+  { text: 'A detectar coesão artificial...', pct: 60 },
+  { text: 'A verificar marcadores formulaicos...', pct: 75 },
+  { text: 'A comparar com estilo do tribunal...', pct: 88 },
+  { text: 'A gerar veredicto forense...', pct: 96 },
+];
+
+let overlayInterval = null;
+let overlayMsgIdx  = 0;
+
+function showOverlay() {
+  const overlay = document.getElementById('analysis-overlay');
+  overlay.classList.add('visible');
+  document.getElementById('overlay-progress').style.width = '0%';
+  document.getElementById('overlay-status').textContent = 'A iniciar análise...';
+  // Reset indicators
+  for (let i = 1; i <= 6; i++) {
+    document.getElementById('oi-' + i).classList.remove('active');
+    document.getElementById('of-' + i).style.width = '0%';
+    document.getElementById('ov-' + i).textContent = '—';
+  }
+  overlayMsgIdx = 0;
+  overlayInterval = setInterval(tickOverlay, 1800);
+}
+
+function tickOverlay() {
+  if (overlayMsgIdx >= overlayMessages.length) return;
+  const msg = overlayMessages[overlayMsgIdx];
+  document.getElementById('overlay-status').textContent = msg.text;
+  document.getElementById('overlay-progress').style.width = msg.pct + '%';
+
+  // Activate indicators progressively
+  if (overlayMsgIdx >= 1 && overlayMsgIdx <= 6) {
+    const idx = overlayMsgIdx;
+    document.getElementById('oi-' + idx).classList.add('active');
+    // Random value for visual effect
+    const val = Math.floor(Math.random() * 40 + 40);
+    setTimeout(() => {
+      document.getElementById('of-' + idx).style.width = val + '%';
+      document.getElementById('ov-' + idx).textContent = val;
+    }, 300);
+  }
+  overlayMsgIdx++;
+}
+
+function hideOverlay(result) {
+  clearInterval(overlayInterval);
+  // Fill remaining indicators with real values if available
+  if (result && result.indicadores) {
+    const keys = ['perplexidade','burstiness','coesao_artificial','uniformidade_sintatica','riqueza_lexical','marcadores_formulaicos'];
+    keys.forEach((k, i) => {
+      const val = result.indicadores[k] || 0;
+      const idx = i + 1;
+      document.getElementById('oi-' + idx).classList.add('active');
+      document.getElementById('of-' + idx).style.width = val + '%';
+      document.getElementById('ov-' + idx).textContent = val;
+    });
+    document.getElementById('overlay-status').textContent = 'Análise concluída!';
+    document.getElementById('overlay-progress').style.width = '100%';
+  }
+  setTimeout(() => {
+    document.getElementById('analysis-overlay').classList.remove('visible');
+  }, result ? 800 : 0);
+}
 // ============================================================
 
 async function logout() {
@@ -973,6 +1100,7 @@ async function analyzeDecision() {
   btn.disabled = true; btn.classList.add('loading');
   document.getElementById('spinner').style.display = 'block';
   loadingBar.classList.add('active');
+  showOverlay();
   document.getElementById('results-area').classList.remove('visible');
 
   try {
@@ -999,6 +1127,7 @@ async function analyzeDecision() {
     lastRef = 'LV-' + Date.now().toString(36).toUpperCase();
     document.getElementById('ref-number').textContent = 'Referência: ' + lastRef;
 
+    hideOverlay(result);
     renderResults(result);
 
     // Save to DB
@@ -1024,6 +1153,7 @@ async function analyzeDecision() {
     document.getElementById('usage-fill').style.width = Math.min(100, (novoTotal / limite) * 100) + '%';
 
   } catch (err) {
+    hideOverlay(null);
     alert('Erro: ' + (err.message || 'Verifique a sua ligação.'));
   } finally {
     btn.disabled = false; btn.classList.remove('loading');
