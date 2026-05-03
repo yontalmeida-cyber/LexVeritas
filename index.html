@@ -694,10 +694,12 @@ async function fazerLogin() {
 
   btn.disabled = true;
   btn.textContent = 'A entrar...';
+  loginInProgress = true;
 
   const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
 
   if (error) {
+    loginInProgress = false;
     errEl.textContent = 'Email ou password incorrectos.';
     errEl.style.display = 'block';
     btn.disabled = false;
@@ -825,43 +827,31 @@ async function logout() {
   showPage('login');
 }
 
-// Auth state listener
-sb.auth.onAuthStateChange(async (event, session) => {
-  console.log('Auth event:', event, session?.user?.email);
-  if (session?.user) {
-    currentUser = session.user;
-    await loadProfile();
+// Auth state listener — apenas para logout e sessão inicial
+let loginInProgress = false;
+
+sb.auth.onAuthStateChange((event, session) => {
+  console.log('Auth event:', event);
+  if (loginInProgress) return;
+  if (event === 'SIGNED_OUT') { showPage('login'); }
+});
+
+// Verificar sessão existente no arranque
+sb.auth.getSession().then(({ data }) => {
+  if (loginInProgress) return;
+  if (data.session?.user) {
+    currentUser = data.session.user;
+    userProfile = {
+      nome: data.session.user.user_metadata?.nome || data.session.user.email.split('@')[0],
+      plano: 'gratuito',
+      analises_mes: 0
+    };
     initApp();
     showPage('app');
-  } else if (event === 'SIGNED_OUT') {
+  } else {
     showPage('login');
   }
 });
-
-// Check for auth tokens in URL (email confirmation redirect)
-const hash = window.location.hash;
-if (hash && (hash.includes('access_token') || hash.includes('error'))) {
-  sb.auth.getSession().then(({ data }) => {
-    if (data.session) {
-      currentUser = data.session.user;
-      loadProfile().then(() => { initApp(); showPage('app'); });
-    } else {
-      showPage('login');
-    }
-  });
-  // Clean URL
-  history.replaceState(null, '', window.location.pathname);
-} else {
-  // Check existing session
-  sb.auth.getSession().then(({ data }) => {
-    if (data.session) {
-      currentUser = data.session.user;
-      loadProfile().then(() => { initApp(); showPage('app'); });
-    } else {
-      showPage('login');
-    }
-  });
-}
 
 async function loadProfile() {
   try {
