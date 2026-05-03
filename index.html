@@ -840,7 +840,10 @@ sb.auth.getSession().then(({ data }) => {
 async function loadProfile() {
   try {
     const mes = new Date().toISOString().substring(0, 7);
-    let { data } = await sb.from('perfis').select('*').eq('id', currentUser.id).single();
+    let { data, error } = await sb.from('perfis').select('*').eq('id', currentUser.id).single();
+    
+    console.log('loadProfile data:', JSON.stringify(data));
+    console.log('loadProfile error:', JSON.stringify(error));
 
     if (!data) {
       const meta = currentUser.user_metadata || {};
@@ -862,14 +865,14 @@ async function loadProfile() {
       data.mes_atual = mes;
     }
 
+    console.log('userProfile final:', JSON.stringify(data));
     userProfile = data || {
       nome: currentUser.email.split('@')[0],
       plano: 'gratuito',
       analises_mes: 0
     };
   } catch (e) {
-    console.error('Erro ao carregar perfil:', e);
-    // Perfil por defeito se falhar
+    console.error('Erro ao carregar perfil:', e.message, e.stack);
     userProfile = {
       nome: currentUser.email.split('@')[0],
       plano: 'gratuito',
@@ -878,7 +881,11 @@ async function loadProfile() {
   }
 }
 
-function getLimite() { return userProfile?.plano === 'profissional' ? 100 : 5; }
+function getLimite() { 
+  const plano = userProfile?.plano;
+  if (plano === 'profissional' || plano === 'institucional') return 1000;
+  return 5; 
+}
 
 function initApp() {
   const now = new Date();
