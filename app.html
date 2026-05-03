@@ -200,6 +200,79 @@
   /* MAIN */
   main { max-width: 1060px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: start; }
 
+  @media (max-width: 760px) {
+    /* Header mobile */
+    .header-inner { flex-wrap: wrap; gap: 8px; padding: 10px 16px; }
+    .nav-tabs { gap: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .nav-tab { padding: 6px 12px; font-size: 10px; white-space: nowrap; }
+    .usage-bar { flex-wrap: wrap; gap: 6px; }
+    .usage-track { max-width: 120px; }
+
+    /* Main layout — stack sidebar below content on mobile */
+    main { grid-template-columns: 1fr; gap: 20px; padding: 16px; }
+
+    /* Sidebar goes below on mobile — reorder */
+    .sidebar { order: 2; }
+    .content-area { order: 1; }
+
+    /* Tribunal selector — full width */
+    .tribunal-row { flex-direction: column; gap: 8px; }
+    select, .relator-input { width: 100%; font-size: 14px; }
+
+    /* Textarea smaller on mobile */
+    textarea { height: 200px; font-size: 13px; padding: 14px; }
+
+    /* Analyse button — full width */
+    .btn-analyze { width: 100%; justify-content: center; padding: 14px; font-size: 12px; }
+    .input-card-footer { flex-direction: column; gap: 10px; align-items: stretch; }
+    .file-hint { justify-content: center; }
+
+    /* Indicators grid — 2 cols on mobile */
+    .indicators-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .indicator-card { padding: 10px 12px; }
+    .indicator-name { font-size: 8px; }
+    .indicator-score { font-size: 22px; }
+
+    /* Verdict card */
+    .verdict-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+    .verdict-confidence { font-size: 36px; }
+
+    /* Masthead */
+    .masthead { padding: 20px 16px 16px; }
+    .masthead h1 { font-size: clamp(28px, 8vw, 48px); }
+    .masthead-meta { flex-direction: column; gap: 4px; align-items: flex-start; }
+
+    /* History */
+    .history-item { flex-direction: column; gap: 8px; align-items: flex-start; }
+    .history-page { padding: 16px; }
+
+    /* Footer */
+    footer { flex-direction: column; gap: 8px; text-align: center; padding: 16px; }
+
+    /* PDF button */
+    .btn-pdf { font-size: 12px; padding: 12px 16px; }
+
+    /* Plans grid */
+    .plans-grid { grid-template-columns: 1fr; }
+
+    /* Sidebar widgets on mobile — compact */
+    .widget-body { padding: 12px; }
+    .sidebar-widget { margin-bottom: 12px; }
+
+    /* Overlay mobile */
+    .overlay-inner { padding: 28px 20px; gap: 20px; }
+    .overlay-logo { font-size: 22px; }
+    .scales-anim { width: 48px; height: 48px; }
+    .overlay-ind-name { width: 90px; font-size: 7px; }
+    .overlay-status { font-size: 9px; }
+    .overlay-subtext { font-size: 10px; }
+  }
+
+  @media (max-width: 400px) {
+    .indicators-grid { grid-template-columns: 1fr; }
+    .masthead h1 { font-size: 26px; }
+  }
+
   .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
   .section-label::after { content: ''; height: 1px; flex: 1; background: var(--gold); opacity: 0.4; }
 
@@ -351,10 +424,7 @@
   }
   .btn-pdf:hover { background: var(--parchment); border-color: var(--gold); color: var(--gold); }
   .ref-number { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 6px; }
-    main { grid-template-columns: 1fr; }
-    .indicators-grid { grid-template-columns: 1fr; }
-    .plans-grid { grid-template-columns: 1fr; }
-  }
+
 
   .btn-pdf {
     display: flex;
@@ -488,7 +558,7 @@
 <!-- ANÁLISE TAB -->
 <div id="tab-content-analise">
 <main>
-  <div class="analysis-section">
+  <div class="analysis-section content-area">
     <div class="section-label">Entrada do Documento</div>
     <div class="input-card">
       <div class="input-card-header">
