@@ -5,23 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LexVeritas — Detector de IA em Jurisprudência Portuguesa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@400;500&family=Libre+Franklin:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root {
+    --black: #060608;
+    --dark: #0e0e12;
+    --card: #13131a;
     --ink: #0d0d0d;
     --parchment: #f5f0e8;
-    --cream: #faf7f2;
+    --cream: #f8f6f1;
     --gold: #c9a84c;
+    --gold-light: #e8c96a;
     --red: #8b1a1a;
     --green: #1a5c3a;
+    --grey: #9a9a9a;
     --rule: rgba(13,13,13,0.12);
-    --serif: 'Playfair Display', Georgia, serif;
-    --mono: 'DM Mono', monospace;
-    --sans: 'Libre Franklin', sans-serif;
+    --rule-dark: rgba(201,168,76,0.15);
+    --serif: 'Instrument Serif', Georgia, serif;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--cream); color: var(--ink); font-family: var(--sans); min-height: 100vh; }
@@ -34,13 +40,35 @@
     align-items: center;
     justify-content: center;
     padding: 24px;
-    background: var(--cream);
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+  }
+  .auth-page::before {
+    content: '';
+    position: absolute;
+    top: -20%; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 500px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .auth-page::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
   }
   .auth-logo {
     font-family: var(--serif);
-    font-size: 48px;
-    font-weight: 900;
+    font-size: 52px;
+    font-style: italic;
     margin-bottom: 8px;
+    color: #f8f6f1;
+    position: relative;
+    z-index: 1;
   }
   .auth-logo em { font-style: italic; color: var(--gold); }
   .auth-tagline {
@@ -48,28 +76,39 @@
     font-size: 10px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: #888;
-    margin-bottom: 40px;
+    color: var(--grey);
+    margin-bottom: 32px;
     text-align: center;
   }
   .auth-card {
-    background: white;
-    border: 1px solid var(--rule);
+    background: var(--card);
+    border: 1px solid var(--rule-dark);
     padding: 36px;
     width: 100%;
     max-width: 420px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+  }
+  .auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
   }
   .auth-card h2 {
     font-family: var(--serif);
-    font-size: 22px;
-    font-weight: 700;
+    font-size: 24px;
+    font-style: italic;
     margin-bottom: 6px;
+    color: #f8f6f1;
   }
   .auth-card p {
     font-size: 13px;
-    color: #888;
+    color: var(--grey);
     margin-bottom: 28px;
+    line-height: 1.6;
   }
   .form-group { margin-bottom: 18px; }
   .form-group label {
@@ -78,43 +117,45 @@
     font-size: 10px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: #888;
+    color: var(--grey);
     margin-bottom: 6px;
   }
   .form-group input, .form-group select {
     width: 100%;
-    padding: 11px 14px;
-    border: 1px solid var(--rule);
-    background: var(--parchment);
+    padding: 12px 14px;
+    border: 1px solid var(--rule-dark);
+    background: rgba(255,255,255,0.05);
     font-family: var(--sans);
     font-size: 13px;
-    color: var(--ink);
+    color: #f8f6f1;
     outline: none;
     transition: border-color 0.2s;
   }
-  .form-group input:focus { border-color: var(--gold); }
+  .form-group select option { background: var(--dark); color: #f8f6f1; }
+  .form-group input:focus, .form-group select:focus { border-color: var(--gold); }
+  .form-group input::placeholder { color: rgba(255,255,255,0.2); }
   .btn-primary {
     width: 100%;
-    background: var(--ink);
-    color: var(--cream);
+    background: var(--gold);
+    color: var(--black);
     border: none;
-    padding: 13px;
+    padding: 14px;
     font-family: var(--sans);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.25s;
     margin-top: 8px;
   }
-  .btn-primary:hover { background: var(--gold); }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,168,76,0.3); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
   .auth-switch {
     text-align: center;
     margin-top: 20px;
-    font-size: 13px;
-    color: #888;
+    font-size: 12px;
+    color: var(--grey);
   }
   .auth-switch a {
     color: var(--gold);
@@ -123,18 +164,18 @@
     font-weight: 600;
   }
   .auth-error {
-    background: #fff0f0;
-    border: 1px solid #ffcccc;
-    color: #8b1a1a;
+    background: rgba(139,26,26,0.2);
+    border: 1px solid rgba(139,26,26,0.4);
+    color: #ff9999;
     padding: 10px 14px;
     font-size: 12px;
     margin-bottom: 16px;
     display: none;
   }
   .auth-success {
-    background: #f0fff4;
-    border: 1px solid #ccffdd;
-    color: #1a5c3a;
+    background: rgba(26,92,58,0.2);
+    border: 1px solid rgba(26,92,58,0.4);
+    color: #99ffbb;
     padding: 10px 14px;
     font-size: 12px;
     margin-bottom: 16px;
@@ -149,53 +190,56 @@
     text-transform: uppercase;
     border-radius: 2px;
   }
-  .plan-gratuito { background: #f0f0e8; color: #888; }
-  .plan-profissional { background: #fff8e8; color: var(--gold); }
+  .plan-gratuito { background: rgba(255,255,255,0.08); color: var(--grey); }
+  .plan-profissional { background: rgba(201,168,76,0.15); color: var(--gold); }
 
   /* HEADER */
-  header { border-bottom: 1px solid var(--rule); padding: 0 clamp(20px, 5vw, 60px); background: var(--cream); }
-  .header-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--rule); }
-  .header-date { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; color: #888; text-transform: uppercase; }
+  header { border-bottom: 1px solid var(--rule-dark); padding: 0 clamp(20px, 5vw, 60px); background: var(--black); position: sticky; top: 0; z-index: 50; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--rule-dark); }
+  .header-date { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; color: var(--grey); text-transform: uppercase; }
   .header-user { display: flex; align-items: center; gap: 12px; }
-  .header-user-info { font-family: var(--mono); font-size: 10px; color: #888; text-align: right; }
+  .header-user-info { font-family: var(--mono); font-size: 9px; color: var(--grey); text-align: right; }
+  .header-user-info div:first-child { color: #f8f6f1; font-size: 10px; }
   .btn-logout {
     background: none;
-    border: 1px solid var(--rule);
+    border: 1px solid var(--rule-dark);
     padding: 5px 12px;
     font-family: var(--mono);
     font-size: 9px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     cursor: pointer;
-    color: #888;
+    color: var(--grey);
     transition: all 0.2s;
   }
   .btn-logout:hover { border-color: var(--red); color: var(--red); }
-  .masthead { text-align: center; padding: 24px 0 18px; }
-  .masthead-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; display: block; }
-  .masthead h1 { font-family: var(--serif); font-size: clamp(38px, 6vw, 80px); font-weight: 900; line-height: 0.92; letter-spacing: -0.02em; }
+  .masthead { text-align: center; padding: 24px 0 18px; background: var(--black); }
+  .masthead-eyebrow { font-family: var(--mono); font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; display: block; }
+  .masthead h1 { font-family: var(--serif); font-size: clamp(38px, 6vw, 80px); font-style: italic; line-height: 0.92; letter-spacing: -0.02em; color: #f8f6f1; }
   .masthead h1 em { font-style: italic; color: var(--gold); }
-  .masthead-sub { font-family: var(--sans); font-size: 12px; font-weight: 300; color: #666; margin-top: 12px; }
+  .masthead-sub { font-family: var(--sans); font-size: 12px; color: var(--grey); margin-top: 12px; }
   .ornament { display: flex; align-items: center; gap: 10px; justify-content: center; margin: 8px 0; }
-  .ornament::before, .ornament::after { content: ''; height: 1px; width: 50px; background: var(--gold); opacity: 0.6; }
-  nav { display: flex; justify-content: center; gap: 24px; padding: 12px 0 10px; border-top: 1px solid var(--rule); flex-wrap: wrap; }
-  nav a { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink); text-decoration: none; opacity: 0.55; transition: opacity 0.2s; cursor: pointer; }
-  nav a:hover, nav a.active { opacity: 1; }
+  .ornament::before, .ornament::after { content: ''; height: 1px; width: 50px; background: var(--gold); opacity: 0.4; }
+  .ornament span { color: var(--gold); }
+  nav { display: flex; justify-content: center; gap: 24px; padding: 12px 0 10px; border-top: 1px solid var(--rule-dark); background: var(--black); flex-wrap: wrap; }
+  nav a { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color 0.2s; cursor: pointer; padding: 4px 0; }
+  nav a:hover { color: #f8f6f1; }
+  nav a.active { color: var(--gold); border-bottom: 1px solid var(--gold); }
 
   /* USAGE BAR */
   .usage-bar-container {
-    background: var(--parchment);
-    border-bottom: 1px solid var(--rule);
+    background: var(--dark);
+    border-bottom: 1px solid var(--rule-dark);
     padding: 8px clamp(20px, 5vw, 60px);
     display: flex;
     align-items: center;
     gap: 16px;
   }
-  .usage-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: #888; white-space: nowrap; }
-  .usage-track { flex: 1; height: 4px; background: var(--rule); max-width: 200px; }
+  .usage-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--grey); white-space: nowrap; }
+  .usage-track { flex: 1; height: 2px; background: rgba(255,255,255,0.08); max-width: 200px; }
   .usage-fill { height: 100%; background: var(--gold); transition: width 0.5s; }
-  .usage-count { font-family: var(--mono); font-size: 10px; color: #888; white-space: nowrap; }
-  .usage-upgrade { font-family: var(--sans); font-size: 11px; font-weight: 600; color: var(--gold); cursor: pointer; margin-left: auto; }
+  .usage-count { font-family: var(--mono); font-size: 10px; color: var(--grey); white-space: nowrap; }
+  .usage-upgrade { font-family: var(--sans); font-size: 11px; font-weight: 600; color: var(--gold); cursor: pointer; margin-left: auto; letter-spacing: 0.05em; }
 
   /* MAIN */
   main { max-width: 1060px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: start; }
