@@ -707,27 +707,11 @@ async function fazerLogin() {
     return;
   }
 
-  // Login bem sucedido — entrar directamente
+  // Login bem sucedido — carregar perfil real da base de dados
   currentUser = data.user;
-  userProfile = {
-    nome: data.user.user_metadata?.nome || email.split('@')[0],
-    plano: 'gratuito',
-    analises_mes: 0
-  };
-
-  // Mostrar app imediatamente
-  document.getElementById('page-login').classList.add('hidden');
-  document.getElementById('page-app').classList.remove('hidden');
-  
-  // Inicializar app
-  const now = new Date();
-  document.getElementById('current-date').textContent = now.toLocaleDateString('pt-PT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
-  document.getElementById('user-name-display').textContent = userProfile.nome;
-  document.getElementById('user-plan-display').innerHTML = '<span class="plan-badge plan-gratuito">gratuito</span>';
-  document.getElementById('usage-count').textContent = '0 / 5';
-  document.getElementById('stat-plano').textContent = 'Gratuito';
-  document.getElementById('stat-mes').textContent = '0 / 5';
-  document.getElementById('stat-total').textContent = '0';
+  await loadProfile();
+  initApp();
+  showPage('app');
 }
 
 async function fazerRegisto() {
