@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Política de Privacidade — LexVeritas</title>
+<meta name="robots" content="index, follow">
+<meta name="description" content="Política de Privacidade do LexVeritas — como tratamos os seus dados pessoais em conformidade com o RGPD.">
+<link rel="canonical" href="https://lexveritas.pt/privacidade">
+<meta name="theme-color" content="#060608">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #060608; --white: #f8f6f1; --gold: #c9a84c; --gold-light: #e8c96a;
+  --grey: #9a9a9a; --dark: #0e0e12; --border: rgba(201,168,76,0.15);
+  --sans: 'Syne', sans-serif; --serif: 'Instrument Serif', Georgia, serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--black); color: var(--white); font-family: var(--sans); }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(6,6,8,0.95); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: var(--serif); font-size: 22px; color: var(--white); text-decoration: none; font-style: italic; }
+.nav-logo span { color: var(--gold); }
+.nav-back { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 8px; }
+.nav-back:hover { color: var(--gold); }
+
+/* HERO */
+.page-hero { padding: 140px 48px 80px; border-bottom: 1px solid var(--border); }
+.page-hero-inner { max-width: 800px; margin: 0 auto; }
+.page-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+.page-eyebrow::after { content: ''; height: 1px; width: 48px; background: var(--gold); opacity: 0.4; }
+.page-title { font-family: var(--serif); font-size: clamp(36px, 5vw, 64px); font-style: italic; line-height: 1.05; margin-bottom: 20px; }
+.page-title span { color: var(--gold); }
+.page-meta { font-family: var(--mono); font-size: 10px; color: var(--grey); letter-spacing: 0.1em; }
+
+/* CONTENT */
+.content-wrap { max-width: 800px; margin: 0 auto; padding: 64px 48px 120px; }
+
+.policy-section { margin-bottom: 56px; padding-bottom: 56px; border-bottom: 1px solid var(--border); }
+.policy-section:last-child { border-bottom: none; }
+
+.policy-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 12px; display: block; }
+.policy-title { font-family: var(--serif); font-size: 26px; font-style: italic; margin-bottom: 20px; }
+.policy-title span { color: var(--gold); }
+
+.policy-body { font-size: 14px; line-height: 1.9; color: rgba(248,246,241,0.7); }
+.policy-body p { margin-bottom: 16px; }
+.policy-body p:last-child { margin-bottom: 0; }
+.policy-body strong { color: var(--white); font-weight: 600; }
+.policy-body a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.3); transition: border-color 0.2s; }
+.policy-body a:hover { border-color: var(--gold); }
+
+.policy-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+.policy-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 1.7; color: rgba(248,246,241,0.7); }
+.policy-list li::before { content: '→'; color: var(--gold); flex-shrink: 0; font-size: 11px; margin-top: 3px; font-family: var(--mono); }
+
+.highlight-box { background: rgba(201,168,76,0.05); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 20px 24px; margin: 24px 0; }
+.highlight-box p { font-size: 13px; line-height: 1.7; color: rgba(248,246,241,0.6); margin: 0; }
+.highlight-box strong { color: var(--gold); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-family: var(--mono); display: block; margin-bottom: 8px; }
+
+/* TABLE */
+.data-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+.data-table th { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); background: rgba(201,168,76,0.04); }
+.data-table td { font-size: 13px; color: rgba(248,246,241,0.65); padding: 12px 16px; border-bottom: 1px solid rgba(201,168,76,0.06); line-height: 1.6; vertical-align: top; }
+.data-table tr:last-child td { border-bottom: none; }
+
+/* CONTACT CARD */
+.contact-card { background: var(--dark); border: 1px solid var(--border); padding: 32px; margin-top: 24px; }
+.contact-card h4 { font-family: var(--serif); font-size: 18px; font-style: italic; margin-bottom: 16px; }
+.contact-row { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; font-size: 13px; color: rgba(248,246,241,0.65); }
+.contact-row a { color: var(--gold); text-decoration: none; }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; }
+.footer-brand { font-family: var(--serif); font-size: 18px; font-style: italic; text-decoration: none; color: var(--white); }
+.footer-brand span { color: var(--gold); }
+.footer-copy { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; }
+
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .page-hero { padding: 100px 24px 48px; }
+  .content-wrap { padding: 40px 24px 80px; }
+  footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
+  .data-table { font-size: 12px; }
+  .data-table th, .data-table td { padding: 8px 10px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Lex<span>Veritas</span></a>
+  <a href="/" class="nav-back">← Voltar ao site</a>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">Documentação Legal</div>
+    <h1 class="page-title">Política de <span>Privacidade</span></h1>
+    <p class="page-meta">Última actualização: Maio de 2026 · Versão 1.0</p>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+  <div class="highlight-box">
+    <strong>Resumo</strong>
+    <p>O LexVeritas recolhe apenas os dados necessários para prestar o serviço. Não vendemos dados a terceiros. Os seus dados estão alojados na União Europeia e são tratados em conformidade com o RGPD. Pode solicitar a eliminação da sua conta a qualquer momento.</p>
+  </div>
+
+  <!-- 1 -->
+  <div class="policy-section">
+    <span class="policy-num">01</span>
+    <h2 class="policy-title">Responsável pelo <span>Tratamento</span></h2>
+    <div class="policy-body">
+      <p>O responsável pelo tratamento dos seus dados pessoais é o <strong>LexVeritas</strong>, plataforma de análise forense de inteligência artificial em jurisprudência portuguesa.</p>
+      <div class="contact-card">
+        <h4>Contacto do Responsável</h4>
+        <div class="contact-row">📧 <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a></div>
+        <div class="contact-row">🌐 <a href="https://lexveritas.pt">lexveritas.pt</a></div>
+        <div class="contact-row">📍 Portugal, União Europeia</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="policy-section">
+    <span class="policy-num">02</span>
+    <h2 class="policy-title">Dados que <span>Recolhemos</span></h2>
+    <div class="policy-body">
+      <p>Recolhemos apenas os dados estritamente necessários para a prestação do serviço:</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Dado</th>
+            <th>Finalidade</th>
+            <th>Base Legal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--white)">Nome</strong></td>
+            <td>Identificação na plataforma e nos relatórios PDF</td>
+            <td>Execução do contrato</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">Email</strong></td>
+            <td>Autenticação e comunicações da conta</td>
+            <td>Execução do contrato</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">Profissão</strong></td>
+            <td>Personalização da experiência (opcional)</td>
+            <td>Consentimento</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">Textos analisados</strong></td>
+            <td>Processamento forense — não são guardados permanentemente</td>
+            <td>Execução do contrato</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">Resultados das análises</strong></td>
+            <td>Histórico pessoal na plataforma</td>
+            <td>Execução do contrato</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">Dados de utilização</strong></td>
+            <td>Contagem de análises por mês para controlo de limites</td>
+            <td>Interesse legítimo</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Importante:</strong> Os textos judiciais que submete para análise são enviados para processamento e não são guardados na nossa base de dados. Apenas o veredicto, o índice de confiança e os metadados (tribunal, relator, data) ficam registados no seu histórico.</p>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="policy-section">
+    <span class="policy-num">03</span>
+    <h2 class="policy-title">Como Usamos os <span>Seus Dados</span></h2>
+    <div class="policy-body">
+      <p>Os seus dados são utilizados exclusivamente para:</p>
+      <ul class="policy-list">
+        <li>Autenticar a sua conta e garantir a segurança do acesso</li>
+        <li>Processar as análises forenses que solicita</li>
+        <li>Gerar e disponibilizar os relatórios PDF</li>
+        <li>Manter o histórico das suas análises</li>
+        <li>Controlar os limites de utilização do seu plano</li>
+        <li>Enviar comunicações relacionadas com a sua conta (confirmação de registo, recuperação de password)</li>
+      </ul>
+      <p><strong>Nunca utilizamos os seus dados para:</strong> publicidade, venda a terceiros, criação de perfis comerciais ou qualquer finalidade não relacionada com o serviço.</p>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="policy-section">
+    <span class="policy-num">04</span>
+    <h2 class="policy-title">Subcontratantes e <span>Transferências</span></h2>
+    <div class="policy-body">
+      <p>Para prestar o serviço, recorremos a subcontratantes que tratam dados em nosso nome:</p>
+      <ul class="policy-list">
+        <li><strong>Supabase</strong> — base de dados e autenticação, alojada na União Europeia (região eu-west-1, Irlanda). Certificado SOC 2. <a href="https://supabase.com/privacy" target="_blank">Política de privacidade</a></li>
+        <li><strong>Anthropic</strong> — processamento de linguagem natural para a análise forense. Os textos são enviados via API e não são utilizados para treino de modelos. <a href="https://www.anthropic.com/privacy" target="_blank">Política de privacidade</a></li>
+        <li><strong>Vercel</strong> — alojamento da aplicação, com servidores na região da EU. <a href="https://vercel.com/legal/privacy-policy" target="_blank">Política de privacidade</a></li>
+      </ul>
+      <p>Não realizamos transferências de dados para países fora do Espaço Económico Europeu sem garantias adequadas.</p>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="policy-section">
+    <span class="policy-num">05</span>
+    <h2 class="policy-title">Os Seus <span>Direitos</span></h2>
+    <div class="policy-body">
+      <p>Ao abrigo do RGPD (Regulamento (UE) 2016/679), tem os seguintes direitos:</p>
+      <ul class="policy-list">
+        <li><strong>Acesso</strong> — pode solicitar uma cópia de todos os dados que guardamos sobre si</li>
+        <li><strong>Rectificação</strong> — pode corrigir dados incorrectos ou incompletos</li>
+        <li><strong>Eliminação</strong> — pode solicitar a eliminação da sua conta e de todos os dados associados</li>
+        <li><strong>Portabilidade</strong> — pode receber os seus dados num formato legível por máquina</li>
+        <li><strong>Oposição</strong> — pode opor-se ao tratamento baseado em interesse legítimo</li>
+        <li><strong>Limitação</strong> — pode solicitar a limitação do tratamento em determinadas circunstâncias</li>
+      </ul>
+      <p>Para exercer qualquer destes direitos, contacte-nos em <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a>. Respondemos no prazo máximo de 30 dias.</p>
+      <p>Tem também o direito de apresentar reclamação à <strong>Comissão Nacional de Protecção de Dados (CNPD)</strong> em <a href="https://www.cnpd.pt" target="_blank">cnpd.pt</a>.</p>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="policy-section">
+    <span class="policy-num">06</span>
+    <h2 class="policy-title">Retenção de <span>Dados</span></h2>
+    <div class="policy-body">
+      <p>Guardamos os seus dados pelo tempo necessário para prestar o serviço:</p>
+      <ul class="policy-list">
+        <li><strong>Dados de conta</strong> — enquanto a conta estiver activa</li>
+        <li><strong>Histórico de análises (plano Gratuito)</strong> — 30 dias</li>
+        <li><strong>Histórico de análises (plano Profissional)</strong> — ilimitado enquanto a subscrição estiver activa</li>
+        <li><strong>Textos submetidos para análise</strong> — não são guardados após o processamento</li>
+      </ul>
+      <p>Após a eliminação da conta, todos os dados são apagados permanentemente no prazo de 30 dias.</p>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="policy-section">
+    <span class="policy-num">07</span>
+    <h2 class="policy-title">Segurança dos <span>Dados</span></h2>
+    <div class="policy-body">
+      <p>Implementamos medidas técnicas e organizativas adequadas para proteger os seus dados:</p>
+      <ul class="policy-list">
+        <li>Comunicações cifradas com TLS/HTTPS em todos os pontos</li>
+        <li>Chaves de API nunca expostas ao browser — processamento exclusivamente no servidor</li>
+        <li>Row Level Security (RLS) activo na base de dados — cada utilizador só acede aos seus próprios dados</li>
+        <li>Autenticação gerida pelo Supabase com hashing seguro de passwords</li>
+        <li>Alojamento em infra-estrutura certificada na União Europeia</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="policy-section">
+    <span class="policy-num">08</span>
+    <h2 class="policy-title">Cookies e <span>Rastreamento</span></h2>
+    <div class="policy-body">
+      <p>O LexVeritas utiliza apenas cookies estritamente necessários para o funcionamento da autenticação (sessão do utilizador). Não utilizamos cookies de rastreamento, publicidade ou análise comportamental.</p>
+      <p>Não integramos ferramentas de analytics de terceiros como Google Analytics ou similares.</p>
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="policy-section">
+    <span class="policy-num">09</span>
+    <h2 class="policy-title">Alterações a esta <span>Política</span></h2>
+    <div class="policy-body">
+      <p>Podemos actualizar esta política periodicamente. Em caso de alterações significativas, notificaremos os utilizadores registados por email com pelo menos 15 dias de antecedência.</p>
+      <p>A data da última actualização está sempre indicada no topo desta página. O uso continuado do serviço após as alterações constitui aceitação da nova política.</p>
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="policy-section">
+    <span class="policy-num">10</span>
+    <h2 class="policy-title">Contacto e <span>Reclamações</span></h2>
+    <div class="policy-body">
+      <p>Para qualquer questão relacionada com a privacidade dos seus dados, contacte-nos:</p>
+      <div class="contact-card">
+        <h4>Encarregado de Proteção de Dados</h4>
+        <div class="contact-row">📧 <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a></div>
+        <div class="contact-row">⏱ Tempo de resposta: até 30 dias úteis</div>
+        <div class="contact-row">🏛 CNPD — <a href="https://www.cnpd.pt" target="_blank">cnpd.pt</a></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <a href="/" class="footer-brand">Lex<span>Veritas</span></a>
+  <span class="footer-copy">© 2026 LEXVERITAS · PORTUGAL · RGPD COMPLIANT</span>
+</footer>
+
+</body>
+</html>
