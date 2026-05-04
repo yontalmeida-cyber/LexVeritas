@@ -6,6 +6,7 @@
     { "source": "/confirm", "destination": "/confirm.html" },
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
+    { "source": "/google61207025d54255fe.html", "destination": "/google61207025d54255fe.html" },
     { "source": "/", "destination": "/index.html" }
   ]
 }
