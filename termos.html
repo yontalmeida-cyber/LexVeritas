@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Termos de Serviço — LexVeritas</title>
+<meta name="robots" content="index, follow">
+<meta name="description" content="Termos de Serviço do LexVeritas — condições de utilização da plataforma de análise forense de IA em jurisprudência portuguesa.">
+<link rel="canonical" href="https://lexveritas.pt/termos">
+<meta name="theme-color" content="#060608">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #060608; --white: #f8f6f1; --gold: #c9a84c; --gold-light: #e8c96a;
+  --grey: #9a9a9a; --dark: #0e0e12; --border: rgba(201,168,76,0.15);
+  --sans: 'Syne', sans-serif; --serif: 'Instrument Serif', Georgia, serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--black); color: var(--white); font-family: var(--sans); }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(6,6,8,0.95); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: var(--serif); font-size: 22px; color: var(--white); text-decoration: none; font-style: italic; }
+.nav-logo span { color: var(--gold); }
+.nav-back { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color 0.2s; }
+.nav-back:hover { color: var(--gold); }
+.page-hero { padding: 140px 48px 80px; border-bottom: 1px solid var(--border); }
+.page-hero-inner { max-width: 800px; margin: 0 auto; }
+.page-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+.page-eyebrow::after { content: ''; height: 1px; width: 48px; background: var(--gold); opacity: 0.4; }
+.page-title { font-family: var(--serif); font-size: clamp(36px, 5vw, 64px); font-style: italic; line-height: 1.05; margin-bottom: 20px; }
+.page-title span { color: var(--gold); }
+.page-meta { font-family: var(--mono); font-size: 10px; color: var(--grey); letter-spacing: 0.1em; }
+.content-wrap { max-width: 800px; margin: 0 auto; padding: 64px 48px 120px; }
+.policy-section { margin-bottom: 56px; padding-bottom: 56px; border-bottom: 1px solid var(--border); }
+.policy-section:last-child { border-bottom: none; }
+.policy-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 12px; display: block; }
+.policy-title { font-family: var(--serif); font-size: 26px; font-style: italic; margin-bottom: 20px; }
+.policy-title span { color: var(--gold); }
+.policy-body { font-size: 14px; line-height: 1.9; color: rgba(248,246,241,0.7); }
+.policy-body p { margin-bottom: 16px; }
+.policy-body p:last-child { margin-bottom: 0; }
+.policy-body strong { color: var(--white); font-weight: 600; }
+.policy-body a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.3); }
+.policy-body a:hover { border-color: var(--gold); }
+.policy-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+.policy-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 1.7; color: rgba(248,246,241,0.7); }
+.policy-list li::before { content: '→'; color: var(--gold); flex-shrink: 0; font-size: 11px; margin-top: 3px; font-family: var(--mono); }
+.highlight-box { background: rgba(201,168,76,0.05); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 20px 24px; margin: 24px 0; }
+.highlight-box p { font-size: 13px; line-height: 1.7; color: rgba(248,246,241,0.6); margin: 0; }
+.highlight-box strong { color: var(--gold); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-family: var(--mono); display: block; margin-bottom: 8px; }
+footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; }
+.footer-brand { font-family: var(--serif); font-size: 18px; font-style: italic; text-decoration: none; color: var(--white); }
+.footer-brand span { color: var(--gold); }
+.footer-copy { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; }
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .page-hero { padding: 100px 24px 48px; }
+  .content-wrap { padding: 40px 24px 80px; }
+  footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Lex<span>Veritas</span></a>
+  <a href="/" class="nav-back">← Voltar ao site</a>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">Documentação Legal</div>
+    <h1 class="page-title">Termos de <span>Serviço</span></h1>
+    <p class="page-meta">Última actualização: Maio de 2026 · Versão 1.0</p>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+  <div class="highlight-box">
+    <strong>Resumo</strong>
+    <p>O LexVeritas é uma ferramenta auxiliar de análise probabilística. Os resultados não constituem prova jurídica definitiva. Ao usar a plataforma, aceita estes termos. O serviço gratuito inclui 5 análises por mês. O plano Profissional custa 19€/mês.</p>
+  </div>
+
+  <div class="policy-section">
+    <span class="policy-num">01</span>
+    <h2 class="policy-title">Aceitação dos <span>Termos</span></h2>
+    <div class="policy-body">
+      <p>Ao aceder e utilizar a plataforma LexVeritas (disponível em <a href="https://lexveritas.pt">lexveritas.pt</a>), o utilizador aceita ficar vinculado pelos presentes Termos de Serviço e pela nossa <a href="/privacidade">Política de Privacidade</a>.</p>
+      <p>Se não concordar com estes termos, não deve utilizar o serviço. A utilização continuada da plataforma após alterações aos termos constitui aceitação das mesmas.</p>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <span class="policy-num">02</span>
+    <h2 class="policy-title">Descrição do <span>Serviço</span></h2>
+    <div class="policy-body">
+      <p>O LexVeritas é uma plataforma de análise forense linguística que aplica indicadores de inteligência artificial a documentos judiciais portugueses, com o objectivo de identificar padrões associados à geração de texto por modelos de linguagem.</p>
+      <p>O serviço inclui:</p>
+      <ul class="policy-list">
+        <li>Análise de texto judicial com 6 indicadores forenses</li>
+        <li>Geração de relatório PDF com número de referência único</li>
+        <li>Histórico de análises na conta do utilizador</li>
+        <li>Suporte por email (plano Profissional)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <span class="policy-num">03</span>
+    <h2 class="policy-title">Limitações e <span>Natureza do Serviço</span></h2>
+    <div class="policy-body">
+      <p><strong>O LexVeritas é uma ferramenta auxiliar de carácter probabilístico.</strong> Os resultados produzidos pelo sistema têm natureza indicativa e não constituem:</p>
+      <ul class="policy-list">
+        <li>Prova jurídica definitiva em processos judiciais</li>
+        <li>Opinião jurídica ou parecer técnico-jurídico</li>
+        <li>Certificação oficial de autenticidade de documentos</li>
+        <li>Garantia absoluta de detecção ou não-detecção de IA</li>
+      </ul>
+      <p>Os resultados devem ser sempre interpretados por um profissional qualificado e usados como elemento de apoio, nunca como prova autónoma e conclusiva.</p>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <span class="policy-num">04</span>
+    <h2 class="policy-title">Planos e <span>Pagamentos</span></h2>
+    <div class="policy-body">
+      <p><strong>Plano Gratuito</strong> — 5 análises por mês, sem custos, sem cartão de crédito. Disponível para sempre.</p>
+      <p><strong>Plano Profissional</strong> — 19€/mês. Inclui 100 análises por mês, análise avançada por relator, relatório PDF profissional, histórico ilimitado e suporte prioritário.</p>
+      <p>Os pagamentos do plano Profissional são processados manualmente mediante contacto para <a href="mailto:profissional@lexveritas.pt">profissional@lexveritas.pt</a>. Reservamo-nos o direito de alterar os preços com aviso prévio de 30 dias.</p>
+      <p>Não são efectuados reembolsos de períodos já iniciados, salvo em casos de falha técnica grave da nossa parte.</p>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <span class="policy-num">05</span>
+    <h2 class="policy-title">Obrigações do <span>Utilizador</span></h2>
+    <div class="policy-body">
+      <p>Ao utilizar o LexVeritas, o utilizador compromete-se a:</p>
+      <ul class="policy-list">
+        <li>Fornecer informações verdadeiras no registo</li>
+        <li>Não utilizar o serviço para fins ilegais ou fraudulentos</li>
+        <li>Não tentar contornar os limites de utilização por meios técnicos</li>
+        <li>Não partilhar credenciais de acesso com terceiros</li>
+        <li>Não submeter documentos que violem direitos de terceiros</li>
+        <li>Não utilizar a API de forma automatizada sem autorização prévia</li>
+      </ul>
+      <p>O incumprimento destas obrigações pode resultar na suspensão ou encerramento da conta sem aviso prévio.</p>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <span class="policy-num">06</span>
+    <h2 class="policy-title">Propriedade <span>Intelectual</span></h2>
+    <div class="policy-body">
+      <p>Todos os direitos de propriedade intelectual relativos à plataforma LexVeritas — incluindo o software, design, metodologia de análise, marca e conteúdos — são propriedade exclusiva do LexVeritas.</p>
+      <p>O utilizador mantém todos os direitos sobre os documentos que submete para análise. Ao submeter um documento, o utilizador garante que tem os direitos necessários para o fazer.</p>
+      <p>Os relatórios PDF gerados pela plataforma podem ser utilizados para fins profissionais, desde que se identifique claramente a sua natureza auxiliar e probabilística.</p>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <span class="policy-num">07</span>
+    <h2 class="policy-title">Limitação de <span>Responsabilidade</span></h2>
+    <div class="policy-body">
+      <p>O LexVeritas não é responsável por:</p>
+      <ul class="policy-list">
+        <li>Decisões tomadas com base nos resultados da análise</li>
+        <li>Perdas ou danos resultantes da utilização ou impossibilidade de utilização do serviço</li>
+        <li>Interrupções temporárias do serviço por razões técnicas</li>
+        <li>Imprecisões nos resultados da análise forense</li>
+      </ul>
+      <p>A responsabilidade máxima do LexVeritas perante qualquer utilizador está limitada ao valor pago pelo serviço nos últimos 3 meses.</p>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <span class="policy-num">08</span>
+    <h2 class="policy-title">Disponibilidade do <span>Serviço</span></h2>
+    <div class="policy-body">
+      <p>O LexVeritas esforça-se por manter o serviço disponível 24 horas por dia, 7 dias por semana. No entanto, não garantimos disponibilidade ininterrupta e reservamo-nos o direito de realizar manutenções programadas com aviso prévio sempre que possível.</p>
+      <p>O plano Gratuito não inclui garantias de disponibilidade (SLA). O plano Profissional tem suporte prioritário em caso de problemas.</p>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <span class="policy-num">09</span>
+    <h2 class="policy-title">Rescisão e <span>Encerramento</span></h2>
+    <div class="policy-body">
+      <p>O utilizador pode encerrar a sua conta a qualquer momento contactando <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a>. Após o encerramento, todos os dados são eliminados no prazo de 30 dias.</p>
+      <p>O LexVeritas pode suspender ou encerrar contas que violem estes termos, com ou sem aviso prévio consoante a gravidade da infracção.</p>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <span class="policy-num">10</span>
+    <h2 class="policy-title">Lei Aplicável e <span>Jurisdição</span></h2>
+    <div class="policy-body">
+      <p>Estes Termos de Serviço são regidos pela lei portuguesa. Qualquer litígio será submetido à jurisdição exclusiva dos tribunais portugueses competentes.</p>
+      <p>Para questões relacionadas com estes termos, contacte: <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a></p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <a href="/" class="footer-brand">Lex<span>Veritas</span></a>
+  <span class="footer-copy">© 2026 LEXVERITAS · PORTUGAL</span>
+</footer>
+
+</body>
+</html>
