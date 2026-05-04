@@ -4,6 +4,8 @@
     { "source": "/app", "destination": "/app.html" },
     { "source": "/privacidade", "destination": "/privacidade.html" },
     { "source": "/confirm", "destination": "/confirm.html" },
+    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
+    { "source": "/robots.txt", "destination": "/robots.txt" },
     { "source": "/", "destination": "/index.html" }
   ]
 }
