@@ -507,7 +507,8 @@ async function loadTotalAnalises(){
 }
 loadTotalAnalises();
 // COOKIE BANNER
-function aceitarCookies(){localStorage.setItem('lv_cookies','1');document.getElementById('cookieBanner').classList.remove('visible')}
+function aceitarCookies(){localStorage.setItem('lv_cookies','aceite');document.getElementById('cookieBanner').classList.remove('visible')}
+function recusarCookies(){localStorage.setItem('lv_cookies','recusado');document.getElementById('cookieBanner').classList.remove('visible')}
 function verificarCookies(){if(!localStorage.getItem('lv_cookies')){setTimeout(()=>{document.getElementById('cookieBanner').classList.add('visible')},2500)}}
 verificarCookies();
 </script>
@@ -515,7 +516,7 @@ verificarCookies();
 <div class="cookie-banner" id="cookieBanner">
   <p class="cookie-text">Utilizamos cookies estritamente necessários para o funcionamento da autenticação. Não utilizamos cookies de rastreamento ou publicidade. <a href="/privacidade">Saiba mais</a></p>
   <div class="cookie-btns">
-    <a href="/privacidade" class="cookie-info">Saber Mais</a>
+    <button class="cookie-info" onclick="recusarCookies()">Recusar</button>
     <button class="cookie-accept" onclick="aceitarCookies()">Aceitar</button>
   </div>
 </div>
