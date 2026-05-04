@@ -1,0 +1,47 @@
+{
+  "name": "LexVeritas — Detector de IA em Jurisprudência Portuguesa",
+  "short_name": "LexVeritas",
+  "description": "O primeiro sistema de análise forense de IA em decisões judiciais portuguesas.",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#060608",
+  "theme_color": "#c9a84c",
+  "orientation": "portrait-primary",
+  "lang": "pt-PT",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%23060608'/><text y='144' x='24' font-size='144' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%23060608'/><text y='384' x='64' font-size='384' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "LexVeritas — Análise Forense de IA"
+    }
+  ],
+  "categories": ["legal", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Nova Análise",
+      "short_name": "Analisar",
+      "description": "Iniciar uma nova análise forense",
+      "url": "/app",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' fill='%23060608'/><text y='72' x='12' font-size='72' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}
