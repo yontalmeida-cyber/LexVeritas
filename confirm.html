@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conta Confirmada — LexVeritas</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#060608">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #060608; --white: #f8f6f1; --gold: #c9a84c; --gold-light: #e8c96a;
+  --grey: #9a9a9a; --dark: #0e0e12; --border: rgba(201,168,76,0.15);
+  --sans: 'Syne', sans-serif; --serif: 'Instrument Serif', Georgia, serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background */
+body::before {
+  content: '';
+  position: absolute;
+  top: -20%; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 600px;
+  background: radial-gradient(ellipse, rgba(201,168,76,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* Card */
+.confirm-card {
+  background: #13131a;
+  border: 1px solid var(--border);
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  animation: fadeUp 0.6s ease forwards;
+}
+.confirm-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Icon */
+.confirm-icon {
+  width: 72px;
+  height: 72px;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 28px;
+  font-size: 32px;
+  animation: iconPop 0.5s 0.3s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes iconPop {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Logo */
+.confirm-logo {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--grey);
+  margin-bottom: 32px;
+  letter-spacing: 0.05em;
+}
+.confirm-logo span { color: var(--gold); }
+
+/* Title */
+.confirm-title {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-style: italic;
+  margin-bottom: 12px;
+  color: var(--white);
+}
+.confirm-title span { color: var(--gold); }
+
+.confirm-sub {
+  font-size: 13px;
+  color: var(--grey);
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+
+/* Features list */
+.confirm-features {
+  background: rgba(201,168,76,0.04);
+  border: 1px solid var(--border);
+  padding: 20px 24px;
+  margin-bottom: 32px;
+  text-align: left;
+}
+.confirm-features-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+  display: block;
+}
+.confirm-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: rgba(248,246,241,0.6);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.confirm-feature:last-child { margin-bottom: 0; }
+.confirm-feature::before {
+  content: '→';
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+/* Button */
+.btn-enter {
+  display: block;
+  width: 100%;
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  padding: 16px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s;
+  margin-bottom: 16px;
+}
+.btn-enter:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201,168,76,0.3);
+}
+
+/* Timer */
+.auto-redirect {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(248,246,241,0.25);
+  letter-spacing: 0.1em;
+}
+.auto-redirect span { color: var(--gold); }
+
+/* Error state */
+.confirm-card.error .confirm-icon { background: rgba(139,26,26,0.1); border-color: rgba(139,26,26,0.3); }
+.error-msg {
+  background: rgba(139,26,26,0.15);
+  border: 1px solid rgba(139,26,26,0.3);
+  color: #ff9999;
+  padding: 12px 16px;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .confirm-card { padding: 36px 24px; }
+  .confirm-title { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="confirm-card" id="card">
+  <div class="confirm-logo">Lex<span>Veritas</span></div>
+
+  <div class="confirm-icon" id="icon">⚖️</div>
+
+  <div class="error-msg" id="error-msg">
+    O link de confirmação é inválido ou expirou. Por favor registe-se novamente ou contacte <a href="mailto:info@lexveritas.pt" style="color:var(--gold)">info@lexveritas.pt</a>.
+  </div>
+
+  <h1 class="confirm-title" id="title">Conta <span>confirmada</span></h1>
+  <p class="confirm-sub" id="subtitle">A sua conta foi verificada com sucesso. Já pode aceder à plataforma e começar a analisar decisões judiciais.</p>
+
+  <div class="confirm-features">
+    <span class="confirm-features-label">A sua conta gratuita inclui</span>
+    <div class="confirm-feature">5 análises forenses por mês</div>
+    <div class="confirm-feature">6 indicadores calibrados para tribunais PT</div>
+    <div class="confirm-feature">Relatório PDF profissional com referência única</div>
+    <div class="confirm-feature">Histórico das suas análises durante 30 dias</div>
+  </div>
+
+  <a href="/app" class="btn-enter" id="btn-enter">Entrar na Plataforma →</a>
+  <div class="auto-redirect" id="redirect-msg">Redirecionamento automático em <span id="countdown">5</span>s</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://bsbgizaftamufmmxeyer.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function handleConfirmation() {
+  // Supabase envia o token via hash (#) ou query params
+  const hash = window.location.hash;
+  const params = new URLSearchParams(window.location.search);
+
+  // Tentar obter sessão — o Supabase trata o token automaticamente
+  const { data, error } = await sb.auth.getSession();
+
+  if (error || !data.session) {
+    // Mostrar erro
+    document.getElementById('card').classList.add('error');
+    document.getElementById('icon').textContent = '✕';
+    document.getElementById('title').innerHTML = 'Link <span>inválido</span>';
+    document.getElementById('subtitle').textContent = 'Não foi possível confirmar a sua conta. O link pode ter expirado.';
+    document.getElementById('error-msg').style.display = 'block';
+    document.getElementById('redirect-msg').style.display = 'none';
+    document.getElementById('btn-enter').textContent = 'Voltar ao início →';
+    document.getElementById('btn-enter').href = '/';
+    return;
+  }
+
+  // Sucesso — iniciar contagem regressiva
+  let count = 5;
+  const timer = setInterval(() => {
+    count--;
+    document.getElementById('countdown').textContent = count;
+    if (count <= 0) {
+      clearInterval(timer);
+      window.location.href = '/app';
+    }
+  }, 1000);
+}
+
+handleConfirmation();
+</script>
+</body>
+</html>
