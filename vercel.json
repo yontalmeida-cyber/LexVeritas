@@ -4,6 +4,7 @@
     { "source": "/app", "destination": "/app.html" },
     { "source": "/privacidade", "destination": "/privacidade.html" },
     { "source": "/termos", "destination": "/termos.html" },
+    { "source": "/academico", "destination": "/academico.html" },
     { "source": "/confirm", "destination": "/confirm.html" },
     { "source": "/manutencao", "destination": "/manutencao.html" },
     { "source": "/manifest.json", "destination": "/manifest.json" },
