@@ -218,6 +218,22 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
 .footer-col a:hover{color:var(--white)}
 .footer-bottom{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;padding-top:24px;border-top:1px solid var(--border)}
 .footer-copy{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.2);letter-spacing:.1em}
+/* COOKIE BANNER */
+.cookie-banner{position:fixed;bottom:0;left:0;right:0;background:rgba(6,6,8,.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:20px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px;z-index:9000;transform:translateY(100%);transition:transform .4s cubic-bezier(.16,1,.3,1);flex-wrap:wrap}
+.cookie-banner.visible{transform:translateY(0)}
+.cookie-text{font-family:var(--mono);font-size:11px;color:var(--grey);line-height:1.6;max-width:700px}
+.cookie-text a{color:var(--gold);text-decoration:none}
+.cookie-text a:hover{text-decoration:underline}
+.cookie-btns{display:flex;gap:10px;flex-shrink:0}
+.cookie-accept{background:var(--gold);color:var(--black);border:none;padding:10px 24px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.cookie-accept:hover{background:var(--gold-light)}
+.cookie-info{background:transparent;color:var(--grey);border:1px solid var(--border);padding:10px 20px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .2s}
+.cookie-info:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:600px){
+  .cookie-banner{padding:16px 20px;flex-direction:column;align-items:flex-start}
+  .cookie-btns{width:100%}
+  .cookie-accept,.cookie-info{flex:1;text-align:center}
+}
 @media(max-width:900px){
   body{cursor:auto}
   .cursor,.cursor-ring{display:none}
@@ -490,6 +506,18 @@ async function loadTotalAnalises(){
   }catch(e){const el=document.getElementById('total-analises');if(el)el.textContent='—'}
 }
 loadTotalAnalises();
+// COOKIE BANNER
+function aceitarCookies(){localStorage.setItem('lv_cookies','1');document.getElementById('cookieBanner').classList.remove('visible')}
+function verificarCookies(){if(!localStorage.getItem('lv_cookies')){setTimeout(()=>{document.getElementById('cookieBanner').classList.add('visible')},2500)}}
+verificarCookies();
 </script>
+<!-- COOKIE BANNER -->
+<div class="cookie-banner" id="cookieBanner">
+  <p class="cookie-text">Utilizamos cookies estritamente necessários para o funcionamento da autenticação. Não utilizamos cookies de rastreamento ou publicidade. <a href="/privacidade">Saiba mais</a></p>
+  <div class="cookie-btns">
+    <a href="/privacidade" class="cookie-info">Saber Mais</a>
+    <button class="cookie-accept" onclick="aceitarCookies()">Aceitar</button>
+  </div>
+</div>
 </body>
 </html>
