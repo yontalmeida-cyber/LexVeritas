@@ -4,15 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LexVeritas — Detector de IA em Jurisprudência Portuguesa</title>
-<meta name="description" content="O primeiro sistema de análise forense de inteligência artificial em decisões judiciais dos tribunais portugueses. STJ, TRL, TRP, TRC, TRG, TRE, TC e mais.">
-<meta name="keywords" content="detector IA jurisprudência, análise forense judicial, inteligência artificial tribunais Portugal, STJ, TRL, LexVeritas">
-<meta name="author" content="LexVeritas">
+<meta name="description" content="O primeiro sistema de análise forense de inteligência artificial em decisões judiciais dos tribunais portugueses.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://lexveritas.pt">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://lexveritas.pt">
 <meta property="og:title" content="LexVeritas — Detector de IA em Jurisprudência Portuguesa">
-<meta property="og:description" content="O primeiro sistema de análise forense de IA em decisões judiciais portuguesas. Calibrado para STJ, TRL, TRP, TRC, TRG, TRE e Tribunal Constitucional.">
+<meta property="og:description" content="O primeiro sistema de análise forense de IA em decisões judiciais portuguesas.">
 <meta property="og:image" content="https://lexveritas.pt/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -23,8 +21,91 @@
 <meta name="twitter:description" content="O primeiro sistema de análise forense de IA em decisões judiciais portuguesas.">
 <meta name="twitter:image" content="https://lexveritas.pt/og-image.png">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
 <meta name="theme-color" content="#060608">
+<link rel="manifest" href="/manifest.json">
+<!-- Schema.org Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "LexVeritas",
+  "description": "O primeiro sistema de análise forense de inteligência artificial em decisões judiciais dos tribunais portugueses.",
+  "url": "https://lexveritas.pt",
+  "applicationCategory": "LegalApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "pt-PT",
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Plano Básico",
+      "price": "0",
+      "priceCurrency": "EUR",
+      "description": "5 análises por mês, 6 indicadores forenses, relatório PDF"
+    },
+    {
+      "@type": "Offer",
+      "name": "Plano Profissional",
+      "price": "19",
+      "priceCurrency": "EUR",
+      "description": "100 análises por mês, análise avançada por relator, histórico ilimitado"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "LexVeritas",
+    "url": "https://lexveritas.pt",
+    "email": "info@lexveritas.pt",
+    "areaServed": "PT"
+  },
+  "featureList": [
+    "Análise forense de IA em jurisprudência portuguesa",
+    "6 indicadores linguísticos calibrados para tribunais PT",
+    "Relatório PDF profissional",
+    "Cobertura de 14+ tribunais portugueses",
+    "Análise por relator"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Os textos que submeto ficam guardados?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Não. Os textos judiciais que submete são enviados para análise e descartados imediatamente após o processamento. Apenas o veredicto, o índice de confiança e os metadados ficam registados no seu histórico pessoal."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "O relatório pode ser usado como prova em tribunal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "O LexVeritas é uma ferramenta auxiliar de análise probabilística. Os resultados têm carácter indicativo e não constituem prova jurídica definitiva."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Como funciona a análise forense?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "O sistema analisa 6 indicadores linguísticos calibrados para jurisprudência portuguesa: perplexidade textual, burstiness, coesão artificial, uniformidade sintáctica, riqueza lexical e marcadores formulaicos."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Os meus dados estão seguros?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sim. Todos os dados estão alojados na União Europeia (Irlanda), em conformidade com o RGPD. A chave da API nunca é exposta ao browser."
+      }
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -32,7 +113,7 @@
 :root{--black:#060608;--white:#f8f6f1;--gold:#c9a84c;--gold-light:#e8c96a;--gold-dim:#8a6f2e;--grey:#9a9a9a;--dark:#0e0e12;--card:#13131a;--border:rgba(201,168,76,0.15);--sans:'Syne',sans-serif;--serif:'Instrument Serif',Georgia,serif;--mono:'JetBrains Mono',monospace}
 html{scroll-behavior:smooth}
 body{background:var(--black);color:var(--white);font-family:var(--sans);overflow-x:hidden;cursor:none}
-.cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,opacity .2s;mix-blend-mode:difference}
+.cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:difference}
 .cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(201,168,76,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .4s cubic-bezier(.16,1,.3,1),height .4s cubic-bezier(.16,1,.3,1),left .12s linear,top .12s linear}
 .intro{position:fixed;inset:0;background:var(--black);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .8s ease,visibility .8s ease}
 .intro.done{opacity:0;visibility:hidden}
@@ -43,21 +124,21 @@ body{background:var(--black);color:var(--white);font-family:var(--sans);overflow
 .intro-label{font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--grey);opacity:0;animation:introFadeUp .5s .7s ease forwards}
 @keyframes introFadeUp{to{opacity:1;transform:translateY(0)}}
 @keyframes introLoad{to{width:100%}}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:rgba(6,6,8,0);backdrop-filter:blur(0px);border-bottom:1px solid transparent;transition:all .4s ease}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:rgba(6,6,8,0);border-bottom:1px solid transparent;transition:all .4s ease}
 nav.scrolled{background:rgba(6,6,8,.9);backdrop-filter:blur(24px);border-bottom-color:var(--border)}
 .nav-logo{font-family:var(--serif);font-size:22px;color:var(--white);text-decoration:none;font-style:italic}
 .nav-logo span{color:var(--gold)}
 .nav-links{display:flex;gap:36px;list-style:none;align-items:center}
 .nav-links a{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--grey);text-decoration:none;transition:color .2s}
 .nav-links a:hover{color:var(--white)}
-.nav-cta{background:var(--gold)!important;color:var(--black)!important;padding:10px 24px!important;font-weight:700!important;transition:background .2s!important}
+.nav-cta{background:var(--gold)!important;color:var(--black)!important;padding:10px 24px!important;font-weight:700!important}
 .nav-cta:hover{background:var(--gold-light)!important}
 .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;z-index:200}
-.nav-hamburger span{display:block;width:24px;height:2px;background:var(--white);transition:all .3s ease}
+.nav-hamburger span{display:block;width:24px;height:2px;background:var(--white);transition:all .3s}
 .nav-hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
 .nav-hamburger.open span:nth-child(2){opacity:0}
 .nav-hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
-.mobile-menu{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(6,6,8,.98);backdrop-filter:blur(24px);z-index:150;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s ease}
+.mobile-menu{position:fixed;inset:0;background:rgba(6,6,8,.98);backdrop-filter:blur(24px);z-index:150;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
 .mobile-menu.open{opacity:1;visibility:visible}
 .mobile-menu a{font-family:var(--serif);font-size:32px;font-style:italic;color:var(--white);text-decoration:none;padding:12px 24px;opacity:0;transform:translateY(20px);transition:opacity .3s ease,transform .3s ease,color .2s}
 .mobile-menu.open a{opacity:1;transform:translateY(0)}
@@ -78,22 +159,22 @@ nav.scrolled{background:rgba(6,6,8,.9);backdrop-filter:blur(24px);border-bottom-
 .orb1{width:300px;height:300px;background:var(--gold);top:20%;left:-5%;animation-duration:25s}
 .orb2{width:200px;height:200px;background:#4c6ec9;top:60%;right:5%;animation-duration:18s;animation-delay:-8s}
 .orb3{width:150px;height:150px;background:var(--gold);bottom:10%;left:30%;animation-duration:22s;animation-delay:-4s}
-@keyframes orbFloat{0%,100%{transform:translate(0,0) rotate(0deg)}25%{transform:translate(30px,-20px) rotate(90deg)}50%{transform:translate(-20px,30px) rotate(180deg)}75%{transform:translate(20px,20px) rotate(270deg)}}
+@keyframes orbFloat{0%,100%{transform:translate(0,0)}25%{transform:translate(30px,-20px)}50%{transform:translate(-20px,30px)}75%{transform:translate(20px,20px)}}
 .hero-content{position:relative;z-index:2}
 .hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;display:flex;align-items:center;justify-content:center;gap:12px;opacity:0;animation:fadeUp .8s 2.4s ease forwards}
 .hero-eyebrow::before,.hero-eyebrow::after{content:'';width:40px;height:1px;background:var(--gold);opacity:.5}
 .hero-title{font-family:var(--serif);font-size:clamp(64px,10vw,140px);font-weight:400;line-height:.88;letter-spacing:-.02em;font-style:italic;margin-bottom:12px;opacity:0;animation:fadeUp .8s 2.5s ease forwards}
 .hero-title span{color:var(--gold)}
-.hero-sub{font-family:var(--sans);font-size:clamp(14px,1.8vw,18px);font-weight:400;color:var(--grey);max-width:520px;margin:28px auto 48px;line-height:1.7;opacity:0;animation:fadeUp .8s 2.6s ease forwards}
+.hero-sub{font-family:var(--sans);font-size:clamp(14px,1.8vw,18px);color:var(--grey);max-width:520px;margin:28px auto 48px;line-height:1.7;opacity:0;animation:fadeUp .8s 2.6s ease forwards}
 .hero-actions{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:72px;opacity:0;animation:fadeUp .8s 2.7s ease forwards}
 .btn-primary{background:var(--gold);color:var(--black);border:none;padding:16px 40px;font-family:var(--sans);font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;cursor:none;text-decoration:none;transition:all .3s;display:inline-flex;align-items:center;gap:10px;position:relative;overflow:hidden}
-.btn-primary::before{content:'';position:absolute;inset:0;background:var(--gold-light);transform:translateX(-100%);transition:transform .3s ease}
+.btn-primary::before{content:'';position:absolute;inset:0;background:var(--gold-light);transform:translateX(-100%);transition:transform .3s}
 .btn-primary:hover::before{transform:translateX(0)}
 .btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(201,168,76,.4)}
 .btn-primary span{position:relative}
 .btn-secondary{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.15);padding:16px 40px;font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;cursor:none;text-decoration:none;transition:all .3s}
 .btn-secondary:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px)}
-.scroll-hint{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp .8s 3s ease forwards;z-index:2;margin-top:16px;margin-bottom:8px}
+.scroll-hint{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp .8s 3s ease forwards;z-index:2;margin-top:16px}
 .scroll-hint-text{font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--grey)}
 .scroll-line{width:1px;height:40px;background:linear-gradient(var(--gold),transparent);animation:scrollLine 2s ease-in-out infinite}
 @keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
@@ -126,7 +207,7 @@ nav.scrolled{background:rgba(6,6,8,.9);backdrop-filter:blur(24px);border-bottom-
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);margin-top:60px}
 .step{background:var(--black);padding:44px 36px;position:relative;overflow:hidden;transition:background .3s}
 .step:hover{background:var(--dark)}
-.step-bar{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+.step-bar{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);transform:scaleX(0);transform-origin:left;transition:transform .4s}
 .step:hover .step-bar{transform:scaleX(1)}
 .step-num{font-family:var(--mono);font-size:72px;font-weight:300;color:rgba(201,168,76,.07);line-height:1;margin-bottom:20px}
 .step-icon{font-size:28px;margin-bottom:16px;display:block}
@@ -193,11 +274,11 @@ nav.scrolled{background:rgba(6,6,8,.9);backdrop-filter:blur(24px);border-bottom-
 .faq-item:hover{border-color:rgba(201,168,76,.3)}
 .faq-question{width:100%;background:none;border:none;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;text-align:left}
 .faq-q-text{font-family:var(--serif);font-size:17px;font-style:italic;color:var(--white);line-height:1.4}
-.faq-icon{width:28px;height:28px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:16px;color:var(--gold);flex-shrink:0;transition:transform .3s ease,background .3s}
+.faq-icon{width:28px;height:28px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--gold);flex-shrink:0;transition:transform .3s,background .3s}
 .faq-item.open .faq-icon{transform:rotate(45deg);background:rgba(201,168,76,.1)}
 .faq-answer{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1)}
 .faq-item.open .faq-answer{max-height:300px}
-.faq-answer-inner{padding:0 28px 24px;font-size:13px;line-height:1.8;color:var(--grey);border-top:1px solid var(--border);padding-top:20px;margin:0 28px}
+.faq-answer-inner{padding:20px 28px 24px;font-size:13px;line-height:1.8;color:var(--grey);border-top:1px solid var(--border);margin:0 28px}
 .legal-wrap{background:var(--black);padding:80px 48px}
 .legal-inner{max-width:1200px;margin:0 auto}
 .legal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
@@ -221,6 +302,22 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
 .footer-col a:hover{color:var(--white)}
 .footer-bottom{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;padding-top:24px;border-top:1px solid var(--border)}
 .footer-copy{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.2);letter-spacing:.1em}
+/* COOKIE BANNER */
+.cookie-banner{position:fixed;bottom:0;left:0;right:0;background:rgba(6,6,8,.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:20px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px;z-index:9000;transform:translateY(100%);transition:transform .4s cubic-bezier(.16,1,.3,1);flex-wrap:wrap}
+.cookie-banner.visible{transform:translateY(0)}
+.cookie-text{font-family:var(--mono);font-size:11px;color:var(--grey);line-height:1.6;max-width:700px}
+.cookie-text a{color:var(--gold);text-decoration:none}
+.cookie-text a:hover{text-decoration:underline}
+.cookie-btns{display:flex;gap:10px;flex-shrink:0}
+.cookie-accept{background:var(--gold);color:var(--black);border:none;padding:10px 24px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.cookie-accept:hover{background:var(--gold-light)}
+.cookie-info{background:transparent;color:var(--grey);border:1px solid var(--border);padding:10px 20px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .2s}
+.cookie-info:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:600px){
+  .cookie-banner{padding:16px 20px;flex-direction:column;align-items:flex-start}
+  .cookie-btns{width:100%}
+  .cookie-accept,.cookie-info{flex:1;text-align:center}
+}
 @media(max-width:900px){
   body{cursor:auto}
   .cursor,.cursor-ring{display:none}
@@ -238,8 +335,8 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
   .footer-bottom{flex-direction:column;gap:8px}
   .stats-bar{gap:24px;padding:28px 24px}
   .faq-q-text{font-size:15px}
-  .faq-answer-inner{margin:0 16px;padding-top:16px}
   .faq-question{padding:20px 16px}
+  .faq-answer-inner{margin:0 16px}
 }
 </style>
 </head>
@@ -255,6 +352,7 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
   <a href="#problema" onclick="closeMobileMenu()">O Problema</a>
   <a href="#como-funciona" onclick="closeMobileMenu()">Como Funciona</a>
   <a href="#precos" onclick="closeMobileMenu()">Preços</a>
+  <a href="/academico" onclick="closeMobileMenu()">Académico</a>
   <div class="mobile-menu-divider"></div>
   <a href="/app" class="mobile-cta">Experimentar →</a>
 </div>
@@ -264,6 +362,7 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
     <li><a href="#problema">O Problema</a></li>
     <li><a href="#como-funciona">Como Funciona</a></li>
     <li><a href="#precos">Preços</a></li>
+    <li><a href="/academico">Académico</a></li>
     <li><a href="/app" class="nav-cta">Experimentar</a></li>
   </ul>
   <button class="nav-hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
@@ -274,16 +373,14 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
   <div class="hero-canvas">
     <div class="hero-glow"></div>
     <div class="hero-grid"></div>
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
+    <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
   </div>
   <div class="hero-content">
-    <div class="hero-eyebrow">Tecnologia Forense Jurídica · Portugal</div>
+    <div class="hero-eyebrow">Análise Forense Jurídica · Judicial & Académico · Portugal</div>
     <h1 class="hero-title">Lex<span>Veritas</span></h1>
-    <p class="hero-sub">O primeiro sistema de análise forense de inteligência artificial em decisões judiciais dos tribunais portugueses.</p>
+    <p class="hero-sub">O primeiro sistema de detecção de inteligência artificial calibrado para texto jurídico português — em decisões judiciais, teses e trabalhos académicos de direito.</p>
     <div class="hero-actions">
-      <a href="/app" class="btn-primary"><span>Analisar uma Decisão →</span></a>
+      <a href="/app" class="btn-primary"><span>Experimentar Gratuitamente →</span></a>
       <a href="#problema" class="btn-secondary">Saber Mais</a>
     </div>
     <div class="stats-bar">
@@ -298,13 +395,13 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
 <section class="problem-wrap" id="problema">
   <div class="problem-inner">
     <div class="section-label reveal">O Problema</div>
-    <h2 class="section-title reveal">A IA chegou aos tribunais.<br><span>Quem está a verificar?</span></h2>
-    <p class="section-body reveal">O uso de inteligência artificial na redacção de decisões judiciais é uma realidade crescente em Portugal. Sem ferramentas de verificação, advogados, magistrados e cidadãos não têm forma de saber quando uma decisão foi elaborada por um ser humano ou por uma máquina.</p>
+    <h2 class="section-title reveal">A IA chegou aos tribunais<br><span>e às faculdades.</span></h2>
+    <p class="section-body reveal">O uso de inteligência artificial na redacção de textos jurídicos é uma realidade crescente em Portugal — nas decisões dos tribunais e nos trabalhos académicos das faculdades de direito. Sem ferramentas calibradas para o contexto jurídico português, advogados, magistrados, docentes e estudantes não têm forma de verificar a autoria real dos textos.</p>
     <div class="problem-grid">
       <div class="problem-card reveal reveal-delay-1"><div class="problem-num">01</div><h3>Transparência em risco</h3><p>O Art. 205.º da CRP garante a fundamentação das decisões por magistrados. O uso oculto de IA levanta questões constitucionais sérias.</p></div>
-      <div class="problem-card reveal reveal-delay-2"><div class="problem-num">02</div><h3>Sem ferramentas específicas</h3><p>Os detectores genéricos não conhecem o estilo jurídico português, os tribunais, os relatores nem a doutrina nacional.</p></div>
-      <div class="problem-card reveal reveal-delay-1"><div class="problem-num">03</div><h3>EU AI Act em vigor</h3><p>O Reg. (UE) 2024/1689 classifica sistemas de IA na administração da justiça como de alto risco, exigindo transparência.</p></div>
-      <div class="problem-card reveal reveal-delay-2"><div class="problem-num">04</div><h3>Impacto nos direitos</h3><p>Decisões judiciais afectam vidas. A autenticidade da fundamentação é um direito fundamental que deve poder ser verificado.</p></div>
+      <div class="problem-card reveal reveal-delay-2"><div class="problem-num">02</div><h3>Integridade académica</h3><p>Nas faculdades de direito, teses e dissertações redigidas com IA comprometem a formação e a avaliação. Ferramentas genéricas não conhecem o estilo jurídico português.</p></div>
+      <div class="problem-card reveal reveal-delay-1"><div class="problem-num">03</div><h3>EU AI Act em vigor</h3><p>O Reg. (UE) 2024/1689 classifica sistemas de IA na administração da justiça como de alto risco, exigindo transparência e rastreabilidade.</p></div>
+      <div class="problem-card reveal reveal-delay-2"><div class="problem-num">04</div><h3>Sem ferramentas específicas</h3><p>Os detectores genéricos foram treinados em inglês e não conhecem os tribunais, os relatores nem a doutrina jurídica nacional.</p></div>
     </div>
   </div>
 </section>
@@ -335,6 +432,46 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
       <div class="ind-row"><div class="ind-top"><span class="ind-name">Riqueza Lexical</span><span class="ind-val">55</span></div><div class="ind-track"><div class="ind-fill c-gold" id="b5" style="width:0"></div></div></div>
       <div class="ind-row"><div class="ind-top"><span class="ind-name">Marc. Formulaicos</span><span class="ind-val">92</span></div><div class="ind-track"><div class="ind-fill c-red" id="b6" style="width:0"></div></div></div>
     </div>
+  </div>
+</section>
+<!-- DEMO AO VIVO -->
+<section style="background:var(--black);padding:100px 48px;border-top:1px solid var(--border)">
+  <div style="max-width:800px;margin:0 auto">
+    <div class="section-label reveal">Experimente Agora</div>
+    <h2 class="section-title reveal">Analise um texto.<br><span>Sem criar conta.</span></h2>
+    <p class="section-body reveal" style="margin-bottom:40px">Cole qualquer excerto de uma decisão judicial ou trabalho académico de direito e veja a análise em tempo real.</p>
+    <div class="reveal" style="background:var(--dark);border:1px solid var(--border)">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-family:var(--serif);font-size:14px;font-style:italic;color:var(--white)">Texto para análise</span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--grey)" id="demo-char-count">0 caracteres</span>
+      </div>
+      <textarea id="demo-textarea" onInput="document.getElementById('demo-char-count').textContent=this.value.length.toLocaleString('pt-PT')+' caracteres'" style="width:100%;height:180px;border:none;outline:none;resize:vertical;padding:16px 20px;font-family:var(--mono);font-size:12px;line-height:1.8;color:var(--white);background:var(--dark);min-height:120px" placeholder="Cole aqui o texto (mínimo 100 caracteres)..."></textarea>
+      <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <span style="font-family:var(--mono);font-size:10px;color:var(--grey)">⚡ Análise instantânea · Sem registo</span>
+        <button id="demo-btn" onclick="runDemo()" style="background:var(--gold);color:var(--black);border:none;padding:11px 28px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">Analisar →</button>
+      </div>
+    </div>
+    <!-- DEMO RESULTS -->
+    <div id="demo-results" style="display:none;margin-top:20px;background:var(--dark);border:1px solid var(--border)">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);margin-bottom:6px">Veredicto</div>
+        <div id="demo-veredicto" style="font-family:var(--serif);font-size:22px;font-style:italic;color:var(--white)">—</div>
+      </div>
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);margin-bottom:10px;display:flex;justify-content:space-between"><span>Confiança</span><span id="demo-confianca" style="color:var(--gold)">—%</span></div>
+        <div style="height:4px;background:rgba(255,255,255,0.08)"><div id="demo-meter" style="height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));width:0;transition:width 1s"></div></div>
+      </div>
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border)" id="demo-inds"></div>
+      <div style="padding:16px 20px">
+        <p id="demo-narrativa" style="font-size:13px;line-height:1.8;color:rgba(248,246,241,0.6)">—</p>
+      </div>
+      <div style="padding:16px 20px;border-top:1px solid var(--border);text-align:center;background:rgba(201,168,76,0.04)">
+        <p style="font-family:var(--mono);font-size:10px;color:var(--grey);margin-bottom:12px">Crie uma conta gratuita para histórico, PDF e 5 análises/mês</p>
+        <a href="/app" style="background:var(--gold);color:var(--black);padding:11px 28px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;display:inline-block">Criar Conta Gratuita →</a>
+      </div>
+    </div>
+    <div id="demo-loading" style="display:none;text-align:center;padding:40px;color:var(--grey);font-family:var(--mono);font-size:11px;letter-spacing:0.1em">A analisar...</div>
+    <div id="demo-error" style="display:none;padding:16px 20px;background:rgba(139,26,26,0.15);border:1px solid rgba(139,26,26,0.3);color:#ff9999;font-family:var(--sans);font-size:13px;margin-top:12px"></div>
   </div>
 </section>
 <section class="features-wrap">
@@ -389,53 +526,34 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
     </div>
   </div>
 </section>
-<!-- FAQ -->
 <section class="faq-wrap" id="faq">
   <div class="faq-inner">
     <div class="section-label reveal">Perguntas Frequentes</div>
     <h2 class="section-title reveal">Tudo o que precisa de <span>saber</span></h2>
     <div class="faq-list reveal">
       <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-q-text">Os textos que submeto ficam guardados?</span>
-          <div class="faq-icon">+</div>
-        </button>
-        <div class="faq-answer"><div class="faq-answer-inner">Não. Os textos judiciais que submete são enviados para análise e descartados imediatamente após o processamento. Apenas o veredicto, o índice de confiança e os metadados (tribunal, relator, data) ficam registados no seu histórico pessoal.</div></div>
+        <button class="faq-question" onclick="toggleFaq(this)"><span class="faq-q-text">Os textos que submeto ficam guardados?</span><div class="faq-icon">+</div></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Não. Os textos judiciais que submete são enviados para análise e descartados imediatamente após o processamento. Apenas o veredicto, o índice de confiança e os metadados ficam registados no seu histórico pessoal.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-q-text">O relatório pode ser usado como prova em tribunal?</span>
-          <div class="faq-icon">+</div>
-        </button>
+        <button class="faq-question" onclick="toggleFaq(this)"><span class="faq-q-text">O relatório pode ser usado como prova em tribunal?</span><div class="faq-icon">+</div></button>
         <div class="faq-answer"><div class="faq-answer-inner">O LexVeritas é uma ferramenta auxiliar de análise probabilística. Os resultados têm carácter indicativo e não constituem prova jurídica definitiva. Devem ser interpretados por um profissional especializado e usados como elemento de suporte, não como prova autónoma.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-q-text">Como funciona a análise forense?</span>
-          <div class="faq-icon">+</div>
-        </button>
+        <button class="faq-question" onclick="toggleFaq(this)"><span class="faq-q-text">Como funciona a análise forense?</span><div class="faq-icon">+</div></button>
         <div class="faq-answer"><div class="faq-answer-inner">O sistema analisa 6 indicadores linguísticos calibrados para jurisprudência portuguesa: perplexidade textual, burstiness (variação de parágrafos), coesão artificial, uniformidade sintáctica, riqueza lexical e marcadores formulaicos. Cada indicador compara o texto com padrões conhecidos de escrita humana e de IA nos tribunais portugueses.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-q-text">Qual é a precisão do sistema?</span>
-          <div class="faq-icon">+</div>
-        </button>
-        <div class="faq-answer"><div class="faq-answer-inner">O sistema foi calibrado especificamente para o estilo jurídico português e é conservador nas suas conclusões — prefere resultados inconclusivos a falsos positivos. A precisão varia consoante o comprimento e tipo de documento. Textos mais longos produzem resultados mais fiáveis do que excertos curtos.</div></div>
+        <button class="faq-question" onclick="toggleFaq(this)"><span class="faq-q-text">Qual é a precisão do sistema?</span><div class="faq-icon">+</div></button>
+        <div class="faq-answer"><div class="faq-answer-inner">O sistema foi calibrado especificamente para o estilo jurídico português e é conservador nas suas conclusões — prefere resultados inconclusivos a falsos positivos. A precisão é maior em textos mais longos (acórdãos completos) do que em excertos curtos.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-q-text">Os meus dados estão seguros?</span>
-          <div class="faq-icon">+</div>
-        </button>
+        <button class="faq-question" onclick="toggleFaq(this)"><span class="faq-q-text">Os meus dados estão seguros?</span><div class="faq-icon">+</div></button>
         <div class="faq-answer"><div class="faq-answer-inner">Sim. Todos os dados estão alojados na União Europeia (Irlanda), em conformidade com o RGPD. A chave da API nunca é exposta ao browser. A base de dados tem Row Level Security activo — cada utilizador só acede aos seus próprios dados.</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-q-text">Posso analisar qualquer tipo de documento judicial?</span>
-          <div class="faq-icon">+</div>
-        </button>
-        <div class="faq-answer"><div class="faq-answer-inner">Sim. O sistema aceita acórdãos, sentenças, despachos e outros documentos judiciais portugueses, em formato de texto ou PDF. Está calibrado para os principais tribunais portugueses: STJ, STA, TC, TRL, TRP, TRC, TRG, TRE, TCAS, TCAN e tribunais de primeira instância.</div></div>
+        <button class="faq-question" onclick="toggleFaq(this)"><span class="faq-q-text">Posso analisar qualquer tipo de documento judicial?</span><div class="faq-icon">+</div></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Sim. O sistema aceita acórdãos, sentenças, despachos e outros documentos judiciais portugueses, em formato de texto ou PDF. Está calibrado para os principais tribunais: STJ, STA, TC, TRL, TRP, TRC, TRG, TRE, TCAS, TCAN e tribunais de primeira instância.</div></div>
       </div>
     </div>
   </div>
@@ -453,33 +571,54 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
 </section>
 <section class="cta-wrap">
   <div class="cta-glow"></div>
-  <h2 class="cta-title reveal">A justiça merece<br><span>transparência</span></h2>
-  <p class="cta-sub reveal">Comece a analisar gratuitamente. Sem cartão de crédito.</p>
+  <h2 class="cta-title reveal">Judicial ou académico.<br><span>A autoria importa.</span></h2>
+  <p class="cta-sub reveal">Para magistrados, advogados, docentes e estudantes. Comece gratuitamente.</p>
   <div class="cta-btns reveal">
     <a href="/app" class="btn-primary"><span>Criar Conta Gratuita →</span></a>
-    <a href="mailto:info@lexveritas.pt" class="btn-secondary">Falar com a Equipa</a>
+    <a href="/academico" class="btn-secondary">Versão Académica</a>
+  </div>
+</section>
+
+<section style="background:#0e0e12;border-top:1px solid rgba(201,168,76,0.15);border-bottom:1px solid rgba(201,168,76,0.15);padding:clamp(48px,6vw,80px) clamp(20px,5vw,60px)">
+  <div style="max-width:1060px;margin:0 auto;display:flex;align-items:center;gap:48px;flex-wrap:wrap">
+    <div style="position:relative;flex-shrink:0">
+      <img src="data:image/jpeg;base64,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mftw730rx4iPuyzGgRjaX89sFY9RMwOy45Pn0UJqbXWntNRllxuMTZW9II/bl/ujp88LkmqvTdcbm11NZKcW+A/7aTD5j8OzfzPvXHritbp08vkUx9z7b3rTWFBZGvFVUtDnD2YmnL3fBv8AM4C4tqHWNbe5HMjzTU3IEbXcuHvP8uig56iaqmfNPK+WV5y573EucfeSra28eGKe/wAuXm8i2T1+BERXNcREQEREBERAREQEREBERAREQEREBERAREQFMWHV9+0y/daLrVUgzkxsfljviw+yfoodEZiZj3Dqds9PNya0R3i10tbk8ywnwn/Tlp+gWVcfSPpe80u14q6Zx+7JFkg+YLSVyJFD7cb3C79pya1M7dr0tqymgnj8KthkjOBtLxn6HkLtVir46yna4NOCB9novipZlJeLlb8ep3CrpsfgzOZ/Aro4vNmsamGhfBudxL7ifZYa5ocXvYezsK1PT1EUbKF9Y17IzuDg3Dsdvpyvj6m9J+tqRobDqu9ADoDVvd/EqtnpV1tHVGqbqW4idzdhk8T2iOuM4Wz+8a61MSq/ZZ3vb61bpmOWniqi8TyMJdK1xzlvu8j3WW21sjbmKEEY4wvkCT0r65keXnVV2a5wwSyctz9MKKqdX6irQRU366zNPVr6uQj6ZUbfUKz+GY8afl9f3W4UtsY712ppaVvnLM1n8StEu3pU0fbS7fdoqh46MpQZcn4jj818zPkfK4ve5z3HqXHJVKqt9Qt/5hOPGj8y67cfThTxl5ttqklkc4kyVL9oz/wtz/Fafe/Slqq+MdDJc30tO7rDSjwm/Mjk/MrUkXOmsTPKe2792+uMT6elxcSSSSeST3XiIsqxERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBFL2nSN/vkPj2yzV9XDkjxYoHGPPluxjPzWf/VprD/d6v8A7n+a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" alt="Tony Branco" style="width:120px;height:120px;object-fit:cover;object-position:center top;border-radius:50%;border:2px solid rgba(201,168,76,0.3);filter:grayscale(15%)">
+      <div style="position:absolute;bottom:0;right:0;width:28px;height:28px;background:#c9a84c;border-radius:50%;display:flex;align-items:center;justify-content:center">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#060608"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+      </div>
+    </div>
+    <div style="flex:1;min-width:240px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c9a84c;margin-bottom:8px">Fundador & Criador</div>
+      <div style="font-family:'Instrument Serif',Georgia,serif;font-size:28px;font-style:italic;color:#f8f6f1;margin-bottom:4px">Tony Branco</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.15em;color:#9a9a9a;margin-bottom:16px">Jurista · QA Analyst II · Lean Six Sigma · AI Integration</div>
+      <p style="font-family:'Syne',sans-serif;font-size:13px;line-height:1.7;color:rgba(248,246,241,0.55);margin-bottom:20px;max-width:520px">
+        «Criei o LexVeritas porque queria juntar a área de Direito que estudei com o fascínio que sempre tive pela Inteligência Artificial.»
+      </p>
+      <a href="/sobre" style="display:inline-flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#c9a84c;text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.3);padding-bottom:2px;transition:all 0.2s">Conhecer o Fundador →</a>
+    </div>
   </div>
 </section>
 <footer>
   <div class="footer-inner">
     <div>
       <div class="footer-brand">Lex<span>Veritas</span></div>
-      <p class="footer-tagline">Análise forense de inteligência artificial em jurisprudência portuguesa. Desenvolvido em Portugal para os tribunais portugueses.</p>
+      <p class="footer-tagline">Análise forense de inteligência artificial em textos jurídicos portugueses — decisões judiciais, teses e trabalhos académicos de direito. Desenvolvido em Portugal.</p>
     </div>
     <div class="footer-col">
       <h4>Produto</h4>
       <a href="#como-funciona">Como Funciona</a>
-      <a href="#precos">Preços</a>
+      <a href="#precos">Preços Judicial</a>
+      <a href="/academico">Versão Académica</a>
       <a href="#faq">FAQ</a>
       <a href="/app">Entrar na Plataforma</a>
     </div>
     <div class="footer-col">
       <h4>Legal & Contacto</h4>
-      <a href="/privacidade">Política de Privacidade</a>
-      <!-- FIX: email corrigido (estava a apontar para gmail pessoal) -->
+      <a href="/sobre">Sobre</a> · <a href="/privacidade">Política de Privacidade</a>
+      <a href="/termos">Termos de Serviço</a>
       <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a>
+      <a href="mailto:academico@lexveritas.pt">Plano Académico</a>
       <a href="mailto:profissional@lexveritas.pt">Plano Profissional</a>
-      <a href="mailto:investidores@lexveritas.pt">Investidores</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -487,7 +626,6 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
     <span class="footer-copy">FERRAMENTA AUXILIAR · NÃO CONSTITUI PROVA JURÍDICA</span>
   </div>
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('intro').classList.add('done')},2200)});
@@ -507,7 +645,6 @@ const barObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isInter
 const dv=document.querySelector('.demo-visual');if(dv)barObs.observe(dv);
 window.addEventListener('scroll',()=>{const g=document.querySelector('.hero-grid');if(g)g.style.transform=`translateY(${window.scrollY*.15}px)`});
 function toggleFaq(btn){const item=btn.closest('.faq-item'),isOpen=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));if(!isOpen)item.classList.add('open')}
-// Contador real
 async function loadTotalAnalises(){
   try{
     const sb=supabase.createClient('https://bsbgizaftamufmmxeyer.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ');
@@ -517,6 +654,55 @@ async function loadTotalAnalises(){
   }catch(e){const el=document.getElementById('total-analises');if(el)el.textContent='—'}
 }
 loadTotalAnalises();
+
+// DEMO AO VIVO
+async function runDemo(){
+  const text=document.getElementById('demo-textarea').value.trim();
+  if(text.length<100){alert('Insira pelo menos 100 caracteres.');return;}
+  const btn=document.getElementById('demo-btn');
+  btn.disabled=true;btn.textContent='A analisar...';
+  document.getElementById('demo-results').style.display='none';
+  document.getElementById('demo-loading').style.display='block';
+  document.getElementById('demo-error').style.display='none';
+  try{
+    const r=await fetch('/api/analisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:text,modo:'judicial'})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.erro||'Erro do servidor.');}
+    const d=await r.json();
+    document.getElementById('demo-loading').style.display='none';
+    const titles={'IA_DETECTADA':'Inteligência Artificial Detectada','PROVAVELMENTE_IA':'Provavelmente Gerado por IA','INCONCLUSIVO':'Análise Inconclusiva','PROVAVELMENTE_HUMANO':'Provavelmente Autoria Humana','HUMANO':'Autoria Humana Confirmada'};
+    const colors={'IA_DETECTADA':'#c97850','PROVAVELMENTE_IA':'#c97850','INCONCLUSIVO':'#9a9a9a','PROVAVELMENTE_HUMANO':'#4a9a6a','HUMANO':'#4a9a6a'};
+    document.getElementById('demo-veredicto').textContent=titles[d.veredicto]||d.veredicto;
+    document.getElementById('demo-veredicto').style.color=colors[d.veredicto]||'var(--white)';
+    document.getElementById('demo-confianca').textContent=d.confianca+'%';
+    setTimeout(()=>{document.getElementById('demo-meter').style.width=d.confianca+'%';},100);
+    const indLabels={perplexidade:'Perplexidade',burstiness:'Burstiness',coesao_artificial:'Coesão Artificial',uniformidade_sintatica:'Uniformidade Sint.',riqueza_lexical:'Riqueza Lexical',marcadores_formulaicos:'Marc. Formulaicos'};
+    const indsEl=document.getElementById('demo-inds');
+    indsEl.innerHTML='<div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);margin-bottom:12px">Indicadores</div>';
+    for(const[k,v] of Object.entries(d.indicadores||{})){
+      const c=v>70?'#8b4513':v>40?'#c9a84c':'#1a5c3a';
+      indsEl.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-family:var(--mono);font-size:9px;color:rgba(248,246,241,0.4);width:110px;flex-shrink:0">${indLabels[k]||k}</span><div style="flex:1;height:2px;background:rgba(255,255,255,0.06)"><div style="height:100%;background:${c};width:${v}%;transition:width 1s"></div></div><span style="font-family:var(--mono);font-size:9px;color:rgba(248,246,241,0.4);width:24px;text-align:right">${v}</span></div>`;
+    }
+    document.getElementById('demo-narrativa').textContent=d.narrativa||'';
+    document.getElementById('demo-results').style.display='block';
+  }catch(e){
+    document.getElementById('demo-loading').style.display='none';
+    document.getElementById('demo-error').textContent='Erro: '+(e.message||'Tente novamente.');
+    document.getElementById('demo-error').style.display='block';
+  }finally{btn.disabled=false;btn.textContent='Analisar →';}
+}
+// COOKIE BANNER
+function aceitarCookies(){localStorage.setItem('lv_cookies','aceite');document.getElementById('cookieBanner').classList.remove('visible')}
+function recusarCookies(){localStorage.setItem('lv_cookies','recusado');document.getElementById('cookieBanner').classList.remove('visible')}
+function verificarCookies(){if(!localStorage.getItem('lv_cookies')){setTimeout(()=>{document.getElementById('cookieBanner').classList.add('visible')},2500)}}
+verificarCookies();
 </script>
+<!-- COOKIE BANNER -->
+<div class="cookie-banner" id="cookieBanner">
+  <p class="cookie-text">Utilizamos cookies estritamente necessários para o funcionamento da autenticação. Não utilizamos cookies de rastreamento ou publicidade. <a href="/sobre">Sobre</a> · <a href="/privacidade">Saiba mais</a></p>
+  <div class="cookie-btns">
+    <button class="cookie-info" onclick="recusarCookies()">Recusar</button>
+    <button class="cookie-accept" onclick="aceitarCookies()">Aceitar</button>
+  </div>
+</div>
 </body>
 </html>
