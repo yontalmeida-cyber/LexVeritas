@@ -674,6 +674,12 @@ async function fazerRegisto() {
     if(data?.user) await sb.from('perfis').upsert({id:data.user.id,email,nome,profissao:prof,mes_atual:new Date().toISOString().substring(0,7),analises_mes:0});
     succEl.textContent='Conta criada! Já pode entrar na sua conta.';
     succEl.style.display='block'; btn.textContent='Conta criada!';
+    // Enviar email de boas-vindas
+    fetch('https://bsbgizaftamufmmxeyer.supabase.co/functions/v1/rapid-service',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({record:{email:email,raw_user_meta_data:{nome:nome}}})
+    }).catch(()=>{});
   } catch(e){errEl.textContent='Erro: '+e.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Criar Conta Gratuita';}
 }
 
