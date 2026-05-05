@@ -19,209 +19,61 @@
 }
 html { scroll-behavior: smooth; }
 body {
-  background: var(--black);
-  color: var(--white);
-  font-family: var(--sans);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  position: relative;
-  overflow: hidden;
+  background: var(--black); color: var(--white); font-family: var(--sans);
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 24px; position: relative; overflow: hidden;
 }
-
-/* Background */
-body::before {
-  content: '';
-  position: absolute;
-  top: -20%; left: 50%;
-  transform: translateX(-50%);
-  width: 700px; height: 600px;
-  background: radial-gradient(ellipse, rgba(201,168,76,0.12) 0%, transparent 60%);
-  pointer-events: none;
-}
-body::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
-}
-
-/* Card */
-.confirm-card {
-  background: #13131a;
-  border: 1px solid var(--border);
-  padding: 48px 40px;
-  width: 100%;
-  max-width: 480px;
-  text-align: center;
-  position: relative;
-  z-index: 1;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
-  animation: fadeUp 0.6s ease forwards;
-}
-.confirm-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Icon */
-.confirm-icon {
-  width: 72px;
-  height: 72px;
-  background: rgba(201,168,76,0.08);
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 28px;
-  font-size: 32px;
-  animation: iconPop 0.5s 0.3s cubic-bezier(0.16,1,0.3,1) both;
-}
-@keyframes iconPop {
-  from { transform: scale(0.5); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* Logo */
-.confirm-logo {
-  font-family: var(--serif);
-  font-size: 14px;
-  font-style: italic;
-  color: var(--grey);
-  margin-bottom: 32px;
-  letter-spacing: 0.05em;
-}
+body::before { content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 700px; height: 600px; background: radial-gradient(ellipse, rgba(201,168,76,0.12) 0%, transparent 60%); pointer-events: none; }
+body::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+.confirm-card { background: #13131a; border: 1px solid var(--border); padding: 48px 40px; width: 100%; max-width: 480px; text-align: center; position: relative; z-index: 1; box-shadow: 0 24px 64px rgba(0,0,0,0.5); animation: fadeUp 0.6s ease forwards; }
+.confirm-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold)); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.confirm-icon { width: 72px; height: 72px; background: rgba(201,168,76,0.08); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; font-size: 32px; animation: iconPop 0.5s 0.3s cubic-bezier(0.16,1,0.3,1) both; }
+@keyframes iconPop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.confirm-logo { font-family: var(--serif); font-size: 14px; font-style: italic; color: var(--grey); margin-bottom: 32px; letter-spacing: 0.05em; }
 .confirm-logo span { color: var(--gold); }
-
-/* Title */
-.confirm-title {
-  font-family: var(--serif);
-  font-size: 28px;
-  font-style: italic;
-  margin-bottom: 12px;
-  color: var(--white);
-}
+.confirm-title { font-family: var(--serif); font-size: 28px; font-style: italic; margin-bottom: 12px; color: var(--white); }
 .confirm-title span { color: var(--gold); }
-
-.confirm-sub {
-  font-size: 13px;
-  color: var(--grey);
-  line-height: 1.7;
-  margin-bottom: 36px;
-}
-
-/* Features list */
-.confirm-features {
-  background: rgba(201,168,76,0.04);
-  border: 1px solid var(--border);
-  padding: 20px 24px;
-  margin-bottom: 32px;
-  text-align: left;
-}
-.confirm-features-label {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 14px;
-  display: block;
-}
-.confirm-feature {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  color: rgba(248,246,241,0.6);
-  margin-bottom: 8px;
-  line-height: 1.5;
-}
+.confirm-sub { font-size: 13px; color: var(--grey); line-height: 1.7; margin-bottom: 36px; }
+.confirm-features { background: rgba(201,168,76,0.04); border: 1px solid var(--border); padding: 20px 24px; margin-bottom: 32px; text-align: left; }
+.confirm-features-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: block; }
+.confirm-feature { display: flex; align-items: center; gap: 10px; font-size: 12px; color: rgba(248,246,241,0.6); margin-bottom: 8px; line-height: 1.5; }
 .confirm-feature:last-child { margin-bottom: 0; }
-.confirm-feature::before {
-  content: '→';
-  color: var(--gold);
-  font-family: var(--mono);
-  font-size: 10px;
-  flex-shrink: 0;
-}
-
-/* Button */
-.btn-enter {
-  display: block;
-  width: 100%;
-  background: var(--gold);
-  color: var(--black);
-  border: none;
-  padding: 16px;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.25s;
-  margin-bottom: 16px;
-}
-.btn-enter:hover {
-  background: var(--gold-light);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(201,168,76,0.3);
-}
-
-/* Timer */
-.auto-redirect {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: rgba(248,246,241,0.25);
-  letter-spacing: 0.1em;
-}
+.confirm-feature::before { content: '→'; color: var(--gold); font-family: var(--mono); font-size: 10px; flex-shrink: 0; }
+.btn-enter { display: block; width: 100%; background: var(--gold); color: var(--black); border: none; padding: 16px; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: all 0.25s; margin-bottom: 16px; }
+.btn-enter:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.3); }
+.auto-redirect { font-family: var(--mono); font-size: 10px; color: rgba(248,246,241,0.25); letter-spacing: 0.1em; }
 .auto-redirect span { color: var(--gold); }
-
-/* Error state */
 .confirm-card.error .confirm-icon { background: rgba(139,26,26,0.1); border-color: rgba(139,26,26,0.3); }
-.error-msg {
-  background: rgba(139,26,26,0.15);
-  border: 1px solid rgba(139,26,26,0.3);
-  color: #ff9999;
-  padding: 12px 16px;
-  font-size: 12px;
-  line-height: 1.6;
-  margin-bottom: 24px;
-  display: none;
-}
-
-@media (max-width: 480px) {
-  .confirm-card { padding: 36px 24px; }
-  .confirm-title { font-size: 24px; }
-}
+.error-msg { background: rgba(139,26,26,0.15); border: 1px solid rgba(139,26,26,0.3); color: #ff9999; padding: 12px 16px; font-size: 12px; line-height: 1.6; margin-bottom: 24px; display: none; }
+/* MODAL CONTACTO */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9500; display: none; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.visible { display: flex; }
+.modal-box { background: #13131a; border: 1px solid rgba(201,168,76,0.25); padding: 36px; max-width: 440px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+.modal-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+.modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: #9a9a9a; font-size: 22px; cursor: pointer; }
+.modal-close:hover { color: var(--white); }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 5px; }
+.form-group input, .form-group textarea { width: 100%; padding: 10px 13px; border: 1px solid rgba(201,168,76,0.2); background: rgba(255,255,255,0.04); font-family: var(--sans); font-size: 13px; color: var(--white); outline: none; }
+.form-group input:focus, .form-group textarea:focus { border-color: var(--gold); }
+.form-group textarea { resize: vertical; min-height: 80px; }
+.btn-submit { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 13px; font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+.btn-submit:hover { background: var(--gold-light); }
+@media (max-width: 480px) { .confirm-card { padding: 36px 24px; } .confirm-title { font-size: 24px; } }
 </style>
 </head>
 <body>
 
 <div class="confirm-card" id="card">
   <div class="confirm-logo">Lex<span>Veritas</span></div>
-
   <div class="confirm-icon" id="icon">⚖️</div>
 
+  <!-- CORRIGIDO: removido mailto, substituído por botão de contacto -->
   <div class="error-msg" id="error-msg">
-    O link de confirmação é inválido ou expirou. Por favor registe-se novamente ou contacte <a href="mailto:info@lexveritas.pt" style="color:var(--gold)">info@lexveritas.pt</a>.
+    O link de confirmação é inválido ou expirou. Por favor registe-se novamente ou
+    <a href="#" onclick="event.preventDefault();document.getElementById('contacto-modal').classList.add('visible')" style="color:var(--gold)">contacte-nos aqui</a>.
   </div>
 
   <h1 class="confirm-title" id="title">Conta <span>confirmada</span></h1>
@@ -239,46 +91,61 @@ body::after {
   <div class="auto-redirect" id="redirect-msg">Redirecionamento automático em <span id="countdown">5</span>s</div>
 </div>
 
+<!-- MODAL CONTACTO -->
+<div class="modal-overlay" id="contacto-modal" onclick="if(event.target===this)this.classList.remove('visible')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('contacto-modal').classList.remove('visible')">×</button>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#c9a84c;margin-bottom:12px">Suporte</div>
+    <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:20px;font-style:italic;color:#f8f6f1;margin-bottom:6px">Problema com a conta?</h2>
+    <p style="font-size:13px;color:#9a9a9a;margin-bottom:18px;line-height:1.6">Descreva o problema e respondemos em 24h.</p>
+    <div class="form-group"><label>Nome</label><input type="text" id="c-nome" placeholder="O seu nome"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="c-email" placeholder="o-seu@email.pt"></div>
+    <div class="form-group"><label>Mensagem</label><textarea id="c-mensagem" placeholder="Descreva o problema..."></textarea></div>
+    <button class="btn-submit" onclick="enviarContacto()">Enviar →</button>
+    <div id="c-msg" style="font-size:12px;margin-top:10px;display:none;padding:8px 12px"></div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = 'https://bsbgizaftamufmmxeyer.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL='https://bsbgizaftamufmmxeyer.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-async function handleConfirmation() {
-  // Supabase envia o token via hash (#) ou query params
-  const hash = window.location.hash;
-  const params = new URLSearchParams(window.location.search);
-
-  // Tentar obter sessão — o Supabase trata o token automaticamente
-  const { data, error } = await sb.auth.getSession();
-
-  if (error || !data.session) {
-    // Mostrar erro
+async function handleConfirmation(){
+  const{data,error}=await sb.auth.getSession();
+  if(error||!data.session){
     document.getElementById('card').classList.add('error');
-    document.getElementById('icon').textContent = '✕';
-    document.getElementById('title').innerHTML = 'Link <span>inválido</span>';
-    document.getElementById('subtitle').textContent = 'Não foi possível confirmar a sua conta. O link pode ter expirado.';
-    document.getElementById('error-msg').style.display = 'block';
-    document.getElementById('redirect-msg').style.display = 'none';
-    document.getElementById('btn-enter').textContent = 'Voltar ao início →';
-    document.getElementById('btn-enter').href = '/';
+    document.getElementById('icon').textContent='✕';
+    document.getElementById('title').innerHTML='Link <span>inválido</span>';
+    document.getElementById('subtitle').textContent='Não foi possível confirmar a sua conta. O link pode ter expirado.';
+    document.getElementById('error-msg').style.display='block';
+    document.getElementById('redirect-msg').style.display='none';
+    document.getElementById('btn-enter').textContent='Voltar ao início →';
+    document.getElementById('btn-enter').href='/';
     return;
   }
-
-  // Sucesso — iniciar contagem regressiva
-  let count = 5;
-  const timer = setInterval(() => {
+  let count=5;
+  const timer=setInterval(()=>{
     count--;
-    document.getElementById('countdown').textContent = count;
-    if (count <= 0) {
-      clearInterval(timer);
-      window.location.href = '/app';
-    }
-  }, 1000);
+    document.getElementById('countdown').textContent=count;
+    if(count<=0){clearInterval(timer);window.location.href='/app';}
+  },1000);
 }
-
 handleConfirmation();
+
+async function enviarContacto(){
+  const nome=document.getElementById('c-nome').value.trim();
+  const email=document.getElementById('c-email').value.trim();
+  const mensagem=document.getElementById('c-mensagem').value.trim();
+  const msg=document.getElementById('c-msg');
+  if(!nome||!email||!mensagem){msg.textContent='Preencha todos os campos.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';return;}
+  try{
+    const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({nome,email,mensagem,assunto:'Problema com confirmação de conta'})});
+    if(r.ok){msg.textContent='✓ Mensagem enviada! Respondemos em 24h.';msg.style.color='#1a5c3a';msg.style.background='rgba(26,92,58,0.15)';msg.style.display='block';document.getElementById('c-nome').value='';document.getElementById('c-email').value='';document.getElementById('c-mensagem').value='';}
+    else throw new Error();
+  }catch(e){msg.textContent='Erro ao enviar. Tente novamente.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';}
+}
 </script>
 </body>
 </html>
