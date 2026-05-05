@@ -713,8 +713,27 @@ async function recuperarPassword(){
 
 async function logout(){await sb.auth.signOut();currentUser=null;userProfile=null;showPage('login');}
 
-sb.auth.onAuthStateChange((event,session)=>{if(loginInProgress)return;if(event==='SIGNED_OUT')showPage('login');if(event==='PASSWORD_RECOVERY'){showPage('reset');}});
-sb.auth.getSession().then(({data})=>{
+sb.auth.onAuthStateChange((event,session)=>{
+  if(loginInProgress)return;
+  if(event==='SIGNED_OUT')showPage('login');
+  if(event==='PASSWORD_RECOVERY'){
+    document.getElementById('lv-loading').style.display='none';
+    showPage('reset');
+  }
+});
+
+// Verificar se é um link de recuperação de password
+const _hashParams=new URLSearchParams(window.location.hash.substring(1));
+if(_hashParams.get('type')==='recovery'){
+  document.getElementById('lv-loading').style.display='none';
+  showPage('reset');
+} else {
+  sb.auth.getSession().then(({data})=>{
+    if(loginInProgress)return;
+    if(data.session?.user){currentUser=data.session.user;userProfile={nome:data.session.user.user_metadata?.nome||data.session.user.email.split('@')[0],plano:'gratuito',analises_mes:0};initApp();showPage('app');}
+    else showPage('login');
+  });
+}
   if(loginInProgress)return;
   if(data.session?.user){currentUser=data.session.user;userProfile={nome:data.session.user.user_metadata?.nome||data.session.user.email.split('@')[0],plano:'gratuito',analises_mes:0};initApp();showPage('app');}
   else showPage('login');
