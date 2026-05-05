@@ -21,15 +21,11 @@
 }
 html { scroll-behavior: smooth; }
 body { background: var(--black); color: var(--white); font-family: var(--sans); }
-
-/* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(6,6,8,0.95); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
 .nav-logo { font-family: var(--serif); font-size: 22px; color: var(--white); text-decoration: none; font-style: italic; }
 .nav-logo span { color: var(--gold); }
 .nav-back { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 8px; }
 .nav-back:hover { color: var(--gold); }
-
-/* HERO */
 .page-hero { padding: 140px 48px 80px; border-bottom: 1px solid var(--border); }
 .page-hero-inner { max-width: 800px; margin: 0 auto; }
 .page-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
@@ -37,50 +33,51 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .page-title { font-family: var(--serif); font-size: clamp(36px, 5vw, 64px); font-style: italic; line-height: 1.05; margin-bottom: 20px; }
 .page-title span { color: var(--gold); }
 .page-meta { font-family: var(--mono); font-size: 10px; color: var(--grey); letter-spacing: 0.1em; }
-
-/* CONTENT */
 .content-wrap { max-width: 800px; margin: 0 auto; padding: 64px 48px 120px; }
-
 .policy-section { margin-bottom: 56px; padding-bottom: 56px; border-bottom: 1px solid var(--border); }
 .policy-section:last-child { border-bottom: none; }
-
 .policy-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 12px; display: block; }
 .policy-title { font-family: var(--serif); font-size: 26px; font-style: italic; margin-bottom: 20px; }
 .policy-title span { color: var(--gold); }
-
 .policy-body { font-size: 14px; line-height: 1.9; color: rgba(248,246,241,0.7); }
 .policy-body p { margin-bottom: 16px; }
 .policy-body p:last-child { margin-bottom: 0; }
 .policy-body strong { color: var(--white); font-weight: 600; }
-.policy-body a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.3); transition: border-color 0.2s; }
+.policy-body a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.3); transition: border-color 0.2s; cursor: pointer; }
 .policy-body a:hover { border-color: var(--gold); }
-
 .policy-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
 .policy-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 1.7; color: rgba(248,246,241,0.7); }
 .policy-list li::before { content: '→'; color: var(--gold); flex-shrink: 0; font-size: 11px; margin-top: 3px; font-family: var(--mono); }
-
 .highlight-box { background: rgba(201,168,76,0.05); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 20px 24px; margin: 24px 0; }
 .highlight-box p { font-size: 13px; line-height: 1.7; color: rgba(248,246,241,0.6); margin: 0; }
 .highlight-box strong { color: var(--gold); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-family: var(--mono); display: block; margin-bottom: 8px; }
-
-/* TABLE */
 .data-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
 .data-table th { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); background: rgba(201,168,76,0.04); }
 .data-table td { font-size: 13px; color: rgba(248,246,241,0.65); padding: 12px 16px; border-bottom: 1px solid rgba(201,168,76,0.06); line-height: 1.6; vertical-align: top; }
 .data-table tr:last-child td { border-bottom: none; }
-
-/* CONTACT CARD */
 .contact-card { background: var(--dark); border: 1px solid var(--border); padding: 32px; margin-top: 24px; }
 .contact-card h4 { font-family: var(--serif); font-size: 18px; font-style: italic; margin-bottom: 16px; }
 .contact-row { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; font-size: 13px; color: rgba(248,246,241,0.65); }
 .contact-row a { color: var(--gold); text-decoration: none; }
-
-/* FOOTER */
 footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; }
 .footer-brand { font-family: var(--serif); font-size: 18px; font-style: italic; text-decoration: none; color: var(--white); }
 .footer-brand span { color: var(--gold); }
 .footer-copy { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; }
-
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9500; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+.modal-overlay.visible { display: flex; }
+.modal-box { background: #13131a; border: 1px solid rgba(201,168,76,0.25); padding: 36px; max-width: 440px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+.modal-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+.modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: #9a9a9a; font-size: 22px; cursor: pointer; }
+.modal-close:hover { color: var(--white); }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 5px; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 13px; border: 1px solid rgba(201,168,76,0.2); background: rgba(255,255,255,0.04); font-family: var(--sans); font-size: 13px; color: var(--white); outline: none; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); }
+.form-group select option { background: var(--dark); }
+.form-group textarea { resize: vertical; min-height: 80px; }
+.btn-submit { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 13px; font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+.btn-submit:hover { background: var(--gold-light); }
 @media (max-width: 768px) {
   nav { padding: 16px 24px; }
   .page-hero { padding: 100px 24px 48px; }
@@ -113,22 +110,21 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     <p>O LexVeritas recolhe apenas os dados necessários para prestar o serviço. Não vendemos dados a terceiros. Os seus dados estão alojados na União Europeia e são tratados em conformidade com o RGPD. Pode solicitar a eliminação da sua conta a qualquer momento.</p>
   </div>
 
-  <!-- 1 -->
   <div class="policy-section">
     <span class="policy-num">01</span>
     <h2 class="policy-title">Responsável pelo <span>Tratamento</span></h2>
     <div class="policy-body">
       <p>O responsável pelo tratamento dos seus dados pessoais é o <strong>LexVeritas</strong>, plataforma de análise forense de inteligência artificial em jurisprudência portuguesa.</p>
+      <!-- CORRIGIDO: removido email pessoal, substituído por formulário -->
       <div class="contact-card">
         <h4>Contacto do Responsável</h4>
-        <div class="contact-row">📧 <a href="mailto:yont.almeida@gmail.com">info@lexveritas.pt</a></div>
+        <div class="contact-row">📧 <a onclick="document.getElementById('priv-modal').classList.add('visible')">Formulário de contacto</a></div>
         <div class="contact-row">🌐 <a href="https://lexveritas.pt">lexveritas.pt</a></div>
         <div class="contact-row">📍 Portugal, União Europeia</div>
       </div>
     </div>
   </div>
 
-  <!-- 2 -->
   <div class="policy-section">
     <span class="policy-num">02</span>
     <h2 class="policy-title">Dados que <span>Recolhemos</span></h2>
@@ -136,50 +132,21 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
       <p>Recolhemos apenas os dados estritamente necessários para a prestação do serviço:</p>
       <table class="data-table">
         <thead>
-          <tr>
-            <th>Dado</th>
-            <th>Finalidade</th>
-            <th>Base Legal</th>
-          </tr>
+          <tr><th>Dado</th><th>Finalidade</th><th>Base Legal</th></tr>
         </thead>
         <tbody>
-          <tr>
-            <td><strong style="color:var(--white)">Nome</strong></td>
-            <td>Identificação na plataforma e nos relatórios PDF</td>
-            <td>Execução do contrato</td>
-          </tr>
-          <tr>
-            <td><strong style="color:var(--white)">Email</strong></td>
-            <td>Autenticação e comunicações da conta</td>
-            <td>Execução do contrato</td>
-          </tr>
-          <tr>
-            <td><strong style="color:var(--white)">Profissão</strong></td>
-            <td>Personalização da experiência (opcional)</td>
-            <td>Consentimento</td>
-          </tr>
-          <tr>
-            <td><strong style="color:var(--white)">Textos analisados</strong></td>
-            <td>Processamento forense — não são guardados permanentemente</td>
-            <td>Execução do contrato</td>
-          </tr>
-          <tr>
-            <td><strong style="color:var(--white)">Resultados das análises</strong></td>
-            <td>Histórico pessoal na plataforma</td>
-            <td>Execução do contrato</td>
-          </tr>
-          <tr>
-            <td><strong style="color:var(--white)">Dados de utilização</strong></td>
-            <td>Contagem de análises por mês para controlo de limites</td>
-            <td>Interesse legítimo</td>
-          </tr>
+          <tr><td><strong style="color:var(--white)">Nome</strong></td><td>Identificação na plataforma e nos relatórios PDF</td><td>Execução do contrato</td></tr>
+          <tr><td><strong style="color:var(--white)">Email</strong></td><td>Autenticação e comunicações da conta</td><td>Execução do contrato</td></tr>
+          <tr><td><strong style="color:var(--white)">Profissão</strong></td><td>Personalização da experiência (opcional)</td><td>Consentimento</td></tr>
+          <tr><td><strong style="color:var(--white)">Textos analisados</strong></td><td>Processamento forense — não são guardados permanentemente</td><td>Execução do contrato</td></tr>
+          <tr><td><strong style="color:var(--white)">Resultados das análises</strong></td><td>Histórico pessoal na plataforma</td><td>Execução do contrato</td></tr>
+          <tr><td><strong style="color:var(--white)">Dados de utilização</strong></td><td>Contagem de análises por mês para controlo de limites</td><td>Interesse legítimo</td></tr>
         </tbody>
       </table>
       <p><strong>Importante:</strong> Os textos judiciais que submete para análise são enviados para processamento e não são guardados na nossa base de dados. Apenas o veredicto, o índice de confiança e os metadados (tribunal, relator, data) ficam registados no seu histórico.</p>
     </div>
   </div>
 
-  <!-- 3 -->
   <div class="policy-section">
     <span class="policy-num">03</span>
     <h2 class="policy-title">Como Usamos os <span>Seus Dados</span></h2>
@@ -197,7 +164,6 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     </div>
   </div>
 
-  <!-- 4 -->
   <div class="policy-section">
     <span class="policy-num">04</span>
     <h2 class="policy-title">Subcontratantes e <span>Transferências</span></h2>
@@ -212,7 +178,6 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     </div>
   </div>
 
-  <!-- 5 -->
   <div class="policy-section">
     <span class="policy-num">05</span>
     <h2 class="policy-title">Os Seus <span>Direitos</span></h2>
@@ -226,12 +191,12 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
         <li><strong>Oposição</strong> — pode opor-se ao tratamento baseado em interesse legítimo</li>
         <li><strong>Limitação</strong> — pode solicitar a limitação do tratamento em determinadas circunstâncias</li>
       </ul>
-      <p>Para exercer qualquer destes direitos, contacte-nos em <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a>. Respondemos no prazo máximo de 30 dias.</p>
+      <!-- CORRIGIDO: removido mailto, substituído por formulário -->
+      <p>Para exercer qualquer destes direitos, <a onclick="document.getElementById('priv-modal').classList.add('visible')">contacte-nos através do formulário</a>. Respondemos no prazo máximo de 30 dias.</p>
       <p>Tem também o direito de apresentar reclamação à <strong>Comissão Nacional de Protecção de Dados (CNPD)</strong> em <a href="https://www.cnpd.pt" target="_blank">cnpd.pt</a>.</p>
     </div>
   </div>
 
-  <!-- 6 -->
   <div class="policy-section">
     <span class="policy-num">06</span>
     <h2 class="policy-title">Retenção de <span>Dados</span></h2>
@@ -247,7 +212,6 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     </div>
   </div>
 
-  <!-- 7 -->
   <div class="policy-section">
     <span class="policy-num">07</span>
     <h2 class="policy-title">Segurança dos <span>Dados</span></h2>
@@ -263,7 +227,6 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     </div>
   </div>
 
-  <!-- 8 -->
   <div class="policy-section">
     <span class="policy-num">08</span>
     <h2 class="policy-title">Cookies e <span>Rastreamento</span></h2>
@@ -273,7 +236,6 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     </div>
   </div>
 
-  <!-- 9 -->
   <div class="policy-section">
     <span class="policy-num">09</span>
     <h2 class="policy-title">Alterações a esta <span>Política</span></h2>
@@ -283,15 +245,15 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     </div>
   </div>
 
-  <!-- 10 -->
   <div class="policy-section">
     <span class="policy-num">10</span>
     <h2 class="policy-title">Contacto e <span>Reclamações</span></h2>
     <div class="policy-body">
       <p>Para qualquer questão relacionada com a privacidade dos seus dados, contacte-nos:</p>
+      <!-- CORRIGIDO: removido email pessoal, substituído por formulário -->
       <div class="contact-card">
         <h4>Encarregado de Proteção de Dados</h4>
-        <div class="contact-row">📧 <a href="mailto:yont.almeida@gmail.com">info@lexveritas.pt</a></div>
+        <div class="contact-row">📧 <a onclick="document.getElementById('priv-modal').classList.add('visible')">Formulário de contacto</a></div>
         <div class="contact-row">⏱ Tempo de resposta: até 30 dias úteis</div>
         <div class="contact-row">🏛 CNPD — <a href="https://www.cnpd.pt" target="_blank">cnpd.pt</a></div>
       </div>
@@ -305,5 +267,48 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
   <span class="footer-copy">© 2026 LEXVERITAS · PORTUGAL · RGPD COMPLIANT</span>
 </footer>
 
+<!-- MODAL CONTACTO RGPD — Formspree -->
+<div class="modal-overlay" id="priv-modal" onclick="if(event.target===this)this.classList.remove('visible')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('priv-modal').classList.remove('visible')">×</button>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#c9a84c;margin-bottom:12px">Privacidade · RGPD</div>
+    <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:20px;font-style:italic;color:#f8f6f1;margin-bottom:6px">Pedido de Privacidade</h2>
+    <p style="font-size:13px;color:#9a9a9a;margin-bottom:18px;line-height:1.6">Acesso, rectificação, eliminação ou portabilidade de dados. Respondemos em até 30 dias.</p>
+    <div class="form-group"><label>Nome</label><input type="text" id="p-nome" placeholder="O seu nome"></div>
+    <div class="form-group"><label>Email da conta</label><input type="email" id="p-email" placeholder="o-seu@email.pt"></div>
+    <div class="form-group">
+      <label>Tipo de pedido</label>
+      <select id="p-tipo">
+        <option value="">— Seleccione —</option>
+        <option>Acesso aos meus dados</option>
+        <option>Rectificação de dados</option>
+        <option>Eliminação da conta</option>
+        <option>Portabilidade de dados</option>
+        <option>Oposição ao tratamento</option>
+        <option>Outra questão de privacidade</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Descrição (opcional)</label><textarea id="p-msg" placeholder="Descreva o seu pedido..."></textarea></div>
+    <button class="btn-submit" onclick="enviarPedido()">Enviar Pedido →</button>
+    <div id="p-resp" style="font-size:12px;margin-top:10px;display:none;padding:8px 12px"></div>
+  </div>
+</div>
+
+<script>
+async function enviarPedido(){
+  const nome=document.getElementById('p-nome').value.trim();
+  const email=document.getElementById('p-email').value.trim();
+  const tipo=document.getElementById('p-tipo').value;
+  const msg=document.getElementById('p-msg').value.trim();
+  const resp=document.getElementById('p-resp');
+  if(!nome||!email||!tipo){resp.textContent='Preencha nome, email e tipo de pedido.';resp.style.color='#c97850';resp.style.background='rgba(139,26,26,0.15)';resp.style.display='block';return;}
+  try{
+    const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({nome,email,assunto:'Pedido RGPD: '+tipo,mensagem:msg||'Sem descrição adicional.',pagina:'privacidade'})});
+    if(r.ok){resp.textContent='✓ Pedido recebido. Respondemos em até 30 dias úteis.';resp.style.color='#1a5c3a';resp.style.background='rgba(26,92,58,0.15)';}
+    else throw new Error();
+  }catch(e){resp.textContent='Erro ao enviar. Tente novamente.';resp.style.color='#c97850';resp.style.background='rgba(139,26,26,0.15)';}
+  resp.style.display='block';
+}
+</script>
 </body>
 </html>
