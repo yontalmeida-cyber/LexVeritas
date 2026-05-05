@@ -283,6 +283,21 @@
   </div>
 </div>
 
+<!-- REDEFINIR PASSWORD -->
+<div id="page-reset" class="auth-page hidden">
+  <div class="auth-logo">Lex<em>Veritas</em></div>
+  <div class="auth-tagline">Redefinir Password</div>
+  <div class="auth-card">
+    <h2>Nova password</h2>
+    <p>Introduza a sua nova password para aceder à plataforma.</p>
+    <div class="auth-error" id="reset-error"></div>
+    <div class="auth-success" id="reset-success"></div>
+    <div class="form-group"><label>Nova Password</label><input type="password" id="reset-password1" placeholder="Mínimo 6 caracteres"></div>
+    <div class="form-group"><label>Confirmar Password</label><input type="password" id="reset-password2" placeholder="Repita a password"></div>
+    <button class="btn-primary" id="btn-reset" onclick="guardarNovaPassword()">Guardar Nova Password</button>
+  </div>
+</div>
+
 <!-- REGISTO -->
 <div id="page-register" class="auth-page hidden">
   <div class="auth-logo">Lex<em>Veritas</em></div>
@@ -648,7 +663,7 @@ function setModo(modo){
   limparPDF();
 }
 
-function showPage(page){['login','register','app'].forEach(p=>document.getElementById('page-'+p).classList.add('hidden'));document.getElementById('page-'+page).classList.remove('hidden');}
+function showPage(page){['login','register','reset','app'].forEach(p=>document.getElementById('page-'+p).classList.add('hidden'));document.getElementById('page-'+page).classList.remove('hidden');}
 function showTab(tab){['analise','historico','perfil'].forEach(t=>{document.getElementById('tab-content-'+t).classList.add('hidden');document.getElementById('tab-'+t).classList.remove('active');});document.getElementById('tab-content-'+tab).classList.remove('hidden');document.getElementById('tab-'+tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(tab==='historico')loadHistory();if(tab==='perfil')loadPerfil();}
 function showModal(id){document.getElementById('modal-'+id).classList.add('visible');}
 function closeModal(id){document.getElementById('modal-'+id).classList.remove('visible');}
@@ -688,7 +703,7 @@ async function recuperarPassword(){
   const email=document.getElementById('login-email').value.trim();
   const errEl=document.getElementById('login-error');
   if(!email){errEl.textContent='Introduza o seu email no campo acima primeiro.';errEl.style.display='block';return;}
-  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+'/app'});
+  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://www.lexveritas.pt/app'});
   if(error){errEl.textContent='Erro ao enviar email: '+error.message;errEl.style.display='block';return;}
   errEl.style.display='none';
   const s=document.createElement('div');s.className='auth-success';s.style.display='block';
@@ -698,13 +713,37 @@ async function recuperarPassword(){
 
 async function logout(){await sb.auth.signOut();currentUser=null;userProfile=null;showPage('login');}
 
-sb.auth.onAuthStateChange((event,session)=>{if(loginInProgress)return;if(event==='SIGNED_OUT')showPage('login');});
-sb.auth.getSession().then(({data})=>{
+sb.auth.onAuthStateChange((event,session)=>{
   if(loginInProgress)return;
-  if(data.session?.user){currentUser=data.session.user;userProfile={nome:data.session.user.user_metadata?.nome||data.session.user.email.split('@')[0],plano:'gratuito',analises_mes:0};initApp();showPage('app');}
-  else showPage('login');
+  if(event==='SIGNED_OUT')showPage('login');
+  if(event==='PASSWORD_RECOVERY'){
+    document.getElementById('lv-loading').style.display='none';
+    showPage('reset');
+  }
 });
 
+// Verificar tipo de acesso
+const _hashParams=new URLSearchParams(window.location.hash.substring(1));
+const _urlParams=new URLSearchParams(window.location.search);
+
+if(_hashParams.get('type')==='recovery'){
+  // Fluxo implícito — token no hash
+  document.getElementById('lv-loading').style.display='none';
+  showPage('reset');
+} else if(_urlParams.has('code')){
+  // Fluxo PKCE — código na query string, aguardar evento PASSWORD_RECOVERY
+  // Não mostrar login ainda — o onAuthStateChange vai tratar
+  document.getElementById('lv-loading').style.display='none';
+  showPage('login'); // fallback temporário
+} else {
+  sb.auth.getSession().then(({data})=>{
+    if(loginInProgress)return;
+    // Não navegar se já estamos na página de reset
+    if(!document.getElementById('page-reset').classList.contains('hidden'))return;
+    if(data.session?.user){currentUser=data.session.user;userProfile={nome:data.session.user.user_metadata?.nome||data.session.user.email.split('@')[0],plano:'gratuito',analises_mes:0};initApp();showPage('app');}
+    else showPage('login');
+  });
+}
 async function loadProfile(){
   try{
     const mes=new Date().toISOString().substring(0,7);
@@ -762,10 +801,27 @@ async function guardarPerfil(){
 
 async function alterarPassword(){
   const msg=document.getElementById('password-msg');
-  const{error}=await sb.auth.resetPasswordForEmail(currentUser.email,{redirectTo:window.location.origin+'/app'});
+  const{error}=await sb.auth.resetPasswordForEmail(currentUser.email,{redirectTo:'https://www.lexveritas.pt/app'});
   if(error){msg.textContent='Erro: '+error.message;msg.style.color='#c97850';}
   else{msg.textContent='✓ Email de recuperação enviado. Verifique a sua caixa de entrada.';msg.style.color='var(--green)';}
   msg.style.display='block';setTimeout(()=>msg.style.display='none',5000);
+}
+
+// REDEFINIR PASSWORD
+async function guardarNovaPassword(){
+  const p1=document.getElementById('reset-password1').value;
+  const p2=document.getElementById('reset-password2').value;
+  const errEl=document.getElementById('reset-error');
+  const succEl=document.getElementById('reset-success');
+  const btn=document.getElementById('btn-reset');
+  errEl.style.display='none';succEl.style.display='none';
+  if(!p1||p1.length<6){errEl.textContent='Password com mínimo 6 caracteres.';errEl.style.display='block';return;}
+  if(p1!==p2){errEl.textContent='As passwords não coincidem.';errEl.style.display='block';return;}
+  btn.disabled=true;btn.textContent='A guardar...';
+  const{error}=await sb.auth.updateUser({password:p1});
+  if(error){errEl.textContent='Erro: '+error.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Guardar Nova Password';return;}
+  succEl.textContent='✓ Password actualizada! A redirecionar...';succEl.style.display='block';
+  setTimeout(()=>{window.location.href='/app';},2000);
 }
 
 // CONTACTO — Formspree
