@@ -9,7 +9,6 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-
 <style>
   :root {
     --black: #060608; --dark: #0e0e12; --card: #13131a; --ink: #0d0d0d;
@@ -71,54 +70,23 @@
   nav a:hover { color: #f8f6f1; }
   nav a.active { color: var(--gold); border-bottom: 1px solid var(--gold); }
   .usage-bar-container { background: var(--dark); border-bottom: 1px solid var(--rule-dark); padding: 8px clamp(20px, 5vw, 60px); display: flex; align-items: center; gap: 16px; }
-  /* MODE TOGGLE */
   .mode-toggle-bar { background: var(--black); border-bottom: 1px solid var(--rule-dark); padding: 12px clamp(20px, 5vw, 60px); display: flex; align-items: center; gap: 8px; }
   .mode-toggle-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-right: 8px; white-space: nowrap; }
   .mode-btn { background: transparent; border: 1px solid var(--rule-dark); padding: 8px 18px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--grey); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
   .mode-btn:hover { border-color: rgba(201,168,76,0.4); color: #f8f6f1; }
   .mode-btn.active { background: rgba(201,168,76,0.12); border-color: var(--gold); color: var(--gold); }
-  @media(max-width:760px) { .mode-toggle-bar { flex-wrap: wrap; gap: 6px; } .mode-btn { flex: 1; justify-content: center; font-size: 10px; padding: 8px 10px; } }
   .usage-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--grey); white-space: nowrap; }
   .usage-track { flex: 1; height: 2px; background: rgba(255,255,255,0.08); max-width: 200px; }
   .usage-fill { height: 100%; background: var(--gold); transition: width 0.5s; }
   .usage-count { font-family: var(--mono); font-size: 10px; color: var(--grey); white-space: nowrap; }
   .usage-upgrade { font-family: var(--sans); font-size: 11px; font-weight: 600; color: var(--gold); cursor: pointer; margin-left: auto; letter-spacing: 0.05em; }
   main { max-width: 1060px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: start; }
-  @media (max-width: 760px) {
-    main { grid-template-columns: 1fr; gap: 20px; padding: 16px; }
-    .sidebar { order: 2; } .content-area { order: 1; }
-    textarea { height: 200px; font-size: 13px; padding: 14px; }
-    .btn-analyze { width: 100%; justify-content: center; padding: 14px; font-size: 12px; }
-    .input-card-footer { flex-direction: column; gap: 10px; align-items: stretch; }
-    .file-hint { justify-content: center; }
-    .indicators-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .indicator-card { padding: 10px 12px; }
-    .indicator-name { font-size: 8px; }
-    .indicator-score { font-size: 22px; }
-    .masthead h1 { font-size: clamp(28px, 8vw, 48px); }
-    .history-item { flex-direction: column; gap: 8px; align-items: flex-start; }
-    .history-page { padding: 16px; }
-    footer { flex-direction: column; gap: 8px; text-align: center; padding: 16px; }
-    .btn-pdf { font-size: 12px; padding: 12px 16px; }
-    .plans-grid { grid-template-columns: 1fr; }
-    .widget-body { padding: 12px; }
-    .sidebar-widget { margin-bottom: 12px; }
-    .overlay-inner { padding: 28px 20px; gap: 20px; }
-    .overlay-logo { font-size: 22px; }
-    .scales-anim { width: 48px; height: 48px; }
-    .overlay-ind-name { width: 90px; font-size: 7px; }
-    .overlay-status { font-size: 9px; }
-    .overlay-subtext { font-size: 10px; }
-    .usage-track { max-width: 120px; }
-  }
-  @media (max-width: 400px) { .indicators-grid { grid-template-columns: 1fr; } .masthead h1 { font-size: 26px; } }
   .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
   .section-label::after { content: ''; height: 1px; flex: 1; background: var(--gold); opacity: 0.4; }
   .input-card { background: white; border: 1px solid var(--rule); box-shadow: 0 2px 16px rgba(0,0,0,0.04); }
   .input-card-header { padding: 16px 20px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; background: var(--parchment); }
   .input-card-title { font-family: var(--serif); font-size: 14px; font-weight: 700; }
   .char-count { font-family: var(--mono); font-size: 11px; color: #aaa; }
-  /* TEXTAREA — sem limite de altura máximo, resize vertical disponível */
   textarea { width: 100%; height: 320px; border: none; outline: none; resize: vertical; padding: 20px; font-family: var(--mono); font-size: 12px; line-height: 1.8; color: var(--ink); background: white; min-height: 160px; max-height: 600px; }
   textarea::placeholder { color: #ccc; font-style: italic; font-family: var(--serif); font-size: 13px; }
   .input-card-footer { padding: 14px 20px; border-top: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; background: var(--parchment); }
@@ -133,13 +101,11 @@
   .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .btn-analyze.loading .spinner { display: block; }
-  /* DROP ZONE */
   .drop-zone { border: 2px dashed var(--rule); padding: 16px; text-align: center; margin-top: 10px; cursor: pointer; transition: all 0.2s; }
   .drop-zone:hover { border-color: var(--gold); background: #fffbf0; }
   .drop-zone.has-file { border-color: rgba(201,168,76,0.4); background: #fffdf5; border-style: solid; cursor: default; }
   .drop-zone-text { font-family: var(--sans); font-size: 12px; color: #bbb; line-height: 1.7; }
   .drop-zone.has-file .drop-zone-text { color: #666; }
-  /* ANALYSIS OVERLAY */
   .analysis-overlay { position: fixed; inset: 0; background: rgba(13,13,13,0.93); z-index: 500; display: none; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(8px); }
   .analysis-overlay.visible { display: flex; animation: overlayIn 0.4s ease; }
   @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
@@ -163,7 +129,6 @@
   .overlay-ind-track { flex: 1; height: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
   .overlay-ind-fill { height: 100%; background: var(--gold); width: 0%; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
   .overlay-ind-val { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.3); width: 24px; text-align: right; }
-  /* RESULTS */
   .results-area { margin-top: 28px; display: none; }
   .results-area.visible { display: block; animation: fadeUp 0.5s ease; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -218,28 +183,37 @@
   .history-meta { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 3px; }
   .history-confianca { font-family: var(--mono); font-size: 18px; font-weight: 500; color: var(--gold); }
   .empty-history { text-align: center; padding: 60px 20px; color: #aaa; font-family: var(--serif); font-size: 18px; font-style: italic; }
-  footer { border-top: 1px solid var(--rule); padding: 20px clamp(20px, 5vw, 60px); display: flex; justify-content: space-between; align-items: center; margin-top: 32px; }
+  footer { border-top: 1px solid var(--rule); padding: 20px clamp(20px, 5vw, 60px); display: flex; justify-content: space-between; align-items: center; margin-top: 32px; flex-wrap: wrap; gap: 12px; }
   .footer-brand { font-family: var(--serif); font-size: 16px; font-weight: 700; }
   .footer-brand em { font-style: italic; color: var(--gold); }
   .footer-copy { font-family: var(--mono); font-size: 9px; color: #bbb; letter-spacing: 0.1em; }
+  .footer-contact { font-family: var(--mono); font-size: 9px; color: var(--gold); cursor: pointer; letter-spacing: 0.1em; text-decoration: none; transition: opacity 0.2s; }
+  .footer-contact:hover { opacity: 0.7; }
+  /* MODAL */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
   .modal-overlay.visible { display: flex; }
   .modal { background: white; max-width: 480px; width: 100%; padding: 36px; position: relative; }
   .modal h2 { font-family: var(--serif); font-size: 24px; font-weight: 900; margin-bottom: 6px; }
   .modal p { font-size: 13px; color: #666; margin-bottom: 28px; line-height: 1.6; }
-  .plans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-  .plan-card { border: 1px solid var(--rule); padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
-  .plan-card:hover, .plan-card.selected { border-color: var(--gold); background: #fffbf0; }
-  .plan-name { font-family: var(--serif); font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-  .plan-price { font-family: var(--mono); font-size: 20px; font-weight: 500; color: var(--gold); margin-bottom: 6px; }
-  .plan-features { font-size: 11px; color: #888; line-height: 1.6; }
   .btn-close-modal { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: #aaa; }
   .btn-pdf { display: flex; align-items: center; gap: 8px; background: white; color: var(--ink); border: 1px solid var(--rule); padding: 11px 20px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 16px; width: 100%; justify-content: center; }
   .btn-pdf:hover { background: var(--parchment); border-color: var(--gold); color: var(--gold); }
   .ref-number { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 6px; text-align: center; }
   .hidden { display: none !important; }
-
-  /* LOADING OVERLAY */
+  /* CONTACTO MODAL DARK */
+  .dark-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+  .dark-modal-overlay.visible { display: flex; }
+  .dark-modal-box { background: var(--card); border: 1px solid var(--rule-dark); padding: 36px; max-width: 460px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+  .dark-modal-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+  .dark-modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: #9a9a9a; font-size: 22px; cursor: pointer; }
+  .dark-modal-close:hover { color: #f8f6f1; }
+  .dark-form-group { margin-bottom: 14px; }
+  .dark-form-group label { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 6px; }
+  .dark-form-group input, .dark-form-group select, .dark-form-group textarea { width: 100%; padding: 11px 14px; border: 1px solid var(--rule-dark); background: rgba(255,255,255,0.04); font-family: var(--sans); font-size: 13px; color: #f8f6f1; outline: none; transition: border-color 0.2s; }
+  .dark-form-group select option { background: var(--dark); }
+  .dark-form-group input:focus, .dark-form-group select:focus, .dark-form-group textarea:focus { border-color: var(--gold); }
+  .dark-form-group textarea { resize: vertical; min-height: 90px; }
+  /* LOADING */
   #lv-loading{position:fixed;inset:0;background:#060608;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s ease}
   #lv-loading.done{opacity:0;pointer-events:none}
   .lv-load-logo{font-family:var(--serif);font-size:48px;font-style:italic;color:#f8f6f1}
@@ -248,16 +222,47 @@
   .lv-load-track{width:200px;height:2px;background:rgba(255,255,255,0.08)}
   .lv-load-fill{height:100%;background:linear-gradient(90deg,#c9a84c,#e8c96a);width:0;animation:lvload 2.5s ease forwards}
   @keyframes lvload{0%{width:0}60%{width:80%}100%{width:95%}}
+  @media(max-width:760px){
+    main{grid-template-columns:1fr;gap:20px;padding:16px}
+    .sidebar{order:2}.content-area{order:1}
+    textarea{height:200px;font-size:13px;padding:14px}
+    .btn-analyze{width:100%;justify-content:center;padding:14px;font-size:12px}
+    .input-card-footer{flex-direction:column;gap:10px;align-items:stretch}
+    .file-hint{justify-content:center}
+    .indicators-grid{grid-template-columns:1fr 1fr;gap:8px}
+    .indicator-card{padding:10px 12px}
+    .indicator-name{font-size:8px}
+    .indicator-score{font-size:22px}
+    .masthead h1{font-size:clamp(28px,8vw,48px)}
+    .history-item{flex-direction:column;gap:8px;align-items:flex-start}
+    .history-page{padding:16px}
+    footer{flex-direction:column;gap:8px;text-align:center;padding:16px}
+    .btn-pdf{font-size:12px;padding:12px 16px}
+    .widget-body{padding:12px}
+    .sidebar-widget{margin-bottom:12px}
+    .overlay-inner{padding:28px 20px;gap:20px}
+    .overlay-logo{font-size:22px}
+    .scales-anim{width:48px;height:48px}
+    .overlay-ind-name{width:90px;font-size:7px}
+    .overlay-status{font-size:9px}
+    .overlay-subtext{font-size:10px}
+    .usage-track{max-width:120px}
+    .mode-toggle-bar{flex-wrap:wrap;gap:6px}
+    .mode-btn{flex:1;justify-content:center;font-size:10px;padding:8px 10px}
+  }
+  @media(max-width:400px){.indicators-grid{grid-template-columns:1fr}.masthead h1{font-size:26px}}
 </style>
 </head>
 <body>
 
-<!-- LOGIN PAGE -->
+<!-- LOADING -->
 <div id="lv-loading">
   <div class="lv-load-logo">Lex<span>Veritas</span></div>
   <div class="lv-load-label">Sistema de Análise Forense</div>
   <div class="lv-load-track"><div class="lv-load-fill"></div></div>
 </div>
+
+<!-- LOGIN -->
 <div id="page-login" class="auth-page">
   <div class="auth-logo">Lex<em>Veritas</em></div>
   <div class="auth-tagline">Detector de IA em Jurisprudência Portuguesa</div>
@@ -270,21 +275,15 @@
     <h2>Entrar na conta</h2>
     <p>Aceda à sua conta para continuar a análise forense.</p>
     <div class="auth-error" id="login-error"></div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" id="login-email" placeholder="o-seu@email.pt" onkeydown="if(event.key==='Enter') fazerLogin()">
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter') fazerLogin()">
-    </div>
+    <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="o-seu@email.pt" onkeydown="if(event.key==='Enter') fazerLogin()"></div>
+    <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter') fazerLogin()"></div>
     <div class="auth-forgot"><a onclick="recuperarPassword()">Esqueceu a password?</a></div>
     <button class="btn-primary" id="btn-login" onclick="fazerLogin()">Entrar</button>
     <div class="auth-switch">Não tem conta? <a onclick="showPage('register')">Crie uma gratuitamente →</a></div>
   </div>
 </div>
 
-<!-- REGISTER PAGE -->
+<!-- REGISTO -->
 <div id="page-register" class="auth-page hidden">
   <div class="auth-logo">Lex<em>Veritas</em></div>
   <div class="auth-tagline">Detector de IA em Jurisprudência Portuguesa</div>
@@ -320,7 +319,7 @@
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- APP PRINCIPAL -->
 <div id="page-app" class="hidden">
 <header>
   <div class="header-top">
@@ -352,7 +351,7 @@
   <span class="usage-count" id="usage-count">0 / 5</span>
   <span class="usage-upgrade" onclick="showModal('upgrade')">⬆ Actualizar</span>
 </div>
-<!-- MODE TOGGLE -->
+
 <div class="mode-toggle-bar">
   <span class="mode-toggle-label">Modo</span>
   <button class="mode-btn active" id="mode-btn-judicial" onclick="setModo('judicial')">⚖ Análise Judicial</button>
@@ -369,9 +368,7 @@
         <span class="char-count" id="char-count">0 caracteres</span>
       </div>
       <div class="loading-bar" id="loading-bar"><div class="loading-bar-fill"></div></div>
-      <textarea id="decision-text" placeholder="Cole aqui o texto completo do acórdão, sentença ou despacho para análise forense...
-
-Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo."></textarea>
+      <textarea id="decision-text" placeholder="Cole aqui o texto completo do acórdão, sentença ou despacho para análise forense...&#10;&#10;Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo."></textarea>
       <div class="input-card-footer">
         <span class="file-hint">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -383,12 +380,10 @@ Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF a
         </button>
       </div>
     </div>
-    <!-- DROP ZONE: mostra confirmação após upload, não põe texto no textarea -->
     <div class="drop-zone" id="drop-zone">
       <div class="drop-zone-text" id="drop-zone-text">📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui</div>
       <input type="file" id="file-input" accept=".txt,.pdf" style="display:none" onchange="handleFile(event)">
     </div>
-
     <div class="results-area" id="results-area">
       <div class="section-label" style="margin-top:28px">Resultado da Análise</div>
       <div class="verdict-banner" id="verdict-banner">
@@ -419,7 +414,6 @@ Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF a
     <div class="sidebar-widget">
       <div class="widget-header"><div class="widget-title" id="ctx-widget-title">Contexto do Documento</div></div>
       <div class="widget-body" style="padding:14px">
-        <!-- JUDICIAL -->
         <div id="ctx-judicial">
           <select id="tribunal-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tribunal (opcional) —</option>
@@ -447,28 +441,18 @@ Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF a
             </optgroup>
           </select>
           <input id="relator-input" type="text" placeholder="Nome do relator (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
-          <div class="info-box note" style="margin:0;font-size:11px">
-            <strong>Porquê indicar?</strong>
-            Cada tribunal e relator têm um estilo próprio. Indicar melhora a precisão.
-          </div>
+          <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>Cada tribunal e relator têm um estilo próprio. Indicar melhora a precisão.</div>
         </div>
-        <!-- ACADÉMICO -->
         <div id="ctx-academico" style="display:none">
           <input id="instituicao-input" type="text" placeholder="Universidade / Faculdade (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
           <select id="tipo-doc-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tipo de documento —</option>
-            <option>Dissertação de Mestrado</option>
-            <option>Tese de Doutoramento</option>
-            <option>Trabalho de Licenciatura</option>
-            <option>Artigo Académico</option>
-            <option>Monografia</option>
-            <option>Outro</option>
+            <option>Dissertação de Mestrado</option><option>Tese de Doutoramento</option>
+            <option>Trabalho de Licenciatura</option><option>Artigo Académico</option>
+            <option>Monografia</option><option>Outro</option>
           </select>
           <input id="orientador-input" type="text" placeholder="Orientador (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
-          <div class="info-box note" style="margin:0;font-size:11px">
-            <strong>Porquê indicar?</strong>
-            O tipo de documento e a instituição ajudam a calibrar a análise para o estilo académico-jurídico esperado.
-          </div>
+          <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>O tipo de documento e a instituição ajudam a calibrar a análise para o estilo académico-jurídico esperado.</div>
         </div>
       </div>
     </div>
@@ -499,7 +483,6 @@ Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF a
   </div>
 </div>
 
-<!-- PERFIL TAB -->
 <div id="tab-content-perfil" class="hidden">
   <div class="history-page">
     <div class="section-label">O Meu Perfil</div>
@@ -536,7 +519,7 @@ Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF a
         <div class="stat-row"><span class="stat-label">Membro desde</span><span class="stat-value" id="perfil-desde">—</span></div>
       </div>
     </div>
-    <div class="input-card">
+    <div class="input-card" style="margin-bottom:20px">
       <div class="input-card-header"><span class="input-card-title">Segurança</span></div>
       <div style="padding:20px;background:white;display:flex;flex-direction:column;gap:12px">
         <p style="font-size:13px;color:#666;line-height:1.6">Para alterar a sua password, enviamos um link de recuperação para o seu email.</p>
@@ -544,14 +527,24 @@ Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF a
         <div id="password-msg" style="font-size:12px;display:none"></div>
       </div>
     </div>
+    <!-- SUPORTE / CONTACTO -->
+    <div class="input-card">
+      <div class="input-card-header"><span class="input-card-title">Suporte & Contacto</span></div>
+      <div style="padding:20px;background:white;display:flex;flex-direction:column;gap:12px">
+        <p style="font-size:13px;color:#666;line-height:1.6">Tem alguma questão sobre o seu plano, suporte técnico ou parcerias? Envie-nos uma mensagem e respondemos em 24h.</p>
+        <button onclick="document.getElementById('contacto-modal').classList.add('visible')" style="background:var(--ink);color:var(--cream);border:none;padding:11px 24px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;align-self:flex-start" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--ink)'">✉ Enviar Mensagem</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <footer>
   <div class="footer-brand">Lex<em>Veritas</em></div>
+  <a class="footer-contact" onclick="document.getElementById('contacto-modal').classList.add('visible')">✉ Contacto & Suporte</a>
   <div class="footer-copy">© 2026 · Jurisprudência Portuguesa · Uso Profissional</div>
 </footer>
 
+<!-- OVERLAY ANÁLISE -->
 <div class="analysis-overlay" id="analysis-overlay">
   <div class="overlay-inner">
     <div class="overlay-logo">Lex<em>Veritas</em></div>
@@ -583,6 +576,7 @@ Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF a
 </div>
 </div>
 
+<!-- MODAL UPGRADE — Lista de espera -->
 <div class="modal-overlay" id="modal-upgrade">
   <div class="modal">
     <button class="btn-close-modal" onclick="closeModal('upgrade')">×</button>
@@ -601,178 +595,124 @@ Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF a
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
-async function inscreverListaEspera(){
-  const email=document.getElementById('upgrade-email').value.trim();
-  const msg=document.getElementById('upgrade-msg');
-  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
-  try{
-    await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});
-    msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';
-    msg.style.color='var(--green)';msg.style.display='block';
-    document.getElementById('upgrade-email').value='';
-  }catch(e){
-    // Tabela pode não existir ainda — guarda na consola
-    msg.textContent='✓ Obrigado! Entraremos em contacto em breve.';
-    msg.style.color='var(--green)';msg.style.display='block';
-  }
-}
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js">
-async function inscreverListaEspera(){
-  const email=document.getElementById('upgrade-email').value.trim();
-  const msg=document.getElementById('upgrade-msg');
-  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
-  try{
-    await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});
-    msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';
-    msg.style.color='var(--green)';msg.style.display='block';
-    document.getElementById('upgrade-email').value='';
-  }catch(e){
-    // Tabela pode não existir ainda — guarda na consola
-    msg.textContent='✓ Obrigado! Entraremos em contacto em breve.';
-    msg.style.color='var(--green)';msg.style.display='block';
-  }
-}
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
-async function inscreverListaEspera(){
-  const email=document.getElementById('upgrade-email').value.trim();
-  const msg=document.getElementById('upgrade-msg');
-  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
-  try{
-    await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});
-    msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';
-    msg.style.color='var(--green)';msg.style.display='block';
-    document.getElementById('upgrade-email').value='';
-  }catch(e){
-    // Tabela pode não existir ainda — guarda na consola
-    msg.textContent='✓ Obrigado! Entraremos em contacto em breve.';
-    msg.style.color='var(--green)';msg.style.display='block';
-  }
-}
-</script>
+<!-- MODAL CONTACTO — Formspree -->
+<div class="dark-modal-overlay" id="contacto-modal" onclick="if(event.target===this)this.classList.remove('visible')">
+  <div class="dark-modal-box">
+    <button class="dark-modal-close" onclick="document.getElementById('contacto-modal').classList.remove('visible')">×</button>
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Suporte & Contacto</div>
+    <h2 style="font-family:var(--serif);font-size:22px;font-style:italic;color:#f8f6f1;margin-bottom:6px">Fale connosco</h2>
+    <p style="font-size:13px;color:var(--grey);margin-bottom:20px;line-height:1.6">Questões sobre o seu plano, suporte técnico ou parcerias. Respondemos em 24h.</p>
+    <div class="dark-form-group"><label>Nome</label><input type="text" id="cm-nome" placeholder="O seu nome"></div>
+    <div class="dark-form-group"><label>Email</label><input type="email" id="cm-email" placeholder="o-seu@email.pt"></div>
+    <div class="dark-form-group">
+      <label>Assunto</label>
+      <select id="cm-assunto">
+        <option value="">— Seleccione —</option>
+        <option>Questão sobre o meu plano</option>
+        <option>Plano Profissional</option>
+        <option>Suporte técnico</option>
+        <option>Parceria</option>
+        <option>Outro</option>
+      </select>
+    </div>
+    <div class="dark-form-group"><label>Mensagem</label><textarea id="cm-mensagem" placeholder="A sua mensagem..."></textarea></div>
+    <button onclick="enviarContacto()" style="width:100%;background:var(--gold);color:var(--black);border:none;padding:13px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;margin-top:4px" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">Enviar Mensagem →</button>
+    <div id="cm-msg" style="font-size:12px;margin-top:12px;display:none;padding:10px 14px"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-// Esconder loading overlay — scripts carregados
 const lvLoad=document.getElementById('lv-loading');
 if(lvLoad){lvLoad.classList.add('done');setTimeout(()=>lvLoad.style.display='none',500);}
 
-const SUPABASE_URL = 'https://bsbgizaftamufmmxeyer.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL='https://bsbgizaftamufmmxeyer.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-let currentUser = null, userProfile = null, lastResult = null, lastRef = null, loginInProgress = false;
-// NOVO: variável para guardar texto de PDF sem poluir o textarea
-let pdfText = null;
-// MODO: judicial ou academico
-let modoActual = 'judicial';
+let currentUser=null,userProfile=null,lastResult=null,lastRef=null,loginInProgress=false;
+let pdfText=null,modoActual='judicial';
 
-function setModo(modo) {
-  modoActual = modo;
-  document.getElementById('mode-btn-judicial').classList.toggle('active', modo === 'judicial');
-  document.getElementById('mode-btn-academico').classList.toggle('active', modo === 'academico');
-  document.getElementById('ctx-judicial').style.display = modo === 'judicial' ? 'block' : 'none';
-  document.getElementById('ctx-academico').style.display = modo === 'academico' ? 'block' : 'none';
-  document.getElementById('input-card-title').textContent = modo === 'judicial'
-    ? 'Texto do Acórdão / Sentença / Despacho'
-    : 'Tese / Dissertação / Trabalho Académico';
-  document.getElementById('decision-text').placeholder = modo === 'judicial'
-    ? 'Cole aqui o texto completo do acórdão, sentença ou despacho para análise forense...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.'
-    : 'Cole aqui o texto da tese, dissertação ou trabalho académico para verificação de autoria...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.';
-  document.getElementById('btn-analyze-text').textContent = modo === 'judicial' ? 'Analisar Decisão' : 'Analisar Documento';
+function setModo(modo){
+  modoActual=modo;
+  document.getElementById('mode-btn-judicial').classList.toggle('active',modo==='judicial');
+  document.getElementById('mode-btn-academico').classList.toggle('active',modo==='academico');
+  document.getElementById('ctx-judicial').style.display=modo==='judicial'?'block':'none';
+  document.getElementById('ctx-academico').style.display=modo==='academico'?'block':'none';
+  document.getElementById('input-card-title').textContent=modo==='judicial'?'Texto do Acórdão / Sentença / Despacho':'Tese / Dissertação / Trabalho Académico';
+  document.getElementById('decision-text').placeholder=modo==='judicial'?'Cole aqui o texto completo do acórdão, sentença ou despacho para análise forense...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.':'Cole aqui o texto da tese, dissertação ou trabalho académico para verificação de autoria...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.';
+  document.getElementById('btn-analyze-text').textContent=modo==='judicial'?'Analisar Decisão':'Analisar Documento';
   document.getElementById('results-area').classList.remove('visible');
   limparPDF();
 }
 
-function showPage(page) {
-  ['login','register','app'].forEach(p => document.getElementById('page-'+p).classList.add('hidden'));
-  document.getElementById('page-'+page).classList.remove('hidden');
-}
-function showTab(tab) {
-  ['analise','historico','perfil'].forEach(t => { document.getElementById('tab-content-'+t).classList.add('hidden'); document.getElementById('tab-'+t).classList.remove('active'); });
-  document.getElementById('tab-content-'+tab).classList.remove('hidden');
-  document.getElementById('tab-'+tab).classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (tab === 'historico') loadHistory();
-  if (tab === 'perfil') loadPerfil();
-}
-function showModal(id) { document.getElementById('modal-'+id).classList.add('visible'); }
-function closeModal(id) { document.getElementById('modal-'+id).classList.remove('visible'); }
+function showPage(page){['login','register','app'].forEach(p=>document.getElementById('page-'+p).classList.add('hidden'));document.getElementById('page-'+page).classList.remove('hidden');}
+function showTab(tab){['analise','historico','perfil'].forEach(t=>{document.getElementById('tab-content-'+t).classList.add('hidden');document.getElementById('tab-'+t).classList.remove('active');});document.getElementById('tab-content-'+tab).classList.remove('hidden');document.getElementById('tab-'+tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(tab==='historico')loadHistory();if(tab==='perfil')loadPerfil();}
+function showModal(id){document.getElementById('modal-'+id).classList.add('visible');}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('visible');}
 
-async function fazerLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const pass  = document.getElementById('login-password').value;
-  const errEl = document.getElementById('login-error');
-  const btn   = document.getElementById('btn-login');
-  errEl.style.display = 'none';
-  if (!email || !pass) { errEl.textContent = 'Preencha email e password.'; errEl.style.display = 'block'; return; }
-  btn.disabled = true; btn.textContent = 'A entrar...'; loginInProgress = true;
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-  if (error) { loginInProgress = false; errEl.textContent = 'Email ou password incorrectos.'; errEl.style.display = 'block'; btn.disabled = false; btn.textContent = 'Entrar'; return; }
-  currentUser = data.user; await loadProfile(); initApp(); showPage('app');
+async function fazerLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-password').value;
+  const errEl=document.getElementById('login-error');
+  const btn=document.getElementById('btn-login');
+  errEl.style.display='none';
+  if(!email||!pass){errEl.textContent='Preencha email e password.';errEl.style.display='block';return;}
+  btn.disabled=true;btn.textContent='A entrar...';loginInProgress=true;
+  const{data,error}=await sb.auth.signInWithPassword({email,password:pass});
+  if(error){loginInProgress=false;errEl.textContent='Email ou password incorrectos.';errEl.style.display='block';btn.disabled=false;btn.textContent='Entrar';return;}
+  currentUser=data.user;await loadProfile();initApp();showPage('app');
 }
 
-async function fazerRegisto() {
-  const nome=document.getElementById('register-nome').value.trim(), prof=document.getElementById('register-profissao').value;
-  const email=document.getElementById('register-email').value.trim(), pass=document.getElementById('register-password').value;
-  const errEl=document.getElementById('register-error'), succEl=document.getElementById('register-success');
+async function fazerRegisto(){
+  const nome=document.getElementById('register-nome').value.trim(),prof=document.getElementById('register-profissao').value;
+  const email=document.getElementById('register-email').value.trim(),pass=document.getElementById('register-password').value;
+  const errEl=document.getElementById('register-error'),succEl=document.getElementById('register-success');
   const btn=document.getElementById('btn-register');
-  errEl.style.display='none'; succEl.style.display='none';
-  if (!nome||!email||!pass){errEl.textContent='Preencha todos os campos.';errEl.style.display='block';return;}
-  if (pass.length<6){errEl.textContent='Password com mínimo 6 caracteres.';errEl.style.display='block';return;}
-  btn.disabled=true; btn.textContent='A criar conta...';
-  try {
+  errEl.style.display='none';succEl.style.display='none';
+  if(!nome||!email||!pass){errEl.textContent='Preencha todos os campos.';errEl.style.display='block';return;}
+  if(pass.length<6){errEl.textContent='Password com mínimo 6 caracteres.';errEl.style.display='block';return;}
+  btn.disabled=true;btn.textContent='A criar conta...';
+  try{
     const{data,error}=await sb.auth.signUp({email,password:pass,options:{data:{nome,profissao:prof}}});
     if(error){errEl.textContent='Erro: '+error.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Criar Conta Gratuita';return;}
-    if(data?.user) await sb.from('perfis').upsert({id:data.user.id,email,nome,profissao:prof,mes_atual:new Date().toISOString().substring(0,7),analises_mes:0});
-    succEl.textContent='Conta criada! Já pode entrar na sua conta.';
-    succEl.style.display='block'; btn.textContent='Conta criada!';
-    // Enviar email de boas-vindas
-    fetch('https://bsbgizaftamufmmxeyer.supabase.co/functions/v1/rapid-service',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({record:{email:email,raw_user_meta_data:{nome:nome}}})
-    }).catch(()=>{});
-  } catch(e){errEl.textContent='Erro: '+e.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Criar Conta Gratuita';}
+    if(data?.user)await sb.from('perfis').upsert({id:data.user.id,email,nome,profissao:prof,mes_atual:new Date().toISOString().substring(0,7),analises_mes:0});
+    succEl.textContent='Conta criada! Já pode entrar na sua conta.';succEl.style.display='block';btn.textContent='Conta criada!';
+    fetch('https://bsbgizaftamufmmxeyer.supabase.co/functions/v1/rapid-service',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({record:{email,raw_user_meta_data:{nome}}})}).catch(()=>{});
+  }catch(e){errEl.textContent='Erro: '+e.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Criar Conta Gratuita';}
 }
 
-async function recuperarPassword() {
+async function recuperarPassword(){
   const email=document.getElementById('login-email').value.trim();
   const errEl=document.getElementById('login-error');
   if(!email){errEl.textContent='Introduza o seu email no campo acima primeiro.';errEl.style.display='block';return;}
   const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+'/app'});
   if(error){errEl.textContent='Erro ao enviar email: '+error.message;errEl.style.display='block';return;}
   errEl.style.display='none';
-  const s=document.createElement('div'); s.className='auth-success'; s.style.display='block';
+  const s=document.createElement('div');s.className='auth-success';s.style.display='block';
   s.textContent='Email de recuperação enviado! Verifique a sua caixa de entrada.';
-  document.getElementById('login-error').after(s); setTimeout(()=>s.remove(),6000);
+  document.getElementById('login-error').after(s);setTimeout(()=>s.remove(),6000);
 }
 
-async function logout() { await sb.auth.signOut(); currentUser=null; userProfile=null; showPage('login'); }
+async function logout(){await sb.auth.signOut();currentUser=null;userProfile=null;showPage('login');}
 
-sb.auth.onAuthStateChange((event,session)=>{ if(loginInProgress)return; if(event==='SIGNED_OUT')showPage('login'); });
-
+sb.auth.onAuthStateChange((event,session)=>{if(loginInProgress)return;if(event==='SIGNED_OUT')showPage('login');});
 sb.auth.getSession().then(({data})=>{
   if(loginInProgress)return;
-  if(data.session?.user){
-    currentUser=data.session.user;
-    userProfile={nome:data.session.user.user_metadata?.nome||data.session.user.email.split('@')[0],plano:'gratuito',analises_mes:0};
-    initApp(); showPage('app');
-  } else showPage('login');
+  if(data.session?.user){currentUser=data.session.user;userProfile={nome:data.session.user.user_metadata?.nome||data.session.user.email.split('@')[0],plano:'gratuito',analises_mes:0};initApp();showPage('app');}
+  else showPage('login');
 });
 
-async function loadProfile() {
-  try {
+async function loadProfile(){
+  try{
     const mes=new Date().toISOString().substring(0,7);
     let{data}=await sb.from('perfis').select('*').eq('id',currentUser.id).single();
-    if(!data){
-      const meta=currentUser.user_metadata||{};
-      await sb.from('perfis').upsert({id:currentUser.id,email:currentUser.email,nome:meta.nome||currentUser.email.split('@')[0],profissao:meta.profissao||'',mes_atual:mes,analises_mes:0,plano:'gratuito'});
-      ({data}=await sb.from('perfis').select('*').eq('id',currentUser.id).single());
-    }
+    if(!data){const meta=currentUser.user_metadata||{};await sb.from('perfis').upsert({id:currentUser.id,email:currentUser.email,nome:meta.nome||currentUser.email.split('@')[0],profissao:meta.profissao||'',mes_atual:mes,analises_mes:0,plano:'gratuito'});({data}=await sb.from('perfis').select('*').eq('id',currentUser.id).single());}
     if(data&&data.mes_atual!==mes){await sb.from('perfis').update({analises_mes:0,mes_atual:mes}).eq('id',currentUser.id);data.analises_mes=0;data.mes_atual=mes;}
     userProfile=data||{nome:currentUser.email.split('@')[0],plano:'gratuito',analises_mes:0};
-  } catch(e){userProfile={nome:currentUser.email.split('@')[0],plano:'gratuito',analises_mes:0};}
+  }catch(e){userProfile={nome:currentUser.email.split('@')[0],plano:'gratuito',analises_mes:0};}
 }
 
 function getLimite(){const p=userProfile?.plano;return(p==='profissional'||p==='institucional')?1000:5;}
@@ -780,27 +720,25 @@ function getLimite(){const p=userProfile?.plano;return(p==='profissional'||p==='
 function initApp(){
   const now=new Date();
   document.getElementById('current-date').textContent=now.toLocaleDateString('pt-PT',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
-  const nome=userProfile?.nome||currentUser?.email||'—', plano=userProfile?.plano||'gratuito';
-  const usado=userProfile?.analises_mes||0, limite=getLimite();
+  const nome=userProfile?.nome||currentUser?.email||'—',plano=userProfile?.plano||'gratuito';
+  const usado=userProfile?.analises_mes||0,limite=getLimite();
   document.getElementById('user-name-display').textContent=nome;
   document.getElementById('user-plan-display').innerHTML=`<span class="plan-badge plan-${plano}">${plano}</span>`;
   document.getElementById('usage-fill').style.width=Math.min(100,(usado/limite)*100)+'%';
   document.getElementById('usage-count').textContent=usado+' / '+limite;
   document.getElementById('stat-plano').textContent=plano.charAt(0).toUpperCase()+plano.slice(1);
   document.getElementById('stat-mes').textContent=usado+' / '+limite;
-  // Detectar modo via URL
   const urlParams=new URLSearchParams(window.location.search);
-  if(urlParams.get('modo')==='academico') setTimeout(()=>setModo('academico'),100);
+  if(urlParams.get('modo')==='academico')setTimeout(()=>setModo('academico'),100);
 }
 
 async function loadPerfil(){
-  if(!currentUser||!userProfile) return;
+  if(!currentUser||!userProfile)return;
   document.getElementById('perfil-nome').value=userProfile.nome||'';
   document.getElementById('perfil-email').value=currentUser.email||'';
   const profSel=document.getElementById('perfil-profissao');
   if(userProfile.profissao){Array.from(profSel.options).forEach(o=>{if(o.value===userProfile.profissao)o.selected=true;});}
-  const plano=userProfile.plano||'gratuito';
-  const limite=getLimite();
+  const plano=userProfile.plano||'gratuito',limite=getLimite();
   document.getElementById('perfil-plano').textContent=plano.charAt(0).toUpperCase()+plano.slice(1);
   document.getElementById('perfil-mes').textContent=(userProfile.analises_mes||0)+' / '+limite;
   const{count}=await sb.from('analises').select('*',{count:'exact',head:true}).eq('user_id',currentUser.id);
@@ -816,7 +754,7 @@ async function guardarPerfil(){
   const msg=document.getElementById('perfil-msg');
   if(!nome){msg.textContent='Introduza o seu nome.';msg.style.color='#c97850';msg.style.display='block';return;}
   await sb.from('perfis').update({nome,profissao:prof}).eq('id',currentUser.id);
-  userProfile.nome=nome; userProfile.profissao=prof;
+  userProfile.nome=nome;userProfile.profissao=prof;
   document.getElementById('user-name-display').textContent=nome;
   msg.textContent='✓ Perfil guardado com sucesso.';msg.style.color='var(--green)';msg.style.display='block';
   setTimeout(()=>msg.style.display='none',3000);
@@ -827,205 +765,88 @@ async function alterarPassword(){
   const{error}=await sb.auth.resetPasswordForEmail(currentUser.email,{redirectTo:window.location.origin+'/app'});
   if(error){msg.textContent='Erro: '+error.message;msg.style.color='#c97850';}
   else{msg.textContent='✓ Email de recuperação enviado. Verifique a sua caixa de entrada.';msg.style.color='var(--green)';}
-  msg.style.display='block';
-  setTimeout(()=>msg.style.display='none',5000);
+  msg.style.display='block';setTimeout(()=>msg.style.display='none',5000);
 }
 
-// ============================================================
-// FILE HANDLING — PDF mostra confirmação, não mete texto no textarea
-// ============================================================
-const textarea = document.getElementById('decision-text');
-
-textarea.addEventListener('input', () => {
-  // Se o utilizador escreve no textarea, limpa o PDF guardado
-  if (textarea.value.length > 0 && pdfText) {
-    pdfText = null;
-    limparDropZone();
-  }
-  actualizarContador();
-});
-
-function actualizarContador() {
-  const len = pdfText ? pdfText.length : textarea.value.length;
-  document.getElementById('char-count').textContent = len.toLocaleString('pt-PT') + ' caracteres';
+// CONTACTO — Formspree
+async function enviarContacto(){
+  const nome=document.getElementById('cm-nome').value.trim();
+  const email=document.getElementById('cm-email').value.trim();
+  const assunto=document.getElementById('cm-assunto').value;
+  const mensagem=document.getElementById('cm-mensagem').value.trim();
+  const msg=document.getElementById('cm-msg');
+  if(!nome||!email||!mensagem){msg.textContent='Preencha nome, email e mensagem.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';return;}
+  try{
+    const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({nome,email,assunto:assunto||'Questão geral',mensagem,user_id:currentUser?.id||'—'})});
+    if(r.ok){
+      msg.textContent='✓ Mensagem enviada! Respondemos em 24h.';msg.style.color='var(--green)';msg.style.background='rgba(26,92,58,0.15)';msg.style.display='block';
+      document.getElementById('cm-nome').value='';document.getElementById('cm-email').value='';
+      document.getElementById('cm-assunto').value='';document.getElementById('cm-mensagem').value='';
+    }else throw new Error();
+  }catch(e){msg.textContent='Erro ao enviar. Tente novamente.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';}
 }
 
-const dropZone = document.getElementById('drop-zone');
-dropZone.addEventListener('click', () => { if (!pdfText) document.getElementById('file-input').click(); });
-dropZone.addEventListener('dragover', e => { e.preventDefault(); if (!pdfText) dropZone.style.borderColor = 'var(--gold)'; });
-dropZone.addEventListener('dragleave', () => { if (!pdfText) dropZone.style.borderColor = ''; });
-dropZone.addEventListener('drop', e => {
-  e.preventDefault(); dropZone.style.borderColor = '';
-  const f = e.dataTransfer.files[0]; if (f && !pdfText) handleFile({ target: { files: [f] } });
-});
-
-function handleFile(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) extractPDF(file);
-  else readTxt(file);
-}
-
-function readTxt(file) {
-  const reader = new FileReader();
-  reader.onload = ev => {
-    pdfText = ev.target.result;
-    actualizarContador();
-    dropZone.classList.add('has-file');
-    document.getElementById('drop-zone-text').innerHTML =
-      `✅ <strong>${file.name}</strong> carregado<br>` +
-      `<span style="font-size:11px;color:#888">${pdfText.length.toLocaleString('pt-PT')} caracteres</span> &nbsp;` +
-      `<span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover</span>`;
-  };
-  reader.readAsText(file);
-}
-
-async function extractPDF(file) {
+// FILE HANDLING
+const textarea=document.getElementById('decision-text');
+textarea.addEventListener('input',()=>{if(textarea.value.length>0&&pdfText){pdfText=null;limparDropZone();}actualizarContador();});
+function actualizarContador(){const len=pdfText?pdfText.length:textarea.value.length;document.getElementById('char-count').textContent=len.toLocaleString('pt-PT')+' caracteres';}
+const dropZone=document.getElementById('drop-zone');
+dropZone.addEventListener('click',()=>{if(!pdfText)document.getElementById('file-input').click();});
+dropZone.addEventListener('dragover',e=>{e.preventDefault();if(!pdfText)dropZone.style.borderColor='var(--gold)';});
+dropZone.addEventListener('dragleave',()=>{if(!pdfText)dropZone.style.borderColor='';});
+dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.style.borderColor='';const f=e.dataTransfer.files[0];if(f&&!pdfText)handleFile({target:{files:[f]}});});
+function handleFile(e){const file=e.target.files[0];if(!file)return;if(file.type==='application/pdf'||file.name.endsWith('.pdf'))extractPDF(file);else readTxt(file);}
+function readTxt(file){const reader=new FileReader();reader.onload=ev=>{pdfText=ev.target.result;actualizarContador();dropZone.classList.add('has-file');document.getElementById('drop-zone-text').innerHTML=`✅ <strong>${file.name}</strong> carregado<br><span style="font-size:11px;color:#888">${pdfText.length.toLocaleString('pt-PT')} caracteres</span> &nbsp;<span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover</span>`;};reader.readAsText(file);}
+async function extractPDF(file){
   setDropText('⏳ A extrair texto do PDF...');
-  try {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    const ab = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
-    setDropText('⏳ A ler ' + pdf.numPages + ' páginas...');
-    let txt = '';
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      txt += content.items.map(x => x.str).join(' ') + '\n\n';
-    }
-    txt = txt.trim();
-    if (!txt || txt.length < 50) { setDropText('⚠️ PDF sem texto extraível. Copie o texto manualmente.'); return; }
-    // NOVO: guarda em variável, NÃO mete no textarea
-    pdfText = txt;
-    actualizarContador();
-    dropZone.classList.add('has-file');
-    document.getElementById('drop-zone-text').innerHTML =
-      `✅ <strong>${file.name}</strong><br>` +
-      `<span style="font-size:11px;color:#888">${pdf.numPages} páginas · ${txt.length.toLocaleString('pt-PT')} caracteres extraídos</span><br>` +
-      `<span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover ficheiro</span>`;
-  } catch (err) { setDropText('❌ Erro ao ler o PDF. Tente copiar o texto manualmente.'); }
+  try{
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const ab=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+    setDropText('⏳ A ler '+pdf.numPages+' páginas...');
+    let txt='';
+    for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i);const content=await page.getTextContent();txt+=content.items.map(x=>x.str).join(' ')+'\n\n';}
+    txt=txt.trim();
+    if(!txt||txt.length<50){setDropText('⚠️ PDF sem texto extraível. Copie o texto manualmente.');return;}
+    pdfText=txt;actualizarContador();dropZone.classList.add('has-file');
+    document.getElementById('drop-zone-text').innerHTML=`✅ <strong>${file.name}</strong><br><span style="font-size:11px;color:#888">${pdf.numPages} páginas · ${txt.length.toLocaleString('pt-PT')} caracteres extraídos</span><br><span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover ficheiro</span>`;
+  }catch(err){setDropText('❌ Erro ao ler o PDF. Tente copiar o texto manualmente.');}
 }
+function limparPDF(){pdfText=null;document.getElementById('file-input').value='';dropZone.classList.remove('has-file');dropZone.style.borderColor='';setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui');actualizarContador();}
+function limparDropZone(){document.getElementById('file-input').value='';dropZone.classList.remove('has-file');dropZone.style.borderColor='';setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui');}
+function setDropText(t){document.getElementById('drop-zone-text').innerHTML=t;}
 
-function limparPDF() {
-  pdfText = null;
-  document.getElementById('file-input').value = '';
-  dropZone.classList.remove('has-file');
-  dropZone.style.borderColor = '';
-  setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui');
-  actualizarContador();
-}
+// OVERLAY
+const overlayMessages=[{text:'A extrair padrões linguísticos...',pct:15},{text:'A calcular perplexidade textual...',pct:30},{text:'A analisar burstiness...',pct:45},{text:'A detectar coesão artificial...',pct:60},{text:'A verificar marcadores formulaicos...',pct:75},{text:'A comparar com estilo do tribunal...',pct:88},{text:'A gerar veredicto forense...',pct:96}];
+let overlayInterval=null,overlayMsgIdx=0;
+function showOverlay(){document.getElementById('analysis-overlay').classList.add('visible');document.getElementById('overlay-progress').style.width='0%';document.getElementById('overlay-status').textContent='A iniciar análise...';for(let i=1;i<=6;i++){document.getElementById('oi-'+i).classList.remove('active');document.getElementById('of-'+i).style.width='0%';document.getElementById('ov-'+i).textContent='—';}overlayMsgIdx=0;overlayInterval=setInterval(tickOverlay,1800);}
+function tickOverlay(){if(overlayMsgIdx>=overlayMessages.length)return;const msg=overlayMessages[overlayMsgIdx];document.getElementById('overlay-status').textContent=msg.text;document.getElementById('overlay-progress').style.width=msg.pct+'%';if(overlayMsgIdx>=1&&overlayMsgIdx<=6){const idx=overlayMsgIdx,val=Math.floor(Math.random()*40+40);document.getElementById('oi-'+idx).classList.add('active');setTimeout(()=>{document.getElementById('of-'+idx).style.width=val+'%';document.getElementById('ov-'+idx).textContent=val;},300);}overlayMsgIdx++;}
+function hideOverlay(result){clearInterval(overlayInterval);if(result&&result.indicadores){const keys=['perplexidade','burstiness','coesao_artificial','uniformidade_sintatica','riqueza_lexical','marcadores_formulaicos'];keys.forEach((k,i)=>{const val=result.indicadores[k]||0,idx=i+1;document.getElementById('oi-'+idx).classList.add('active');document.getElementById('of-'+idx).style.width=val+'%';document.getElementById('ov-'+idx).textContent=val;});document.getElementById('overlay-status').textContent='Análise concluída!';document.getElementById('overlay-progress').style.width='100%';}setTimeout(()=>{document.getElementById('analysis-overlay').classList.remove('visible');},result?800:0);}
 
-function limparDropZone() {
-  document.getElementById('file-input').value = '';
-  dropZone.classList.remove('has-file');
-  dropZone.style.borderColor = '';
-  setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui');
-}
-
-function setDropText(t) { document.getElementById('drop-zone-text').innerHTML = t; }
-
-// ============================================================
-// ANALYSIS OVERLAY
-// ============================================================
-const overlayMessages = [
-  { text: 'A extrair padrões linguísticos...', pct: 15 },
-  { text: 'A calcular perplexidade textual...', pct: 30 },
-  { text: 'A analisar burstiness...', pct: 45 },
-  { text: 'A detectar coesão artificial...', pct: 60 },
-  { text: 'A verificar marcadores formulaicos...', pct: 75 },
-  { text: 'A comparar com estilo do tribunal...', pct: 88 },
-  { text: 'A gerar veredicto forense...', pct: 96 },
-];
-let overlayInterval=null, overlayMsgIdx=0;
-
-function showOverlay(){
-  document.getElementById('analysis-overlay').classList.add('visible');
-  document.getElementById('overlay-progress').style.width='0%';
-  document.getElementById('overlay-status').textContent='A iniciar análise...';
-  for(let i=1;i<=6;i++){document.getElementById('oi-'+i).classList.remove('active');document.getElementById('of-'+i).style.width='0%';document.getElementById('ov-'+i).textContent='—';}
-  overlayMsgIdx=0; overlayInterval=setInterval(tickOverlay,1800);
-}
-
-function tickOverlay(){
-  if(overlayMsgIdx>=overlayMessages.length)return;
-  const msg=overlayMessages[overlayMsgIdx];
-  document.getElementById('overlay-status').textContent=msg.text;
-  document.getElementById('overlay-progress').style.width=msg.pct+'%';
-  if(overlayMsgIdx>=1&&overlayMsgIdx<=6){
-    const idx=overlayMsgIdx, val=Math.floor(Math.random()*40+40);
-    document.getElementById('oi-'+idx).classList.add('active');
-    setTimeout(()=>{document.getElementById('of-'+idx).style.width=val+'%';document.getElementById('ov-'+idx).textContent=val;},300);
-  }
-  overlayMsgIdx++;
-}
-
-function hideOverlay(result){
-  clearInterval(overlayInterval);
-  if(result&&result.indicadores){
-    const keys=['perplexidade','burstiness','coesao_artificial','uniformidade_sintatica','riqueza_lexical','marcadores_formulaicos'];
-    keys.forEach((k,i)=>{const val=result.indicadores[k]||0,idx=i+1;document.getElementById('oi-'+idx).classList.add('active');document.getElementById('of-'+idx).style.width=val+'%';document.getElementById('ov-'+idx).textContent=val;});
-    document.getElementById('overlay-status').textContent='Análise concluída!';
-    document.getElementById('overlay-progress').style.width='100%';
-  }
-  setTimeout(()=>{document.getElementById('analysis-overlay').classList.remove('visible');},result?800:0);
-}
-
-// ============================================================
-// ANALYSIS — usa pdfText OU textarea
-// ============================================================
-async function analyzeDecision() {
-  // NOVO: usa PDF guardado ou texto do textarea
-  const text = (pdfText || textarea.value).trim();
-  if (text.length < 100) { alert('Insira pelo menos 100 caracteres ou carregue um PDF.'); return; }
-
-  const usado=userProfile?.analises_mes||0, limite=getLimite();
+// ANÁLISE
+async function analyzeDecision(){
+  const text=(pdfText||textarea.value).trim();
+  if(text.length<100){alert('Insira pelo menos 100 caracteres ou carregue um PDF.');return;}
+  const usado=userProfile?.analises_mes||0,limite=getLimite();
   if(usado>=limite){showModal('upgrade');return;}
-
-  const btn=document.getElementById('btn-analyze'), loadingBar=document.getElementById('loading-bar');
-  btn.disabled=true; btn.classList.add('loading');
-  document.getElementById('spinner').style.display='block';
-  loadingBar.classList.add('active');
-  showOverlay();
-  document.getElementById('results-area').classList.remove('visible');
-
-  try {
-    // Contexto consoante o modo
-    let tribunal=null, relator=null, instituicao=null, tipoDoc=null, orientador=null;
-    if(modoActual === 'judicial'){
-      tribunal=document.getElementById('tribunal-select').value||null;
-      relator=document.getElementById('relator-input').value||null;
-    } else {
-      instituicao=document.getElementById('instituicao-input').value||null;
-      tipoDoc=document.getElementById('tipo-doc-select').value||null;
-      orientador=document.getElementById('orientador-input').value||null;
-    }
-
-    const response=await fetch('/api/analisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:text,modo:modoActual,tribunal:tribunal,relator:relator,instituicao:instituicao,tipoDoc:tipoDoc,orientador:orientador})});
+  const btn=document.getElementById('btn-analyze'),loadingBar=document.getElementById('loading-bar');
+  btn.disabled=true;btn.classList.add('loading');document.getElementById('spinner').style.display='block';loadingBar.classList.add('active');showOverlay();document.getElementById('results-area').classList.remove('visible');
+  try{
+    let tribunal=null,relator=null,instituicao=null,tipoDoc=null,orientador=null;
+    if(modoActual==='judicial'){tribunal=document.getElementById('tribunal-select').value||null;relator=document.getElementById('relator-input').value||null;}
+    else{instituicao=document.getElementById('instituicao-input').value||null;tipoDoc=document.getElementById('tipo-doc-select').value||null;orientador=document.getElementById('orientador-input').value||null;}
+    const response=await fetch('/api/analisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:text,modo:modoActual,tribunal,relator,instituicao,tipoDoc,orientador})});
     if(!response.ok){const err=await response.json().catch(()=>({}));throw new Error(err.erro||'Erro do servidor.');}
-
     const result=await response.json();
-    lastResult=result;
-    lastResult._tribunal=tribunal; lastResult._relator=relator;
-    lastResult._instituicao=instituicao; lastResult._tipoDoc=tipoDoc; lastResult._modo=modoActual;
-    lastRef='LV-'+Date.now().toString(36).toUpperCase();
-    document.getElementById('ref-number').textContent='Referência: '+lastRef;
-
-    hideOverlay(result);
-    renderResults(result);
-
+    lastResult=result;lastResult._tribunal=tribunal;lastResult._relator=relator;lastResult._instituicao=instituicao;lastResult._tipoDoc=tipoDoc;lastResult._modo=modoActual;
+    lastRef='LV-'+Date.now().toString(36).toUpperCase();document.getElementById('ref-number').textContent='Referência: '+lastRef;
+    hideOverlay(result);renderResults(result);
     if(window.innerWidth<=760){setTimeout(()=>{const el=document.getElementById('results-area');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},900);}
-
     await sb.from('analises').insert({user_id:currentUser.id,tribunal:tribunal||instituicao||null,relator:relator||tipoDoc||null,veredicto:result.veredicto,confianca:result.confianca,narrativa:result.narrativa});
-    const novoTotal=usado+1;
-    await sb.from('perfis').update({analises_mes:novoTotal}).eq('id',currentUser.id);
-    userProfile.analises_mes=novoTotal;
+    const novoTotal=usado+1;await sb.from('perfis').update({analises_mes:novoTotal}).eq('id',currentUser.id);userProfile.analises_mes=novoTotal;
     const{count}=await sb.from('analises').select('*',{count:'exact',head:true}).eq('user_id',currentUser.id);
-    document.getElementById('stat-total').textContent=count||novoTotal;
-    document.getElementById('stat-mes').textContent=novoTotal+' / '+limite;
-    document.getElementById('usage-count').textContent=novoTotal+' / '+limite;
-    document.getElementById('usage-fill').style.width=Math.min(100,(novoTotal/limite)*100)+'%';
-
-  } catch(err){hideOverlay(null);alert('Erro: '+(err.message||'Verifique a sua ligação.'));}
+    document.getElementById('stat-total').textContent=count||novoTotal;document.getElementById('stat-mes').textContent=novoTotal+' / '+limite;document.getElementById('usage-count').textContent=novoTotal+' / '+limite;document.getElementById('usage-fill').style.width=Math.min(100,(novoTotal/limite)*100)+'%';
+  }catch(err){hideOverlay(null);alert('Erro: '+(err.message||'Verifique a sua ligação.'));}
   finally{btn.disabled=false;btn.classList.remove('loading');document.getElementById('spinner').style.display='none';loadingBar.classList.remove('active');}
 }
 
@@ -1040,11 +861,8 @@ function renderResults(result){
   document.getElementById('confidence-value').textContent=result.confianca+'%';
   setTimeout(()=>{document.getElementById('meter-fill').style.width=result.confianca+'%';},100);
   const indLabels={perplexidade:'Perplexidade',burstiness:'Burstiness',coesao_artificial:'Coesão Artificial',uniformidade_sintatica:'Uniformidade Sint.',riqueza_lexical:'Riqueza Lexical',marcadores_formulaicos:'Marc. Formulaicos'};
-  const grid=document.getElementById('indicators-grid'); grid.innerHTML='';
-  for(const[key,val]of Object.entries(result.indicadores||{})){
-    const bc=val>70?'bar-high':val>40?'bar-mid':'bar-low';
-    grid.innerHTML+=`<div class="indicator-card"><div class="indicator-name">${indLabels[key]||key}</div><div class="indicator-score">${val}<small style="font-size:10px;font-weight:400;color:#aaa">/100</small></div><div class="indicator-bar"><div class="indicator-bar-fill ${bc}" style="width:0" data-width="${val}%"></div></div></div>`;
-  }
+  const grid=document.getElementById('indicators-grid');grid.innerHTML='';
+  for(const[key,val]of Object.entries(result.indicadores||{})){const bc=val>70?'bar-high':val>40?'bar-mid':'bar-low';grid.innerHTML+=`<div class="indicator-card"><div class="indicator-name">${indLabels[key]||key}</div><div class="indicator-score">${val}<small style="font-size:10px;font-weight:400;color:#aaa">/100</small></div><div class="indicator-bar"><div class="indicator-bar-fill ${bc}" style="width:0" data-width="${val}%"></div></div></div>`;}
   setTimeout(()=>{grid.querySelectorAll('.indicator-bar-fill').forEach(el=>{el.style.width=el.dataset.width;});},200);
   document.getElementById('analysis-narrative').innerHTML=(result.narrativa||'').replace(/\n/g,'<br>');
   const rc=document.getElementById('relator-card');
@@ -1054,7 +872,6 @@ function renderResults(result){
   document.getElementById('results-area').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// PDF REPORT (mantido igual)
 function gerarPDF(){
   if(!lastResult){alert('Faça primeiro uma análise.');return;}
   try{
@@ -1095,8 +912,7 @@ function gerarPDF(){
     const halfW=contentW/2-3;
     inds.forEach(([key,val],i)=>{
       const isLeft=i%2===0,x0=isLeft?margin:margin+halfW+6;
-      checkY(16);
-      sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text(indLabels[key]||key,x0,y);
+      checkY(16);sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text(indLabels[key]||key,x0,y);
       sc(cInk,'text');doc.setFontSize(11);doc.setFont('helvetica','bold');doc.text(String(val),x0,y+7);
       sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('/100',x0+9,y+7);
       const barX=x0+22,barW2=halfW-26;
@@ -1120,13 +936,11 @@ function gerarPDF(){
       doc.text(mLines[0]||'',margin+14,y+3);y+=11;
       if(mLines.length>1){mLines.slice(1).forEach(l=>{checkY(6);doc.text(l,margin+14,y);y+=5.5;});}
     });
-    y+=8;
-    checkY(24);sc(cGold,'draw');doc.setLineWidth(0.3);doc.line(margin,y,W-margin,y);y+=6;
+    y+=8;checkY(24);sc(cGold,'draw');doc.setLineWidth(0.3);doc.line(margin,y,W-margin,y);y+=6;
     sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','italic');
     const disc='Este relatorio foi gerado automaticamente pelo sistema LexVeritas com base em analise linguistica por inteligencia artificial. Os resultados tem caracter auxiliar e probabilistico, nao constituindo prova juridica definitiva. Ref: '+lastRef+'. Data: '+dateStr+' '+timeStr+'.';
     doc.splitTextToSize(disc,contentW).forEach(l=>{doc.text(l,margin,y);y+=4;});
-    addFooter();
-    doc.save('LexVeritas-'+lastRef+'.pdf');
+    addFooter();doc.save('LexVeritas-'+lastRef+'.pdf');
   }catch(err){console.error('Erro PDF:',err);alert('Erro ao gerar PDF: '+err.message);}
 }
 
@@ -1150,16 +964,9 @@ async function inscreverListaEspera(){
   const email=document.getElementById('upgrade-email').value.trim();
   const msg=document.getElementById('upgrade-msg');
   if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
-  try{
-    await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});
-    msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';
-    msg.style.color='var(--green)';msg.style.display='block';
-    document.getElementById('upgrade-email').value='';
-  }catch(e){
-    // Tabela pode não existir ainda — guarda na consola
-    msg.textContent='✓ Obrigado! Entraremos em contacto em breve.';
-    msg.style.color='var(--green)';msg.style.display='block';
-  }
+  try{await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});}catch(e){}
+  msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';msg.style.color='var(--green)';msg.style.display='block';
+  document.getElementById('upgrade-email').value='';
 }
 </script>
 </body>
