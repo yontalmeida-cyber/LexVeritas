@@ -18,134 +18,39 @@
   --mono: 'JetBrains Mono', monospace;
 }
 body {
-  background: var(--black);
-  color: var(--white);
-  font-family: var(--sans);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+  background: var(--black); color: var(--white); font-family: var(--sans);
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 24px; text-align: center; position: relative; overflow: hidden;
 }
-.bg-glow {
-  position: absolute;
-  top: -20%; left: 50%;
-  transform: translateX(-50%);
-  width: 700px; height: 600px;
-  background: radial-gradient(ellipse, rgba(201,168,76,0.1) 0%, transparent 60%);
-  pointer-events: none;
-}
-.bg-grid {
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
-}
-.top-bar {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
-}
-.content {
-  position: relative;
-  z-index: 1;
-  animation: fadeUp 0.6s ease forwards;
-  max-width: 520px;
-}
+.bg-glow { position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 700px; height: 600px; background: radial-gradient(ellipse, rgba(201,168,76,0.1) 0%, transparent 60%); pointer-events: none; }
+.bg-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+.top-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold)); }
+.content { position: relative; z-index: 1; animation: fadeUp 0.6s ease forwards; max-width: 520px; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-.logo {
-  font-family: var(--serif);
-  font-size: 32px;
-  font-style: italic;
-  margin-bottom: 40px;
-  color: var(--white);
-}
+.logo { font-family: var(--serif); font-size: 32px; font-style: italic; margin-bottom: 40px; color: var(--white); }
 .logo span { color: var(--gold); }
-
-.icon {
-  font-size: 56px;
-  margin-bottom: 24px;
-  display: block;
-  animation: spin 4s linear infinite;
-}
+.icon { font-size: 56px; margin-bottom: 24px; display: block; animation: spin 4s linear infinite; }
 @keyframes spin { 0%, 100% { transform: rotate(-15deg); } 50% { transform: rotate(15deg); } }
-
-.title {
-  font-family: var(--serif);
-  font-size: clamp(28px, 5vw, 44px);
-  font-style: italic;
-  margin-bottom: 16px;
-  line-height: 1.1;
-}
+.title { font-family: var(--serif); font-size: clamp(28px, 5vw, 44px); font-style: italic; margin-bottom: 16px; line-height: 1.1; }
 .title span { color: var(--gold); }
-
-.sub {
-  font-size: 14px;
-  color: var(--grey);
-  line-height: 1.7;
-  margin-bottom: 40px;
-}
-
-.eta-box {
-  background: rgba(201,168,76,0.06);
-  border: 1px solid var(--border);
-  padding: 20px 28px;
-  margin-bottom: 32px;
-}
-.eta-label {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--gold);
-  display: block;
-  margin-bottom: 8px;
-}
-.eta-time {
-  font-family: var(--serif);
-  font-size: 24px;
-  font-style: italic;
-  color: var(--white);
-}
-
-.contact {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--grey);
-  letter-spacing: 0.1em;
-}
-.contact a {
-  color: var(--gold);
-  text-decoration: none;
-}
-.contact a:hover { text-decoration: underline; }
-
-.progress-bar {
-  width: 100%;
-  height: 2px;
-  background: rgba(255,255,255,0.06);
-  margin: 32px 0 16px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--gold), var(--gold-light));
-  animation: progress 3s ease-in-out infinite alternate;
-}
+.sub { font-size: 14px; color: var(--grey); line-height: 1.7; margin-bottom: 40px; }
+.eta-box { background: rgba(201,168,76,0.06); border: 1px solid var(--border); padding: 20px 28px; margin-bottom: 32px; }
+.eta-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 8px; }
+.eta-time { font-family: var(--serif); font-size: 24px; font-style: italic; color: var(--white); }
+.progress-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.06); margin: 32px 0 24px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); animation: progress 3s ease-in-out infinite alternate; }
 @keyframes progress { from { width: 20%; } to { width: 85%; } }
-
-@media (max-width: 480px) {
-  .title { font-size: 28px; }
-  .eta-time { font-size: 20px; }
-}
+/* CONTACTO INLINE */
+.contact-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 12px; display: block; }
+.contact-form { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.contact-form input { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid rgba(201,168,76,0.25); background: rgba(255,255,255,0.04); font-family: var(--sans); font-size: 12px; color: var(--white); outline: none; text-align: left; }
+.contact-form input:focus { border-color: var(--gold); }
+.contact-form input::placeholder { color: rgba(255,255,255,0.25); }
+.contact-form button { background: var(--gold); color: var(--black); border: none; padding: 10px 20px; font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+.contact-form button:hover { background: var(--gold-light); }
+.contact-msg { font-family: var(--mono); font-size: 11px; margin-top: 10px; display: none; }
+@media (max-width: 480px) { .title { font-size: 28px; } .eta-time { font-size: 20px; } .contact-form { flex-direction: column; } .contact-form input, .contact-form button { width: 100%; } }
 </style>
 </head>
 <body>
@@ -155,9 +60,7 @@ body {
 
 <div class="content">
   <div class="logo">Lex<span>Veritas</span></div>
-
   <span class="icon">⚙️</span>
-
   <h1 class="title">Em <span>manutenção</span></h1>
   <p class="sub">Estamos a realizar actualizações para melhorar a plataforma. Voltamos em breve com melhorias.</p>
 
@@ -168,9 +71,28 @@ body {
 
   <div class="progress-bar"><div class="progress-fill"></div></div>
 
-  <p class="contact">
-    Questões urgentes: <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a>
-  </p>
+  <!-- CORRIGIDO: formulário inline em vez de mailto -->
+  <span class="contact-label">Questões urgentes? Deixe o seu email</span>
+  <div class="contact-form">
+    <input type="email" id="m-email" placeholder="o-seu@email.pt">
+    <button onclick="enviarUrgente()">Contactar</button>
+  </div>
+  <div class="contact-msg" id="m-msg"></div>
 </div>
+
+<script>
+async function enviarUrgente(){
+  const email=document.getElementById('m-email').value.trim();
+  const msg=document.getElementById('m-msg');
+  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
+  try{
+    const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({email,assunto:'Contacto urgente — página de manutenção',mensagem:'Utilizador deixou contacto durante manutenção.'})});
+    if(r.ok){msg.textContent='✓ Recebemos o seu contacto. Respondemos assim que possível.';msg.style.color='#c9a84c';}
+    else throw new Error();
+  }catch(e){msg.textContent='Erro. Tente novamente.';msg.style.color='#c97850';}
+  msg.style.display='block';
+  document.getElementById('m-email').value='';
+}
+</script>
 </body>
 </html>
