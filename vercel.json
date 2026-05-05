@@ -1,20 +1,17 @@
 {
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/:path*" },
-    { "source": "/app", "destination": "/app.html" },
-    { "source": "/privacidade", "destination": "/privacidade.html" },
-    { "source": "/termos", "destination": "/termos.html" },
-    { "source": "/academico", "destination": "/academico.html" },
-    { "source": "/confirm", "destination": "/confirm.html" },
-    { "source": "/manutencao", "destination": "/manutencao.html" },
-    { "source": "/manifest.json", "destination": "/manifest.json" },
-    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
-    { "source": "/robots.txt", "destination": "/robots.txt" },
-    { "source": "/google61207025d54255fe.html", "destination": "/google61207025d54255fe.html" },
-    { "source": "/", "destination": "/index.html" }
-  ],
   "routes": [
-    { "handle": "filesystem" },
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/app", "dest": "/app.html" },
+    { "src": "/privacidade", "dest": "/privacidade.html" },
+    { "src": "/termos", "dest": "/termos.html" },
+    { "src": "/academico", "dest": "/academico.html" },
+    { "src": "/confirm", "dest": "/confirm.html" },
+    { "src": "/manutencao", "dest": "/manutencao.html" },
+    { "src": "/manifest.json", "dest": "/manifest.json" },
+    { "src": "/sitemap.xml", "dest": "/sitemap.xml" },
+    { "src": "/robots.txt", "dest": "/robots.txt" },
+    { "src": "/google61207025d54255fe.html", "dest": "/google61207025d54255fe.html" },
+    { "src": "/", "dest": "/index.html" },
     { "src": "/(.*)", "dest": "/404.html", "status": 404 }
   ]
 }
