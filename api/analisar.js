@@ -1,5 +1,5 @@
-// api/analisar.js — LexVeritas v5
-// Limite aumentado para 300.000 chars (200 páginas)
+// api/analisar.js — LexVeritas v6
+// Suporte a modo judicial e académico · limite 300.000 chars
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -20,28 +20,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ erro: 'Servidor mal configurado.' });
   }
 
-  const estilosTribunal = {
-    'STJ — Supremo Tribunal de Justiça': `ESTILO STJ: linguagem técnica densa, frases longas (50-120 palavras), doutrina clássica (Antunes Varela, Menezes Cordeiro, Menezes Leitão, Oliveira Ascensão), citações precisas com número de processo e relator, latim jurídico natural (ex vi, ad quem, a quo, in casu), variação NOTÁVEL no tamanho dos parágrafos. Expressões humanas típicas: afigura-se-nos, temos por seguro que, sem embargo, cumpre notar porém, salvo o devido respeito, haverá que concluir, com efeito, ora. SINAIS DE IA NO STJ: parágrafos uniformes, ausência de latim, citações sem processo específico, neste conspecto excessivo.`,
-    'TRL — Tribunal da Relação de Lisboa': `ESTILO TRL: estilo directo, fundamentação concisa, citações do próprio TRL com número de processo, matéria de facto em lista numerada, linguagem forense prática, irregularidades sintácticas naturais, variação no tamanho dos parágrafos, travessão para comentários intercalados. Expressões: como resulta dos autos, conforme se extrai de, tendo presente que. SINAIS DE IA: estrutura perfeitamente simétrica, ausência de irregularidades, falta de referências processuais específicas.`,
-    'TRP — Tribunal da Relação do Porto': `ESTILO TRP: directo e pragmático, frases curtas (20-40 palavras), matéria de facto estruturada em itens numerados, travessão intercalado. Expressões: como vem sendo entendido, é pacífico que, não se vislumbra razão para. SINAIS DE IA: frases longas e elaboradas, estrutura pedagógica, parágrafos uniformes.`,
-    'TRC — Tribunal da Relação de Coimbra': `ESTILO TRC: influência académica, citações doutrinárias extensas com obra e página, subtítulos frequentes (I - II -), parágrafos médios. Expressões: conforme ensina o Prof. X in Obra pág. Y, na lição de, como doutrina. SINAIS DE IA: ausência de citações doutrinárias precisas.`,
-    'TRG — Tribunal da Relação de Guimarães': `ESTILO TRG: conciso e prático, acórdãos curtos, vai directo ao ponto. Expressões: resulta evidente que, não merece censura a decisão. SINAIS DE IA: introduções longas, parágrafos extensos e uniformes.`,
-    'TRE — Tribunal da Relação de Évora': `ESTILO TRE: equilibrado, jurisprudência do STJ como referência, extensão moderada, linguagem acessível mas precisa.`,
-    'TC — Tribunal Constitucional': `ESTILO TC: linguagem constitucional específica, direito comparado (TEDH, BVerfG), votos de vencido frequentes, acórdãos muito longos, numeração romana. Expressões: à luz do bloco de constitucionalidade, o núcleo essencial, princípio da proporcionalidade impõe. SINAIS DE IA: ausência de referências comparatistas, falta de votos.`,
-    'TCAS — Tribunal Central Administrativo Sul': `ESTILO TCAS: linguagem administrativa (acto administrativo, vício de forma, desvio de poder), referências ao CPA e CPTA com artigos específicos, matéria de facto focada em actos e prazos. SINAIS DE IA: ausência de referências legislativas específicas.`,
-    'TCAN — Tribunal Central Administrativo Norte': `Partilha características com TCAS: especialização administrativa e fiscal, estilo ligeiramente mais conciso.`,
-  };
-
-  const estiloCtx = tribunal && estilosTribunal[tribunal] ? `\n${estilosTribunal[tribunal]}` : tribunal ? `\nTribunal: ${tribunal}` : '';
-  const relatorCtx = relator?.trim() ? `\nRELATOR: "${relator.trim()}" — verifica se o texto tem marcas pessoais deste magistrado ou parece genérico.` : '';
-  const academicCtx = modo === 'academico' ? [
-    instituicao ? `\nINSTITUIÇÃO: ${instituicao}` : '',
-    tipoDoc ? `\nTIPO DE DOCUMENTO: ${tipoDoc}` : '',
-    orientador ? `\nORIENTADOR: ${orientador}` : '',
-  ].filter(Boolean).join('') : '';
-
-  // Extracção inteligente: início + múltiplas amostras do meio + fim
-  // Para documentos longos, amostras distribuídas ao longo do texto
+  // ── EXTRACÇÃO DE AMOSTRAS ──────────────────────────────────
   const len = texto.length;
   let textoAnalise;
   if (len <= 8000) {
@@ -55,43 +34,36 @@ export default async function handler(req, res) {
     textoAnalise = ini + '\n\n[...]\n\n' + q1 + '\n\n[...]\n\n' + mid + '\n\n[...]\n\n' + q3 + '\n\n[...]\n\n' + fim;
   }
 
-  const systemPrompt = `És o melhor especialista mundial em análise forense linguística de textos jurídicos portugueses. Determina com máxima precisão se um documento judicial foi elaborado por magistrado humano ou com auxílio de IA.
+  // ── ESTILOS DE TRIBUNAL ────────────────────────────────────
+  const estilosTribunal = {
+    'STJ — Supremo Tribunal de Justiça': 'ESTILO STJ: linguagem técnica densa, frases longas (50-120 palavras), doutrina clássica (Antunes Varela, Menezes Cordeiro, Menezes Leitão), latim jurídico natural (ex vi, ad quem, a quo, in casu), variação NOTÁVEL no tamanho dos parágrafos. Expressões humanas: afigura-se-nos, temos por seguro que, sem embargo, ora. SINAIS DE IA: parágrafos uniformes, ausência de latim, neste conspecto excessivo.',
+    'TRL — Tribunal da Relação de Lisboa': 'ESTILO TRL: estilo directo, fundamentação concisa, citações do próprio TRL com número de processo, matéria de facto em lista numerada. Expressões: como resulta dos autos, conforme se extrai de. SINAIS DE IA: estrutura perfeitamente simétrica, falta de referências processuais específicas.',
+    'TRP — Tribunal da Relação do Porto': 'ESTILO TRP: directo e pragmático, frases curtas (20-40 palavras), matéria de facto estruturada em itens. SINAIS DE IA: frases longas e elaboradas, parágrafos uniformes.',
+    'TRC — Tribunal da Relação de Coimbra': 'ESTILO TRC: influência académica, citações doutrinárias extensas com obra e página, subtítulos frequentes. SINAIS DE IA: ausência de citações doutrinárias precisas.',
+    'TRG — Tribunal da Relação de Guimarães': 'ESTILO TRG: conciso e prático, acórdãos curtos. SINAIS DE IA: introduções longas, parágrafos uniformes.',
+    'TRE — Tribunal da Relação de Évora': 'ESTILO TRE: equilibrado, jurisprudência do STJ como referência, extensão moderada.',
+    'TC — Tribunal Constitucional': 'ESTILO TC: linguagem constitucional específica, direito comparado (TEDH, BVerfG), acórdãos muito longos. SINAIS DE IA: ausência de referências comparatistas.',
+    'TCAS — Tribunal Central Administrativo Sul': 'ESTILO TCAS: linguagem administrativa (acto administrativo, vício de forma), referências ao CPA e CPTA com artigos específicos. SINAIS DE IA: ausência de referências legislativas específicas.',
+    'TCAN — Tribunal Central Administrativo Norte': 'Partilha características com TCAS: especialização administrativa e fiscal.',
+  };
 
-METODOLOGIA EM DUAS FASES:
+  // ── CONTEXTO ───────────────────────────────────────────────
+  const estiloCtx = tribunal && estilosTribunal[tribunal]
+    ? `\n${estilosTribunal[tribunal]}`
+    : tribunal ? `\nTribunal: ${tribunal}` : '';
 
-FASE 1 — ANÁLISE ESTRUTURAL:
-- Variação no tamanho dos parágrafos: humanos têm ALTA variância; IA tende à uniformidade
-- Elementos inesperados: parênteses, travessões intercalados, frases inacabadas = humano
-- Densidade de referências concretas: números de processo, datas, artigos de lei, autores com obra e página = humano
-- Estilo pedagógico e exaustivo = IA; ir directo ao ponto = humano
+  const relatorCtx = relator?.trim()
+    ? `\nRELATOR: "${relator.trim()}" — verifica se o texto tem marcas pessoais deste magistrado.`
+    : '';
 
-FASE 2 — ANÁLISE LINGUÍSTICA:
-MARCADORES DE ALTA SUSPEIÇÃO DE IA:
-- "cumpre apreciar e decidir", "importa referir que", "neste conspecto"
-- "por todo o exposto", "nos termos e com os fundamentos supra expostos", "nesta conformidade"
-- "há que salientar", "importa sublinhar", "face ao exposto", "em suma", "diga-se desde já"
-- "conforme resulta da jurisprudência dominante", "carreados para os autos"
-- "demais disso" (brasileirismo = IA), "em sede de" (possível IA)
-- Parágrafos com exactamente o mesmo número de frases e tamanho similar
+  const academicCtx = [
+    instituicao ? `\nINSTITUIÇÃO: ${instituicao}` : '',
+    tipoDoc     ? `\nTIPO DE DOCUMENTO: ${tipoDoc}` : '',
+    orientador  ? `\nORIENTADOR: ${orientador}` : '',
+  ].filter(Boolean).join('');
 
-MARCADORES DE ESCRITA HUMANA AUTÊNTICA:
-- "ora", "vejamos", "com efeito", "aliás", "de resto", "sem embargo", "afigura-se-nos"
-- Travessão intercalado — como este — no meio de frases
-- Frases que começam com conjunção adversativa ou conclusiva
-- Referências documentais: "cfr. doc. 3 junto com a p.i.", "a fls. 45 dos autos"
-- Latim jurídico natural e não forçado: ex vi, ad quem, in casu
-- Erros ortográficos leves, pontuação irregular = humano
-
-CALIBRAÇÃO DOS INDICADORES:
-- perplexidade: 0=muito previsível (IA), 100=muito imprevisível (humano)
-- burstiness: 0=parágrafos uniformes (IA), 100=alta variância (humano)
-- coesao_artificial: 0=coesão natural (humano), 100=coesão excessiva (IA)
-- uniformidade_sintatica: 0=sintaxe variada (humano), 100=sintaxe uniforme (IA)
-- riqueza_lexical: 0=pobre, 100=rico (não discrimina sozinho)
-- marcadores_formulaicos: 0=sem marcadores IA, 100=cheio de marcadores IA
-
-SER CONSERVADOR: prefere INCONCLUSIVO a falsos positivos.
-
+  // ── PROMPTS ────────────────────────────────────────────────
+  const JSON_FORMAT = `
 RESPONDE APENAS COM JSON VÁLIDO. SEM TEXTO ANTES OU DEPOIS:
 {
   "veredicto": "IA_DETECTADA|PROVAVELMENTE_IA|INCONCLUSIVO|PROVAVELMENTE_HUMANO|HUMANO",
@@ -104,15 +76,36 @@ RESPONDE APENAS COM JSON VÁLIDO. SEM TEXTO ANTES OU DEPOIS:
     "riqueza_lexical": 0-100,
     "marcadores_formulaicos": 0-100
   },
-  "narrativa": "Explicacao em 3-4 frases em portugues europeu com evidencias concretas do texto analisado.",
-  "relator_analise": "Analise do estilo do relator ou Relator nao indicado.",
+  "narrativa": "Explicacao em 3-4 frases em portugues europeu com evidencias concretas.",
+  "relator_analise": "Analise do estilo ou contexto do documento.",
   "marcadores": [
     {"tipo": "ai|ok", "texto": "Descricao especifica com exemplo concreto do texto"}
   ]
 }
 Entre 4 e 6 marcadores. Sem aspas dentro de strings JSON.`;
 
-  const systemPromptAcademico = `És o melhor especialista mundial em análise forense linguística de textos académicos jurídicos em português europeu. Determina se um trabalho académico foi escrito por um ser humano ou com auxílio significativo de IA.
+  const promptJudicial = `És o melhor especialista mundial em análise forense linguística de textos jurídicos portugueses. Determina com máxima precisão se um documento judicial foi elaborado por magistrado humano ou com auxílio de IA.
+
+MARCADORES DE ALTA SUSPEIÇÃO DE IA:
+- "cumpre apreciar e decidir", "importa referir que", "neste conspecto"
+- "por todo o exposto", "nos termos e com os fundamentos supra expostos", "nesta conformidade"
+- "há que salientar", "importa sublinhar", "face ao exposto", "em suma"
+- "conforme resulta da jurisprudência dominante", "carreados para os autos"
+- "demais disso" (brasileirismo), parágrafos com comprimento muito uniforme
+
+MARCADORES DE ESCRITA HUMANA:
+- "ora", "vejamos", "com efeito", "aliás", "sem embargo", "afigura-se-nos"
+- Travessão intercalado no meio de frases
+- Referências documentais: "cfr. doc. 3 junto com a p.i.", "a fls. 45 dos autos"
+- Latim jurídico natural: ex vi, ad quem, in casu
+- Erros leves de pontuação, variação no tamanho dos parágrafos
+
+CALIBRAÇÃO: perplexidade 0=previsível(IA) 100=imprevisível(humano); burstiness 0=uniforme(IA) 100=variado(humano); coesao_artificial 0=natural(humano) 100=excessiva(IA); uniformidade_sintatica 0=variada(humano) 100=uniforme(IA); riqueza_lexical 0=pobre 100=rico; marcadores_formulaicos 0=sem 100=cheio.
+
+SER CONSERVADOR: prefere INCONCLUSIVO a falsos positivos.
+${JSON_FORMAT}`;
+
+  const promptAcademico = `És o melhor especialista mundial em análise forense linguística de textos académicos jurídicos em português europeu. Determina se um trabalho académico (tese, dissertação, monografia) foi escrito por um ser humano ou com auxílio significativo de IA.
 
 MARCADORES DE IA EM TEXTOS ACADÉMICOS:
 - Introduções genéricas sem posicionamento do autor
@@ -132,58 +125,30 @@ MARCADORES DE ESCRITA HUMANA ACADÉMICA:
 - Referências a jurisprudência específica com número de processo
 - Comentários críticos à doutrina maioritária
 
-CALIBRAÇÃO DOS INDICADORES para texto académico:
-- perplexidade: 0=genérico/previsível (IA), 100=voz própria (humano)
-- burstiness: 0=parágrafos uniformes (IA), 100=alta variância (humano)
-- coesao_artificial: 0=coesão natural (humano), 100=coesão formulaica (IA)
-- uniformidade_sintatica: 0=sintaxe variada (humano), 100=uniforme (IA)
-- riqueza_lexical: 0=pobre, 100=rico e técnico
-- marcadores_formulaicos: 0=sem marcadores IA, 100=cheio de expressões de IA
+CALIBRAÇÃO: perplexidade 0=genérico(IA) 100=voz própria(humano); burstiness 0=uniforme(IA) 100=variado(humano); coesao_artificial 0=natural(humano) 100=formulaica(IA); uniformidade_sintatica 0=variada(humano) 100=uniforme(IA); riqueza_lexical 0=pobre 100=rico e técnico; marcadores_formulaicos 0=sem 100=cheio.
 
 SER CONSERVADOR: prefere INCONCLUSIVO a falsos positivos.
+${JSON_FORMAT}`;
 
-RESPONDE APENAS COM JSON VÁLIDO:
-{
-  "veredicto": "IA_DETECTADA|PROVAVELMENTE_IA|INCONCLUSIVO|PROVAVELMENTE_HUMANO|HUMANO",
-  "confianca": 0-100,
-  "indicadores": {"perplexidade":0-100,"burstiness":0-100,"coesao_artificial":0-100,"uniformidade_sintatica":0-100,"riqueza_lexical":0-100,"marcadores_formulaicos":0-100},
-  "narrativa": "Explicacao em 3-4 frases com evidencias concretas do texto academico.",
-  "relator_analise": "Analise do estilo academico detectado e tipo de documento.",
-  "marcadores": [{"tipo":"ai|ok","texto":"Descricao especifica com exemplo concreto"}]
-}`;
-
-  const systemPrompt = modo === 'academico' ? systemPromptAcademico : systemPromptAcademico.replace('académicos','').replace(/académico/g,'');
-  // Use correct prompt per mode
-  const finalSystemPrompt = modo === 'academico' ? systemPromptAcademico : `És o melhor especialista mundial em análise forense linguística de textos jurídicos portugueses. Determina com máxima precisão se um documento judicial foi elaborado por magistrado humano ou com auxílio de IA.
-
-MARCADORES DE ALTA SUSPEIÇÃO DE IA: "cumpre apreciar e decidir", "importa referir que", "neste conspecto", "por todo o exposto", "nos termos e com os fundamentos supra expostos", "há que salientar", "importa sublinhar", "face ao exposto", "em suma", "carreados para os autos", "demais disso", parágrafos uniformes.
-
-MARCADORES DE ESCRITA HUMANA: "ora", "vejamos", "com efeito", "aliás", "sem embargo", "afigura-se-nos", travessão intercalado, referências documentais precisas, latim jurídico natural, erros leves de pontuação.
-
-CALIBRAÇÃO: perplexidade 0=previsível(IA) 100=imprevisível(humano); burstiness 0=uniforme(IA) 100=variado(humano); coesao_artificial 0=natural(humano) 100=excessiva(IA); uniformidade_sintatica 0=variada(humano) 100=uniforme(IA); riqueza_lexical 0=pobre 100=rico; marcadores_formulaicos 0=sem 100=cheio.
-
-SER CONSERVADOR. RESPONDE APENAS COM JSON VÁLIDO:
-{
-  "veredicto": "IA_DETECTADA|PROVAVELMENTE_IA|INCONCLUSIVO|PROVAVELMENTE_HUMANO|HUMANO",
-  "confianca": 0-100,
-  "indicadores": {"perplexidade":0-100,"burstiness":0-100,"coesao_artificial":0-100,"uniformidade_sintatica":0-100,"riqueza_lexical":0-100,"marcadores_formulaicos":0-100},
-  "narrativa": "Explicacao em 3-4 frases em portugues europeu com evidencias concretas.",
-  "relator_analise": "Analise do estilo do relator ou Relator nao indicado.",
-  "marcadores": [{"tipo":"ai|ok","texto":"Descricao especifica com exemplo concreto"}]
-}`;
+  const systemPrompt = modo === 'academico' ? promptAcademico : promptJudicial;
 
   const userMsg = modo === 'academico'
     ? ['Analisa este trabalho academico juridico portugues.', academicCtx, '', 'DOCUMENTO:', textoAnalise].filter(Boolean).join('\n')
     : ['Analisa este documento judicial portugues com maxima precisao.', estiloCtx, relatorCtx, '', 'DOCUMENTO:', textoAnalise].filter(Boolean).join('\n');
 
+  // ── CHAMADA À API ──────────────────────────────────────────
   try {
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 1200,
-        system: finalSystemPrompt,
+        system: systemPrompt,
         messages: [{ role: 'user', content: userMsg }]
       })
     });
