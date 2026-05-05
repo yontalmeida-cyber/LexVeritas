@@ -43,7 +43,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .policy-body p { margin-bottom: 16px; }
 .policy-body p:last-child { margin-bottom: 0; }
 .policy-body strong { color: var(--white); font-weight: 600; }
-.policy-body a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.3); }
+.policy-body a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.3); cursor: pointer; transition: border-color 0.2s; }
 .policy-body a:hover { border-color: var(--gold); }
 .policy-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
 .policy-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 1.7; color: rgba(248,246,241,0.7); }
@@ -55,6 +55,21 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
 .footer-brand { font-family: var(--serif); font-size: 18px; font-style: italic; text-decoration: none; color: var(--white); }
 .footer-brand span { color: var(--gold); }
 .footer-copy { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; }
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9500; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+.modal-overlay.visible { display: flex; }
+.modal-box { background: #13131a; border: 1px solid rgba(201,168,76,0.25); padding: 36px; max-width: 440px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+.modal-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+.modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: #9a9a9a; font-size: 22px; cursor: pointer; }
+.modal-close:hover { color: var(--white); }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 5px; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 13px; border: 1px solid rgba(201,168,76,0.2); background: rgba(255,255,255,0.04); font-family: var(--sans); font-size: 13px; color: var(--white); outline: none; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); }
+.form-group select option { background: var(--dark); }
+.form-group textarea { resize: vertical; min-height: 80px; }
+.btn-submit { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 13px; font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+.btn-submit:hover { background: var(--gold-light); }
 @media (max-width: 768px) {
   nav { padding: 16px 24px; }
   .page-hero { padding: 100px 24px 48px; }
@@ -104,7 +119,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
         <li>Análise de texto judicial com 6 indicadores forenses</li>
         <li>Geração de relatório PDF com número de referência único</li>
         <li>Histórico de análises na conta do utilizador</li>
-        <li>Suporte por email (plano Profissional)</li>
+        <li>Suporte prioritário (plano Profissional)</li>
       </ul>
     </div>
   </div>
@@ -130,7 +145,8 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     <div class="policy-body">
       <p><strong>Plano Gratuito</strong> — 5 análises por mês, sem custos, sem cartão de crédito. Disponível para sempre.</p>
       <p><strong>Plano Profissional</strong> — 19€/mês. Inclui 100 análises por mês, análise avançada por relator, relatório PDF profissional, histórico ilimitado e suporte prioritário.</p>
-      <p>Os pagamentos do plano Profissional são processados manualmente mediante contacto para <a href="mailto:profissional@lexveritas.pt">profissional@lexveritas.pt</a>. Reservamo-nos o direito de alterar os preços com aviso prévio de 30 dias.</p>
+      <!-- CORRIGIDO: removido mailto, substituído por formulário -->
+      <p>Os pagamentos do plano Profissional são processados mediante <a onclick="abrirModal('Plano Profissional — pagamento')">contacto através do nosso formulário</a>. Reservamo-nos o direito de alterar os preços com aviso prévio de 30 dias.</p>
       <p>Não são efectuados reembolsos de períodos já iniciados, salvo em casos de falha técnica grave da nossa parte.</p>
     </div>
   </div>
@@ -190,7 +206,8 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     <span class="policy-num">09</span>
     <h2 class="policy-title">Rescisão e <span>Encerramento</span></h2>
     <div class="policy-body">
-      <p>O utilizador pode encerrar a sua conta a qualquer momento contactando <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a>. Após o encerramento, todos os dados são eliminados no prazo de 30 dias.</p>
+      <!-- CORRIGIDO: removido mailto -->
+      <p>O utilizador pode encerrar a sua conta a qualquer momento <a onclick="abrirModal('Encerramento de conta')">através do nosso formulário de contacto</a>. Após o encerramento, todos os dados são eliminados no prazo de 30 dias.</p>
       <p>O LexVeritas pode suspender ou encerrar contas que violem estes termos, com ou sem aviso prévio consoante a gravidade da infracção.</p>
     </div>
   </div>
@@ -200,7 +217,8 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     <h2 class="policy-title">Lei Aplicável e <span>Jurisdição</span></h2>
     <div class="policy-body">
       <p>Estes Termos de Serviço são regidos pela lei portuguesa. Qualquer litígio será submetido à jurisdição exclusiva dos tribunais portugueses competentes.</p>
-      <p>Para questões relacionadas com estes termos, contacte: <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a></p>
+      <!-- CORRIGIDO: removido mailto -->
+      <p>Para questões relacionadas com estes termos, <a onclick="abrirModal('Questão sobre Termos de Serviço')">contacte-nos através do formulário</a>.</p>
     </div>
   </div>
 
@@ -211,5 +229,52 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
   <span class="footer-copy">© 2026 LEXVERITAS · PORTUGAL</span>
 </footer>
 
+<!-- MODAL CONTACTO — Formspree -->
+<div class="modal-overlay" id="termos-modal" onclick="if(event.target===this)this.classList.remove('visible')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('termos-modal').classList.remove('visible')">×</button>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#c9a84c;margin-bottom:12px">Contacto</div>
+    <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:20px;font-style:italic;color:#f8f6f1;margin-bottom:6px">Fale connosco</h2>
+    <p style="font-size:13px;color:#9a9a9a;margin-bottom:18px;line-height:1.6">Respondemos em 24h.</p>
+    <div class="form-group"><label>Nome</label><input type="text" id="t-nome" placeholder="O seu nome"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="t-email" placeholder="o-seu@email.pt"></div>
+    <div class="form-group">
+      <label>Assunto</label>
+      <select id="t-assunto">
+        <option value="">— Seleccione —</option>
+        <option>Plano Profissional — pagamento</option>
+        <option>Encerramento de conta</option>
+        <option>Questão sobre Termos de Serviço</option>
+        <option>Outro</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Mensagem</label><textarea id="t-mensagem" placeholder="A sua mensagem..."></textarea></div>
+    <button class="btn-submit" onclick="enviarTermos()">Enviar →</button>
+    <div id="t-msg" style="font-size:12px;margin-top:10px;display:none;padding:8px 12px"></div>
+  </div>
+</div>
+
+<script>
+function abrirModal(assunto){
+  const sel=document.getElementById('t-assunto');
+  if(assunto&&sel){Array.from(sel.options).forEach(o=>{if(o.value===assunto)o.selected=true;});}
+  document.getElementById('termos-modal').classList.add('visible');
+}
+
+async function enviarTermos(){
+  const nome=document.getElementById('t-nome').value.trim();
+  const email=document.getElementById('t-email').value.trim();
+  const assunto=document.getElementById('t-assunto').value;
+  const mensagem=document.getElementById('t-mensagem').value.trim();
+  const msg=document.getElementById('t-msg');
+  if(!nome||!email){msg.textContent='Preencha nome e email.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';return;}
+  try{
+    const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({nome,email,assunto:assunto||'Termos de Serviço',mensagem:mensagem||'—',pagina:'termos'})});
+    if(r.ok){msg.textContent='✓ Mensagem enviada! Respondemos em 24h.';msg.style.color='#1a5c3a';msg.style.background='rgba(26,92,58,0.15)';}
+    else throw new Error();
+  }catch(e){msg.textContent='Erro ao enviar. Tente novamente.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';}
+  msg.style.display='block';
+}
+</script>
 </body>
 </html>
