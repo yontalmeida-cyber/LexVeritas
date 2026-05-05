@@ -613,9 +613,7 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
       <a href="/sobre">Sobre</a>
       <a href="/privacidade">Política de Privacidade</a>
       <a href="/termos">Termos de Serviço</a>
-      <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a>
-      <a href="mailto:academico@lexveritas.pt">Plano Académico</a>
-      <a href="mailto:profissional@lexveritas.pt">Plano Profissional</a>
+      <a href="#" onclick="event.preventDefault();document.getElementById('contacto-modal').classList.add('visible')" style="color:var(--gold)">✉ Enviar mensagem</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -639,6 +637,44 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
     </div>
     <div id="idx-msg" style="font-size:12px;margin-top:12px;display:none;padding:8px 12px;border-radius:2px"></div>
     <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(201,168,76,0.1);font-family:'JetBrains Mono',monospace;font-size:10px;color:#666">Plano Gratuito actual: 5 análises/mês · PDF · Histórico 30 dias</div>
+  </div>
+</div>
+
+<!-- MODAL CONTACTO — Formspree -->
+<div class="idx-modal-overlay" id="contacto-modal" onclick="if(event.target===this)this.classList.remove('visible')">
+  <div class="idx-modal-box">
+    <button class="idx-modal-close" onclick="document.getElementById('contacto-modal').classList.remove('visible')">×</button>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#c9a84c;margin-bottom:14px">Contacto</div>
+    <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:22px;font-style:italic;color:#f8f6f1;margin-bottom:6px">Fale connosco</h2>
+    <p style="font-size:13px;color:#9a9a9a;margin-bottom:24px;line-height:1.6">Questões sobre planos, parcerias ou suporte técnico. Respondemos em 24h.</p>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#9a9a9a;display:block;margin-bottom:6px">Nome</label>
+        <input type="text" id="c-nome" placeholder="O seu nome" style="width:100%;padding:11px 14px;border:1px solid rgba(201,168,76,0.2);background:rgba(255,255,255,0.04);font-family:'Syne',sans-serif;font-size:13px;color:#f8f6f1;outline:none">
+      </div>
+      <div>
+        <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#9a9a9a;display:block;margin-bottom:6px">Email</label>
+        <input type="email" id="c-email" placeholder="o-seu@email.pt" style="width:100%;padding:11px 14px;border:1px solid rgba(201,168,76,0.2);background:rgba(255,255,255,0.04);font-family:'Syne',sans-serif;font-size:13px;color:#f8f6f1;outline:none">
+      </div>
+      <div>
+        <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#9a9a9a;display:block;margin-bottom:6px">Assunto</label>
+        <select id="c-assunto" style="width:100%;padding:11px 14px;border:1px solid rgba(201,168,76,0.2);background:#13131a;font-family:'Syne',sans-serif;font-size:13px;color:#f8f6f1;outline:none;cursor:pointer">
+          <option value="">— Seleccione —</option>
+          <option>Questão geral</option>
+          <option>Plano Profissional</option>
+          <option>Plano Académico</option>
+          <option>Suporte técnico</option>
+          <option>Parceria</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#9a9a9a;display:block;margin-bottom:6px">Mensagem</label>
+        <textarea id="c-mensagem" placeholder="A sua mensagem..." rows="4" style="width:100%;padding:11px 14px;border:1px solid rgba(201,168,76,0.2);background:rgba(255,255,255,0.04);font-family:'Syne',sans-serif;font-size:13px;color:#f8f6f1;outline:none;resize:vertical;min-height:100px"></textarea>
+      </div>
+      <button onclick="enviarContacto()" style="background:#c9a84c;color:#060608;border:none;padding:13px 24px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;margin-top:4px" onmouseover="this.style.background='#e8c96a'" onmouseout="this.style.background='#c9a84c'">Enviar Mensagem →</button>
+      <div id="c-msg" style="font-size:12px;display:none;padding:10px 14px"></div>
+    </div>
   </div>
 </div>
 
@@ -729,6 +765,25 @@ async function idxSubscrever(){
   msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';
   msg.style.color='#1a5c3a';msg.style.background='rgba(26,92,58,0.15)';msg.style.display='block';
   document.getElementById('idx-email').value='';
+}
+
+// FORMULÁRIO DE CONTACTO — Formspree
+async function enviarContacto(){
+  const nome=document.getElementById('c-nome').value.trim();
+  const email=document.getElementById('c-email').value.trim();
+  const assunto=document.getElementById('c-assunto').value;
+  const mensagem=document.getElementById('c-mensagem').value.trim();
+  const msg=document.getElementById('c-msg');
+  if(!nome||!email||!mensagem){msg.textContent='Preencha nome, email e mensagem.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';return;}
+  try{
+    const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({nome,email,assunto:assunto||'Questão geral',mensagem})});
+    if(r.ok){
+      msg.textContent='✓ Mensagem enviada! Respondemos em 24h.';
+      msg.style.color='#1a5c3a';msg.style.background='rgba(26,92,58,0.15)';msg.style.display='block';
+      document.getElementById('c-nome').value='';document.getElementById('c-email').value='';
+      document.getElementById('c-assunto').value='';document.getElementById('c-mensagem').value='';
+    } else { throw new Error(); }
+  }catch(e){msg.textContent='Erro ao enviar. Tente novamente.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';}
 }
 
 // COOKIE BANNER
