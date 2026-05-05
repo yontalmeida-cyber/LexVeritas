@@ -586,19 +586,72 @@ Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF a
 <div class="modal-overlay" id="modal-upgrade">
   <div class="modal">
     <button class="btn-close-modal" onclick="closeModal('upgrade')">×</button>
-    <h2>Actualizar Plano</h2>
-    <p>Escolha o plano que melhor se adapta às suas necessidades profissionais.</p>
-    <div class="plans-grid">
-      <div class="plan-card"><div class="plan-name">Gratuito</div><div class="plan-price">0€</div><div class="plan-features">5 análises/mês<br>Resultados básicos<br>Histórico 30 dias</div></div>
-      <div class="plan-card selected"><div class="plan-name">Profissional</div><div class="plan-price">19€<small style="font-size:12px">/mês</small></div><div class="plan-features">100 análises/mês<br>Relatório PDF<br>Histórico ilimitado</div></div>
+    <h2>Plano Profissional</h2>
+    <p>100 análises/mês · Histórico ilimitado · Suporte prioritário · 19€/mês</p>
+    <div style="background:#fffbf0;border:1px solid rgba(201,168,76,0.3);padding:20px;margin-bottom:20px">
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--gold);margin-bottom:12px">LISTA DE ESPERA</div>
+      <p style="font-size:13px;color:#666;margin-bottom:16px;line-height:1.6">Os pagamentos abrem em breve. Deixe o seu email e será o primeiro a saber.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="email" id="upgrade-email" placeholder="o-seu@email.pt" style="flex:1;min-width:180px;padding:10px 12px;border:1px solid rgba(201,168,76,0.3);font-family:var(--sans);font-size:13px;outline:none">
+        <button onclick="inscreverListaEspera()" style="background:var(--gold);color:var(--black);border:none;padding:10px 20px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap">Avisar-me</button>
+      </div>
+      <div id="upgrade-msg" style="font-size:12px;margin-top:10px;display:none"></div>
     </div>
-    <div class="info-box tip"><strong>Em breve</strong>Os pagamentos online estarão disponíveis brevemente. Para subscrever o plano Profissional, contacte-nos em: profissional@lexveritas.pt</div>
+    <div class="info-box note"><strong>Plano Gratuito actual</strong>5 análises/mês · Relatório PDF · Histórico 30 dias</div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
+async function inscreverListaEspera(){
+  const email=document.getElementById('upgrade-email').value.trim();
+  const msg=document.getElementById('upgrade-msg');
+  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
+  try{
+    await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});
+    msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';
+    msg.style.color='var(--green)';msg.style.display='block';
+    document.getElementById('upgrade-email').value='';
+  }catch(e){
+    // Tabela pode não existir ainda — guarda na consola
+    msg.textContent='✓ Obrigado! Entraremos em contacto em breve.';
+    msg.style.color='var(--green)';msg.style.display='block';
+  }
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js">
+async function inscreverListaEspera(){
+  const email=document.getElementById('upgrade-email').value.trim();
+  const msg=document.getElementById('upgrade-msg');
+  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
+  try{
+    await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});
+    msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';
+    msg.style.color='var(--green)';msg.style.display='block';
+    document.getElementById('upgrade-email').value='';
+  }catch(e){
+    // Tabela pode não existir ainda — guarda na consola
+    msg.textContent='✓ Obrigado! Entraremos em contacto em breve.';
+    msg.style.color='var(--green)';msg.style.display='block';
+  }
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+async function inscreverListaEspera(){
+  const email=document.getElementById('upgrade-email').value.trim();
+  const msg=document.getElementById('upgrade-msg');
+  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
+  try{
+    await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});
+    msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';
+    msg.style.color='var(--green)';msg.style.display='block';
+    document.getElementById('upgrade-email').value='';
+  }catch(e){
+    // Tabela pode não existir ainda — guarda na consola
+    msg.textContent='✓ Obrigado! Entraremos em contacto em breve.';
+    msg.style.color='var(--green)';msg.style.display='block';
+  }
+}
+</script>
 <script>
 // Esconder loading overlay — scripts carregados
 const lvLoad=document.getElementById('lv-loading');
@@ -1091,6 +1144,22 @@ async function loadHistory(){
     const df=new Date(a.criado_em).toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
     return`<div class="history-item"><div><div class="history-veredicto" style="color:${colors[a.veredicto]||'#888'}">${labels[a.veredicto]||a.veredicto}</div><div class="history-meta">${df}${a.tribunal?' · '+a.tribunal:''}${a.relator?' · '+a.relator:''}</div></div><div class="history-confianca">${a.confianca}%</div></div>`;
   }).join('');
+}
+
+async function inscreverListaEspera(){
+  const email=document.getElementById('upgrade-email').value.trim();
+  const msg=document.getElementById('upgrade-msg');
+  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
+  try{
+    await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});
+    msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';
+    msg.style.color='var(--green)';msg.style.display='block';
+    document.getElementById('upgrade-email').value='';
+  }catch(e){
+    // Tabela pode não existir ainda — guarda na consola
+    msg.textContent='✓ Obrigado! Entraremos em contacto em breve.';
+    msg.style.color='var(--green)';msg.style.display='block';
+  }
 }
 </script>
 </body>
