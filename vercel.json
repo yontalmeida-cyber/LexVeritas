@@ -5,6 +5,7 @@
     { "source": "/termos", "destination": "/termos.html" },
     { "source": "/academico", "destination": "/academico.html" },
     { "source": "/confirm", "destination": "/confirm.html" },
-    { "source": "/manutencao", "destination": "/manutencao.html" }
+    { "source": "/manutencao", "destination": "/manutencao.html" },
+    { "source": "/sobre", "destination": "/sobre.html" }
   ]
 }
