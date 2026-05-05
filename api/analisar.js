@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ erro: 'Método não permitido.' });
   }
 
-  const { texto, tribunal, relator } = req.body || {};
+  const { texto, tribunal, relator, modo, instituicao, tipoDoc, orientador } = req.body || {};
 
   if (!texto || typeof texto !== 'string' || texto.trim().length < 100) {
     return res.status(400).json({ erro: 'Texto demasiado curto (mínimo 100 caracteres).' });
@@ -34,6 +34,11 @@ export default async function handler(req, res) {
 
   const estiloCtx = tribunal && estilosTribunal[tribunal] ? `\n${estilosTribunal[tribunal]}` : tribunal ? `\nTribunal: ${tribunal}` : '';
   const relatorCtx = relator?.trim() ? `\nRELATOR: "${relator.trim()}" — verifica se o texto tem marcas pessoais deste magistrado ou parece genérico.` : '';
+  const academicCtx = modo === 'academico' ? [
+    instituicao ? `\nINSTITUIÇÃO: ${instituicao}` : '',
+    tipoDoc ? `\nTIPO DE DOCUMENTO: ${tipoDoc}` : '',
+    orientador ? `\nORIENTADOR: ${orientador}` : '',
+  ].filter(Boolean).join('') : '';
 
   // Extracção inteligente: início + múltiplas amostras do meio + fim
   // Para documentos longos, amostras distribuídas ao longo do texto
@@ -107,7 +112,69 @@ RESPONDE APENAS COM JSON VÁLIDO. SEM TEXTO ANTES OU DEPOIS:
 }
 Entre 4 e 6 marcadores. Sem aspas dentro de strings JSON.`;
 
-  const userMsg = ['Analisa este documento judicial portugues com maxima precisao.', estiloCtx, relatorCtx, '', 'DOCUMENTO:', textoAnalise].filter(Boolean).join('\n');
+  const systemPromptAcademico = `És o melhor especialista mundial em análise forense linguística de textos académicos jurídicos em português europeu. Determina se um trabalho académico foi escrito por um ser humano ou com auxílio significativo de IA.
+
+MARCADORES DE IA EM TEXTOS ACADÉMICOS:
+- Introduções genéricas sem posicionamento do autor
+- "No âmbito da presente dissertação", "importa referir que", "cumpre analisar"
+- Estrutura excessivamente simétrica (exactamente 3 pontos em cada secção)
+- Ausência de voz própria — tom neutro e impessoal em excesso
+- Citações sem página específica ("conforme refere a doutrina")
+- Transições excessivamente fluidas entre parágrafos
+- "em suma", "por todo o exposto", "neste sentido", "face ao exposto"
+- Parágrafos com comprimento muito uniforme
+
+MARCADORES DE ESCRITA HUMANA ACADÉMICA:
+- Posicionamento crítico claro ("entendemos que", "discordamos de", "a nossa posição é")
+- Citações precisas: "SILVA, João, Direito Civil, vol. II, 3.ª ed., Almedina, 2019, p. 142"
+- Notas de rodapé densas e variadas
+- Irregularidades naturais: parênteses intercalados, travessões, variação de comprimento
+- Referências a jurisprudência específica com número de processo
+- Comentários críticos à doutrina maioritária
+
+CALIBRAÇÃO DOS INDICADORES para texto académico:
+- perplexidade: 0=genérico/previsível (IA), 100=voz própria (humano)
+- burstiness: 0=parágrafos uniformes (IA), 100=alta variância (humano)
+- coesao_artificial: 0=coesão natural (humano), 100=coesão formulaica (IA)
+- uniformidade_sintatica: 0=sintaxe variada (humano), 100=uniforme (IA)
+- riqueza_lexical: 0=pobre, 100=rico e técnico
+- marcadores_formulaicos: 0=sem marcadores IA, 100=cheio de expressões de IA
+
+SER CONSERVADOR: prefere INCONCLUSIVO a falsos positivos.
+
+RESPONDE APENAS COM JSON VÁLIDO:
+{
+  "veredicto": "IA_DETECTADA|PROVAVELMENTE_IA|INCONCLUSIVO|PROVAVELMENTE_HUMANO|HUMANO",
+  "confianca": 0-100,
+  "indicadores": {"perplexidade":0-100,"burstiness":0-100,"coesao_artificial":0-100,"uniformidade_sintatica":0-100,"riqueza_lexical":0-100,"marcadores_formulaicos":0-100},
+  "narrativa": "Explicacao em 3-4 frases com evidencias concretas do texto academico.",
+  "relator_analise": "Analise do estilo academico detectado e tipo de documento.",
+  "marcadores": [{"tipo":"ai|ok","texto":"Descricao especifica com exemplo concreto"}]
+}`;
+
+  const systemPrompt = modo === 'academico' ? systemPromptAcademico : systemPromptAcademico.replace('académicos','').replace(/académico/g,'');
+  // Use correct prompt per mode
+  const finalSystemPrompt = modo === 'academico' ? systemPromptAcademico : `És o melhor especialista mundial em análise forense linguística de textos jurídicos portugueses. Determina com máxima precisão se um documento judicial foi elaborado por magistrado humano ou com auxílio de IA.
+
+MARCADORES DE ALTA SUSPEIÇÃO DE IA: "cumpre apreciar e decidir", "importa referir que", "neste conspecto", "por todo o exposto", "nos termos e com os fundamentos supra expostos", "há que salientar", "importa sublinhar", "face ao exposto", "em suma", "carreados para os autos", "demais disso", parágrafos uniformes.
+
+MARCADORES DE ESCRITA HUMANA: "ora", "vejamos", "com efeito", "aliás", "sem embargo", "afigura-se-nos", travessão intercalado, referências documentais precisas, latim jurídico natural, erros leves de pontuação.
+
+CALIBRAÇÃO: perplexidade 0=previsível(IA) 100=imprevisível(humano); burstiness 0=uniforme(IA) 100=variado(humano); coesao_artificial 0=natural(humano) 100=excessiva(IA); uniformidade_sintatica 0=variada(humano) 100=uniforme(IA); riqueza_lexical 0=pobre 100=rico; marcadores_formulaicos 0=sem 100=cheio.
+
+SER CONSERVADOR. RESPONDE APENAS COM JSON VÁLIDO:
+{
+  "veredicto": "IA_DETECTADA|PROVAVELMENTE_IA|INCONCLUSIVO|PROVAVELMENTE_HUMANO|HUMANO",
+  "confianca": 0-100,
+  "indicadores": {"perplexidade":0-100,"burstiness":0-100,"coesao_artificial":0-100,"uniformidade_sintatica":0-100,"riqueza_lexical":0-100,"marcadores_formulaicos":0-100},
+  "narrativa": "Explicacao em 3-4 frases em portugues europeu com evidencias concretas.",
+  "relator_analise": "Analise do estilo do relator ou Relator nao indicado.",
+  "marcadores": [{"tipo":"ai|ok","texto":"Descricao especifica com exemplo concreto"}]
+}`;
+
+  const userMsg = modo === 'academico'
+    ? ['Analisa este trabalho academico juridico portugues.', academicCtx, '', 'DOCUMENTO:', textoAnalise].filter(Boolean).join('\n')
+    : ['Analisa este documento judicial portugues com maxima precisao.', estiloCtx, relatorCtx, '', 'DOCUMENTO:', textoAnalise].filter(Boolean).join('\n');
 
   try {
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -116,7 +183,7 @@ Entre 4 e 6 marcadores. Sem aspas dentro de strings JSON.`;
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 1200,
-        system: systemPrompt,
+        system: finalSystemPrompt,
         messages: [{ role: 'user', content: userMsg }]
       })
     });
