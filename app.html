@@ -165,15 +165,40 @@
   .nulidade-card { background: white; border: 1px solid var(--rule); border-left: 3px solid var(--red); padding: 18px 20px; margin-bottom: 12px; }
   .nulidade-card.moderada { border-left-color: var(--gold); }
   .nulidade-card.leve { border-left-color: #bbb; }
-  .nulidade-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
-  .nulidade-tipo-badge { font-family: var(--mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; background: rgba(139,26,26,0.08); color: var(--red); padding: 3px 8px; }
+  .nulidade-card.erro-direito { border-left-color: #2563a8; }
+  .nulidade-card.erro-facto { border-left-color: #1a6b3a; }
+  .nulidade-card.questao-constitucional { border-left-color: #6b2ea8; }
+  .nulidade-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 6px; }
+  .nulidade-header-left { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .nulidade-tipo-badge { font-family: var(--mono); font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; background: rgba(139,26,26,0.08); color: var(--red); padding: 3px 8px; }
   .nulidade-card.moderada .nulidade-tipo-badge { background: rgba(201,168,76,0.1); color: #8b5e1a; }
   .nulidade-card.leve .nulidade-tipo-badge { background: rgba(0,0,0,0.05); color: #888; }
+  .nulidade-card.erro-direito .nulidade-tipo-badge { background: rgba(37,99,168,0.08); color: #2563a8; }
+  .nulidade-card.erro-facto .nulidade-tipo-badge { background: rgba(26,107,58,0.08); color: #1a6b3a; }
+  .nulidade-card.questao-constitucional .nulidade-tipo-badge { background: rgba(107,46,168,0.08); color: #6b2ea8; }
+  .categoria-badge { font-family: var(--mono); font-size: 7px; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; }
+  .categoria-nulidade { background: rgba(139,26,26,0.06); color: #8b1a1a; }
+  .categoria-erro_direito { background: rgba(37,99,168,0.06); color: #2563a8; }
+  .categoria-erro_facto { background: rgba(26,107,58,0.06); color: #1a6b3a; }
+  .categoria-questao_constitucional { background: rgba(107,46,168,0.06); color: #6b2ea8; }
+  .prioridade-badge { font-family: var(--mono); font-size: 8px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--ink); color: white; flex-shrink: 0; }
+  .dificuldade-badge { font-family: var(--mono); font-size: 7px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 6px; }
+  .dif-facil { background: rgba(26,92,58,0.08); color: #1a5c2a; }
+  .dif-media { background: rgba(201,168,76,0.1); color: #8b5e1a; }
+  .dif-dificil { background: rgba(139,26,26,0.08); color: #8b1a1a; }
   .nulidade-artigo { font-family: var(--mono); font-size: 9px; color: var(--gold); letter-spacing: 0.08em; }
   .nulidade-desc { font-family: var(--sans); font-size: 12px; line-height: 1.7; color: #444; margin: 8px 0 10px; }
   .nulidade-argumento { background: #fffbf0; border-left: 2px solid var(--gold); padding: 10px 14px; }
   .nulidade-argumento-label { font-family: var(--mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: #888; display: block; margin-bottom: 4px; }
   .nulidade-argumento-text { font-family: var(--sans); font-size: 12px; line-height: 1.7; color: #555; }
+  .meta-recurso { background: #f8f5ff; border: 1px solid rgba(107,46,168,0.15); border-left: 3px solid #6b2ea8; padding: 14px 16px; margin-bottom: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .meta-recurso-item { }
+  .meta-recurso-label { font-family: var(--mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: #888; margin-bottom: 3px; }
+  .meta-recurso-value { font-family: var(--sans); font-size: 12px; font-weight: 600; color: #333; line-height: 1.4; }
+  .admissibilidade-badge { display: inline-flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; margin-bottom: 12px; }
+  .admissivel-sim { background: rgba(26,92,58,0.08); color: #1a5c2a; }
+  .admissivel-nao { background: rgba(139,26,26,0.08); color: #8b1a1a; }
+  @media(max-width:760px){ .meta-recurso { grid-template-columns: 1fr; } }
 
   /* SIDEBAR */
   .sidebar-widget { background: white; border: 1px solid var(--rule); margin-bottom: 20px; overflow: hidden; }
@@ -491,10 +516,11 @@
           </div>
           <div class="meter-track"><div class="meter-fill" id="meter-fill-critica"></div></div>
         </div>
+        <div id="meta-recurso-container"></div>
         <div class="analysis-card"><h3>Sumário Executivo</h3><p id="critica-sumario">—</p></div>
         <div id="nulidades-container"></div>
         <div class="analysis-card" style="border-left:3px solid var(--gold)">
-          <h3>Recomendação do Consultor</h3><p id="critica-conclusao">—</p>
+          <h3>Recomendação Estratégica</h3><p id="critica-conclusao">—</p>
         </div>
       </div>
 
@@ -1117,7 +1143,7 @@ async function analyzeDecision(){
       dbRecord.confianca=result.confianca||0;
       dbRecord.narrativa=result.sumario||null;
       dbRecord.relator_analise=result.conclusao||null;
-      dbRecord.marcadores=result.nulidades||null;
+      dbRecord.marcadores=result.fundamentos||result.nulidades||null;
       dbRecord.indicadores=null;
     }else{
       dbRecord.veredicto=result.veredicto;
@@ -1174,7 +1200,7 @@ function renderResultsCritica(result){
   document.getElementById('results-standard').style.display='none';
   document.getElementById('results-critica').style.display='block';
   const vertitulos={'RECURSO_VIAVEL':'Recurso Viável — Fundamentos Identificados','RECURSO_PARCIAL':'Recurso Parcialmente Fundamentado','RECURSO_INVIAVEL':'Sem Fundamentos Sólidos para Recurso'};
-  const versubs={'RECURSO_VIAVEL':'Foram identificadas nulidades e/ou erros de julgamento com fundamento jurídico sólido para interposição de recurso.','RECURSO_PARCIAL':'Existem alguns argumentos para recurso, mas com limitações. Recomenda-se avaliação cuidadosa da viabilidade.','RECURSO_INVIAVEL':'A decisão encontra-se devidamente fundamentada. Os fundamentos para recurso são fracos ou inexistentes.'};
+  const versubs={'RECURSO_VIAVEL':'Foram identificados fundamentos jurídicos sólidos para interposição de recurso.','RECURSO_PARCIAL':'Existem argumentos para recurso, mas com limitações. Avaliação cuidadosa recomendada.','RECURSO_INVIAVEL':'A decisão encontra-se devidamente fundamentada. Fundamentos para recurso fracos ou inexistentes.'};
   const vercls={'RECURSO_VIAVEL':'recurso-viavel','RECURSO_PARCIAL':'recurso-parcial','RECURSO_INVIAVEL':'recurso-inviavel'};
   const veredicto=result.veredicto_recurso||'RECURSO_INVIAVEL';
   const bannerC=document.getElementById('verdict-banner-critica');
@@ -1183,26 +1209,66 @@ function renderResultsCritica(result){
   document.getElementById('verdict-subtitle-critica').textContent=versubs[veredicto]||'';
   document.getElementById('confidence-value-critica').textContent=(result.confianca||0)+'%';
   setTimeout(()=>{document.getElementById('meter-fill-critica').style.width=(result.confianca||0)+'%';},100);
+
+  // Meta-recurso: tribunal, prazo, admissibilidade
+  const metaContainer=document.getElementById('meta-recurso-container');
+  metaContainer.innerHTML='';
+  if(result.tribunal_recurso||result.prazo_recurso){
+    const admissivel=result.admissivel!==false;
+    metaContainer.innerHTML=`
+      <span class="admissibilidade-badge ${admissivel?'admissivel-sim':'admissivel-nao'}">${admissivel?'✓ Decisão Recorrível':'✗ Verificar Admissibilidade'}</span>
+      <div class="meta-recurso">
+        <div class="meta-recurso-item">
+          <div class="meta-recurso-label">Tribunal Competente</div>
+          <div class="meta-recurso-value">${result.tribunal_recurso||'—'}</div>
+        </div>
+        <div class="meta-recurso-item">
+          <div class="meta-recurso-label">Prazo de Recurso</div>
+          <div class="meta-recurso-value">${result.prazo_recurso||'—'}</div>
+        </div>
+      </div>`;
+  }
+
   document.getElementById('critica-sumario').innerHTML=(result.sumario||'Sem sumário disponível.').replace(/\n/g,'<br>');
-  // Nulidades
+
+  // Fundamentos (novo formato) ou nulidades (formato antigo)
   const container=document.getElementById('nulidades-container');container.innerHTML='';
-  const nulidades=result.nulidades||[];
-  if(nulidades.length>0){
-    const label=document.createElement('div');label.className='nulidades-section-label';label.style.marginBottom='12px';label.textContent=`${nulidades.length} Nulidade${nulidades.length>1?'s':''} / Vício${nulidades.length>1?'s':''} Identificado${nulidades.length>1?'s':''}`;container.appendChild(label);
-    nulidades.forEach(n=>{
-      const grav=(n.gravidade||'grave').toLowerCase();
-      const card=document.createElement('div');card.className=`nulidade-card ${grav==='grave'?'':''+grav}`;
+  const fundamentos=result.fundamentos||result.nulidades||[];
+  const catLabels={nulidade:'Nulidade Processual',erro_direito:'Erro de Direito',erro_facto:'Erro de Facto',questao_constitucional:'Questão Constitucional'};
+  const difLabels={facil:'Fácil de provar',media:'Dificuldade média',dificil:'Difícil de provar'};
+
+  if(fundamentos.length>0){
+    const totalLabel=document.createElement('div');
+    totalLabel.className='nulidades-section-label';
+    totalLabel.style.marginBottom='12px';
+    totalLabel.textContent=`${fundamentos.length} Fundamento${fundamentos.length>1?'s':''} Identificado${fundamentos.length>1?'s':''}`;
+    container.appendChild(totalLabel);
+
+    fundamentos.forEach(f=>{
+      const grav=(f.gravidade||'moderada').toLowerCase();
+      const cat=(f.categoria||'nulidade').replace(/_/g,'-');
+      const dif=(f.dificuldade||'media').toLowerCase();
+      const catKey=f.categoria||'nulidade';
+      const card=document.createElement('div');
+      card.className=`nulidade-card ${grav==='grave'?'':grav} ${cat!=='nulidade'?cat:''}`;
       card.innerHTML=`
         <div class="nulidade-header">
-          <span class="nulidade-tipo-badge">${n.tipo||'Vício Processual'}</span>
-          <span class="nulidade-artigo">${n.artigo||''}</span>
+          <div class="nulidade-header-left">
+            ${f.prioridade?`<span class="prioridade-badge">${f.prioridade}</span>`:''}
+            <span class="nulidade-tipo-badge">${f.tipo||'Fundamento'}</span>
+            ${catKey!=='nulidade'?`<span class="categoria-badge categoria-${catKey}">${catLabels[catKey]||catKey}</span>`:''}
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            ${f.dificuldade?`<span class="dificuldade-badge dif-${dif}">${difLabels[dif]||dif}</span>`:''}
+            <span class="nulidade-artigo">${f.artigo||''}</span>
+          </div>
         </div>
-        <p class="nulidade-desc">${n.descricao||''}</p>
-        ${n.argumento?`<div class="nulidade-argumento"><span class="nulidade-argumento-label">Argumento para Recurso</span><span class="nulidade-argumento-text">${n.argumento}</span></div>`:''}`;
+        <p class="nulidade-desc">${f.descricao||''}</p>
+        ${f.argumento?`<div class="nulidade-argumento"><span class="nulidade-argumento-label">Argumento para a Peça Processual</span><span class="nulidade-argumento-text">${f.argumento}</span></div>`:''}`;
       container.appendChild(card);
     });
   }else{
-    container.innerHTML='<div class="analysis-card"><h3>Vícios Processuais</h3><p style="color:#888;font-style:italic">Não foram identificados vícios processuais significativos.</p></div>';
+    container.innerHTML='<div class="analysis-card"><h3>Fundamentos de Recurso</h3><p style="color:#888;font-style:italic">Não foram identificados fundamentos significativos para recurso.</p></div>';
   }
   document.getElementById('critica-conclusao').innerHTML=(result.conclusao||'').replace(/\n/g,'<br>');
   document.getElementById('results-area').classList.add('visible');
