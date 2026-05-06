@@ -20,6 +20,8 @@
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--black); color: var(--ink); font-family: var(--sans); min-height: 100vh; }
+
+  /* AUTH */
   .auth-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; background: var(--black); position: relative; overflow: hidden; }
   .auth-page::before { content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 600px; height: 500px; background: radial-gradient(ellipse, rgba(201,168,76,0.12) 0%, transparent 60%); pointer-events: none; }
   .auth-page::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
@@ -37,7 +39,7 @@
   .form-group input:focus, .form-group select:focus { border-color: var(--gold); }
   .form-group input::placeholder { color: rgba(255,255,255,0.2); }
   .btn-primary { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 14px; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.25s; margin-top: 8px; }
-  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,168,76,0.3); }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
   .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
   .auth-switch { text-align: center; margin-top: 20px; font-size: 12px; color: var(--grey); }
   .auth-switch a { color: var(--gold); cursor: pointer; text-decoration: none; font-weight: 600; }
@@ -49,6 +51,8 @@
   .plan-badge { display: inline-block; padding: 2px 8px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; border-radius: 2px; }
   .plan-gratuito { background: rgba(255,255,255,0.08); color: var(--grey); }
   .plan-profissional { background: rgba(201,168,76,0.15); color: var(--gold); }
+
+  /* HEADER */
   header { border-bottom: 1px solid var(--rule-dark); padding: 0 clamp(20px, 5vw, 60px); background: var(--black); position: sticky; top: 0; z-index: 50; }
   .header-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--rule-dark); }
   .header-date { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; color: var(--grey); text-transform: uppercase; }
@@ -69,17 +73,22 @@
   nav a { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color 0.2s; cursor: pointer; padding: 4px 0; }
   nav a:hover { color: #f8f6f1; }
   nav a.active { color: var(--gold); border-bottom: 1px solid var(--gold); }
+
+  /* USAGE & MODE BARS */
   .usage-bar-container { background: var(--dark); border-bottom: 1px solid var(--rule-dark); padding: 8px clamp(20px, 5vw, 60px); display: flex; align-items: center; gap: 16px; }
-  .mode-toggle-bar { background: var(--black); border-bottom: 1px solid var(--rule-dark); padding: 12px clamp(20px, 5vw, 60px); display: flex; align-items: center; gap: 8px; }
-  .mode-toggle-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-right: 8px; white-space: nowrap; }
-  .mode-btn { background: transparent; border: 1px solid var(--rule-dark); padding: 8px 18px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--grey); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
-  .mode-btn:hover { border-color: rgba(201,168,76,0.4); color: #f8f6f1; }
-  .mode-btn.active { background: rgba(201,168,76,0.12); border-color: var(--gold); color: var(--gold); }
   .usage-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--grey); white-space: nowrap; }
   .usage-track { flex: 1; height: 2px; background: rgba(255,255,255,0.08); max-width: 200px; }
   .usage-fill { height: 100%; background: var(--gold); transition: width 0.5s; }
   .usage-count { font-family: var(--mono); font-size: 10px; color: var(--grey); white-space: nowrap; }
   .usage-upgrade { font-family: var(--sans); font-size: 11px; font-weight: 600; color: var(--gold); cursor: pointer; margin-left: auto; letter-spacing: 0.05em; }
+  .mode-toggle-bar { background: var(--black); border-bottom: 1px solid var(--rule-dark); padding: 12px clamp(20px, 5vw, 60px); display: flex; align-items: center; gap: 8px; overflow-x: auto; }
+  .mode-toggle-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-right: 8px; white-space: nowrap; }
+  .mode-btn { background: transparent; border: 1px solid var(--rule-dark); padding: 8px 16px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; color: var(--grey); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .mode-btn:hover { border-color: rgba(201,168,76,0.4); color: #f8f6f1; }
+  .mode-btn.active { background: rgba(201,168,76,0.12); border-color: var(--gold); color: var(--gold); }
+  .mode-btn.critica.active { background: rgba(139,26,26,0.1); border-color: #c97850; color: #c97850; }
+
+  /* MAIN LAYOUT */
   main { max-width: 1060px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: start; }
   .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
   .section-label::after { content: ''; height: 1px; flex: 1; background: var(--gold); opacity: 0.4; }
@@ -93,6 +102,7 @@
   .file-hint { font-family: var(--sans); font-size: 11px; color: #aaa; display: flex; align-items: center; gap: 5px; }
   .btn-analyze { background: var(--ink); color: var(--cream); border: none; padding: 11px 28px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 8px; }
   .btn-analyze:hover { background: var(--gold); }
+  .btn-analyze.critica-mode:hover { background: #c97850; }
   .btn-analyze:disabled { opacity: 0.5; cursor: not-allowed; }
   .loading-bar { height: 3px; background: var(--rule); overflow: hidden; display: none; }
   .loading-bar.active { display: block; }
@@ -106,29 +116,8 @@
   .drop-zone.has-file { border-color: rgba(201,168,76,0.4); background: #fffdf5; border-style: solid; cursor: default; }
   .drop-zone-text { font-family: var(--sans); font-size: 12px; color: #bbb; line-height: 1.7; }
   .drop-zone.has-file .drop-zone-text { color: #666; }
-  .analysis-overlay { position: fixed; inset: 0; background: rgba(13,13,13,0.93); z-index: 500; display: none; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(8px); }
-  .analysis-overlay.visible { display: flex; animation: overlayIn 0.4s ease; }
-  @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
-  .overlay-inner { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 40px 32px; max-width: 380px; width: 100%; }
-  .overlay-logo { font-family: var(--serif); font-size: 28px; color: var(--cream); }
-  .overlay-logo em { font-style: italic; color: var(--gold); }
-  .scales-anim { width: 64px; height: 64px; animation: scalesTilt 2s ease-in-out infinite; }
-  @keyframes scalesTilt { 0%,100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
-  .overlay-progress-track { width: 100%; height: 2px; background: rgba(255,255,255,0.08); overflow: hidden; }
-  .overlay-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), #e8c96a); width: 0%; transition: width 0.6s ease; }
-  .overlay-status { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); text-align: center; min-height: 18px; }
-  .overlay-subtext { font-family: var(--sans); font-size: 11px; color: rgba(255,255,255,0.3); text-align: center; line-height: 1.6; }
-  .scanning-dots { display: flex; gap: 6px; align-items: center; justify-content: center; }
-  .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); animation: dotPulse 1.4s ease-in-out infinite; }
-  .dot:nth-child(2) { animation-delay: 0.2s; } .dot:nth-child(3) { animation-delay: 0.4s; } .dot:nth-child(4) { animation-delay: 0.6s; } .dot:nth-child(5) { animation-delay: 0.8s; }
-  @keyframes dotPulse { 0%,80%,100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1.3); } }
-  .overlay-indicators { width: 100%; display: flex; flex-direction: column; gap: 8px; }
-  .overlay-ind { display: flex; align-items: center; gap: 8px; opacity: 0; transform: translateX(-8px); transition: opacity 0.4s, transform 0.4s; }
-  .overlay-ind.active { opacity: 1; transform: translateX(0); }
-  .overlay-ind-name { font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); text-transform: uppercase; width: 110px; flex-shrink: 0; }
-  .overlay-ind-track { flex: 1; height: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
-  .overlay-ind-fill { height: 100%; background: var(--gold); width: 0%; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
-  .overlay-ind-val { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.3); width: 24px; text-align: right; }
+
+  /* RESULTS AREA */
   .results-area { margin-top: 28px; display: none; }
   .results-area.visible { display: block; animation: fadeUp 0.5s ease; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -136,6 +125,12 @@
   .verdict-banner.ai { background: #fff8f0; border-color: #e8c090; }
   .verdict-banner.human { background: #f0f5f0; border-color: #90b890; }
   .verdict-banner.uncertain { background: #f5f5f0; border-color: #c0c0b0; }
+  .verdict-banner.recurso-viavel { background: #f0f5f0; border-color: #90b890; }
+  .verdict-banner.recurso-viavel .verdict-title { color: #1a5c2a; }
+  .verdict-banner.recurso-parcial { background: #fff8f0; border-color: #e8c090; }
+  .verdict-banner.recurso-parcial .verdict-title { color: #8b4513; }
+  .verdict-banner.recurso-inviavel { background: #f5f5f0; border-color: #c0c0b0; }
+  .verdict-banner.recurso-inviavel .verdict-title { color: #555; }
   .verdict-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 6px; opacity: 0.6; }
   .verdict-title { font-family: var(--serif); font-size: 26px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
   .verdict-banner.ai .verdict-title { color: #8b4513; }
@@ -163,6 +158,24 @@
   .marker-ai { background: #ffe0c0; color: #8b4513; }
   .marker-ok { background: #d0e8d0; color: #1a5c2a; }
   .evidence-text { font-family: var(--sans); font-size: 12px; line-height: 1.6; color: #555; }
+
+  /* NULIDADES (Análise Crítica) */
+  .nulidades-section-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #888; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .nulidades-section-label::after { content: ''; height: 1px; flex: 1; background: rgba(0,0,0,0.1); }
+  .nulidade-card { background: white; border: 1px solid var(--rule); border-left: 3px solid var(--red); padding: 18px 20px; margin-bottom: 12px; }
+  .nulidade-card.moderada { border-left-color: var(--gold); }
+  .nulidade-card.leve { border-left-color: #bbb; }
+  .nulidade-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+  .nulidade-tipo-badge { font-family: var(--mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; background: rgba(139,26,26,0.08); color: var(--red); padding: 3px 8px; }
+  .nulidade-card.moderada .nulidade-tipo-badge { background: rgba(201,168,76,0.1); color: #8b5e1a; }
+  .nulidade-card.leve .nulidade-tipo-badge { background: rgba(0,0,0,0.05); color: #888; }
+  .nulidade-artigo { font-family: var(--mono); font-size: 9px; color: var(--gold); letter-spacing: 0.08em; }
+  .nulidade-desc { font-family: var(--sans); font-size: 12px; line-height: 1.7; color: #444; margin: 8px 0 10px; }
+  .nulidade-argumento { background: #fffbf0; border-left: 2px solid var(--gold); padding: 10px 14px; }
+  .nulidade-argumento-label { font-family: var(--mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: #888; display: block; margin-bottom: 4px; }
+  .nulidade-argumento-text { font-family: var(--sans); font-size: 12px; line-height: 1.7; color: #555; }
+
+  /* SIDEBAR */
   .sidebar-widget { background: white; border: 1px solid var(--rule); margin-bottom: 20px; overflow: hidden; }
   .widget-header { padding: 12px 16px; background: var(--parchment); border-bottom: 1px solid var(--rule); }
   .widget-title { font-family: var(--serif); font-size: 13px; font-weight: 700; }
@@ -177,6 +190,11 @@
   .info-box.warn { border-color: var(--red); background: #fff8f8; }
   .info-box.note { border-color: #aaa; background: #f8f8f8; }
   .info-box strong { display: block; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 3px; color: #888; }
+  .critica-banner { background: rgba(139,26,26,0.06); border: 1px solid rgba(139,26,26,0.15); padding: 12px 14px; margin-bottom: 10px; }
+  .critica-banner strong { display: block; font-family: var(--mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: #c97850; margin-bottom: 4px; }
+  .critica-banner p { font-family: var(--sans); font-size: 11px; color: #666; line-height: 1.6; }
+
+  /* HISTORY */
   .history-page { max-width: 800px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); }
   .history-item { background: white; border: 1px solid var(--rule); margin-bottom: 16px; overflow: hidden; }
   .history-item-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; transition: background 0.2s; }
@@ -189,12 +207,41 @@
   .history-details { display: none; padding: 20px; border-top: 1px solid var(--rule); }
   .history-item.open .history-details { display: block; animation: fadeUp 0.3s ease; }
   .empty-history { text-align: center; padding: 60px 20px; color: #aaa; font-family: var(--serif); font-size: 18px; font-style: italic; }
+
+  /* OVERLAY */
+  .analysis-overlay { position: fixed; inset: 0; background: rgba(13,13,13,0.93); z-index: 500; display: none; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(8px); }
+  .analysis-overlay.visible { display: flex; animation: overlayIn 0.4s ease; }
+  @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+  .overlay-inner { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 40px 32px; max-width: 380px; width: 100%; }
+  .overlay-logo { font-family: var(--serif); font-size: 28px; color: var(--cream); }
+  .overlay-logo em { font-style: italic; color: var(--gold); }
+  .scales-anim { width: 64px; height: 64px; animation: scalesTilt 2s ease-in-out infinite; }
+  @keyframes scalesTilt { 0%,100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
+  .overlay-progress-track { width: 100%; height: 2px; background: rgba(255,255,255,0.08); overflow: hidden; }
+  .overlay-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), #e8c96a); width: 0%; transition: width 0.6s ease; }
+  .overlay-status { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); text-align: center; min-height: 18px; }
+  .overlay-subtext { font-family: var(--sans); font-size: 11px; color: rgba(255,255,255,0.3); text-align: center; line-height: 1.6; }
+  .scanning-dots { display: flex; gap: 6px; align-items: center; justify-content: center; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); animation: dotPulse 1.4s ease-in-out infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; } .dot:nth-child(3) { animation-delay: 0.4s; } .dot:nth-child(4) { animation-delay: 0.6s; } .dot:nth-child(5) { animation-delay: 0.8s; }
+  @keyframes dotPulse { 0%,80%,100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1.3); } }
+  .overlay-indicators { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+  .overlay-ind { display: flex; align-items: center; gap: 8px; opacity: 0; transform: translateX(-8px); transition: opacity 0.4s, transform 0.4s; }
+  .overlay-ind.active { opacity: 1; transform: translateX(0); }
+  .overlay-ind-name { font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); text-transform: uppercase; width: 120px; flex-shrink: 0; }
+  .overlay-ind-track { flex: 1; height: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
+  .overlay-ind-fill { height: 100%; background: var(--gold); width: 0%; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+  .overlay-ind-val { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.3); width: 24px; text-align: right; }
+
+  /* FOOTER */
   footer { border-top: 1px solid var(--rule); padding: 20px clamp(20px, 5vw, 60px); display: flex; justify-content: space-between; align-items: center; margin-top: 32px; flex-wrap: wrap; gap: 12px; }
   .footer-brand { font-family: var(--serif); font-size: 16px; font-weight: 700; }
   .footer-brand em { font-style: italic; color: var(--gold); }
   .footer-copy { font-family: var(--mono); font-size: 9px; color: #bbb; letter-spacing: 0.1em; }
   .footer-contact { font-family: var(--mono); font-size: 9px; color: var(--gold); cursor: pointer; letter-spacing: 0.1em; text-decoration: none; transition: opacity 0.2s; }
   .footer-contact:hover { opacity: 0.7; }
+
+  /* MODALS */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
   .modal-overlay.visible { display: flex; }
   .modal { background: white; max-width: 480px; width: 100%; padding: 36px; position: relative; }
@@ -217,6 +264,8 @@
   .dark-form-group select option { background: var(--dark); }
   .dark-form-group input:focus, .dark-form-group select:focus, .dark-form-group textarea:focus { border-color: var(--gold); }
   .dark-form-group textarea { resize: vertical; min-height: 90px; }
+
+  /* LOADING SCREEN */
   #lv-loading{position:fixed;inset:0;background:#060608;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s ease}
   #lv-loading.done{opacity:0;pointer-events:none}
   .lv-load-logo{font-family:var(--serif);font-size:48px;font-style:italic;color:#f8f6f1}
@@ -225,6 +274,7 @@
   .lv-load-track{width:200px;height:2px;background:rgba(255,255,255,0.08)}
   .lv-load-fill{height:100%;background:linear-gradient(90deg,#c9a84c,#e8c96a);width:0;animation:lvload 2.5s ease forwards}
   @keyframes lvload{0%{width:0}60%{width:80%}100%{width:95%}}
+
   @media(max-width:760px){
     main{grid-template-columns:1fr;gap:20px;padding:16px}
     .sidebar{order:2}.content-area{order:1}
@@ -245,12 +295,12 @@
     .overlay-inner{padding:28px 20px;gap:20px}
     .overlay-logo{font-size:22px}
     .scales-anim{width:48px;height:48px}
-    .overlay-ind-name{width:90px;font-size:7px}
+    .overlay-ind-name{width:100px;font-size:7px}
     .overlay-status{font-size:9px}
     .overlay-subtext{font-size:10px}
     .usage-track{max-width:120px}
-    .mode-toggle-bar{flex-wrap:wrap;gap:6px}
-    .mode-btn{flex:1;justify-content:center;font-size:10px;padding:8px 10px}
+    .mode-toggle-bar{gap:6px}
+    .mode-btn{font-size:10px;padding:7px 10px}
   }
   @media(max-width:400px){.indicators-grid{grid-template-columns:1fr}.masthead h1{font-size:26px}}
 </style>
@@ -271,7 +321,7 @@
   <div style="display:flex;gap:20px;justify-content:center;margin-bottom:20px;flex-wrap:wrap">
     <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em"><span style="color:var(--gold)">⚖</span> 6 INDICADORES FORENSES</div>
     <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em"><span style="color:var(--gold)">📄</span> RELATÓRIO PDF</div>
-    <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em"><span style="color:var(--gold)">🏛</span> 9+ TRIBUNAIS</div>
+    <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em"><span style="color:var(--gold)">🏛</span> ANÁLISE CRÍTICA</div>
   </div>
   <div class="auth-card">
     <h2>Entrar na conta</h2>
@@ -373,12 +423,13 @@
   <span class="mode-toggle-label">Modo</span>
   <button class="mode-btn active" id="mode-btn-judicial" onclick="setModo('judicial')">⚖ Análise Judicial</button>
   <button class="mode-btn" id="mode-btn-academico" onclick="setModo('academico')">🎓 Análise Académica</button>
+  <button class="mode-btn critica" id="mode-btn-critica" onclick="setModo('critica')">🏛 Análise Crítica</button>
 </div>
 
 <div id="tab-content-analise">
 <main>
   <div class="analysis-section content-area">
-    <div class="section-label">Entrada do Documento</div>
+    <div class="section-label" id="section-label-input">Entrada do Documento</div>
     <div class="input-card">
       <div class="input-card-header">
         <span class="input-card-title" id="input-card-title">Texto do Acórdão / Sentença / Despacho</span>
@@ -403,34 +454,62 @@
     </div>
     <div class="results-area" id="results-area">
       <div class="section-label" style="margin-top:28px">Resultado da Análise</div>
-      <div class="verdict-banner" id="verdict-banner">
-        <div class="verdict-label">Veredicto Forense</div>
-        <div class="verdict-title" id="verdict-title">—</div>
-        <div class="verdict-subtitle" id="verdict-subtitle">—</div>
-      </div>
-      <div class="confidence-block">
-        <div class="confidence-label">
-          <span>Índice de Confiança na Detecção</span>
-          <span class="confidence-value" id="confidence-value">—%</span>
+
+      <!-- RESULTADOS MODO JUDICIAL / ACADÉMICO -->
+      <div id="results-standard">
+        <div class="verdict-banner" id="verdict-banner">
+          <div class="verdict-label">Veredicto Forense</div>
+          <div class="verdict-title" id="verdict-title">—</div>
+          <div class="verdict-subtitle" id="verdict-subtitle">—</div>
         </div>
-        <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
+        <div class="confidence-block">
+          <div class="confidence-label">
+            <span>Índice de Confiança na Detecção</span>
+            <span class="confidence-value" id="confidence-value">—%</span>
+          </div>
+          <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
+        </div>
+        <div class="indicators-grid" id="indicators-grid"></div>
+        <div class="analysis-card"><h3>Fundamentação da Análise</h3><p id="analysis-narrative">—</p></div>
+        <div class="analysis-card" id="relator-card" style="display:none;border-left:3px solid var(--gold)">
+          <h3 id="relator-card-title">Análise do Estilo do Relator</h3><p id="relator-analise-text">—</p>
+        </div>
+        <div class="analysis-card"><h3>Marcadores Identificados</h3><ul class="evidence-list" id="evidence-list"></ul></div>
       </div>
-      <div class="indicators-grid" id="indicators-grid"></div>
-      <div class="analysis-card"><h3>Fundamentação da Análise</h3><p id="analysis-narrative">—</p></div>
-      <div class="analysis-card" id="relator-card" style="display:none;border-left:3px solid var(--gold)">
-        <h3 id="relator-card-title">Análise do Estilo do Relator</h3><p id="relator-analise-text">—</p>
+
+      <!-- RESULTADOS MODO CRÍTICA -->
+      <div id="results-critica" style="display:none">
+        <div class="verdict-banner" id="verdict-banner-critica">
+          <div class="verdict-label">Avaliação de Recurso — Consultor Jurídico Sénior</div>
+          <div class="verdict-title" id="verdict-title-critica">—</div>
+          <div class="verdict-subtitle" id="verdict-subtitle-critica">—</div>
+        </div>
+        <div class="confidence-block">
+          <div class="confidence-label">
+            <span>Grau de Fundamentação do Recurso</span>
+            <span class="confidence-value" id="confidence-value-critica">—%</span>
+          </div>
+          <div class="meter-track"><div class="meter-fill" id="meter-fill-critica"></div></div>
+        </div>
+        <div class="analysis-card"><h3>Sumário Executivo</h3><p id="critica-sumario">—</p></div>
+        <div id="nulidades-container"></div>
+        <div class="analysis-card" style="border-left:3px solid var(--gold)">
+          <h3>Recomendação do Consultor</h3><p id="critica-conclusao">—</p>
+        </div>
       </div>
-      <div class="analysis-card"><h3>Marcadores Identificados</h3><ul class="evidence-list" id="evidence-list"></ul></div>
+
       <button class="btn-pdf" onclick="gerarPDF()">📄 Descarregar Relatório PDF Profissional</button>
       <div class="ref-number" id="ref-number"></div>
     </div>
   </div>
 
   <div class="sidebar">
-    <div class="section-label">Tribunal & Relator</div>
+    <div class="section-label" id="sidebar-section-label">Tribunal & Relator</div>
     <div class="sidebar-widget">
       <div class="widget-header"><div class="widget-title" id="ctx-widget-title">Contexto do Documento</div></div>
       <div class="widget-body" style="padding:14px">
+
+        <!-- JUDICIAL -->
         <div id="ctx-judicial">
           <select id="tribunal-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tribunal (opcional) —</option>
@@ -460,6 +539,8 @@
           <input id="relator-input" type="text" placeholder="Nome do relator (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
           <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>Cada tribunal e relator têm um estilo próprio. Indicar melhora a precisão.</div>
         </div>
+
+        <!-- ACADÉMICO -->
         <div id="ctx-academico" style="display:none">
           <input id="instituicao-input" type="text" placeholder="Universidade / Faculdade (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
           <select id="tipo-doc-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
@@ -469,8 +550,57 @@
             <option>Monografia</option><option>Outro</option>
           </select>
           <input id="orientador-input" type="text" placeholder="Orientador (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
-          <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>O tipo de documento e a instituição ajudam a calibrar a análise para o estilo académico-jurídico esperado.</div>
+          <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>O tipo de documento ajuda a calibrar a análise para o estilo académico-jurídico esperado.</div>
         </div>
+
+        <!-- CRÍTICA -->
+        <div id="ctx-critica" style="display:none">
+          <div class="critica-banner" style="margin-bottom:10px">
+            <strong>Consultor Jurídico Sénior</strong>
+            <p>Análise de nulidades, vícios processuais e erros de julgamento. Geração de argumentos para recurso.</p>
+          </div>
+          <select id="tribunal-critica-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
+            <option value="">— Tribunal (opcional) —</option>
+            <optgroup label="Supremos Tribunais">
+              <option>STJ — Supremo Tribunal de Justiça</option>
+              <option>STA — Supremo Tribunal Administrativo</option>
+              <option>TC — Tribunal Constitucional</option>
+            </optgroup>
+            <optgroup label="Tribunais da Relação">
+              <option>TRL — Tribunal da Relação de Lisboa</option>
+              <option>TRP — Tribunal da Relação do Porto</option>
+              <option>TRC — Tribunal da Relação de Coimbra</option>
+              <option>TRG — Tribunal da Relação de Guimarães</option>
+              <option>TRE — Tribunal da Relação de Évora</option>
+            </optgroup>
+            <optgroup label="Outros">
+              <option>Tribunal de 1.ª Instância (Cível)</option>
+              <option>Tribunal de 1.ª Instância (Criminal)</option>
+              <option>Tribunal de Trabalho</option>
+              <option>Tribunal Administrativo e Fiscal</option>
+            </optgroup>
+          </select>
+          <select id="tipo-processo-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
+            <option value="">— Tipo de processo (opcional) —</option>
+            <option>Processo Civil</option>
+            <option>Processo Penal</option>
+            <option>Processo Administrativo</option>
+            <option>Processo Laboral</option>
+            <option>Processo de Família</option>
+            <option>Processo de Insolvência</option>
+          </select>
+          <select id="parte-recorrente-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
+            <option value="">— Parte recorrente (opcional) —</option>
+            <option>Autor / Demandante</option>
+            <option>Réu / Demandado</option>
+            <option>Arguido</option>
+            <option>Ministério Público</option>
+            <option>Assistente</option>
+            <option>Interveniente</option>
+          </select>
+          <div class="info-box warn" style="margin:0;font-size:11px"><strong>Aviso Legal</strong>Esta análise é um apoio técnico. Não substitui consulta jurídica profissional. Os resultados têm carácter auxiliar.</div>
+        </div>
+
       </div>
     </div>
     <div class="sidebar-widget">
@@ -481,7 +611,7 @@
         <div class="stat-row"><span class="stat-label">Total de análises</span><span class="stat-value" id="stat-total">0</span></div>
       </div>
     </div>
-    <div class="sidebar-widget">
+    <div class="sidebar-widget" id="ref-legais-widget">
       <div class="widget-header"><div class="widget-title">Referências Legais</div></div>
       <div class="widget-body">
         <div class="info-box note"><strong>Art. 205.º CRP</strong>Fundamentação obrigatória das decisões judiciais.</div>
@@ -489,10 +619,20 @@
         <div class="info-box note"><strong>EU AI Act 2024/1689</strong>IA de alto risco na administração da justiça.</div>
       </div>
     </div>
+    <div class="sidebar-widget hidden" id="ref-critica-widget">
+      <div class="widget-header"><div class="widget-title">Nulidades Analisadas</div></div>
+      <div class="widget-body">
+        <div class="info-box note"><strong>Art. 615.º CPC</strong>Causas de nulidade da sentença — omissão de pronúncia, contradição, excesso.</div>
+        <div class="info-box note"><strong>Art. 379.º CPP</strong>Nulidade da sentença em processo penal.</div>
+        <div class="info-box note"><strong>Art. 662.º CPC</strong>Poderes da Relação na modificação da matéria de facto.</div>
+        <div class="info-box note"><strong>Art. 5.º CPC</strong>Ónus de alegação e dever de pronúncia.</div>
+      </div>
+    </div>
   </div>
 </main>
 </div>
 
+<!-- HISTÓRICO -->
 <div id="tab-content-historico" class="hidden">
   <div class="history-page">
     <div class="section-label">Histórico de Análises</div>
@@ -500,6 +640,7 @@
   </div>
 </div>
 
+<!-- PERFIL -->
 <div id="tab-content-perfil" class="hidden">
   <div class="history-page">
     <div class="section-label">O Meu Perfil</div>
@@ -579,15 +720,15 @@
     </div>
     <div class="overlay-status" id="overlay-status">A iniciar análise...</div>
     <div class="overlay-progress-track"><div class="overlay-progress-fill" id="overlay-progress"></div></div>
-    <div class="overlay-indicators">
-      <div class="overlay-ind" id="oi-1"><div class="overlay-ind-name">Perplexidade</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-1"></div></div><div class="overlay-ind-val" id="ov-1">—</div></div>
-      <div class="overlay-ind" id="oi-2"><div class="overlay-ind-name">Burstiness</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-2"></div></div><div class="overlay-ind-val" id="ov-2">—</div></div>
-      <div class="overlay-ind" id="oi-3"><div class="overlay-ind-name">Coesão Artificial</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-3"></div></div><div class="overlay-ind-val" id="ov-3">—</div></div>
-      <div class="overlay-ind" id="oi-4"><div class="overlay-ind-name">Uniformidade Sint.</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-4"></div></div><div class="overlay-ind-val" id="ov-4">—</div></div>
-      <div class="overlay-ind" id="oi-5"><div class="overlay-ind-name">Riqueza Lexical</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-5"></div></div><div class="overlay-ind-val" id="ov-5">—</div></div>
-      <div class="overlay-ind" id="oi-6"><div class="overlay-ind-name">Marc. Formulaicos</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-6"></div></div><div class="overlay-ind-val" id="ov-6">—</div></div>
+    <div class="overlay-indicators" id="overlay-indicators-list">
+      <div class="overlay-ind" id="oi-1"><div class="overlay-ind-name" id="on-1">Perplexidade</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-1"></div></div><div class="overlay-ind-val" id="ov-1">—</div></div>
+      <div class="overlay-ind" id="oi-2"><div class="overlay-ind-name" id="on-2">Var. Rítmica</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-2"></div></div><div class="overlay-ind-val" id="ov-2">—</div></div>
+      <div class="overlay-ind" id="oi-3"><div class="overlay-ind-name" id="on-3">Coesão Artificial</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-3"></div></div><div class="overlay-ind-val" id="ov-3">—</div></div>
+      <div class="overlay-ind" id="oi-4"><div class="overlay-ind-name" id="on-4">Uniform. Sint.</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-4"></div></div><div class="overlay-ind-val" id="ov-4">—</div></div>
+      <div class="overlay-ind" id="oi-5"><div class="overlay-ind-name" id="on-5">Riqueza Lexical</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-5"></div></div><div class="overlay-ind-val" id="ov-5">—</div></div>
+      <div class="overlay-ind" id="oi-6"><div class="overlay-ind-name" id="on-6">Marc. Formulaicos</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-6"></div></div><div class="overlay-ind-val" id="ov-6">—</div></div>
     </div>
-    <div class="overlay-subtext">A analisar padrões linguísticos forenses<br>calibrados para os tribunais portugueses</div>
+    <div class="overlay-subtext" id="overlay-subtext">A analisar padrões linguísticos forenses<br>calibrados para os tribunais portugueses</div>
   </div>
 </div>
 </div>
@@ -597,7 +738,7 @@
   <div class="modal">
     <button class="btn-close-modal" onclick="closeModal('upgrade')">×</button>
     <h2>Plano Profissional</h2>
-    <p>100 análises/mês · Histórico ilimitado · Suporte prioritário · 19€/mês</p>
+    <p>100 análises/mês · Análise Crítica de Nulidades · Histórico ilimitado · 19€/mês</p>
     <div style="background:#fffbf0;border:1px solid rgba(201,168,76,0.3);padding:20px;margin-bottom:20px">
       <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--gold);margin-bottom:12px">LISTA DE ESPERA</div>
       <p style="font-size:13px;color:#666;margin-bottom:16px;line-height:1.6">Os pagamentos abrem em breve. Deixe o seu email e será o primeiro a saber.</p>
@@ -624,11 +765,8 @@
       <label>Assunto</label>
       <select id="cm-assunto">
         <option value="">— Seleccione —</option>
-        <option>Questão sobre o meu plano</option>
-        <option>Plano Profissional</option>
-        <option>Suporte técnico</option>
-        <option>Parceria</option>
-        <option>Outro</option>
+        <option>Questão sobre o meu plano</option><option>Plano Profissional</option>
+        <option>Suporte técnico</option><option>Parceria</option><option>Outro</option>
       </select>
     </div>
     <div class="dark-form-group"><label>Mensagem</label><textarea id="cm-mensagem" placeholder="A sua mensagem..."></textarea></div>
@@ -651,25 +789,49 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null,userProfile=null,lastResult=null,lastRef=null,loginInProgress=false;
 let pdfText=null,modoActual='judicial';
 
+// ============================
+// MODO
+// ============================
 function setModo(modo){
   modoActual=modo;
-  document.getElementById('mode-btn-judicial').classList.toggle('active',modo==='judicial');
-  document.getElementById('mode-btn-academico').classList.toggle('active',modo==='academico');
-  document.getElementById('ctx-judicial').style.display=modo==='judicial'?'block':'none';
-  document.getElementById('ctx-academico').style.display=modo==='academico'?'block':'none';
-  document.getElementById('input-card-title').textContent=modo==='judicial'?'Texto do Acórdão / Sentença / Despacho':'Tese / Dissertação / Trabalho Académico';
-  document.getElementById('decision-text').placeholder=modo==='judicial'?'Cole aqui o texto completo do acórdão, sentença ou despacho para análise forense...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.':'Cole aqui o texto da tese, dissertação ou trabalho académico para verificação de autoria...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.';
-  document.getElementById('btn-analyze-text').textContent=modo==='judicial'?'Analisar Decisão':'Analisar Documento';
-  document.getElementById('relator-card-title').textContent=modo==='judicial'?'Análise do Estilo do Relator':'Análise do Estilo do Autor';
+  ['judicial','academico','critica'].forEach(m=>{
+    document.getElementById('mode-btn-'+m).classList.toggle('active',m===modo);
+    document.getElementById('ctx-'+m).style.display=m===modo?'block':'none';
+  });
+  document.getElementById('ref-legais-widget').classList.toggle('hidden',modo==='critica');
+  document.getElementById('ref-critica-widget').classList.toggle('hidden',modo!=='critica');
+
+  const titles={judicial:'Texto do Acórdão / Sentença / Despacho',academico:'Tese / Dissertação / Trabalho Académico',critica:'Texto da Decisão Judicial a Atacar'};
+  const placeholders={
+    judicial:'Cole aqui o texto completo do acórdão, sentença ou despacho para análise forense...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.',
+    academico:'Cole aqui o texto da tese, dissertação ou trabalho académico para verificação de autoria...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.',
+    critica:'Cole aqui o texto completo da decisão judicial que pretende analisar criticamente.\n\nO consultor jurídico sénior identificará nulidades, erros de julgamento e gerará argumentos para recurso.'
+  };
+  const btnTexts={judicial:'Analisar Decisão',academico:'Analisar Documento',critica:'Analisar Nulidades'};
+  const relatorTitles={judicial:'Análise do Estilo do Relator',academico:'Análise do Estilo do Autor',critica:''};
+  const sidebarLabels={judicial:'Tribunal & Relator',academico:'Instituição & Documento',critica:'Contexto do Recurso'};
+
+  document.getElementById('input-card-title').textContent=titles[modo];
+  document.getElementById('decision-text').placeholder=placeholders[modo];
+  document.getElementById('btn-analyze-text').textContent=btnTexts[modo];
+  document.getElementById('btn-analyze').classList.toggle('critica-mode',modo==='critica');
+  if(relatorTitles[modo])document.getElementById('relator-card-title').textContent=relatorTitles[modo];
+  document.getElementById('sidebar-section-label').textContent=sidebarLabels[modo];
   document.getElementById('results-area').classList.remove('visible');
   limparPDF();
 }
 
+// ============================
+// NAVEGAÇÃO
+// ============================
 function showPage(page){['login','register','reset','app'].forEach(p=>document.getElementById('page-'+p).classList.add('hidden'));document.getElementById('page-'+page).classList.remove('hidden');}
 function showTab(tab){['analise','historico','perfil'].forEach(t=>{document.getElementById('tab-content-'+t).classList.add('hidden');document.getElementById('tab-'+t).classList.remove('active');});document.getElementById('tab-content-'+tab).classList.remove('hidden');document.getElementById('tab-'+tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(tab==='historico')loadHistory();if(tab==='perfil')loadPerfil();}
 function showModal(id){document.getElementById('modal-'+id).classList.add('visible');}
 function closeModal(id){document.getElementById('modal-'+id).classList.remove('visible');}
 
+// ============================
+// AUTH
+// ============================
 async function fazerLogin(){
   const email=document.getElementById('login-email').value.trim();
   const pass=document.getElementById('login-password').value;
@@ -718,22 +880,14 @@ async function logout(){await sb.auth.signOut();currentUser=null;userProfile=nul
 sb.auth.onAuthStateChange((event,session)=>{
   if(loginInProgress)return;
   if(event==='SIGNED_OUT')showPage('login');
-  if(event==='PASSWORD_RECOVERY'){
-    document.getElementById('lv-loading').style.display='none';
-    showPage('reset');
-  }
+  if(event==='PASSWORD_RECOVERY'){document.getElementById('lv-loading').style.display='none';showPage('reset');}
 });
 
 const _hashParams=new URLSearchParams(window.location.hash.substring(1));
 const _urlParams=new URLSearchParams(window.location.search);
-
-if(_hashParams.get('type')==='recovery'){
-  document.getElementById('lv-loading').style.display='none';
-  showPage('reset');
-} else if(_urlParams.has('code')){
-  document.getElementById('lv-loading').style.display='none';
-  showPage('login');
-} else {
+if(_hashParams.get('type')==='recovery'){document.getElementById('lv-loading').style.display='none';showPage('reset');}
+else if(_urlParams.has('code')){document.getElementById('lv-loading').style.display='none';showPage('login');}
+else{
   sb.auth.getSession().then(({data})=>{
     if(loginInProgress)return;
     if(!document.getElementById('page-reset').classList.contains('hidden'))return;
@@ -767,6 +921,7 @@ function initApp(){
   document.getElementById('stat-mes').textContent=usado+' / '+limite;
   const urlParams=new URLSearchParams(window.location.search);
   if(urlParams.get('modo')==='academico')setTimeout(()=>setModo('academico'),100);
+  if(urlParams.get('modo')==='critica')setTimeout(()=>setModo('critica'),100);
 }
 
 async function loadPerfil(){
@@ -808,9 +963,7 @@ async function alterarPassword(){
 async function guardarNovaPassword(){
   const p1=document.getElementById('reset-password1').value;
   const p2=document.getElementById('reset-password2').value;
-  const errEl=document.getElementById('reset-error');
-  const succEl=document.getElementById('reset-success');
-  const btn=document.getElementById('btn-reset');
+  const errEl=document.getElementById('reset-error'),succEl=document.getElementById('reset-success'),btn=document.getElementById('btn-reset');
   errEl.style.display='none';succEl.style.display='none';
   if(!p1||p1.length<6){errEl.textContent='Password com mínimo 6 caracteres.';errEl.style.display='block';return;}
   if(p1!==p2){errEl.textContent='As passwords não coincidem.';errEl.style.display='block';return;}
@@ -822,23 +975,20 @@ async function guardarNovaPassword(){
 }
 
 async function enviarContacto(){
-  const nome=document.getElementById('cm-nome').value.trim();
-  const email=document.getElementById('cm-email').value.trim();
-  const assunto=document.getElementById('cm-assunto').value;
-  const mensagem=document.getElementById('cm-mensagem').value.trim();
+  const nome=document.getElementById('cm-nome').value.trim(),email=document.getElementById('cm-email').value.trim();
+  const assunto=document.getElementById('cm-assunto').value,mensagem=document.getElementById('cm-mensagem').value.trim();
   const msg=document.getElementById('cm-msg');
   if(!nome||!email||!mensagem){msg.textContent='Preencha nome, email e mensagem.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';return;}
   try{
     const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({nome,email,assunto:assunto||'Questão geral',mensagem,user_id:currentUser?.id||'—'})});
-    if(r.ok){
-      msg.textContent='✓ Mensagem enviada! Respondemos em 24h.';msg.style.color='var(--green)';msg.style.background='rgba(26,92,58,0.15)';msg.style.display='block';
-      document.getElementById('cm-nome').value='';document.getElementById('cm-email').value='';
-      document.getElementById('cm-assunto').value='';document.getElementById('cm-mensagem').value='';
-    }else throw new Error();
+    if(r.ok){msg.textContent='✓ Mensagem enviada! Respondemos em 24h.';msg.style.color='var(--green)';msg.style.background='rgba(26,92,58,0.15)';msg.style.display='block';document.getElementById('cm-nome').value='';document.getElementById('cm-email').value='';document.getElementById('cm-assunto').value='';document.getElementById('cm-mensagem').value='';}
+    else throw new Error();
   }catch(e){msg.textContent='Erro ao enviar. Tente novamente.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';}
 }
 
+// ============================
 // FILE HANDLING
+// ============================
 const textarea=document.getElementById('decision-text');
 textarea.addEventListener('input',()=>{if(textarea.value.length>0&&pdfText){pdfText=null;limparDropZone();}actualizarContador();});
 function actualizarContador(){const len=pdfText?pdfText.length:textarea.value.length;document.getElementById('char-count').textContent=len.toLocaleString('pt-PT')+' caracteres';}
@@ -853,8 +1003,7 @@ async function extractPDF(file){
   setDropText('⏳ A extrair texto do PDF...');
   try{
     pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    const ab=await file.arrayBuffer();
-    const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+    const ab=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;
     setDropText('⏳ A ler '+pdf.numPages+' páginas...');
     let txt='';
     for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i);const content=await page.getTextContent();txt+=content.items.map(x=>x.str).join(' ')+'\n\n';}
@@ -868,41 +1017,135 @@ function limparPDF(){pdfText=null;document.getElementById('file-input').value=''
 function limparDropZone(){document.getElementById('file-input').value='';dropZone.classList.remove('has-file');dropZone.style.borderColor='';setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui');}
 function setDropText(t){document.getElementById('drop-zone-text').innerHTML=t;}
 
+// ============================
 // OVERLAY
-const overlayMessages=[{text:'A extrair padrões linguísticos...',pct:15},{text:'A calcular perplexidade textual...',pct:30},{text:'A analisar burstiness...',pct:45},{text:'A detectar coesão artificial...',pct:60},{text:'A verificar marcadores formulaicos...',pct:75},{text:'A comparar com estilo do tribunal...',pct:88},{text:'A gerar veredicto forense...',pct:96}];
+// ============================
+const overlayMsgs={
+  judicial:[{text:'A extrair padrões linguísticos...',pct:15},{text:'A calcular perplexidade textual...',pct:30},{text:'A analisar variabilidade rítmica...',pct:45},{text:'A detectar coesão artificial...',pct:60},{text:'A verificar marcadores formulaicos...',pct:75},{text:'A comparar com estilo do tribunal...',pct:88},{text:'A gerar veredicto forense...',pct:96}],
+  academico:[{text:'A extrair padrões de escrita...',pct:15},{text:'A analisar estrutura argumentativa...',pct:30},{text:'A verificar citações jurídicas...',pct:45},{text:'A detectar homogeneidade sintáctica...',pct:60},{text:'A comparar com estilo académico...',pct:75},{text:'A analisar perfil do autor...',pct:88},{text:'A gerar veredicto de autoria...',pct:96}],
+  critica:[{text:'A identificar vícios processuais...',pct:15},{text:'A verificar fundamentação da decisão...',pct:30},{text:'A analisar exame crítico das provas...',pct:45},{text:'A pesquisar nulidades processuais...',pct:60},{text:'A verificar artigos violados...',pct:75},{text:'A gerar argumentos de recurso...',pct:88},{text:'A formular recomendação jurídica...',pct:96}]
+};
+const overlayIndNames={
+  judicial:['Perplexidade','Var. Rítmica','Coesão Artificial','Uniform. Sint.','Riqueza Lexical','Marc. Formulaicos'],
+  academico:['Perplexidade','Var. Rítmica','Coesão Artificial','Uniform. Sint.','Riqueza Lexical','Marc. Formulaicos'],
+  critica:['Vícios Processuais','Fund. da Decisão','Exame das Provas','Coerência Lógica','Citações Legais','Omissões Detect.']
+};
 let overlayInterval=null,overlayMsgIdx=0;
-function showOverlay(){document.getElementById('analysis-overlay').classList.add('visible');document.getElementById('overlay-progress').style.width='0%';document.getElementById('overlay-status').textContent='A iniciar análise...';for(let i=1;i<=6;i++){document.getElementById('oi-'+i).classList.remove('active');document.getElementById('of-'+i).style.width='0%';document.getElementById('ov-'+i).textContent='—';}overlayMsgIdx=0;overlayInterval=setInterval(tickOverlay,1800);}
-function tickOverlay(){if(overlayMsgIdx>=overlayMessages.length)return;const msg=overlayMessages[overlayMsgIdx];document.getElementById('overlay-status').textContent=msg.text;document.getElementById('overlay-progress').style.width=msg.pct+'%';if(overlayMsgIdx>=1&&overlayMsgIdx<=6){const idx=overlayMsgIdx,val=Math.floor(Math.random()*40+40);document.getElementById('oi-'+idx).classList.add('active');setTimeout(()=>{document.getElementById('of-'+idx).style.width=val+'%';document.getElementById('ov-'+idx).textContent=val;},300);}overlayMsgIdx++;}
-function hideOverlay(result){clearInterval(overlayInterval);if(result&&result.indicadores){const keys=['perplexidade','burstiness','coesao_artificial','uniformidade_sintatica','riqueza_lexical','marcadores_formulaicos'];keys.forEach((k,i)=>{const val=result.indicadores[k]||0,idx=i+1;document.getElementById('oi-'+idx).classList.add('active');document.getElementById('of-'+idx).style.width=val+'%';document.getElementById('ov-'+idx).textContent=val;});document.getElementById('overlay-status').textContent='Análise concluída!';document.getElementById('overlay-progress').style.width='100%';}setTimeout(()=>{document.getElementById('analysis-overlay').classList.remove('visible');},result?800:0);}
 
-// ANÁLISE
+function showOverlay(){
+  document.getElementById('analysis-overlay').classList.add('visible');
+  document.getElementById('overlay-progress').style.width='0%';
+  document.getElementById('overlay-status').textContent='A iniciar análise...';
+  const names=overlayIndNames[modoActual]||overlayIndNames.judicial;
+  for(let i=1;i<=6;i++){
+    document.getElementById('oi-'+i).classList.remove('active');
+    document.getElementById('of-'+i).style.width='0%';
+    document.getElementById('ov-'+i).textContent='—';
+    document.getElementById('on-'+i).textContent=names[i-1];
+  }
+  const subTexts={judicial:'A analisar padrões linguísticos forenses<br>calibrados para os tribunais portugueses',academico:'A analisar padrões de autoria académica<br>calibrados para o português jurídico',critica:'A actuar como Consultor Jurídico Sénior<br>a identificar nulidades e vícios processuais'};
+  document.getElementById('overlay-subtext').innerHTML=subTexts[modoActual]||subTexts.judicial;
+  overlayMsgIdx=0;
+  const msgs=overlayMsgs[modoActual]||overlayMsgs.judicial;
+  overlayInterval=setInterval(()=>{
+    if(overlayMsgIdx>=msgs.length)return;
+    const msg=msgs[overlayMsgIdx];
+    document.getElementById('overlay-status').textContent=msg.text;
+    document.getElementById('overlay-progress').style.width=msg.pct+'%';
+    if(overlayMsgIdx>=1&&overlayMsgIdx<=6){
+      const idx=overlayMsgIdx,val=Math.floor(Math.random()*40+40);
+      document.getElementById('oi-'+idx).classList.add('active');
+      setTimeout(()=>{document.getElementById('of-'+idx).style.width=val+'%';document.getElementById('ov-'+idx).textContent=val;},300);
+    }
+    overlayMsgIdx++;
+  },1800);
+}
+
+function hideOverlay(result){
+  clearInterval(overlayInterval);
+  document.getElementById('overlay-status').textContent='Análise concluída!';
+  document.getElementById('overlay-progress').style.width='100%';
+  setTimeout(()=>document.getElementById('analysis-overlay').classList.remove('visible'),result?800:0);
+}
+
+// ============================
+// ANÁLISE PRINCIPAL
+// ============================
 async function analyzeDecision(){
   const text=(pdfText||textarea.value).trim();
   if(text.length<100){alert('Insira pelo menos 100 caracteres ou carregue um PDF.');return;}
   const usado=userProfile?.analises_mes||0,limite=getLimite();
   if(usado>=limite){showModal('upgrade');return;}
   const btn=document.getElementById('btn-analyze'),loadingBar=document.getElementById('loading-bar');
-  btn.disabled=true;btn.classList.add('loading');document.getElementById('spinner').style.display='block';loadingBar.classList.add('active');showOverlay();document.getElementById('results-area').classList.remove('visible');
+  btn.disabled=true;btn.classList.add('loading');document.getElementById('spinner').style.display='block';loadingBar.classList.add('active');
+  showOverlay();document.getElementById('results-area').classList.remove('visible');
   try{
-    let tribunal=null,relator=null,instituicao=null,tipoDoc=null,orientador=null;
-    if(modoActual==='judicial'){tribunal=document.getElementById('tribunal-select').value||null;relator=document.getElementById('relator-input').value||null;}
-    else{instituicao=document.getElementById('instituicao-input').value||null;tipoDoc=document.getElementById('tipo-doc-select').value||null;orientador=document.getElementById('orientador-input').value||null;}
-    const response=await fetch('/api/analisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:text,modo:modoActual,tribunal,relator,instituicao,tipoDoc,orientador})});
+    let payload={texto:text,modo:modoActual};
+    if(modoActual==='judicial'){
+      payload.tribunal=document.getElementById('tribunal-select').value||null;
+      payload.relator=document.getElementById('relator-input').value||null;
+    }else if(modoActual==='academico'){
+      payload.instituicao=document.getElementById('instituicao-input').value||null;
+      payload.tipoDoc=document.getElementById('tipo-doc-select').value||null;
+      payload.orientador=document.getElementById('orientador-input').value||null;
+    }else if(modoActual==='critica'){
+      payload.tribunal=document.getElementById('tribunal-critica-select').value||null;
+      payload.tipoProcesso=document.getElementById('tipo-processo-select').value||null;
+      payload.parteRecorrente=document.getElementById('parte-recorrente-select').value||null;
+    }
+    const{data:{session}}=await sb.auth.getSession();
+    if(!session?.access_token){hideOverlay(null);btn.disabled=false;btn.classList.remove('loading');document.getElementById('spinner').style.display='none';loadingBar.classList.remove('active');alert('Sessão expirada. Por favor faça login novamente.');logout();return;}
+    const response=await fetch('/api/analisar',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${session.access_token}`},body:JSON.stringify(payload)});
     if(!response.ok){const err=await response.json().catch(()=>({}));throw new Error(err.erro||'Erro do servidor.');}
     const result=await response.json();
-    lastResult=result;lastResult._tribunal=tribunal;lastResult._relator=relator;lastResult._instituicao=instituicao;lastResult._tipoDoc=tipoDoc;lastResult._modo=modoActual;
-    lastRef='LV-'+Date.now().toString(36).toUpperCase();document.getElementById('ref-number').textContent='Referência: '+lastRef;
-    hideOverlay(result);renderResults(result);
+    lastResult=result;
+    lastResult._modo=modoActual;
+    lastResult._tribunal=payload.tribunal;
+    lastResult._relator=payload.relator||payload.tipoDoc||null;
+    lastResult._tipoProcesso=payload.tipoProcesso||null;
+    lastResult._parteRecorrente=payload.parteRecorrente||null;
+    lastRef='LV-'+Date.now().toString(36).toUpperCase();
+    document.getElementById('ref-number').textContent='Referência: '+lastRef;
+    hideOverlay(result);
+    if(modoActual==='critica')renderResultsCritica(result);else renderResults(result);
     if(window.innerWidth<=760){setTimeout(()=>{const el=document.getElementById('results-area');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},900);}
-    await sb.from('analises').insert({user_id:currentUser.id,tribunal:tribunal||instituicao||null,relator:relator||tipoDoc||null,veredicto:result.veredicto,confianca:result.confianca,narrativa:result.narrativa,indicadores:result.indicadores||null,marcadores:result.marcadores||null,relator_analise:result.relator_analise||null,modo:modoActual});
-    const novoTotal=usado+1;await sb.from('perfis').update({analises_mes:novoTotal}).eq('id',currentUser.id);userProfile.analises_mes=novoTotal;
+
+    // Guardar no Supabase
+    let dbRecord={user_id:currentUser.id,modo:modoActual,tribunal:payload.tribunal||payload.instituicao||null,relator:payload.relator||payload.tipoDoc||null};
+    if(modoActual==='critica'){
+      dbRecord.veredicto=result.veredicto_recurso||'INCONCLUSIVO';
+      dbRecord.confianca=result.confianca||0;
+      dbRecord.narrativa=result.sumario||null;
+      dbRecord.relator_analise=result.conclusao||null;
+      dbRecord.marcadores=result.nulidades||null;
+      dbRecord.indicadores=null;
+    }else{
+      dbRecord.veredicto=result.veredicto;
+      dbRecord.confianca=result.confianca;
+      dbRecord.narrativa=result.narrativa;
+      dbRecord.indicadores=result.indicadores||null;
+      dbRecord.marcadores=result.marcadores||null;
+      dbRecord.relator_analise=result.relator_analise||null;
+    }
+    await sb.from('analises').insert(dbRecord);
+    const novoTotal=usado+1;
+    await sb.from('perfis').update({analises_mes:novoTotal}).eq('id',currentUser.id);
+    userProfile.analises_mes=novoTotal;
     const{count}=await sb.from('analises').select('*',{count:'exact',head:true}).eq('user_id',currentUser.id);
-    document.getElementById('stat-total').textContent=count||novoTotal;document.getElementById('stat-mes').textContent=novoTotal+' / '+limite;document.getElementById('usage-count').textContent=novoTotal+' / '+limite;document.getElementById('usage-fill').style.width=Math.min(100,(novoTotal/limite)*100)+'%';
+    document.getElementById('stat-total').textContent=count||novoTotal;
+    document.getElementById('stat-mes').textContent=novoTotal+' / '+limite;
+    document.getElementById('usage-count').textContent=novoTotal+' / '+limite;
+    document.getElementById('usage-fill').style.width=Math.min(100,(novoTotal/limite)*100)+'%';
   }catch(err){hideOverlay(null);alert('Erro: '+(err.message||'Verifique a sua ligação.'));}
   finally{btn.disabled=false;btn.classList.remove('loading');document.getElementById('spinner').style.display='none';loadingBar.classList.remove('active');}
 }
 
+// ============================
+// RENDER — JUDICIAL / ACADÉMICO
+// ============================
 function renderResults(result){
+  document.getElementById('results-standard').style.display='block';
+  document.getElementById('results-critica').style.display='none';
   const titles={'IA_DETECTADA':'Inteligência Artificial Detectada','PROVAVELMENTE_IA':'Provavelmente Gerado por IA','INCONCLUSIVO':'Análise Inconclusiva','PROVAVELMENTE_HUMANO':'Provavelmente Autoria Humana','HUMANO':'Autoria Humana Confirmada'};
   const subs={'IA_DETECTADA':'Os marcadores linguísticos indicam fortemente o uso de inteligência artificial.','PROVAVELMENTE_IA':'Vários indicadores sugerem uso significativo de IA.','INCONCLUSIVO':'Os indicadores não permitem determinar com segurança o uso de IA.','PROVAVELMENTE_HUMANO':'O texto apresenta características predominantemente humanas.','HUMANO':'Os marcadores são consistentes com autoria humana.'};
   const cls={'IA_DETECTADA':'ai','PROVAVELMENTE_IA':'ai','INCONCLUSIVO':'uncertain','PROVAVELMENTE_HUMANO':'human','HUMANO':'human'};
@@ -912,7 +1155,7 @@ function renderResults(result){
   document.getElementById('verdict-subtitle').textContent=subs[result.veredicto]||'';
   document.getElementById('confidence-value').textContent=result.confianca+'%';
   setTimeout(()=>{document.getElementById('meter-fill').style.width=result.confianca+'%';},100);
-  const indLabels={perplexidade:'Perplexidade',burstiness:'Burstiness',coesao_artificial:'Coesão Artificial',uniformidade_sintatica:'Uniformidade Sint.',riqueza_lexical:'Riqueza Lexical',marcadores_formulaicos:'Marc. Formulaicos'};
+  const indLabels={perplexidade:'Perplexidade',burstiness:'Var. Rítmica',coesao_artificial:'Coesão Artificial',uniformidade_sintatica:'Uniformidade Sint.',riqueza_lexical:'Riqueza Lexical',marcadores_formulaicos:'Marc. Formulaicos'};
   const grid=document.getElementById('indicators-grid');grid.innerHTML='';
   for(const[key,val]of Object.entries(result.indicadores||{})){const bc=val>70?'bar-high':val>40?'bar-mid':'bar-low';grid.innerHTML+=`<div class="indicator-card"><div class="indicator-name">${indLabels[key]||key}</div><div class="indicator-score">${val}<small style="font-size:10px;font-weight:400;color:#aaa">/100</small></div><div class="indicator-bar"><div class="indicator-bar-fill ${bc}" style="width:0" data-width="${val}%"></div></div></div>`;}
   setTimeout(()=>{grid.querySelectorAll('.indicator-bar-fill').forEach(el=>{el.style.width=el.dataset.width;});},200);
@@ -924,8 +1167,57 @@ function renderResults(result){
   document.getElementById('results-area').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+// ============================
+// RENDER — ANÁLISE CRÍTICA
+// ============================
+function renderResultsCritica(result){
+  document.getElementById('results-standard').style.display='none';
+  document.getElementById('results-critica').style.display='block';
+  const vertitulos={'RECURSO_VIAVEL':'Recurso Viável — Fundamentos Identificados','RECURSO_PARCIAL':'Recurso Parcialmente Fundamentado','RECURSO_INVIAVEL':'Sem Fundamentos Sólidos para Recurso'};
+  const versubs={'RECURSO_VIAVEL':'Foram identificadas nulidades e/ou erros de julgamento com fundamento jurídico sólido para interposição de recurso.','RECURSO_PARCIAL':'Existem alguns argumentos para recurso, mas com limitações. Recomenda-se avaliação cuidadosa da viabilidade.','RECURSO_INVIAVEL':'A decisão encontra-se devidamente fundamentada. Os fundamentos para recurso são fracos ou inexistentes.'};
+  const vercls={'RECURSO_VIAVEL':'recurso-viavel','RECURSO_PARCIAL':'recurso-parcial','RECURSO_INVIAVEL':'recurso-inviavel'};
+  const veredicto=result.veredicto_recurso||'RECURSO_INVIAVEL';
+  const bannerC=document.getElementById('verdict-banner-critica');
+  bannerC.className='verdict-banner '+(vercls[veredicto]||'uncertain');
+  document.getElementById('verdict-title-critica').textContent=vertitulos[veredicto]||veredicto;
+  document.getElementById('verdict-subtitle-critica').textContent=versubs[veredicto]||'';
+  document.getElementById('confidence-value-critica').textContent=(result.confianca||0)+'%';
+  setTimeout(()=>{document.getElementById('meter-fill-critica').style.width=(result.confianca||0)+'%';},100);
+  document.getElementById('critica-sumario').innerHTML=(result.sumario||'Sem sumário disponível.').replace(/\n/g,'<br>');
+  // Nulidades
+  const container=document.getElementById('nulidades-container');container.innerHTML='';
+  const nulidades=result.nulidades||[];
+  if(nulidades.length>0){
+    const label=document.createElement('div');label.className='nulidades-section-label';label.style.marginBottom='12px';label.textContent=`${nulidades.length} Nulidade${nulidades.length>1?'s':''} / Vício${nulidades.length>1?'s':''} Identificado${nulidades.length>1?'s':''}`;container.appendChild(label);
+    nulidades.forEach(n=>{
+      const grav=(n.gravidade||'grave').toLowerCase();
+      const card=document.createElement('div');card.className=`nulidade-card ${grav==='grave'?'':''+grav}`;
+      card.innerHTML=`
+        <div class="nulidade-header">
+          <span class="nulidade-tipo-badge">${n.tipo||'Vício Processual'}</span>
+          <span class="nulidade-artigo">${n.artigo||''}</span>
+        </div>
+        <p class="nulidade-desc">${n.descricao||''}</p>
+        ${n.argumento?`<div class="nulidade-argumento"><span class="nulidade-argumento-label">Argumento para Recurso</span><span class="nulidade-argumento-text">${n.argumento}</span></div>`:''}`;
+      container.appendChild(card);
+    });
+  }else{
+    container.innerHTML='<div class="analysis-card"><h3>Vícios Processuais</h3><p style="color:#888;font-style:italic">Não foram identificados vícios processuais significativos.</p></div>';
+  }
+  document.getElementById('critica-conclusao').innerHTML=(result.conclusao||'').replace(/\n/g,'<br>');
+  document.getElementById('results-area').classList.add('visible');
+  document.getElementById('results-area').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ============================
+// GERAR PDF
+// ============================
 function gerarPDF(){
   if(!lastResult){alert('Faça primeiro uma análise.');return;}
+  if(lastResult._modo==='critica')gerarPDFCritica();else gerarPDFStandard();
+}
+
+function gerarPDFStandard(){
   try{
     const{jsPDF}=window.jspdf;
     const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
@@ -960,168 +1252,4 @@ function gerarPDF(){
     sc(cGrey,'text');doc.setFontSize(6);doc.setFont('helvetica','normal');doc.text('CONFIANCA',bx+bw/2,by+18,{align:'center'});
     y+=30;
     sectionHeader('INDICADORES FORENSES');
-    const inds=Object.entries(lastResult.indicadores||{});
-    const halfW=contentW/2-3;
-    inds.forEach(([key,val],i)=>{
-      const isLeft=i%2===0,x0=isLeft?margin:margin+halfW+6;
-      checkY(16);sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text(indLabels[key]||key,x0,y);
-      sc(cInk,'text');doc.setFontSize(11);doc.setFont('helvetica','bold');doc.text(String(val),x0,y+7);
-      sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('/100',x0+9,y+7);
-      const barX=x0+22,barW2=halfW-26;
-      sc([220,215,205],'fill');doc.rect(barX,y+3,barW2,3,'F');
-      const fillC=val>70?cRed:val>40?cOrange:cGreen;
-      sc(fillC,'fill');doc.rect(barX,y+3,barW2*val/100,3,'F');
-      if(!isLeft)y+=16;
-    });
-    if(inds.length%2!==0)y+=16;y+=4;
-    sectionHeader('FUNDAMENTACAO DA ANALISE');bodyText(lastResult.narrativa||'Sem narrativa disponivel.');y+=4;
-    const rel=lastResult.relator_analise||'';
-    const relLabel=lastResult._modo==='academico'?'ANALISE DO ESTILO DO AUTOR':'ANALISE DO ESTILO DO RELATOR';
-    if(rel&&!rel.toLowerCase().includes('nao indicado')&&!rel.toLowerCase().includes('não indicado')){sectionHeader(relLabel);bodyText(rel);y+=4;}
-    sectionHeader('MARCADORES IDENTIFICADOS');
-    (lastResult.marcadores||[]).forEach(m=>{
-      checkY(12);const isAI=m.tipo==='ai';
-      const bgC=isAI?[255,242,230]:[230,245,235],txtC=isAI?cRed:cGreen;
-      sc(bgC,'fill');doc.rect(margin,y-3,contentW,9,'F');
-      sc(txtC,'text');doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text(isAI?'[!]':'[OK]',margin+2,y+3);
-      sc(cInk,'text');doc.setFontSize(8);doc.setFont('helvetica','normal');
-      const mLines=doc.splitTextToSize(m.texto||'',contentW-16);
-      doc.text(mLines[0]||'',margin+14,y+3);y+=11;
-      if(mLines.length>1){mLines.slice(1).forEach(l=>{checkY(6);doc.text(l,margin+14,y);y+=5.5;});}
-    });
-    y+=8;checkY(24);sc(cGold,'draw');doc.setLineWidth(0.3);doc.line(margin,y,W-margin,y);y+=6;
-    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','italic');
-    const disc='Este relatorio foi gerado automaticamente pelo sistema LexVeritas com base em analise linguistica por inteligencia artificial. Os resultados tem caracter auxiliar e probabilistico, nao constituindo prova juridica definitiva. Ref: '+lastRef+'. Data: '+dateStr+' '+timeStr+'.';
-    doc.splitTextToSize(disc,contentW).forEach(l=>{doc.text(l,margin,y);y+=4;});
-    addFooter();doc.save('LexVeritas-'+lastRef+'.pdf');
-  }catch(err){console.error('Erro PDF:',err);alert('Erro ao gerar PDF: '+err.message);}
-}
-
-// ============================================================
-// HISTÓRICO — mostra análise completa idêntica à aba Análise
-// ============================================================
-async function loadHistory(){
-  const listEl=document.getElementById('history-list');
-  listEl.innerHTML='<div class="empty-history">A carregar...</div>';
-  const{data,error}=await sb.from('analises').select('*').eq('user_id',currentUser.id).order('criado_em',{ascending:false}).limit(50);
-  if(error||!data||data.length===0){
-    listEl.innerHTML=`<div style="text-align:center;padding:48px 20px"><div style="font-size:48px;margin-bottom:16px">⚖️</div><div style="font-family:var(--serif);font-size:20px;font-style:italic;color:#888;margin-bottom:8px">Ainda não fez nenhuma análise</div><div style="font-family:var(--sans);font-size:13px;color:#bbb;margin-bottom:24px;line-height:1.6">Cole o texto de um acórdão, sentença ou despacho<br>e descubra se foi elaborado com IA.</div><button onclick="showTab('analise')" style="background:var(--ink);color:var(--cream);border:none;padding:12px 28px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer">Fazer primeira análise →</button></div>`;
-    return;
-  }
-
-  const colors={'IA_DETECTADA':'#8b4513','PROVAVELMENTE_IA':'#c97850','INCONCLUSIVO':'#888','PROVAVELMENTE_HUMANO':'#2a7a4a','HUMANO':'#1a5c2a'};
-  const labels={'IA_DETECTADA':'IA Detectada','PROVAVELMENTE_IA':'Provavelmente IA','INCONCLUSIVO':'Inconclusivo','PROVAVELMENTE_HUMANO':'Provavelmente Humano','HUMANO':'Humano'};
-  const bannerCls={'IA_DETECTADA':'ai','PROVAVELMENTE_IA':'ai','INCONCLUSIVO':'uncertain','PROVAVELMENTE_HUMANO':'human','HUMANO':'human'};
-  const bannerTitles={'IA_DETECTADA':'Inteligência Artificial Detectada','PROVAVELMENTE_IA':'Provavelmente Gerado por IA','INCONCLUSIVO':'Análise Inconclusiva','PROVAVELMENTE_HUMANO':'Provavelmente Autoria Humana','HUMANO':'Autoria Humana Confirmada'};
-  const bannerSubs={'IA_DETECTADA':'Os marcadores linguísticos indicam fortemente o uso de inteligência artificial.','PROVAVELMENTE_IA':'Vários indicadores sugerem uso significativo de IA.','INCONCLUSIVO':'Os indicadores não permitem determinar com segurança o uso de IA.','PROVAVELMENTE_HUMANO':'O texto apresenta características predominantemente humanas.','HUMANO':'Os marcadores são consistentes com autoria humana.'};
-  const indLabels={perplexidade:'Perplexidade',burstiness:'Var. Rítmica',coesao_artificial:'Coesão Artif.',uniformidade_sintatica:'Uniform. Sint.',riqueza_lexical:'Riqueza Lex.',marcadores_formulaicos:'Marc. Form.'};
-
-  listEl.innerHTML=data.map((a,idx)=>{
-    const df=new Date(a.criado_em).toLocaleString('pt-PT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    const cor=colors[a.veredicto]||'#888';
-    const label=labels[a.veredicto]||a.veredicto;
-    const modoAcademico=a.modo==='academico';
-    const contexto=[a.tribunal,a.relator].filter(Boolean).join(' · ');
-    const modo=modoAcademico?'🎓 Académico':'⚖ Judicial';
-
-    // VERDICT BANNER
-    const bCls=bannerCls[a.veredicto]||'uncertain';
-    const bTitle=bannerTitles[a.veredicto]||a.veredicto;
-    const bSub=bannerSubs[a.veredicto]||'';
-    const bannerHtml=`<div class="verdict-banner ${bCls}" style="margin-bottom:16px">
-      <div class="verdict-label">Veredicto Forense</div>
-      <div class="verdict-title">${bTitle}</div>
-      <div class="verdict-subtitle">${bSub}</div>
-    </div>`;
-
-    // CONFIDENCE BLOCK
-    const confidenceHtml=`<div class="confidence-block" style="margin-bottom:16px">
-      <div class="confidence-label">
-        <span>Índice de Confiança na Detecção</span>
-        <span class="confidence-value">${a.confianca}%</span>
-      </div>
-      <div class="meter-track"><div class="meter-fill" style="width:${a.confianca}%"></div></div>
-    </div>`;
-
-    // INDICATORS GRID
-    let indsHtml='';
-    if(a.indicadores){
-      indsHtml=`<div class="indicators-grid" style="margin-bottom:16px">${Object.entries(a.indicadores).map(([k,v])=>{
-        const bc=v>70?'bar-high':v>40?'bar-mid':'bar-low';
-        return`<div class="indicator-card">
-          <div class="indicator-name">${indLabels[k]||k}</div>
-          <div class="indicator-score">${v}<small style="font-size:10px;font-weight:400;color:#aaa">/100</small></div>
-          <div class="indicator-bar"><div class="indicator-bar-fill ${bc}" style="width:${v}%"></div></div>
-        </div>`;
-      }).join('')}</div>`;
-    } else {
-      indsHtml=`<p style="font-family:var(--mono);font-size:10px;color:#bbb;margin-bottom:16px;font-style:italic">Indicadores não disponíveis — análise anterior ao histórico completo.</p>`;
-    }
-
-    // NARRATIVA
-    const narrativaHtml=a.narrativa?`<div class="analysis-card" style="margin-bottom:16px">
-      <h3>Fundamentação da Análise</h3>
-      <p>${(a.narrativa||'').replace(/\n/g,'<br>')}</p>
-    </div>`:'';
-
-    // RELATOR / AUTOR
-    const relatorLabel=modoAcademico?'Análise do Estilo do Autor':'Análise do Estilo do Relator';
-    const relatorValido=a.relator_analise
-      &&!a.relator_analise.toLowerCase().includes('nao indicado')
-      &&!a.relator_analise.toLowerCase().includes('não indicado');
-    const relatorHtml=relatorValido?`<div class="analysis-card" style="margin-bottom:16px;border-left:3px solid var(--gold)">
-      <h3>${relatorLabel}</h3>
-      <p>${a.relator_analise}</p>
-    </div>`:'';
-
-    // MARCADORES
-    let marcadoresHtml='';
-    if(a.marcadores&&a.marcadores.length>0){
-      marcadoresHtml=`<div class="analysis-card" style="margin-bottom:16px">
-        <h3>Marcadores Identificados</h3>
-        <ul class="evidence-list">${a.marcadores.map(m=>`
-          <li class="evidence-item">
-            <div class="evidence-marker ${m.tipo==='ai'?'marker-ai':'marker-ok'}">${m.tipo==='ai'?'⚠':'✓'}</div>
-            <span class="evidence-text">${m.texto}</span>
-          </li>`).join('')}
-        </ul>
-      </div>`;
-    }
-
-    return`<div class="history-item" id="hist-${idx}">
-      <div class="history-item-header" onclick="toggleHistory(${idx})">
-        <div style="flex:1;min-width:0">
-          <div class="history-veredicto" style="color:${cor}">${label}</div>
-          <div class="history-meta">${df}${contexto?' · '+contexto:''} · ${modo}</div>
-        </div>
-        <div class="history-confianca">${a.confianca}%</div>
-        <div class="history-chevron">▼</div>
-      </div>
-      <div class="history-details">
-        ${bannerHtml}
-        ${confidenceHtml}
-        ${indsHtml}
-        ${narrativaHtml}
-        ${relatorHtml}
-        ${marcadoresHtml}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function toggleHistory(idx){
-  const el=document.getElementById('hist-'+idx);
-  el.classList.toggle('open');
-}
-
-async function inscreverListaEspera(){
-  const email=document.getElementById('upgrade-email').value.trim();
-  const msg=document.getElementById('upgrade-msg');
-  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
-  try{await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});}catch(e){}
-  msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';msg.style.color='var(--green)';msg.style.display='block';
-  document.getElementById('upgrade-email').value='';
-}
-</script>
-</body>
-</html>
+    const inds=Obj
