@@ -65,46 +65,6 @@
   ]
 }
 </script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Os textos que submeto ficam guardados?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Não. Os textos judiciais que submete são enviados para análise e descartados imediatamente após o processamento. Apenas o veredicto, o índice de confiança e os metadados ficam registados no seu histórico pessoal."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "O relatório pode ser usado como prova em tribunal?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "O LexVeritas é uma ferramenta auxiliar de análise probabilística. Os resultados têm carácter indicativo e não constituem prova jurídica definitiva."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Como funciona a análise forense?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "O sistema analisa 6 indicadores linguísticos calibrados para jurisprudência portuguesa: perplexidade textual, burstiness, coesão artificial, uniformidade sintáctica, riqueza lexical e marcadores formulaicos."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Os meus dados estão seguros?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Sim. Todos os dados estão alojados na União Europeia (Irlanda), em conformidade com o RGPD. A chave da API nunca é exposta ao browser."
-      }
-    }
-  ]
-}
-</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -440,7 +400,6 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
     </div>
   </div>
 </section>
-<!-- DEMO AO VIVO -->
 <section style="background:var(--black);padding:100px 48px;border-top:1px solid var(--border)">
   <div style="max-width:800px;margin:0 auto">
     <div class="section-label reveal">Experimente Agora</div>
@@ -526,7 +485,6 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
         <div class="price-val">19<small>€</small></div>
         <div class="price-period">por mês</div>
         <ul class="price-list"><li>100 análises por mês</li><li>Análise avançada por relator</li><li>Relatório PDF profissional</li><li>Histórico ilimitado</li><li>Suporte prioritário</li></ul>
-        <!-- CORRIGIDO: abre modal em vez de mailto -->
         <button onclick="document.getElementById('idx-modal').classList.add('visible')" class="price-btn price-btn-solid">Subscrever</button>
       </div>
     </div>
@@ -625,7 +583,6 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
   </div>
 </footer>
 
-<!-- MODAL LISTA DE ESPERA — Plano Profissional -->
 <div class="idx-modal-overlay" id="idx-modal" onclick="if(event.target===this)this.classList.remove('visible')">
   <div class="idx-modal-box">
     <button class="idx-modal-close" onclick="document.getElementById('idx-modal').classList.remove('visible')">×</button>
@@ -643,13 +600,12 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
   </div>
 </div>
 
-<!-- MODAL CONTACTO — Formspree -->
 <div class="idx-modal-overlay" id="contacto-modal" onclick="if(event.target===this)this.classList.remove('visible')">
   <div class="idx-modal-box">
     <button class="idx-modal-close" onclick="document.getElementById('contacto-modal').classList.remove('visible')">×</button>
     <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#c9a84c;margin-bottom:14px">Contacto</div>
     <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:22px;font-style:italic;color:#f8f6f1;margin-bottom:6px">Fale connosco</h2>
-    <p style="font-size:13px;color:#9a9a9a;margin-bottom:24px;line-height:1.6">Questões sobre planos, parcerias ou suporte técnico. Respondemos em 24h.</p>
+    <p style="font-size:13px;color:#9a9a9a;margin-bottom:24px;line-height:1.6">Questões sobre planos, parcerias ou suporte técnico. Guardamos a sua mensagem no nosso sistema.</p>
     <div style="display:flex;flex-direction:column;gap:12px">
       <div>
         <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#9a9a9a;display:block;margin-bottom:6px">Nome</label>
@@ -676,12 +632,11 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
         <textarea id="c-mensagem" placeholder="A sua mensagem..." rows="4" style="width:100%;padding:11px 14px;border:1px solid rgba(201,168,76,0.2);background:rgba(255,255,255,0.04);font-family:'Syne',sans-serif;font-size:13px;color:#f8f6f1;outline:none;resize:vertical;min-height:100px"></textarea>
       </div>
       <button onclick="enviarContacto()" style="background:#c9a84c;color:#060608;border:none;padding:13px 24px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;margin-top:4px" onmouseover="this.style.background='#e8c96a'" onmouseout="this.style.background='#c9a84c'">Enviar Mensagem →</button>
-      <div id="c-msg" style="font-size:12px;display:none;padding:10px 14px"></div>
+      <div id="c-msg" style="font-size:12px;display:none;padding:10px 14px;margin-top:10px;border-radius:2px"></div>
     </div>
   </div>
 </div>
 
-<!-- COOKIE BANNER -->
 <div class="cookie-banner" id="cookieBanner">
   <p class="cookie-text">Utilizamos cookies estritamente necessários para o funcionamento da autenticação. Não utilizamos cookies de rastreamento ou publicidade. <a href="/sobre">Sobre</a> · <a href="/privacidade">Saiba mais</a></p>
   <div class="cookie-btns">
@@ -693,6 +648,12 @@ footer{border-top:1px solid var(--border);padding:60px 48px 32px}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('intro').classList.add('done')},2200)});
+
+// INICIALIZAÇÃO DO SUPABASE
+const supabaseUrl = 'https://bsbgizaftamufmmxeyer.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
+const sbContactos = supabase.createClient(supabaseUrl, supabaseKey);
+
 const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
@@ -712,8 +673,7 @@ function toggleFaq(btn){const item=btn.closest('.faq-item'),isOpen=item.classLis
 
 async function loadTotalAnalises(){
   try{
-    const sb=supabase.createClient('https://bsbgizaftamufmmxeyer.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ');
-    const{count}=await sb.from('analises').select('*',{count:'exact',head:true});
+    const{count}=await sbContactos.from('analises').select('*',{count:'exact',head:true});
     const el=document.getElementById('total-analises');
     if(el&&count!==null)el.textContent=count>0?count+'+':'—';
   }catch(e){const el=document.getElementById('total-analises');if(el)el.textContent='—'}
@@ -762,31 +722,68 @@ async function idxSubscrever(){
   const msg=document.getElementById('idx-msg');
   if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';return;}
   try{
-    const sbClient=supabase.createClient('https://bsbgizaftamufmmxeyer.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ');
-    await sbClient.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});
-  }catch(e){}
-  msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';
-  msg.style.color='#1a5c3a';msg.style.background='rgba(26,92,58,0.15)';msg.style.display='block';
-  document.getElementById('idx-email').value='';
+    await sbContactos.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});
+    msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';
+    msg.style.color='#1a5c3a';msg.style.background='rgba(26,92,58,0.15)';msg.style.display='block';
+    document.getElementById('idx-email').value='';
+  }catch(e){
+    msg.textContent='Erro ao subscrever. Tente mais tarde.';
+    msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';
+  }
 }
 
-// FORMULÁRIO DE CONTACTO — Formspree
+// FUNÇÃO DE CONTACTO — ENVIO PARA O SUPABASE
 async function enviarContacto(){
-  const nome=document.getElementById('c-nome').value.trim();
-  const email=document.getElementById('c-email').value.trim();
-  const assunto=document.getElementById('c-assunto').value;
-  const mensagem=document.getElementById('c-mensagem').value.trim();
-  const msg=document.getElementById('c-msg');
-  if(!nome||!email||!mensagem){msg.textContent='Preencha nome, email e mensagem.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';return;}
-  try{
-    const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({nome,email,assunto:assunto||'Questão geral',mensagem})});
-    if(r.ok){
-      msg.textContent='✓ Mensagem enviada! Respondemos em 24h.';
-      msg.style.color='#1a5c3a';msg.style.background='rgba(26,92,58,0.15)';msg.style.display='block';
-      document.getElementById('c-nome').value='';document.getElementById('c-email').value='';
-      document.getElementById('c-assunto').value='';document.getElementById('c-mensagem').value='';
-    } else { throw new Error(); }
-  }catch(e){msg.textContent='Erro ao enviar. Tente novamente.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';}
+  const nome = document.getElementById('c-nome').value.trim();
+  const email = document.getElementById('c-email').value.trim();
+  const assunto = document.getElementById('c-assunto').value;
+  const mensagem = document.getElementById('c-mensagem').value.trim();
+  const msg = document.getElementById('c-msg');
+
+  if(!nome || !email || !mensagem){
+    msg.textContent = 'Preencha nome, email e mensagem.';
+    msg.style.color = '#c97850';
+    msg.style.background = 'rgba(139,26,26,0.15)';
+    msg.style.display = 'block';
+    return;
+  }
+
+  try {
+    const { error } = await sbContactos
+      .from('contactos')
+      .insert([
+        { 
+          nome: nome, 
+          email: email, 
+          assunto: assunto || 'Geral', 
+          mensagem: mensagem 
+        }
+      ]);
+
+    if (error) throw error;
+
+    msg.textContent = '✓ Mensagem enviada com sucesso para a base de dados!';
+    msg.style.color = '#1a5c3a';
+    msg.style.background = 'rgba(26,92,58,0.15)';
+    msg.style.display = 'block';
+
+    document.getElementById('c-nome').value = '';
+    document.getElementById('c-email').value = '';
+    document.getElementById('c-assunto').value = '';
+    document.getElementById('c-mensagem').value = '';
+    
+    // Fecha o modal após 2 segundos de sucesso
+    setTimeout(() => {
+        document.getElementById('contacto-modal').classList.remove('visible');
+        msg.style.display = 'none';
+    }, 2500);
+
+  } catch (e) {
+    msg.textContent = 'Erro ao enviar: ' + e.message;
+    msg.style.color = '#c97850';
+    msg.style.background = 'rgba(139,26,26,0.15)';
+    msg.style.display = 'block';
+  }
 }
 
 // COOKIE BANNER
