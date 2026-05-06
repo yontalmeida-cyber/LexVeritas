@@ -1252,4 +1252,234 @@ function gerarPDFStandard(){
     sc(cGrey,'text');doc.setFontSize(6);doc.setFont('helvetica','normal');doc.text('CONFIANCA',bx+bw/2,by+18,{align:'center'});
     y+=30;
     sectionHeader('INDICADORES FORENSES');
-    const inds=Obj
+    const inds=Object.entries(lastResult.indicadores||{});const halfW=contentW/2-3;
+    inds.forEach(([key,val],i)=>{
+      const isLeft=i%2===0,x0=isLeft?margin:margin+halfW+6;
+      checkY(16);sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text(indLabels[key]||key,x0,y);
+      sc(cInk,'text');doc.setFontSize(11);doc.setFont('helvetica','bold');doc.text(String(val),x0,y+7);
+      sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('/100',x0+9,y+7);
+      const barX=x0+22,barW2=halfW-26;
+      sc([220,215,205],'fill');doc.rect(barX,y+3,barW2,3,'F');
+      const fillC=val>70?cRed:val>40?cOrange:cGreen;
+      sc(fillC,'fill');doc.rect(barX,y+3,barW2*val/100,3,'F');
+      if(!isLeft)y+=16;
+    });
+    if(inds.length%2!==0)y+=16;y+=4;
+    sectionHeader('FUNDAMENTACAO DA ANALISE');bodyText(lastResult.narrativa||'Sem narrativa disponivel.');y+=4;
+    const relLabel=lastResult._modo==='academico'?'ANALISE DO ESTILO DO AUTOR':'ANALISE DO ESTILO DO RELATOR';
+    const rel=lastResult.relator_analise||'';
+    if(rel&&!rel.toLowerCase().includes('nao indicado')&&!rel.toLowerCase().includes('não indicado')){sectionHeader(relLabel);bodyText(rel);y+=4;}
+    sectionHeader('MARCADORES IDENTIFICADOS');
+    (lastResult.marcadores||[]).forEach(m=>{
+      checkY(12);const isAI=m.tipo==='ai';
+      const bgC=isAI?[255,242,230]:[230,245,235],txtC=isAI?cRed:cGreen;
+      sc(bgC,'fill');doc.rect(margin,y-3,contentW,9,'F');
+      sc(txtC,'text');doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text(isAI?'[!]':'[OK]',margin+2,y+3);
+      sc(cInk,'text');doc.setFontSize(8);doc.setFont('helvetica','normal');
+      const mLines=doc.splitTextToSize(m.texto||'',contentW-16);doc.text(mLines[0]||'',margin+14,y+3);y+=11;
+      if(mLines.length>1){mLines.slice(1).forEach(l=>{checkY(6);doc.text(l,margin+14,y);y+=5.5;});}
+    });
+    y+=8;checkY(24);sc(cGold,'draw');doc.setLineWidth(0.3);doc.line(margin,y,W-margin,y);y+=6;
+    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','italic');
+    const disc='Este relatorio foi gerado automaticamente pelo sistema LexVeritas. Os resultados tem caracter auxiliar e probabilistico. Ref: '+lastRef+'. Data: '+dateStr+' '+timeStr+'.';
+    doc.splitTextToSize(disc,contentW).forEach(l=>{doc.text(l,margin,y);y+=4;});
+    addFooter();doc.save('LexVeritas-'+lastRef+'.pdf');
+  }catch(err){console.error('Erro PDF:',err);alert('Erro ao gerar PDF: '+err.message);}
+}
+
+function gerarPDFCritica(){
+  try{
+    const{jsPDF}=window.jspdf;
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const W=210,margin=20,contentW=W-margin*2;let y=0;
+    const cGold=[201,168,76],cInk=[13,13,13],cLight=[245,240,232],cGrey=[140,140,140],cRed=[139,26,26],cGreen=[26,92,58],cOrange=[180,100,40];
+    const now=new Date(),dateStr=now.toLocaleDateString('pt-PT',{day:'2-digit',month:'long',year:'numeric'}),timeStr=now.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+    const veredicto=lastResult.veredicto_recurso||'RECURSO_INVIAVEL';
+    const vColor=veredicto==='RECURSO_VIAVEL'?cGreen:veredicto==='RECURSO_PARCIAL'?cOrange:cGrey;
+    const vLabels={'RECURSO_VIAVEL':'Recurso Viavel - Fundamentos Identificados','RECURSO_PARCIAL':'Recurso Parcialmente Fundamentado','RECURSO_INVIAVEL':'Sem Fundamentos Solidos para Recurso'};
+    function sc(arr,type){if(type==='text')doc.setTextColor(arr[0],arr[1],arr[2]);if(type==='fill')doc.setFillColor(arr[0],arr[1],arr[2]);if(type==='draw')doc.setDrawColor(arr[0],arr[1],arr[2]);}
+    function addFooter(){sc(cGold,'draw');doc.setLineWidth(0.3);doc.line(margin,283,W-margin,283);doc.setFontSize(7);sc(cGrey,'text');doc.setFont('helvetica','normal');doc.text('LexVeritas - Analise Critica de Decisao Judicial - '+lastRef,margin,287);doc.text('Documento auxiliar. Nao substitui consulta juridica profissional.',W-margin,287,{align:'right'});}
+    function checkY(n){if(y+n>275){addFooter();doc.addPage();y=24;sc(cRed,'fill');doc.rect(0,0,W,10,'F');sc([255,255,255],'text');doc.setFontSize(7);doc.setFont('helvetica','bold');doc.text('LEXVERITAS - ANALISE CRITICA / RECURSO',margin,7);doc.text(lastRef,W-margin,7,{align:'right'});}}
+    function sectionHeader(title){checkY(12);sc(cLight,'fill');doc.rect(margin,y,contentW,7,'F');sc(cGrey,'draw');doc.setLineWidth(0.1);doc.rect(margin,y,contentW,7,'S');sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','bold');doc.text(title,margin+3,y+5);y+=11;}
+    function bodyText(text){const lines=doc.splitTextToSize(text,contentW);lines.forEach(l=>{checkY(6);sc(cInk,'text');doc.setFontSize(9);doc.setFont('helvetica','normal');doc.text(l,margin,y);y+=5.5;});}
+    // HEADER
+    sc(cRed,'fill');doc.rect(0,0,W,10,'F');sc(cGold,'fill');doc.rect(0,10,W,22,'F');
+    sc([255,255,255],'text');doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text('LEXVERITAS — CONSULTOR JURIDICO SENIOR — ANALISE CRITICA DE RECURSO',margin,7);
+    sc(cInk,'text');doc.setFontSize(30);doc.setFont('helvetica','bold');doc.text('LexVeritas',margin,26);
+    doc.setFontSize(8);doc.setFont('helvetica','normal');doc.text('RELATORIO DE ANALISE CRITICA — NULIDADES E ARGUMENTOS DE RECURSO',margin,32);
+    doc.text(dateStr.toUpperCase()+' - '+timeStr,W-margin,26,{align:'right'});doc.text(lastRef,W-margin,32,{align:'right'});
+    y=46;
+    // CONTEXTO
+    sc(cLight,'fill');doc.rect(margin,y,contentW,20,'F');sc(cGold,'draw');doc.setLineWidth(0.5);doc.rect(margin,y,contentW,20,'S');
+    const col1=margin+4,col2=margin+64,col3=margin+128;
+    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');
+    doc.text('TRIBUNAL',col1,y+5);doc.text('TIPO DE PROCESSO',col2,y+5);doc.text('PARTE RECORRENTE',col3,y+5);
+    sc(cInk,'text');doc.setFontSize(9);doc.setFont('helvetica','bold');
+    doc.text((lastResult._tribunal||'Nao indicado').substring(0,26),col1,y+13);
+    doc.text((lastResult._tipoProcesso||'Nao indicado').substring(0,22),col2,y+13);
+    doc.text((lastResult._parteRecorrente||'Nao indicado').substring(0,20),col3,y+13);
+    y+=28;
+    // VEREDICTO
+    sc(vColor,'draw');doc.setLineWidth(1.5);doc.line(margin,y,margin,y+22);
+    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('AVALIACAO DO RECURSO',margin+5,y+5);
+    sc(vColor,'text');doc.setFontSize(17);doc.setFont('helvetica','bold');doc.text(vLabels[veredicto]||veredicto,margin+5,y+16);
+    const bx=W-margin-36,by=y+1,bw=34,bh=20;
+    sc(cLight,'fill');doc.rect(bx,by,bw,bh,'F');sc(vColor,'draw');doc.setLineWidth(0.8);doc.rect(bx,by,bw,bh,'S');
+    sc(vColor,'text');doc.setFontSize(18);doc.setFont('helvetica','bold');doc.text((lastResult.confianca||0)+'%',bx+bw/2,by+12,{align:'center'});
+    sc(cGrey,'text');doc.setFontSize(6);doc.setFont('helvetica','normal');doc.text('FUNDAMENTO',bx+bw/2,by+18,{align:'center'});
+    y+=30;
+    // SUMÁRIO
+    sectionHeader('SUMARIO EXECUTIVO');bodyText(lastResult.sumario||'');y+=4;
+    // NULIDADES
+    const nulidades=lastResult.nulidades||[];
+    sectionHeader('NULIDADES E VICIOS PROCESSUAIS IDENTIFICADOS ('+nulidades.length+')');
+    nulidades.forEach((n,i)=>{
+      checkY(28);
+      const grav=(n.gravidade||'grave').toUpperCase();
+      const nColor=grav==='GRAVE'?cRed:grav==='MODERADA'?cOrange:cGrey;
+      sc(nColor,'draw');doc.setLineWidth(0.8);doc.line(margin,y,margin,y+4);
+      sc(nColor,'text');doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text((i+1)+'. '+n.tipo,margin+4,y+3);
+      sc(cGold,'text');doc.setFontSize(8);doc.setFont('helvetica','normal');
+      if(n.artigo)doc.text(n.artigo,W-margin,y+3,{align:'right'});
+      y+=7;
+      if(n.descricao){
+        const dlines=doc.splitTextToSize(n.descricao,contentW-4);
+        dlines.forEach(l=>{checkY(6);sc(cInk,'text');doc.setFontSize(8.5);doc.setFont('helvetica','normal');doc.text(l,margin+4,y);y+=5;});
+      }
+      if(n.argumento){
+        checkY(16);sc([255,251,240],'fill');doc.rect(margin,y,contentW,5,'F');
+        sc(cGold,'text');doc.setFontSize(7);doc.setFont('helvetica','bold');doc.text('ARGUMENTO PARA RECURSO:',margin+3,y+3.5);
+        y+=6;
+        const alines=doc.splitTextToSize(n.argumento,contentW-6);
+        alines.forEach(l=>{checkY(6);sc([80,60,20],'text');doc.setFontSize(8);doc.setFont('helvetica','italic');doc.text(l,margin+3,y);y+=5;});
+      }
+      y+=6;
+    });
+    // CONCLUSÃO
+    sectionHeader('RECOMENDACAO DO CONSULTOR JURIDICO');bodyText(lastResult.conclusao||'');y+=8;
+    checkY(16);sc(cGold,'draw');doc.setLineWidth(0.3);doc.line(margin,y,W-margin,y);y+=6;
+    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','italic');
+    const disc='Este relatorio foi produzido pelo sistema LexVeritas no modo Consultor Juridico Senior. Os resultados tem caracter auxiliar e nao substituem consulta juridica profissional. Ref: '+lastRef+'. Data: '+dateStr+' '+timeStr+'.';
+    doc.splitTextToSize(disc,contentW).forEach(l=>{doc.text(l,margin,y);y+=4;});
+    addFooter();doc.save('LexVeritas-Critica-'+lastRef+'.pdf');
+  }catch(err){console.error('Erro PDF Critica:',err);alert('Erro ao gerar PDF: '+err.message);}
+}
+
+// ============================
+// HISTÓRICO
+// ============================
+async function loadHistory(){
+  const listEl=document.getElementById('history-list');
+  listEl.innerHTML='<div class="empty-history">A carregar...</div>';
+  const{data,error}=await sb.from('analises').select('*').eq('user_id',currentUser.id).order('criado_em',{ascending:false}).limit(50);
+  if(error||!data||data.length===0){
+    listEl.innerHTML=`<div style="text-align:center;padding:48px 20px"><div style="font-size:48px;margin-bottom:16px">⚖️</div><div style="font-family:var(--serif);font-size:20px;font-style:italic;color:#888;margin-bottom:8px">Ainda não fez nenhuma análise</div><div style="font-family:var(--sans);font-size:13px;color:#bbb;margin-bottom:24px;line-height:1.6">Cole o texto de um acórdão, sentença ou despacho<br>e descubra se foi elaborado com IA.</div><button onclick="showTab('analise')" style="background:var(--ink);color:var(--cream);border:none;padding:12px 28px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer">Fazer primeira análise →</button></div>`;
+    return;
+  }
+
+  // Dicionários standard
+  const colors={'IA_DETECTADA':'#8b4513','PROVAVELMENTE_IA':'#c97850','INCONCLUSIVO':'#888','PROVAVELMENTE_HUMANO':'#2a7a4a','HUMANO':'#1a5c2a','RECURSO_VIAVEL':'#1a5c2a','RECURSO_PARCIAL':'#c97850','RECURSO_INVIAVEL':'#888'};
+  const labels={'IA_DETECTADA':'IA Detectada','PROVAVELMENTE_IA':'Provavelmente IA','INCONCLUSIVO':'Inconclusivo','PROVAVELMENTE_HUMANO':'Provavelmente Humano','HUMANO':'Humano','RECURSO_VIAVEL':'Recurso Viável','RECURSO_PARCIAL':'Recurso Parcial','RECURSO_INVIAVEL':'Recurso Inviável'};
+  const bannerCls={'IA_DETECTADA':'ai','PROVAVELMENTE_IA':'ai','INCONCLUSIVO':'uncertain','PROVAVELMENTE_HUMANO':'human','HUMANO':'human','RECURSO_VIAVEL':'recurso-viavel','RECURSO_PARCIAL':'recurso-parcial','RECURSO_INVIAVEL':'recurso-inviavel'};
+  const bannerTitles={'IA_DETECTADA':'Inteligência Artificial Detectada','PROVAVELMENTE_IA':'Provavelmente Gerado por IA','INCONCLUSIVO':'Análise Inconclusiva','PROVAVELMENTE_HUMANO':'Provavelmente Autoria Humana','HUMANO':'Autoria Humana Confirmada','RECURSO_VIAVEL':'Recurso Viável — Fundamentos Identificados','RECURSO_PARCIAL':'Recurso Parcialmente Fundamentado','RECURSO_INVIAVEL':'Sem Fundamentos Sólidos para Recurso'};
+  const bannerSubs={'IA_DETECTADA':'Os marcadores linguísticos indicam fortemente o uso de IA.','PROVAVELMENTE_IA':'Vários indicadores sugerem uso significativo de IA.','INCONCLUSIVO':'Os indicadores não permitem determinar com segurança.','PROVAVELMENTE_HUMANO':'O texto apresenta características predominantemente humanas.','HUMANO':'Os marcadores são consistentes com autoria humana.','RECURSO_VIAVEL':'Foram identificadas nulidades e/ou erros de julgamento com fundamento jurídico.','RECURSO_PARCIAL':'Existem alguns argumentos para recurso, mas com limitações.','RECURSO_INVIAVEL':'A decisão encontra-se devidamente fundamentada.'};
+  const indLabels={perplexidade:'Perplexidade',burstiness:'Var. Rítmica',coesao_artificial:'Coesão Artif.',uniformidade_sintatica:'Uniform. Sint.',riqueza_lexical:'Riqueza Lex.',marcadores_formulaicos:'Marc. Form.'};
+
+  listEl.innerHTML=data.map((a,idx)=>{
+    const df=new Date(a.criado_em).toLocaleString('pt-PT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const isCritica=a.modo==='critica';
+    const isAcademico=a.modo==='academico';
+    const cor=colors[a.veredicto]||'#888';
+    const label=labels[a.veredicto]||a.veredicto;
+    const contexto=[a.tribunal,a.relator].filter(Boolean).join(' · ');
+    const modoLabel=isCritica?'🏛 Crítica':isAcademico?'🎓 Académico':'⚖ Judicial';
+    const confiancaLabel=isCritica?'Fund.':'';
+
+    // BANNER
+    const bCls=bannerCls[a.veredicto]||'uncertain';
+    const bTitle=bannerTitles[a.veredicto]||a.veredicto;
+    const bSub=bannerSubs[a.veredicto]||'';
+    const bannerLabel=isCritica?'Avaliação de Recurso':'Veredicto Forense';
+    const bannerHtml=`<div class="verdict-banner ${bCls}" style="margin-bottom:16px">
+      <div class="verdict-label">${bannerLabel}</div>
+      <div class="verdict-title">${bTitle}</div>
+      <div class="verdict-subtitle">${bSub}</div>
+    </div>`;
+
+    // CONFIDENCE
+    const confidenceLabel=isCritica?'Grau de Fundamentação do Recurso':'Índice de Confiança na Detecção';
+    const confidenceHtml=`<div class="confidence-block" style="margin-bottom:16px">
+      <div class="confidence-label"><span>${confidenceLabel}</span><span class="confidence-value">${a.confianca}%</span></div>
+      <div class="meter-track"><div class="meter-fill" style="width:${a.confianca}%"></div></div>
+    </div>`;
+
+    // INDICADORES (só standard)
+    let indsHtml='';
+    if(!isCritica){
+      if(a.indicadores){
+        indsHtml=`<div class="indicators-grid" style="margin-bottom:16px">${Object.entries(a.indicadores).map(([k,v])=>{const bc=v>70?'bar-high':v>40?'bar-mid':'bar-low';return`<div class="indicator-card"><div class="indicator-name">${indLabels[k]||k}</div><div class="indicator-score">${v}<small style="font-size:10px;font-weight:400;color:#aaa">/100</small></div><div class="indicator-bar"><div class="indicator-bar-fill ${bc}" style="width:${v}%"></div></div></div>`;}).join('')}</div>`;
+      }else{
+        indsHtml=`<p style="font-family:var(--mono);font-size:10px;color:#bbb;margin-bottom:16px;font-style:italic">Indicadores não disponíveis — análise anterior ao histórico completo.</p>`;
+      }
+    }
+
+    // NARRATIVA / SUMÁRIO
+    const narrativaLabel=isCritica?'Sumário Executivo':'Fundamentação da Análise';
+    const narrativaHtml=a.narrativa?`<div class="analysis-card" style="margin-bottom:16px"><h3>${narrativaLabel}</h3><p>${(a.narrativa||'').replace(/\n/g,'<br>')}</p></div>`:'';
+
+    // NULIDADES (só crítica)
+    let nulidadesHtml='';
+    if(isCritica&&a.marcadores&&a.marcadores.length>0){
+      nulidadesHtml=`<div style="margin-bottom:16px">
+        <div class="nulidades-section-label" style="margin-bottom:12px">${a.marcadores.length} Nulidade${a.marcadores.length>1?'s':''} Identificada${a.marcadores.length>1?'s':''}</div>
+        ${a.marcadores.map(n=>{const grav=(n.gravidade||'grave').toLowerCase();return`<div class="nulidade-card ${grav==='grave'?'':''+grav}">
+          <div class="nulidade-header">
+            <span class="nulidade-tipo-badge">${n.tipo||'Vício Processual'}</span>
+            <span class="nulidade-artigo">${n.artigo||''}</span>
+          </div>
+          <p class="nulidade-desc">${n.descricao||''}</p>
+          ${n.argumento?`<div class="nulidade-argumento"><span class="nulidade-argumento-label">Argumento para Recurso</span><span class="nulidade-argumento-text">${n.argumento}</span></div>`:''}
+        </div>`;}).join('')}
+      </div>`;
+    }
+
+    // MARCADORES (só standard)
+    let marcadoresHtml='';
+    if(!isCritica&&a.marcadores&&a.marcadores.length>0){
+      marcadoresHtml=`<div class="analysis-card" style="margin-bottom:16px"><h3>Marcadores Identificados</h3><ul class="evidence-list">${a.marcadores.map(m=>`<li class="evidence-item"><div class="evidence-marker ${m.tipo==='ai'?'marker-ai':'marker-ok'}">${m.tipo==='ai'?'⚠':'✓'}</div><span class="evidence-text">${m.texto}</span></li>`).join('')}</ul></div>`;
+    }
+
+    // RELATOR / AUTOR / CONCLUSÃO CRÍTICA
+    const relatorLabel=isCritica?'Recomendação do Consultor':isAcademico?'Análise do Estilo do Autor':'Análise do Estilo do Relator';
+    const relatorValido=a.relator_analise&&!a.relator_analise.toLowerCase().includes('nao indicado')&&!a.relator_analise.toLowerCase().includes('não indicado');
+    const relatorHtml=relatorValido?`<div class="analysis-card" style="margin-bottom:16px;border-left:3px solid var(--gold)"><h3>${relatorLabel}</h3><p>${a.relator_analise}</p></div>`:'';
+
+    return`<div class="history-item" id="hist-${idx}">
+      <div class="history-item-header" onclick="toggleHistory(${idx})">
+        <div style="flex:1;min-width:0">
+          <div class="history-veredicto" style="color:${cor}">${label}</div>
+          <div class="history-meta">${df}${contexto?' · '+contexto:''} · ${modoLabel}</div>
+        </div>
+        <div class="history-confianca">${a.confianca}%${confiancaLabel?'<div style="font-size:7px;color:#aaa;font-weight:400">'+confiancaLabel+'</div>':''}</div>
+        <div class="history-chevron">▼</div>
+      </div>
+      <div class="history-details">
+        ${bannerHtml}${confidenceHtml}${indsHtml}${narrativaHtml}${nulidadesHtml}${relatorHtml}${marcadoresHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleHistory(idx){document.getElementById('hist-'+idx).classList.toggle('open');}
+
+async function inscreverListaEspera(){
+  const email=document.getElementById('upgrade-email').value.trim();
+  const msg=document.getElementById('upgrade-msg');
+  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
+  try{await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});}catch(e){}
+  msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';msg.style.color='var(--green)';msg.style.display='block';
+  document.getElementById('upgrade-email').value='';
+}
+</script>
+</body>
+</html>
