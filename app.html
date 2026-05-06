@@ -178,10 +178,28 @@
   .info-box.note { border-color: #aaa; background: #f8f8f8; }
   .info-box strong { display: block; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 3px; color: #888; }
   .history-page { max-width: 800px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); }
-  .history-item { background: white; border: 1px solid var(--rule); padding: 16px 20px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .history-item { background: white; border: 1px solid var(--rule); margin-bottom: 16px; overflow: hidden; }
+  .history-item-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; transition: background 0.2s; }
+  .history-item-header:hover { background: var(--parchment); }
   .history-veredicto { font-family: var(--serif); font-size: 15px; font-weight: 700; }
   .history-meta { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 3px; }
-  .history-confianca { font-family: var(--mono); font-size: 18px; font-weight: 500; color: var(--gold); }
+  .history-confianca { font-family: var(--mono); font-size: 18px; font-weight: 500; color: var(--gold); flex-shrink: 0; }
+  .history-chevron { font-size: 12px; color: #aaa; transition: transform 0.3s; flex-shrink: 0; }
+  .history-item.open .history-chevron { transform: rotate(180deg); }
+  .history-details { display: none; padding: 0 20px 20px; border-top: 1px solid var(--rule); }
+  .history-item.open .history-details { display: block; }
+  .history-meter { height: 5px; background: var(--rule); margin: 14px 0 16px; overflow: hidden; }
+  .history-meter-fill { height: 100%; background: linear-gradient(90deg, #90b890, #c9a84c, #c97850); }
+  .history-inds { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .history-ind { background: var(--parchment); padding: 10px 12px; }
+  .history-ind-name { font-family: var(--mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: #aaa; margin-bottom: 3px; }
+  .history-ind-val { font-family: var(--serif); font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+  .history-ind-bar { height: 2px; background: var(--rule); overflow: hidden; }
+  .history-ind-fill { height: 100%; }
+  .history-narrativa { font-family: var(--sans); font-size: 12px; line-height: 1.8; color: #555; background: var(--parchment); padding: 12px 14px; margin-bottom: 12px; border-left: 3px solid var(--gold); }
+  .history-marcadores { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .history-marcador { display: flex; gap: 8px; align-items: flex-start; font-family: var(--sans); font-size: 11px; line-height: 1.5; color: #555; }
+  .history-marcador-ico { font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
   .empty-history { text-align: center; padding: 60px 20px; color: #aaa; font-family: var(--serif); font-size: 18px; font-style: italic; }
   footer { border-top: 1px solid var(--rule); padding: 20px clamp(20px, 5vw, 60px); display: flex; justify-content: space-between; align-items: center; margin-top: 32px; flex-wrap: wrap; gap: 12px; }
   .footer-brand { font-family: var(--serif); font-size: 16px; font-weight: 700; }
@@ -898,7 +916,7 @@ async function analyzeDecision(){
     lastRef='LV-'+Date.now().toString(36).toUpperCase();document.getElementById('ref-number').textContent='Referência: '+lastRef;
     hideOverlay(result);renderResults(result);
     if(window.innerWidth<=760){setTimeout(()=>{const el=document.getElementById('results-area');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},900);}
-    await sb.from('analises').insert({user_id:currentUser.id,tribunal:tribunal||instituicao||null,relator:relator||tipoDoc||null,veredicto:result.veredicto,confianca:result.confianca,narrativa:result.narrativa});
+    await sb.from('analises').insert({user_id:currentUser.id,tribunal:tribunal||instituicao||null,relator:relator||tipoDoc||null,veredicto:result.veredicto,confianca:result.confianca,narrativa:result.narrativa,indicadores:result.indicadores||null,marcadores:result.marcadores||null,relator_analise:result.relator_analise||null,modo:modoActual});
     const novoTotal=usado+1;await sb.from('perfis').update({analises_mes:novoTotal}).eq('id',currentUser.id);userProfile.analises_mes=novoTotal;
     const{count}=await sb.from('analises').select('*',{count:'exact',head:true}).eq('user_id',currentUser.id);
     document.getElementById('stat-total').textContent=count||novoTotal;document.getElementById('stat-mes').textContent=novoTotal+' / '+limite;document.getElementById('usage-count').textContent=novoTotal+' / '+limite;document.getElementById('usage-fill').style.width=Math.min(100,(novoTotal/limite)*100)+'%';
@@ -1010,10 +1028,61 @@ async function loadHistory(){
   }
   const colors={'IA_DETECTADA':'#8b4513','PROVAVELMENTE_IA':'#c97850','INCONCLUSIVO':'#888','PROVAVELMENTE_HUMANO':'#2a7a4a','HUMANO':'#1a5c2a'};
   const labels={'IA_DETECTADA':'IA Detectada','PROVAVELMENTE_IA':'Provavelmente IA','INCONCLUSIVO':'Inconclusivo','PROVAVELMENTE_HUMANO':'Provavelmente Humano','HUMANO':'Humano'};
-  listEl.innerHTML=data.map(a=>{
+  const indLabels={perplexidade:'Perplexidade',burstiness:'Var. Rítmica',coesao_artificial:'Coesão Artif.',uniformidade_sintatica:'Uniform. Sint.',riqueza_lexical:'Riqueza Lex.',marcadores_formulaicos:'Marc. Form.'};
+
+  listEl.innerHTML=data.map((a,idx)=>{
     const df=new Date(a.criado_em).toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    return`<div class="history-item"><div><div class="history-veredicto" style="color:${colors[a.veredicto]||'#888'}">${labels[a.veredicto]||a.veredicto}</div><div class="history-meta">${df}${a.tribunal?' · '+a.tribunal:''}${a.relator?' · '+a.relator:''}</div></div><div class="history-confianca">${a.confianca}%</div></div>`;
+    const cor=colors[a.veredicto]||'#888';
+    const label=labels[a.veredicto]||a.veredicto;
+    const contexto=[a.tribunal,a.relator].filter(Boolean).join(' · ');
+    const modo=a.modo==='academico'?'🎓 Académico':'⚖ Judicial';
+
+    // Indicadores
+    let indsHtml='';
+    if(a.indicadores){
+      indsHtml=`<div class="history-inds">${Object.entries(a.indicadores).map(([k,v])=>{
+        const bc=v>70?'var(--red)':v>40?'var(--gold)':'var(--green)';
+        return`<div class="history-ind"><div class="history-ind-name">${indLabels[k]||k}</div><div class="history-ind-val" style="color:${bc}">${v}<small style="font-size:9px;font-weight:400;color:#aaa">/100</small></div><div class="history-ind-bar"><div class="history-ind-fill" style="width:${v}%;background:${bc}"></div></div></div>`;
+      }).join('')}</div>`;
+    } else {
+      indsHtml=`<p style="font-family:var(--mono);font-size:10px;color:#bbb;margin-bottom:14px;font-style:italic">Indicadores não disponíveis — análise anterior ao histórico completo.</p>`;
+    }
+
+    // Narrativa
+    const narrativaHtml=a.narrativa?`<div class="history-narrativa">${a.narrativa}</div>`:'';
+
+    // Marcadores
+    let marcadoresHtml='';
+    if(a.marcadores&&a.marcadores.length>0){
+      marcadoresHtml=`<div style="font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:8px">Marcadores Identificados</div><div class="history-marcadores">${a.marcadores.map(m=>`<div class="history-marcador"><span class="history-marcador-ico" style="color:${m.tipo==='ai'?'var(--red)':'var(--green)'}">${m.tipo==='ai'?'⚠':'✓'}</span><span>${m.texto}</span></div>`).join('')}</div>`;
+    }
+
+    // Análise do relator
+    const relatorHtml=(a.relator_analise&&!a.relator_analise.toLowerCase().includes('nao indicado')&&!a.relator_analise.toLowerCase().includes('não indicado'))?`<div style="background:#fffbf0;border-left:3px solid var(--gold);padding:10px 14px;margin-bottom:12px;font-family:var(--sans);font-size:12px;line-height:1.7;color:#555"><strong style="display:block;font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:4px">Estilo do Relator</strong>${a.relator_analise}</div>`:'';
+
+    return`<div class="history-item" id="hist-${idx}">
+      <div class="history-item-header" onclick="toggleHistory(${idx})">
+        <div style="flex:1;min-width:0">
+          <div class="history-veredicto" style="color:${cor}">${label}</div>
+          <div class="history-meta">${df}${contexto?' · '+contexto:''} · ${modo}</div>
+        </div>
+        <div class="history-confianca">${a.confianca}%</div>
+        <div class="history-chevron">▼</div>
+      </div>
+      <div class="history-details">
+        <div class="history-meter"><div class="history-meter-fill" style="width:${a.confianca}%"></div></div>
+        ${indsHtml}
+        ${narrativaHtml}
+        ${relatorHtml}
+        ${marcadoresHtml}
+      </div>
+    </div>`;
   }).join('');
+}
+
+function toggleHistory(idx){
+  const el=document.getElementById('hist-'+idx);
+  el.classList.toggle('open');
 }
 
 async function inscreverListaEspera(){
