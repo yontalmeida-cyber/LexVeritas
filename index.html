@@ -3,51 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LexVeritas — Detector de IA e Análise Crítica de Jurisprudência Portuguesa</title>
-<meta name="description" content="A primeira plataforma forense para advogados e magistrados portugueses. Detecte autoria de IA, identifique nulidades processuais e gere argumentos de recurso em segundos.">
+<title>LexVeritas — Detector de IA em Jurisprudência Portuguesa</title>
+<meta name="description" content="O primeiro sistema de análise forense de inteligência artificial em decisões judiciais dos tribunais portugueses.">
 <meta name="robots" content="index, follow">
-
+<link rel="canonical" href="https://lexveritas.pt">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://lexveritas.pt/">
-<meta property="og:title" content="LexVeritas — Detector de IA e Análise Crítica de Jurisprudência">
-<meta property="og:description" content="A primeira plataforma forense para advogados e magistrados portugueses. Detecte autoria de IA e identifique nulidades processuais em segundos.">
+<meta property="og:url" content="https://lexveritas.pt">
+<meta property="og:title" content="LexVeritas — Detector de IA em Jurisprudência Portuguesa">
+<meta property="og:description" content="O primeiro sistema de análise forense de IA em decisões judiciais portuguesas.">
 <meta property="og:image" content="https://lexveritas.pt/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:locale" content="pt_PT">
 <meta property="og:site_name" content="LexVeritas">
-
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="https://lexveritas.pt/">
 <meta name="twitter:title" content="LexVeritas — Detector de IA em Jurisprudência Portuguesa">
-<meta name="twitter:description" content="Detecte autoria de IA e identifique nulidades processuais em decisões judiciais portuguesas.">
+<meta name="twitter:description" content="O primeiro sistema de análise forense de IA em decisões judiciais portuguesas.">
 <meta name="twitter:image" content="https://lexveritas.pt/og-image.png">
-
-<link rel="canonical" href="https://lexveritas.pt/">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
-
+<meta name="theme-color" content="#060608">
+<link rel="manifest" href="/manifest.json">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "LexVeritas",
+  "description": "O primeiro sistema de análise forense de inteligência artificial em decisões judiciais dos tribunais portugueses.",
+  "url": "https://lexveritas.pt",
+  "applicationCategory": "LegalApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "pt-PT",
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Plano Básico",
+      "price": "0",
+      "priceCurrency": "EUR",
+      "description": "5 análises por mês, 6 indicadores forenses, relatório PDF"
+    },
+    {
+      "@type": "Offer",
+      "name": "Plano Profissional",
+      "price": "19",
+      "priceCurrency": "EUR",
+      "description": "100 análises por mês, análise avançada por relator, histórico ilimitado"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "LexVeritas",
+    "url": "https://lexveritas.pt",
+    "email": "info@lexveritas.pt",
+    "areaServed": "PT"
+  },
+  "featureList": [
+    "Análise forense de IA em jurisprudência portuguesa",
+    "6 indicadores linguísticos calibrados para tribunais PT",
+    "Relatório PDF profissional",
+    "Cobertura de 14+ tribunais portugueses",
+    "Análise por relator"
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--black:#060608;--white:#f8f6f1;--gold:#c9a84c;--gold-light:#e8c96a;--gold-dim:#8a6f2e;--grey:#9a9a9a;--dark:#0e0e12;--card:#13131a;--border:rgba(201,168,76,0.15);--sans:'Syne',sans-serif;--serif:'Instrument Serif',Georgia,serif;--mono:'JetBrains Mono',monospace}
 html{scroll-behavior:smooth}
 body{background:var(--black);color:var(--white);font-family:var(--sans);overflow-x:hidden;cursor:none}
-
-/* CURSOR */
 .cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:difference}
 .cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(201,168,76,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .4s cubic-bezier(.16,1,.3,1),height .4s cubic-bezier(.16,1,.3,1),left .12s linear,top .12s linear}
-
-/* INTRO */
 .intro{position:fixed;inset:0;background:var(--black);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .8s ease,visibility .8s ease}
 .intro.done{opacity:0;visibility:hidden}
 .intro-logo{font-family:var(--serif);font-size:56px;font-style:italic;color:var(--white);opacity:0;transform:translateY(20px);animation:introFadeUp .8s .3s ease forwards}
 .intro-logo span{color:var(--gold)}
 .intro-bar-track{width:200px;height:1px;background:rgba(255,255,255,.1);overflow:hidden;opacity:0;animation:introFadeUp .5s .6s ease forwards}
 .intro-bar-fill{height:100%;background:var(--gold);width:0%;animation:introLoad 1.4s .8s cubic-bezier(.16,1,.3,1) forwards}
+.intro-label{font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--grey);opacity:0;animation:introFadeUp .5s .7s ease forwards}
 @keyframes introFadeUp{to{opacity:1;transform:translateY(0)}}
 @keyframes introLoad{to{width:100%}}
-
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:rgba(6,6,8,0);border-bottom:1px solid transparent;transition:all .4s ease}
 nav.scrolled{background:rgba(6,6,8,.9);backdrop-filter:blur(24px);border-bottom-color:var(--border)}
 .nav-logo{font-family:var(--serif);font-size:22px;color:var(--white);text-decoration:none;font-style:italic}
@@ -56,363 +91,706 @@ nav.scrolled{background:rgba(6,6,8,.9);backdrop-filter:blur(24px);border-bottom-
 .nav-links a{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--grey);text-decoration:none;transition:color .2s}
 .nav-links a:hover{color:var(--white)}
 .nav-cta{background:var(--gold)!important;color:var(--black)!important;padding:10px 24px!important;font-weight:700!important}
-
-/* HERO */
+.nav-cta:hover{background:var(--gold-light)!important}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;z-index:200}
+.nav-hamburger span{display:block;width:24px;height:2px;background:var(--white);transition:all .3s}
+.nav-hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mobile-menu{position:fixed;inset:0;background:rgba(6,6,8,.98);backdrop-filter:blur(24px);z-index:150;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.mobile-menu.open{opacity:1;visibility:visible}
+.mobile-menu a{font-family:var(--serif);font-size:32px;font-style:italic;color:var(--white);text-decoration:none;padding:12px 24px;opacity:0;transform:translateY(20px);transition:opacity .3s ease,transform .3s ease,color .2s}
+.mobile-menu.open a{opacity:1;transform:translateY(0)}
+.mobile-menu.open a:nth-child(1){transition-delay:.05s}
+.mobile-menu.open a:nth-child(2){transition-delay:.1s}
+.mobile-menu.open a:nth-child(3){transition-delay:.15s}
+.mobile-menu.open a:nth-child(4){transition-delay:.2s}
+.mobile-menu a:hover{color:var(--gold)}
+.mobile-menu .mobile-cta{background:var(--gold);color:var(--black)!important;font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:16px 40px!important;margin-top:16px;font-style:normal}
+.mobile-menu-divider{width:40px;height:1px;background:var(--border);margin:8px 0}
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 48px 80px;position:relative;overflow:hidden;text-align:center}
-.hero-glow{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(201,168,76,.15) 0%,transparent 60%)}
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.05) 1px,transparent 1px);background-size:80px 80px}
+.hero-canvas{position:absolute;inset:0;overflow:hidden}
+.hero-glow{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(201,168,76,.15) 0%,transparent 60%);animation:glowPulse 4s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{opacity:.8;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.1)}}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.05) 1px,transparent 1px);background-size:80px 80px;animation:gridMove 20s linear infinite}
+@keyframes gridMove{0%{background-position:0 0}100%{background-position:80px 80px}}
+.orb{position:absolute;border-radius:50%;filter:blur(60px);animation:orbFloat linear infinite;opacity:.15}
+.orb1{width:300px;height:300px;background:var(--gold);top:20%;left:-5%;animation-duration:25s}
+.orb2{width:200px;height:200px;background:#4c6ec9;top:60%;right:5%;animation-duration:18s;animation-delay:-8s}
+.orb3{width:150px;height:150px;background:var(--gold);bottom:10%;left:30%;animation-duration:22s;animation-delay:-4s}
+@keyframes orbFloat{0%,100%{transform:translate(0,0)}25%{transform:translate(30px,-20px)}50%{transform:translate(-20px,30px)}75%{transform:translate(20px,20px)}}
 .hero-content{position:relative;z-index:2}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;display:flex;align-items:center;justify-content:center;gap:12px;opacity:0;animation:fadeUp .8s 2.4s ease forwards}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:40px;height:1px;background:var(--gold);opacity:.5}
 .hero-title{font-family:var(--serif);font-size:clamp(64px,10vw,140px);font-weight:400;line-height:.88;letter-spacing:-.02em;font-style:italic;margin-bottom:12px;opacity:0;animation:fadeUp .8s 2.5s ease forwards}
 .hero-title span{color:var(--gold)}
-.hero-sub{font-family:var(--sans);font-size:clamp(14px,1.8vw,18px);color:var(--grey);max-width:600px;margin:28px auto 48px;line-height:1.7;opacity:0;animation:fadeUp .8s 2.6s ease forwards}
-
-/* COMMON SECTIONS */
-.section-padding{padding:100px 48px}
-.container{max-width:1200px;margin:0 auto}
+.hero-sub{font-family:var(--sans);font-size:clamp(14px,1.8vw,18px);color:var(--grey);max-width:520px;margin:28px auto 48px;line-height:1.7;opacity:0;animation:fadeUp .8s 2.6s ease forwards}
+.hero-actions{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:72px;opacity:0;animation:fadeUp .8s 2.7s ease forwards}
+.btn-primary{background:var(--gold);color:var(--black);border:none;padding:16px 40px;font-family:var(--sans);font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;cursor:none;text-decoration:none;transition:all .3s;display:inline-flex;align-items:center;gap:10px;position:relative;overflow:hidden}
+.btn-primary::before{content:'';position:absolute;inset:0;background:var(--gold-light);transform:translateX(-100%);transition:transform .3s}
+.btn-primary:hover::before{transform:translateX(0)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(201,168,76,.4)}
+.btn-primary span{position:relative}
+.btn-secondary{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.15);padding:16px 40px;font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;cursor:none;text-decoration:none;transition:all .3s}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px)}
+.scroll-hint{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp .8s 3s ease forwards;z-index:2;margin-top:16px}
+.scroll-hint-text{font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--grey)}
+.scroll-line{width:1px;height:40px;background:linear-gradient(var(--gold),transparent);animation:scrollLine 2s ease-in-out infinite}
+@keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.stats-bar{display:flex;gap:48px;justify-content:center;flex-wrap:wrap;padding:40px 48px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);width:100%;max-width:900px;position:relative;z-index:2;opacity:0;animation:fadeUp .8s 2.8s ease forwards}
+.stat-item{text-align:center}
+.stat-number{font-family:var(--serif);font-size:40px;font-style:italic;color:var(--gold);display:block;line-height:1;margin-bottom:6px}
+.stat-label{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 .reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
 .reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
 .section-label{font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:12px}
 .section-label::after{content:'';height:1px;width:48px;background:var(--gold);opacity:.4}
 .section-title{font-family:var(--serif);font-size:clamp(36px,4.5vw,64px);font-weight:400;font-style:italic;line-height:1.05;margin-bottom:24px}
 .section-title span{color:var(--gold)}
-
-/* STEPS */
-.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:60px}
-.step-card{background:var(--black);padding:44px 36px;position:relative;overflow:hidden;transition:background .3s}
-.step-card:hover{background:var(--dark)}
-.step-num{font-family:var(--mono);font-size:60px;color:rgba(201,168,76,.07);position:absolute;top:20px;right:30px}
-.step-icon{font-size:32px;margin-bottom:24px;display:block}
-
-/* FEATURES */
+.section-body{font-size:15px;line-height:1.8;color:var(--grey);max-width:560px}
+.problem-wrap{background:var(--dark);padding:100px 48px}
+.problem-inner{max-width:1200px;margin:0 auto}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:60px}
+.problem-card{background:var(--dark);padding:40px;transition:background .3s}
+.problem-card:hover{background:#161620}
+.problem-num{font-family:var(--mono);font-size:56px;font-weight:300;color:rgba(201,168,76,.08);line-height:1;margin-bottom:16px;transition:color .3s}
+.problem-card:hover .problem-num{color:rgba(201,168,76,.2)}
+.problem-card h3{font-family:var(--serif);font-size:22px;font-style:italic;margin-bottom:12px}
+.problem-card p{font-size:13px;line-height:1.7;color:var(--grey)}
+.how-wrap{padding:100px 48px}
+.how-inner{max-width:1200px;margin:0 auto}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);margin-top:60px}
+.step{background:var(--black);padding:44px 36px;position:relative;overflow:hidden;transition:background .3s}
+.step:hover{background:var(--dark)}
+.step-bar{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.step:hover .step-bar{transform:scaleX(1)}
+.step-num{font-family:var(--mono);font-size:72px;font-weight:300;color:rgba(201,168,76,.07);line-height:1;margin-bottom:20px}
+.step-icon{font-size:28px;margin-bottom:16px;display:block}
+.step h3{font-size:15px;font-weight:700;letter-spacing:.04em;margin-bottom:10px}
+.step p{font-size:13px;line-height:1.7;color:var(--grey)}
+.demo-wrap{background:var(--dark);padding:100px 48px}
+.demo-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.demo-visual{background:var(--black);border:1px solid var(--border);padding:32px;position:relative}
+.demo-visual::before{content:'';position:absolute;inset:-1px;background:linear-gradient(135deg,rgba(201,168,76,.3),transparent,rgba(201,168,76,.1));pointer-events:none;opacity:0;transition:opacity .4s}
+.demo-visual:hover::before{opacity:1}
+.demo-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.demo-mono{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:6px}
+.demo-verdict-text{font-family:var(--serif);font-size:22px;font-style:italic;color:#e08040}
+.demo-pct{font-family:var(--mono);font-size:32px;color:var(--gold);font-weight:500}
+.ind-row{margin-bottom:18px}
+.ind-top{display:flex;justify-content:space-between;margin-bottom:7px}
+.ind-name{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--grey)}
+.ind-val{font-family:var(--mono);font-size:10px;color:var(--white)}
+.ind-track{height:3px;background:rgba(255,255,255,.05)}
+.ind-fill{height:100%;transition:width 1.8s cubic-bezier(.16,1,.3,1)}
+.c-red{background:linear-gradient(90deg,#6b1515,#c94040)}
+.c-gold{background:linear-gradient(90deg,#6b4f15,var(--gold))}
+.c-green{background:linear-gradient(90deg,#154b25,#3a9060)}
+.features-wrap{padding:100px 48px}
+.features-inner{max-width:1200px;margin:0 auto}
 .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:60px}
-.feat-card{background:var(--black);padding:40px;transition:all .3s ease}
+.feat-card{background:var(--black);padding:36px 32px;transition:background .3s;position:relative;overflow:hidden}
+.feat-card::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--gold),transparent);transform:scaleX(0);transform-origin:left;transition:transform .4s}
 .feat-card:hover{background:var(--dark)}
-.feat-icon{width:48px;height:48px;background:rgba(201,168,76,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:24px;font-size:20px}
-
-/* PRICING */
-.pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:60px;max-width:800px;margin-left:auto;margin-right:auto}
-.price-card{background:var(--black);padding:48px 40px;text-align:center}
-.price-card.featured{background:var(--card);position:relative}
-.price-card.featured::before{content:'RECOMENDADO';position:absolute;top:0;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--black);font-family:var(--mono);font-size:9px;padding:4px 12px;letter-spacing:1px}
-
-/* FAQ */
-.faq-list{margin-top:60px;max-width:800px;margin-left:auto;margin-right:auto}
-.faq-item{border-bottom:1px solid var(--border)}
-.faq-question{width:100%;padding:24px 0;background:none;border:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;text-align:left}
-.faq-question h3{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--white)}
-.faq-answer{max-height:0;overflow:hidden;transition:all .4s ease;color:var(--grey);font-size:14px;line-height:1.8}
-.faq-item.active .faq-answer{max-height:200px;padding-bottom:24px}
-
-/* MODAL */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:2000;display:none;align-items:center;justify-content:center;padding:24px}
-.modal.active{display:flex}
-.modal-content{background:var(--dark);border:1px solid var(--border);padding:48px;max-width:500px;width:100%;position:relative}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-
-/* FOOTER */
-footer{padding:60px 48px 40px;border-top:1px solid var(--border)}
-.footer-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:32px}
-.footer-brand{font-family:var(--serif);font-size:28px;font-style:italic}
+.feat-card:hover::after{transform:scaleX(1)}
+.feat-icon{width:48px;height:48px;background:rgba(201,168,76,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:20px;transition:background .3s}
+.feat-card:hover .feat-icon{background:rgba(201,168,76,.15)}
+.feat-card h3{font-size:14px;font-weight:700;letter-spacing:.04em;margin-bottom:10px}
+.feat-card p{font-size:12px;line-height:1.7;color:var(--grey)}
+.trib-wrap{background:var(--dark);padding:80px 48px}
+.trib-inner{max-width:1200px;margin:0 auto}
+.trib-flow{display:flex;flex-wrap:wrap;gap:10px;margin-top:40px}
+.trib-tag{font-family:var(--mono);font-size:10px;letter-spacing:.15em;padding:10px 18px;border:1px solid var(--border);color:var(--grey);transition:all .25s;cursor:default}
+.trib-tag:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05);transform:translateY(-2px)}
+.pricing-wrap{padding:100px 48px}
+.pricing-inner{max-width:760px;margin:0 auto}
+.pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:60px}
+.price-card{background:var(--black);padding:40px 32px;position:relative}
+.price-card.hot{background:var(--card)}
+.price-card.hot::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold))}
+.price-badge{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:block}
+.price-name{font-family:var(--serif);font-size:26px;font-style:italic;margin-bottom:8px}
+.price-val{font-family:var(--sans);font-size:44px;font-weight:800;color:var(--gold);line-height:1;margin-bottom:4px}
+.price-val small{font-size:18px;font-weight:400;color:var(--grey)}
+.price-period{font-family:var(--mono);font-size:9px;color:var(--grey);margin-bottom:28px}
+.price-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.price-list li{font-size:12px;color:var(--grey);display:flex;gap:10px;line-height:1.5}
+.price-list li::before{content:'→';color:var(--gold);flex-shrink:0;font-size:10px;margin-top:2px}
+.price-btn{display:block;text-align:center;padding:13px 24px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:all .25s;cursor:pointer}
+.price-btn-ghost{border:1px solid var(--border);color:var(--grey)}
+.price-btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.price-btn-solid{background:var(--gold);color:var(--black);border:none}
+.price-btn-solid:hover{background:var(--gold-light);transform:translateY(-2px)}
+.faq-wrap{padding:100px 48px;background:var(--dark)}
+.faq-inner{max-width:800px;margin:0 auto}
+.faq-list{margin-top:60px;display:flex;flex-direction:column;gap:2px}
+.faq-item{background:var(--black);border:1px solid var(--border);overflow:hidden;transition:border-color .3s}
+.faq-item:hover{border-color:rgba(201,168,76,.3)}
+.faq-question{width:100%;background:none;border:none;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;text-align:left}
+.faq-q-text{font-family:var(--serif);font-size:17px;font-style:italic;color:var(--white);line-height:1.4}
+.faq-icon{width:28px;height:28px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--gold);flex-shrink:0;transition:transform .3s,background .3s}
+.faq-item.open .faq-icon{transform:rotate(45deg);background:rgba(201,168,76,.1)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1)}
+.faq-item.open .faq-answer{max-height:300px}
+.faq-answer-inner{padding:20px 28px 24px;font-size:13px;line-height:1.8;color:var(--grey);border-top:1px solid var(--border);margin:0 28px}
+.legal-wrap{background:var(--black);padding:80px 48px}
+.legal-inner{max-width:1200px;margin:0 auto}
+.legal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.legal-card{border-left:2px solid var(--gold-dim);padding:20px 24px;background:rgba(201,168,76,.02);transition:background .3s,border-color .3s}
+.legal-card:hover{background:rgba(201,168,76,.05);border-left-color:var(--gold)}
+.legal-card h4{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.legal-card p{font-size:12px;line-height:1.6;color:var(--grey)}
+.cta-wrap{padding:140px 48px;text-align:center;position:relative;overflow:hidden;background:var(--dark)}
+.cta-glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 50% 50%,rgba(201,168,76,.1) 0%,transparent 70%);animation:glowPulse 4s ease-in-out infinite}
+.cta-title{font-family:var(--serif);font-size:clamp(44px,6vw,80px);font-style:italic;line-height:1.05;margin-bottom:20px;position:relative}
+.cta-title span{color:var(--gold)}
+.cta-sub{font-size:15px;color:var(--grey);margin-bottom:48px;position:relative}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative}
+footer{border-top:1px solid var(--border);padding:60px 48px 32px}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-brand{font-family:var(--serif);font-size:28px;font-style:italic;margin-bottom:12px}
 .footer-brand span{color:var(--gold)}
-.footer-nav{display:flex;gap:32px;flex-wrap:wrap;justify-content:center}
-.footer-nav a{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--grey);text-decoration:none;transition:color .2s}
-.footer-nav a:hover{color:var(--gold)}
-.footer-divider{width:100%;height:1px;background:var(--border)}
-.footer-bottom{display:flex;align-items:center;justify-content:space-between;width:100%;flex-wrap:wrap;gap:12px}
-.footer-copy{color:var(--grey);font-size:11px;font-family:var(--mono);letter-spacing:.08em}
-.footer-legal{display:flex;gap:24px}
-.footer-legal a{font-family:var(--mono);font-size:10px;color:rgba(154,154,154,.6);text-decoration:none;transition:color .2s;letter-spacing:.08em}
-.footer-legal a:hover{color:var(--grey)}
-
-/* RESPONSIVE */
+.footer-tagline{font-size:12px;color:var(--grey);line-height:1.7}
+.footer-col h4{font-family:var(--mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.footer-col a{display:block;font-size:13px;color:var(--grey);text-decoration:none;margin-bottom:10px;transition:color .2s}
+.footer-col a:hover{color:var(--white)}
+.footer-bottom{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;padding-top:24px;border-top:1px solid var(--border)}
+.footer-copy{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.2);letter-spacing:.1em}
+.cookie-banner{position:fixed;bottom:0;left:0;right:0;background:rgba(6,6,8,.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:20px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px;z-index:9000;transform:translateY(100%);transition:transform .4s cubic-bezier(.16,1,.3,1);flex-wrap:wrap}
+.cookie-banner.visible{transform:translateY(0)}
+.cookie-text{font-family:var(--mono);font-size:11px;color:var(--grey);line-height:1.6;max-width:700px}
+.cookie-text a{color:var(--gold);text-decoration:none}
+.cookie-text a:hover{text-decoration:underline}
+.cookie-btns{display:flex;gap:10px;flex-shrink:0}
+.cookie-accept{background:var(--gold);color:var(--black);border:none;padding:10px 24px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.cookie-accept:hover{background:var(--gold-light)}
+.cookie-info{background:transparent;color:var(--grey);border:1px solid var(--border);padding:10px 20px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .2s}
+.cookie-info:hover{border-color:var(--gold);color:var(--gold)}
+/* MODAL LISTA ESPERA */
+.idx-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9500;display:none;align-items:center;justify-content:center;padding:20px}
+.idx-modal-overlay.visible{display:flex}
+.idx-modal-box{background:#13131a;border:1px solid rgba(201,168,76,0.25);padding:40px 36px;max-width:440px;width:100%;position:relative;box-shadow:0 24px 64px rgba(0,0,0,0.5)}
+.idx-modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+.idx-modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:#9a9a9a;font-size:22px;cursor:pointer;line-height:1}
+.idx-modal-close:hover{color:var(--white)}
+@media(max-width:600px){
+  .cookie-banner{padding:16px 20px;flex-direction:column;align-items:flex-start}
+  .cookie-btns{width:100%}
+  .cookie-accept,.cookie-info{flex:1;text-align:center}
+}
 @media(max-width:900px){
-  .nav-links,.cursor,.cursor-ring{display:none}
-  .steps-grid,.features-grid,.pricing-grid{grid-template-columns:1fr}
-  .section-padding{padding:80px 24px}
+  body{cursor:auto}
+  .cursor,.cursor-ring{display:none}
   nav{padding:16px 24px}
+  .nav-links{display:none}
+  .nav-hamburger{display:flex}
+  .btn-primary,.btn-secondary,.price-btn{cursor:pointer}
   .hero{padding:100px 24px 60px}
-  footer{padding:48px 24px 32px}
-  .footer-bottom{flex-direction:column;text-align:center}
+  .problem-grid,.steps,.features-grid,.pricing-grid,.legal-grid{grid-template-columns:1fr}
+  .demo-inner{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr}
+  .problem-wrap,.how-wrap,.demo-wrap,.features-wrap,.pricing-wrap,.legal-wrap,.trib-wrap,.faq-wrap{padding:60px 24px}
+  .cta-wrap{padding:80px 24px}
+  footer{padding:40px 24px 24px}
+  .footer-bottom{flex-direction:column;gap:8px}
+  .stats-bar{gap:24px;padding:28px 24px}
+  .faq-q-text{font-size:15px}
+  .faq-question{padding:20px 16px}
+  .faq-answer-inner{margin:0 16px}
 }
 </style>
 </head>
 <body>
-
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
-
 <div class="intro" id="intro">
   <div class="intro-logo">Lex<span>Veritas</span></div>
+  <div class="intro-label">Sistema de Análise Forense Jurídica</div>
   <div class="intro-bar-track"><div class="intro-bar-fill"></div></div>
 </div>
-
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#problema" onclick="closeMobileMenu()">O Problema</a>
+  <a href="#como-funciona" onclick="closeMobileMenu()">Como Funciona</a>
+  <a href="#precos" onclick="closeMobileMenu()">Preços</a>
+  <a href="/blog" onclick="closeMobileMenu()">Blog</a>
+  <a href="/academico" onclick="closeMobileMenu()">Académico</a>
+  <div class="mobile-menu-divider"></div>
+  <a href="/app" class="mobile-cta">Experimentar →</a>
+</div>
 <nav id="nav">
   <a href="#" class="nav-logo">Lex<span>Veritas</span></a>
   <ul class="nav-links">
-    <li><a href="#metodologia">Metodologia</a></li>
-    <li><a href="#analise-critica">Análise Crítica</a></li>
-    <li><a href="#funcionalidades">Funcionalidades</a></li>
+    <li><a href="#problema">O Problema</a></li>
+    <li><a href="#como-funciona">Como Funciona</a></li>
     <li><a href="#precos">Preços</a></li>
     <li><a href="/blog">Blog</a></li>
-    <li><a href="/app" class="nav-cta">Aceder ao App</a></li>
+    <li><a href="/academico">Académico</a></li>
+    <li><a href="/app" class="nav-cta">Experimentar</a></li>
   </ul>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
-
 <section class="hero">
-  <div class="hero-glow"></div>
-  <div class="hero-grid"></div>
+  <div class="hero-canvas">
+    <div class="hero-glow"></div>
+    <div class="hero-grid"></div>
+    <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+  </div>
   <div class="hero-content">
-    <div class="section-label" style="justify-content:center">Inteligência Jurídica Portugal</div>
-    <h1 class="hero-title">O Veredicto da <span>Verdade.</span></h1>
-    <p class="hero-sub">A primeira plataforma forense para advogados e magistrados portugueses. Detecte a autoria de IA, identifique nulidades processuais e gere argumentos de recurso em segundos.</p>
-    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
-      <a href="/app" style="background:var(--gold);color:var(--black);padding:18px 36px;text-decoration:none;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase">Começar Agora</a>
-      <a href="#analise-critica" style="border:1px solid var(--border);color:var(--white);padding:18px 36px;text-decoration:none;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase">Ver Funcionalidades</a>
+    <div class="hero-eyebrow">Análise Forense Jurídica · Judicial & Académico · Portugal</div>
+    <h1 class="hero-title">Lex<span>Veritas</span></h1>
+    <p class="hero-sub">O primeiro sistema de detecção de inteligência artificial calibrado para texto jurídico português — em decisões judiciais, teses e trabalhos académicos de direito.</p>
+    <div class="hero-actions">
+      <a href="/app" class="btn-primary"><span>Experimentar Gratuitamente →</span></a>
+      <a href="#problema" class="btn-secondary">Saber Mais</a>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-item"><span class="stat-number">14+</span><span class="stat-label">Tribunais Cobertos</span></div>
+      <div class="stat-item"><span class="stat-number">6</span><span class="stat-label">Indicadores Forenses</span></div>
+      <div class="stat-item"><span class="stat-number" id="total-analises">—</span><span class="stat-label">Análises Realizadas</span></div>
+      <div class="stat-item"><span class="stat-number">EU</span><span class="stat-label">Dados em Portugal</span></div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span class="scroll-hint-text">Scroll</span><div class="scroll-line"></div></div>
+</section>
+<section class="problem-wrap" id="problema">
+  <div class="problem-inner">
+    <div class="section-label reveal">O Problema</div>
+    <h2 class="section-title reveal">A IA chegou aos tribunais<br><span>e às faculdades.</span></h2>
+    <p class="section-body reveal">O uso de inteligência artificial na redacção de textos jurídicos é uma realidade crescente em Portugal — nas decisões dos tribunais e nos trabalhos académicos das faculdades de direito. Sem ferramentas calibradas para o contexto jurídico português, advogados, magistrados, docentes e estudantes não têm forma de verificar a autoria real dos textos.</p>
+    <div class="problem-grid">
+      <div class="problem-card reveal reveal-delay-1"><div class="problem-num">01</div><h3>Transparência em risco</h3><p>O Art. 205.º da CRP garante a fundamentação das decisões por magistrados. O uso oculto de IA levanta questões constitucionais sérias.</p></div>
+      <div class="problem-card reveal reveal-delay-2"><div class="problem-num">02</div><h3>Integridade académica</h3><p>Nas faculdades de direito, teses e dissertações redigidas com IA comprometem a formação e a avaliação. Ferramentas genéricas não conhecem o estilo jurídico português.</p></div>
+      <div class="problem-card reveal reveal-delay-1"><div class="problem-num">03</div><h3>EU AI Act em vigor</h3><p>O Reg. (UE) 2024/1689 classifica sistemas de IA na administração da justiça como de alto risco, exigindo transparência e rastreabilidade.</p></div>
+      <div class="problem-card reveal reveal-delay-2"><div class="problem-num">04</div><h3>Sem ferramentas específicas</h3><p>Os detectores genéricos foram treinados em inglês e não conhecem os tribunais, os relatores nem a doutrina jurídica nacional.</p></div>
     </div>
   </div>
 </section>
-
-<section id="analise-critica" class="section-padding" style="background:var(--dark)">
-  <div class="container">
-    <div class="section-label reveal">Nova Funcionalidade</div>
-    <h2 class="section-title reveal">Além da Detecção: <span>Auditoria Jurídica.</span></h2>
-    <p style="color:var(--grey);max-width:600px;margin-bottom:0" class="reveal">Não dizemos apenas se foi a IA a escrever. O LexVeritas analisa se a decisão cumpre os requisitos de fundamentação do Art. 205.º da CRP e identifica potenciais nulidades e fundamentos para recurso.</p>
-    <div class="steps-grid">
-      <div class="step-card reveal">
-        <span class="step-num">01</span>
-        <span class="step-icon">⚖️</span>
-        <h3 style="margin-bottom:12px;font-family:var(--serif);font-size:24px">Escaneamento de Vícios</h3>
-        <p style="color:var(--grey);font-size:14px;line-height:1.6">Identificamos omissões de pronúncia, contradições entre fundamentação e decisão e falta de exame crítico das provas.</p>
-      </div>
-      <div class="step-card reveal">
-        <span class="step-num">02</span>
-        <span class="step-icon">🔬</span>
-        <h3 style="margin-bottom:12px;font-family:var(--serif);font-size:24px">Análise de Autoria</h3>
-        <p style="color:var(--grey);font-size:14px;line-height:1.6">Cruzamento de 6 indicadores linguísticos para confirmar se houve supervisão humana real na redacção da decisão.</p>
-      </div>
-      <div class="step-card reveal">
-        <span class="step-num">03</span>
-        <span class="step-icon">📝</span>
-        <h3 style="margin-bottom:12px;font-family:var(--serif);font-size:24px">Argumentos de Recurso</h3>
-        <p style="color:var(--grey);font-size:14px;line-height:1.6">Geração de argumentos técnicos baseados nas nulidades encontradas para fundamentar a sua peça processual de recurso.</p>
-      </div>
+<section class="how-wrap" id="como-funciona">
+  <div class="how-inner">
+    <div class="section-label reveal">Como Funciona</div>
+    <h2 class="section-title reveal">Análise forense em <span>três passos</span></h2>
+    <div class="steps">
+      <div class="step reveal reveal-delay-1"><div class="step-bar"></div><div class="step-num">01</div><span class="step-icon">📄</span><h3>Submeter o Documento</h3><p>Cole o texto ou carregue um PDF. O sistema extrai automaticamente o conteúdo, página a página.</p></div>
+      <div class="step reveal reveal-delay-2"><div class="step-bar"></div><div class="step-num">02</div><span class="step-icon">⚙️</span><h3>Análise Linguística</h3><p>6 indicadores forenses calibrados para jurisprudência portuguesa — perplexidade, burstiness, coesão artificial e mais.</p></div>
+      <div class="step reveal reveal-delay-3"><div class="step-bar"></div><div class="step-num">03</div><span class="step-icon">📊</span><h3>Relatório Profissional</h3><p>Veredicto com índice de confiança e relatório PDF com número de referência único — pronto para uso profissional.</p></div>
     </div>
   </div>
 </section>
-
-<section id="funcionalidades" class="section-padding">
-  <div class="container">
-    <div class="section-label reveal">Capacidades</div>
-    <h2 class="section-title reveal">Tecnologia de <span>Elite.</span></h2>
+<section class="demo-wrap">
+  <div class="demo-inner">
+    <div>
+      <div class="section-label reveal">Exemplo Real</div>
+      <h2 class="section-title reveal">6 indicadores.<br><span>Um veredicto.</span></h2>
+      <p class="section-body reveal" style="margin-top:16px">Cada análise examina padrões que distinguem a escrita humana dos modelos de linguagem — desde a variação no tamanho dos parágrafos até marcadores formulaicos típicos de IA.</p>
+    </div>
+    <div class="demo-visual reveal">
+      <div class="demo-hdr"><div><div class="demo-mono">Veredicto Forense</div><div class="demo-verdict-text">Provavelmente IA</div></div><div class="demo-pct">78%</div></div>
+      <div class="ind-row"><div class="ind-top"><span class="ind-name">Perplexidade</span><span class="ind-val">72</span></div><div class="ind-track"><div class="ind-fill c-gold" id="b1" style="width:0"></div></div></div>
+      <div class="ind-row"><div class="ind-top"><span class="ind-name">Burstiness</span><span class="ind-val">40</span></div><div class="ind-track"><div class="ind-fill c-green" id="b2" style="width:0"></div></div></div>
+      <div class="ind-row"><div class="ind-top"><span class="ind-name">Coesão Artificial</span><span class="ind-val">88</span></div><div class="ind-track"><div class="ind-fill c-red" id="b3" style="width:0"></div></div></div>
+      <div class="ind-row"><div class="ind-top"><span class="ind-name">Uniformidade Sint.</span><span class="ind-val">82</span></div><div class="ind-track"><div class="ind-fill c-red" id="b4" style="width:0"></div></div></div>
+      <div class="ind-row"><div class="ind-top"><span class="ind-name">Riqueza Lexical</span><span class="ind-val">55</span></div><div class="ind-track"><div class="ind-fill c-gold" id="b5" style="width:0"></div></div></div>
+      <div class="ind-row"><div class="ind-top"><span class="ind-name">Marc. Formulaicos</span><span class="ind-val">92</span></div><div class="ind-track"><div class="ind-fill c-red" id="b6" style="width:0"></div></div></div>
+    </div>
+  </div>
+</section>
+<section style="background:var(--black);padding:100px 48px;border-top:1px solid var(--border)">
+  <div style="max-width:800px;margin:0 auto">
+    <div class="section-label reveal">Experimente Agora</div>
+    <h2 class="section-title reveal">Analise um texto.<br><span>Sem criar conta.</span></h2>
+    <p class="section-body reveal" style="margin-bottom:40px">Cole qualquer excerto de uma decisão judicial ou trabalho académico de direito e veja a análise em tempo real.</p>
+    <div class="reveal" style="background:var(--dark);border:1px solid var(--border)">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-family:var(--serif);font-size:14px;font-style:italic;color:var(--white)">Texto para análise</span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--grey)" id="demo-char-count">0 caracteres</span>
+      </div>
+      <textarea id="demo-textarea" onInput="document.getElementById('demo-char-count').textContent=this.value.length.toLocaleString('pt-PT')+' caracteres'" style="width:100%;height:180px;border:none;outline:none;resize:vertical;padding:16px 20px;font-family:var(--mono);font-size:12px;line-height:1.8;color:var(--white);background:var(--dark);min-height:120px" placeholder="Cole aqui o texto (mínimo 100 caracteres)..."></textarea>
+      <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <span style="font-family:var(--mono);font-size:10px;color:var(--grey)">⚡ Análise instantânea · Sem registo</span>
+        <button id="demo-btn" onclick="runDemo()" style="background:var(--gold);color:var(--black);border:none;padding:11px 28px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">Analisar →</button>
+      </div>
+    </div>
+    <div id="demo-results" style="display:none;margin-top:20px;background:var(--dark);border:1px solid var(--border)">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);margin-bottom:6px">Veredicto</div>
+        <div id="demo-veredicto" style="font-family:var(--serif);font-size:22px;font-style:italic;color:var(--white)">—</div>
+      </div>
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);margin-bottom:10px;display:flex;justify-content:space-between"><span>Confiança</span><span id="demo-confianca" style="color:var(--gold)">—%</span></div>
+        <div style="height:4px;background:rgba(255,255,255,0.08)"><div id="demo-meter" style="height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));width:0;transition:width 1s"></div></div>
+      </div>
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border)" id="demo-inds"></div>
+      <div style="padding:16px 20px">
+        <p id="demo-narrativa" style="font-size:13px;line-height:1.8;color:rgba(248,246,241,0.6)">—</p>
+      </div>
+      <div style="padding:16px 20px;border-top:1px solid var(--border);text-align:center;background:rgba(201,168,76,0.04)">
+        <p style="font-family:var(--mono);font-size:10px;color:var(--grey);margin-bottom:12px">Crie uma conta gratuita para histórico, PDF e 5 análises/mês</p>
+        <a href="/app" style="background:var(--gold);color:var(--black);padding:11px 28px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;display:inline-block">Criar Conta Gratuita →</a>
+      </div>
+    </div>
+    <div id="demo-loading" style="display:none;text-align:center;padding:40px;color:var(--grey);font-family:var(--mono);font-size:11px;letter-spacing:0.1em">A analisar...</div>
+    <div id="demo-error" style="display:none;padding:16px 20px;background:rgba(139,26,26,0.15);border:1px solid rgba(139,26,26,0.3);color:#ff9999;font-family:var(--sans);font-size:13px;margin-top:12px"></div>
+  </div>
+</section>
+<section class="features-wrap">
+  <div class="features-inner">
+    <div class="section-label reveal">Funcionalidades</div>
+    <h2 class="section-title reveal">Construído para <span>profissionais do direito</span></h2>
     <div class="features-grid">
-      <div class="feat-card reveal">
-        <div class="feat-icon">🎯</div>
-        <h4 style="margin-bottom:12px">Precisão Forense</h4>
-        <p style="color:var(--grey);font-size:13px">Calibrado especificamente para o português jurídico (PT-PT), evitando falsos positivos comuns em ferramentas globais.</p>
-      </div>
-      <div class="feat-card reveal">
-        <div class="feat-icon">🛡️</div>
-        <h4 style="margin-bottom:12px">Sigilo Absoluto</h4>
-        <p style="color:var(--grey);font-size:13px">Os documentos carregados são processados em memória volátil e nunca são utilizados para treinar modelos externos.</p>
-      </div>
-      <div class="feat-card reveal">
-        <div class="feat-icon">📊</div>
-        <h4 style="margin-bottom:12px">Relatórios PDF</h4>
-        <p style="color:var(--grey);font-size:13px">Emita relatórios técnicos prontos a serem anexados como prova documental ou suporte de consulta jurídica.</p>
-      </div>
-      <div class="feat-card reveal">
-        <div class="feat-icon">🏛</div>
-        <h4 style="margin-bottom:12px">Análise Crítica</h4>
-        <p style="color:var(--grey);font-size:13px">Modo exclusivo de auditoria: identifica nulidades processuais e gera argumentos jurídicos fundamentados para recurso.</p>
-      </div>
-      <div class="feat-card reveal">
-        <div class="feat-icon">🔄</div>
-        <h4 style="margin-bottom:12px">Múltiplos Modos</h4>
-        <p style="color:var(--grey);font-size:13px">Análise judicial, académica e de recurso — adaptados ao contexto, ao tribunal e ao tipo de documento analisado.</p>
-      </div>
-      <div class="feat-card reveal">
-        <div class="feat-icon">📋</div>
-        <h4 style="margin-bottom:12px">Histórico Seguro</h4>
-        <p style="color:var(--grey);font-size:13px">Aceda a todas as suas análises anteriores com os resultados completos, organizadas por data e tipo de modo utilizado.</p>
-      </div>
+      <div class="feat-card reveal reveal-delay-1"><div class="feat-icon">🏛️</div><h3>Calibrado para Tribunais PT</h3><p>STJ, TRL, TRP, TRC, TRG, TRE, TC, TCAS, TCAN — cada tribunal tem um perfil estilístico próprio.</p></div>
+      <div class="feat-card reveal reveal-delay-2"><div class="feat-icon">👤</div><h3>Análise por Relator</h3><p>Indique o relator e o sistema compara o estilo com as características conhecidas desse magistrado.</p></div>
+      <div class="feat-card reveal reveal-delay-3"><div class="feat-icon">📋</div><h3>Relatório PDF</h3><p>Cada análise gera um relatório PDF com número de referência único e indicadores visuais.</p></div>
+      <div class="feat-card reveal reveal-delay-1"><div class="feat-icon">📜</div><h3>Leitura de PDF</h3><p>Carregue directamente ficheiros PDF de decisões judiciais — extracção automática página a página.</p></div>
+      <div class="feat-card reveal reveal-delay-2"><div class="feat-icon">🔒</div><h3>Segurança</h3><p>Dados alojados na União Europeia (Irlanda). A chave da API nunca é exposta ao browser.</p></div>
+      <div class="feat-card reveal reveal-delay-3"><div class="feat-icon">📈</div><h3>Histórico</h3><p>Todas as análises guardadas na sua conta com datas, tribunais, relatores e resultados.</p></div>
     </div>
   </div>
 </section>
-
-<section id="precos" class="section-padding" style="background:var(--dark)">
-  <div class="container">
-    <div class="section-label reveal" style="justify-content:center">Planos de Acesso</div>
-    <h2 class="section-title reveal" style="text-align:center">Investimento no <span>Rigor.</span></h2>
+<section class="trib-wrap">
+  <div class="trib-inner">
+    <div class="section-label reveal">Cobertura</div>
+    <h2 class="section-title reveal">Todos os tribunais <span>portugueses</span></h2>
+    <div class="trib-flow reveal">
+      <div class="trib-tag">STJ</div><div class="trib-tag">STA</div><div class="trib-tag">TC</div>
+      <div class="trib-tag">TRL</div><div class="trib-tag">TRP</div><div class="trib-tag">TRC</div>
+      <div class="trib-tag">TRG</div><div class="trib-tag">TRE</div><div class="trib-tag">TCAS</div>
+      <div class="trib-tag">TCAN</div><div class="trib-tag">1.ª Instância Cível</div>
+      <div class="trib-tag">1.ª Instância Criminal</div><div class="trib-tag">Tribunais do Trabalho</div>
+      <div class="trib-tag">TAF</div>
+    </div>
+  </div>
+</section>
+<section class="pricing-wrap" id="precos">
+  <div class="pricing-inner">
+    <div class="section-label reveal">Planos</div>
+    <h2 class="section-title reveal">Preços <span>transparentes</span></h2>
     <div class="pricing-grid">
       <div class="price-card reveal">
-        <div style="font-family:var(--mono);font-size:10px;margin-bottom:20px;color:var(--grey)">PLANO BÁSICO</div>
-        <div style="font-size:48px;font-family:var(--serif);margin-bottom:24px">0€<span style="font-size:16px;font-family:var(--sans);color:var(--grey)">/mês</span></div>
-        <ul style="list-style:none;color:var(--grey);font-size:13px;margin-bottom:32px;line-height:2.5">
-          <li>5 Análises Mensais</li>
-          <li>Indicadores de IA</li>
-          <li>Relatório PDF</li>
-          <li>Histórico 30 dias</li>
-        </ul>
-        <a href="/app" style="display:block;border:1px solid var(--border);padding:14px;color:var(--white);text-decoration:none;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Começar Grátis</a>
+        <span class="price-badge">Gratuito</span>
+        <div class="price-name">Básico</div>
+        <div class="price-val">0<small>€</small></div>
+        <div class="price-period">Para sempre</div>
+        <ul class="price-list"><li>5 análises por mês</li><li>6 indicadores forenses</li><li>Relatório PDF</li><li>Histórico 30 dias</li></ul>
+        <a href="/app" class="price-btn price-btn-ghost">Começar grátis</a>
       </div>
-      <div class="price-card featured reveal">
-        <div style="font-family:var(--mono);font-size:10px;margin-bottom:20px;color:var(--gold)">PLANO PRO</div>
-        <div style="font-size:48px;font-family:var(--serif);margin-bottom:24px;color:var(--gold)">19€<span style="font-size:16px;font-family:var(--sans);color:var(--grey)">/mês</span></div>
-        <ul style="list-style:none;color:var(--grey);font-size:13px;margin-bottom:32px;line-height:2.5">
-          <li>100 Análises Mensais</li>
-          <li><strong style="color:var(--white)">Análise Crítica de Nulidades</strong></li>
-          <li>Argumentos de Recurso</li>
-          <li>Relatórios PDF Profissionais</li>
-        </ul>
-        <button onclick="openModal()" style="width:100%;background:var(--gold);border:none;padding:14px;color:var(--black);font-weight:800;font-size:11px;text-transform:uppercase;cursor:pointer">Lista de Espera Pro</button>
+      <div class="price-card hot reveal reveal-delay-1">
+        <span class="price-badge">Mais popular</span>
+        <div class="price-name">Profissional</div>
+        <div class="price-val">19<small>€</small></div>
+        <div class="price-period">por mês</div>
+        <ul class="price-list"><li>100 análises por mês</li><li>Análise avançada por relator</li><li>Relatório PDF profissional</li><li>Histórico ilimitado</li><li>Suporte prioritário</li></ul>
+        <button onclick="document.getElementById('idx-modal').classList.add('visible')" class="price-btn price-btn-solid">Subscrever</button>
       </div>
     </div>
   </div>
 </section>
-
-<section id="faq" class="section-padding">
-  <div class="container">
-    <div class="section-label reveal">Dúvidas Frequentes</div>
-    <h2 class="section-title reveal">Transparência <span>Total.</span></h2>
-    <div class="faq-list">
-      <div class="faq-item reveal">
-        <button class="faq-question">
-          <h3>Como é feita a detecção em português?</h3>
-          <span>+</span>
-        </button>
-        <div class="faq-answer">
-          O nosso algoritmo foi treinado com milhares de acórdãos reais do DGSI e comparado com textos gerados por modelos GPT, Claude e Gemini em português de Portugal. Analisamos a variabilidade rítmica e a perplexidade específica da linguagem jurídica portuguesa.
-        </div>
+<section class="faq-wrap" id="faq">
+  <div class="faq-inner">
+    <div class="section-label reveal">Perguntas Frequentes</div>
+    <h2 class="section-title reveal">Tudo o que precisa de <span>saber</span></h2>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span class="faq-q-text">Os textos que submeto ficam guardados?</span><div class="faq-icon">+</div></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Não. Os textos judiciais que submete são enviados para análise e descartados imediatamente após o processamento. Apenas o veredicto, o índice de confiança e os metadados ficam registados no seu histórico pessoal.</div></div>
       </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">
-          <h3>A análise de nulidades substitui o advogado?</h3>
-          <span>+</span>
-        </button>
-        <div class="faq-answer">
-          Não. O LexVeritas é uma ferramenta de apoio. Apontamos onde a decisão falhou logicamente ou onde a fundamentação é genérica, mas cabe ao advogado validar e subscrever a estratégia no recurso. Os resultados têm carácter auxiliar e probabilístico.
-        </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span class="faq-q-text">O relatório pode ser usado como prova em tribunal?</span><div class="faq-icon">+</div></button>
+        <div class="faq-answer"><div class="faq-answer-inner">O LexVeritas é uma ferramenta auxiliar de análise probabilística. Os resultados têm carácter indicativo e não constituem prova jurídica definitiva. Devem ser interpretados por um profissional especializado e usados como elemento de suporte, não como prova autónoma.</div></div>
       </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">
-          <h3>Os meus dados estão protegidos pelo RGPD?</h3>
-          <span>+</span>
-        </button>
-        <div class="faq-answer">
-          Sim. Todos os servidores estão localizados na União Europeia. Não guardamos cópias dos textos analisados após o encerramento da sessão, a menos que o utilizador opte por guardar no seu histórico pessoal.
-        </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span class="faq-q-text">Como funciona a análise forense?</span><div class="faq-icon">+</div></button>
+        <div class="faq-answer"><div class="faq-answer-inner">O sistema analisa 6 indicadores linguísticos calibrados para jurisprudência portuguesa: perplexidade textual, burstiness (variação de parágrafos), coesão artificial, uniformidade sintáctica, riqueza lexical e marcadores formulaicos. Cada indicador compara o texto com padrões conhecidos de escrita humana e de IA nos tribunais portugueses.</div></div>
       </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">
-          <h3>Funciona para que tipos de decisão?</h3>
-          <span>+</span>
-        </button>
-        <div class="faq-answer">
-          O LexVeritas funciona com acórdãos, sentenças e despachos de todos os tribunais portugueses — STJ, Relações, tribunais administrativos e de 1.ª instância. Suporta também análise académica de teses e dissertações jurídicas.
-        </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span class="faq-q-text">Qual é a precisão do sistema?</span><div class="faq-icon">+</div></button>
+        <div class="faq-answer"><div class="faq-answer-inner">O sistema foi calibrado especificamente para o estilo jurídico português e é conservador nas suas conclusões — prefere resultados inconclusivos a falsos positivos. A precisão é maior em textos mais longos (acórdãos completos) do que em excertos curtos.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span class="faq-q-text">Os meus dados estão seguros?</span><div class="faq-icon">+</div></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Sim. Todos os dados estão alojados na União Europeia (Irlanda), em conformidade com o RGPD. A chave da API nunca é exposta ao browser. A base de dados tem Row Level Security activo — cada utilizador só acede aos seus próprios dados.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span class="faq-q-text">Posso analisar qualquer tipo de documento judicial?</span><div class="faq-icon">+</div></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Sim. O sistema aceita acórdãos, sentenças, despachos e outros documentos judiciais portugueses, em formato de texto ou PDF. Está calibrado para os principais tribunais: STJ, STA, TC, TRL, TRP, TRC, TRG, TRE, TCAS, TCAN e tribunais de primeira instância.</div></div>
       </div>
     </div>
   </div>
 </section>
+<section class="legal-wrap">
+  <div class="legal-inner">
+    <div class="section-label reveal">Enquadramento Legal</div>
+    <h2 class="section-title reveal">Fundamentado no <span>direito europeu</span></h2>
+    <div class="legal-grid">
+      <div class="legal-card reveal reveal-delay-1"><h4>Art. 205.º CRP</h4><p>A Constituição impõe a fundamentação obrigatória das decisões judiciais — garantia que o LexVeritas ajuda a proteger.</p></div>
+      <div class="legal-card reveal reveal-delay-2"><h4>EU AI Act 2024/1689</h4><p>Classifica sistemas de IA na administração da justiça como de alto risco, exigindo transparência e supervisão humana.</p></div>
+      <div class="legal-card reveal reveal-delay-3"><h4>RGPD — Art. 22.º</h4><p>Protege cidadãos de decisões automatizadas com efeitos jurídicos sem supervisão humana adequada.</p></div>
+    </div>
+  </div>
+</section>
+<section class="cta-wrap">
+  <div class="cta-glow"></div>
+  <h2 class="cta-title reveal">Judicial ou académico.<br><span>A autoria importa.</span></h2>
+  <p class="cta-sub reveal">Para magistrados, advogados, docentes e estudantes. Comece gratuitamente.</p>
+  <div class="cta-btns reveal">
+    <a href="/app" class="btn-primary"><span>Criar Conta Gratuita →</span></a>
+    <a href="/academico" class="btn-secondary">Versão Académica</a>
+  </div>
+</section>
 
+<section style="background:#0e0e12;border-top:1px solid rgba(201,168,76,0.15);border-bottom:1px solid rgba(201,168,76,0.15);padding:clamp(48px,6vw,80px) clamp(20px,5vw,60px)">
+  <div style="max-width:1060px;margin:0 auto;display:flex;align-items:center;gap:48px;flex-wrap:wrap">
+    <div style="flex:1;min-width:240px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c9a84c;margin-bottom:8px">Fundador & Criador</div>
+      <div style="font-family:'Instrument Serif',Georgia,serif;font-size:28px;font-style:italic;color:#f8f6f1;margin-bottom:4px">Tony Branco</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.15em;color:#9a9a9a;margin-bottom:16px">Jurista · QA Analyst II · Lean Six Sigma · AI Integration</div>
+      <p style="font-family:'Syne',sans-serif;font-size:13px;line-height:1.7;color:rgba(248,246,241,0.55);margin-bottom:20px;max-width:520px">«Estudei Direito e apaixonei-me pela IA. O LexVeritas nasceu dessa combinação.»</p>
+      <a href="/sobre" style="display:inline-flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#c9a84c;text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.3);padding-bottom:2px;transition:all 0.2s">Conhecer o Fundador →</a>
+    </div>
+  </div>
+</section>
 <footer>
   <div class="footer-inner">
-    <div class="footer-brand">Lex<span>Veritas</span></div>
-    <nav class="footer-nav">
-      <a href="/app">Plataforma</a>
-      <a href="/blog">Blog</a>
-      <a href="#funcionalidades">Funcionalidades</a>
-      <a href="#precos">Preços</a>
-      <a href="#faq">FAQ</a>
-      <a href="#" onclick="document.getElementById('contactoModal').classList.add('active');return false;">Contacto</a>
-    </nav>
-    <div class="footer-divider"></div>
-    <div class="footer-bottom">
-      <div class="footer-copy">© 2026 LexVeritas · Lisboa, Portugal · Tecnologia Forense Jurídica</div>
-      <div class="footer-legal">
-        <a href="#">Política de Privacidade</a>
-        <a href="#">Termos de Uso</a>
-        <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a>
-      </div>
+    <div>
+      <div class="footer-brand">Lex<span>Veritas</span></div>
+      <p class="footer-tagline">Análise forense de inteligência artificial em textos jurídicos portugueses — decisões judiciais, teses e trabalhos académicos de direito. Desenvolvido em Portugal.</p>
     </div>
+    <div class="footer-col">
+      <h4>Produto</h4>
+      <a href="#como-funciona">Como Funciona</a>
+      <a href="#precos">Preços Judicial</a>
+      <a href="/academico">Versão Académica</a>
+      <a href="#faq">FAQ</a>
+      <a href="/blog">Blog</a>
+      <a href="/app">Entrar na Plataforma</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal & Contacto</h4>
+      <a href="/sobre">Sobre</a>
+      <a href="/privacidade">Política de Privacidade</a>
+      <a href="/termos">Termos de Serviço</a>
+      <a href="#" onclick="event.preventDefault();document.getElementById('contacto-modal').classList.add('visible')" style="color:var(--gold)">✉ Enviar mensagem</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 LEXVERITAS · TODOS OS DIREITOS RESERVADOS · PORTUGAL</span>
+    <span class="footer-copy">FERRAMENTA AUXILIAR · NÃO CONSTITUI PROVA JURÍDICA</span>
   </div>
 </footer>
 
-<div class="modal" id="waitlistModal">
-  <div class="modal-content">
-    <button onclick="closeModal()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer">×</button>
-    <h3 style="font-family:var(--serif);font-size:28px;font-style:italic;margin-bottom:12px">Plano Profissional</h3>
-    <p style="color:var(--grey);font-size:14px;margin-bottom:24px">O acesso à Análise Crítica está a ser libertado gradualmente. Junte-se à lista de espera prioritária.</p>
-    <input type="email" id="modalEmail" placeholder="O seu email profissional" style="width:100%;padding:14px;background:var(--black);border:1px solid var(--border);color:var(--white);margin-bottom:16px;outline:none;font-family:var(--sans)">
-    <button onclick="saveWaitlist()" style="width:100%;background:var(--gold);color:var(--black);border:none;padding:14px;font-weight:800;text-transform:uppercase;cursor:pointer;font-family:var(--sans)">Garantir Acesso</button>
-    <div id="modalMsg" style="margin-top:16px;font-size:12px;display:none"></div>
+<div class="idx-modal-overlay" id="idx-modal" onclick="if(event.target===this)this.classList.remove('visible')">
+  <div class="idx-modal-box">
+    <button class="idx-modal-close" onclick="document.getElementById('idx-modal').classList.remove('visible')">×</button>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#c9a84c;margin-bottom:14px">Lista de Espera · Plano Profissional</div>
+    <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:24px;font-style:italic;color:#f8f6f1;margin-bottom:8px">Plano Profissional</h2>
+    <p style="font-size:13px;color:#9a9a9a;margin-bottom:8px;line-height:1.6">100 análises/mês · Histórico ilimitado · Suporte prioritário</p>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:18px;color:#c9a84c;margin-bottom:20px;font-weight:500">19€ <small style="font-size:11px;color:#9a9a9a;font-weight:400">/ mês</small></p>
+    <p style="font-size:13px;color:#9a9a9a;margin-bottom:20px;line-height:1.6">Os pagamentos abrem em breve. Deixe o seu email e será o primeiro a saber.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input type="email" id="idx-email" placeholder="o-seu@email.pt" style="flex:1;min-width:180px;padding:11px 14px;border:1px solid rgba(201,168,76,0.3);background:rgba(255,255,255,0.05);font-family:'Syne',sans-serif;font-size:13px;color:#f8f6f1;outline:none">
+      <button onclick="idxSubscrever()" style="background:#c9a84c;color:#060608;border:none;padding:11px 22px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:background 0.2s" onmouseover="this.style.background='#e8c96a'" onmouseout="this.style.background='#c9a84c'">Avisar-me</button>
+    </div>
+    <div id="idx-msg" style="font-size:12px;margin-top:12px;display:none;padding:8px 12px;border-radius:2px"></div>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(201,168,76,0.1);font-family:'JetBrains Mono',monospace;font-size:10px;color:#666">Plano Gratuito actual: 5 análises/mês · PDF · Histórico 30 dias</div>
   </div>
 </div>
 
-<div class="modal" id="contactoModal" onclick="if(event.target===this)this.classList.remove('active')">
-  <div class="modal-content">
-    <button onclick="document.getElementById('contactoModal').classList.remove('active')" style="position:absolute;top:20px;right:20px;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer">×</button>
-    <div style="font-family:var(--mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Contacto</div>
-    <h3 style="font-family:var(--serif);font-size:26px;font-style:italic;margin-bottom:8px">Fale connosco</h3>
-    <p style="color:var(--grey);font-size:13px;margin-bottom:24px;line-height:1.6">Questões sobre planos, suporte técnico ou parcerias. Respondemos em 24h.</p>
-    <input type="text" id="ctNome" placeholder="O seu nome" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--white);margin-bottom:12px;outline:none;font-family:var(--sans)">
-    <input type="email" id="ctEmail" placeholder="O seu email" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--white);margin-bottom:12px;outline:none;font-family:var(--sans)">
-    <textarea id="ctMsg" placeholder="A sua mensagem..." rows="4" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--white);margin-bottom:16px;outline:none;resize:vertical;font-family:var(--sans)"></textarea>
-    <button onclick="enviarContacto()" style="width:100%;background:var(--gold);color:var(--black);border:none;padding:14px;font-weight:800;text-transform:uppercase;cursor:pointer;font-family:var(--sans)">Enviar Mensagem →</button>
-    <div id="ctResult" style="margin-top:14px;font-size:12px;display:none"></div>
+<div class="idx-modal-overlay" id="contacto-modal" onclick="if(event.target===this)this.classList.remove('visible')">
+  <div class="idx-modal-box">
+    <button class="idx-modal-close" onclick="document.getElementById('contacto-modal').classList.remove('visible')">×</button>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#c9a84c;margin-bottom:14px">Contacto</div>
+    <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:22px;font-style:italic;color:#f8f6f1;margin-bottom:6px">Fale connosco</h2>
+    <p style="font-size:13px;color:#9a9a9a;margin-bottom:24px;line-height:1.6">Questões sobre planos, parcerias ou suporte técnico. Guardamos a sua mensagem no nosso sistema.</p>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#9a9a9a;display:block;margin-bottom:6px">Nome</label>
+        <input type="text" id="c-nome" placeholder="O seu nome" style="width:100%;padding:11px 14px;border:1px solid rgba(201,168,76,0.2);background:rgba(255,255,255,0.04);font-family:'Syne',sans-serif;font-size:13px;color:#f8f6f1;outline:none">
+      </div>
+      <div>
+        <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#9a9a9a;display:block;margin-bottom:6px">Email</label>
+        <input type="email" id="c-email" placeholder="o-seu@email.pt" style="width:100%;padding:11px 14px;border:1px solid rgba(201,168,76,0.2);background:rgba(255,255,255,0.04);font-family:'Syne',sans-serif;font-size:13px;color:#f8f6f1;outline:none">
+      </div>
+      <div>
+        <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#9a9a9a;display:block;margin-bottom:6px">Assunto</label>
+        <select id="c-assunto" style="width:100%;padding:11px 14px;border:1px solid rgba(201,168,76,0.2);background:#13131a;font-family:'Syne',sans-serif;font-size:13px;color:#f8f6f1;outline:none;cursor:pointer">
+          <option value="">— Seleccione —</option>
+          <option>Questão geral</option>
+          <option>Plano Profissional</option>
+          <option>Plano Académico</option>
+          <option>Suporte técnico</option>
+          <option>Parceria</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#9a9a9a;display:block;margin-bottom:6px">Mensagem</label>
+        <textarea id="c-mensagem" placeholder="A sua mensagem..." rows="4" style="width:100%;padding:11px 14px;border:1px solid rgba(201,168,76,0.2);background:rgba(255,255,255,0.04);font-family:'Syne',sans-serif;font-size:13px;color:#f8f6f1;outline:none;resize:vertical;min-height:100px"></textarea>
+      </div>
+      <button onclick="enviarContacto()" style="background:#c9a84c;color:#060608;border:none;padding:13px 24px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;margin-top:4px" onmouseover="this.style.background='#e8c96a'" onmouseout="this.style.background='#c9a84c'">Enviar Mensagem →</button>
+      <div id="c-msg" style="font-size:12px;display:none;padding:10px 14px;margin-top:10px;border-radius:2px"></div>
+    </div>
+  </div>
+</div>
+
+<div class="cookie-banner" id="cookieBanner">
+  <p class="cookie-text">Utilizamos cookies estritamente necessários para o funcionamento da autenticação. Não utilizamos cookies de rastreamento ou publicidade. <a href="/sobre">Sobre</a> · <a href="/privacidade">Saiba mais</a></p>
+  <div class="cookie-btns">
+    <button class="cookie-info" onclick="recusarCookies()">Recusar</button>
+    <button class="cookie-accept" onclick="aceitarCookies()">Aceitar</button>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const supabaseUrl='https://bsbgizaftamufmmxeyer.supabase.co';
-const supabaseKey='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
-const sb=supabase.createClient(supabaseUrl,supabaseKey);
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('intro').classList.add('done')},2200)});
 
-window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('intro').classList.add('done'),2000);});
+// INICIALIZAÇÃO DO SUPABASE
+const supabaseUrl = 'https://bsbgizaftamufmmxeyer.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
+const sbContactos = supabase.createClient(supabaseUrl, supabaseKey);
 
 const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
 let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
-function moveRing(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(moveRing);}
-moveRing();
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)}
+animRing();
+document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.style.width='20px';cursor.style.height='20px';ring.style.width='56px';ring.style.height='56px'});el.addEventListener('mouseleave',()=>{cursor.style.width='10px';cursor.style.height='10px';ring.style.width='36px';ring.style.height='36px'})});
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>60)});
+function toggleMobileMenu(){const m=document.getElementById('mobileMenu'),b=document.getElementById('hamburger');m.classList.toggle('open');b.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':''}
+function closeMobileMenu(){document.getElementById('mobileMenu').classList.remove('open');document.getElementById('hamburger').classList.remove('open');document.body.style.overflow=''}
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+const barObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){setTimeout(()=>{document.getElementById('b1').style.width='72%';document.getElementById('b2').style.width='40%';document.getElementById('b3').style.width='88%';document.getElementById('b4').style.width='82%';document.getElementById('b5').style.width='55%';document.getElementById('b6').style.width='92%'},400);barObs.disconnect()}})},{threshold:.5});
+const dv=document.querySelector('.demo-visual');if(dv)barObs.observe(dv);
+window.addEventListener('scroll',()=>{const g=document.querySelector('.hero-grid');if(g)g.style.transform=`translateY(${window.scrollY*.15}px)`});
+function toggleFaq(btn){const item=btn.closest('.faq-item'),isOpen=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));if(!isOpen)item.classList.add('open')}
 
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50));
-
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-
-document.querySelectorAll('.faq-question').forEach(btn=>{
-  btn.addEventListener('click',()=>btn.parentElement.classList.toggle('active'));
-});
-
-function openModal(){document.getElementById('waitlistModal').classList.add('active');}
-function closeModal(){document.getElementById('waitlistModal').classList.remove('active');}
-
-async function saveWaitlist(){
-  const email=document.getElementById('modalEmail').value;
-  const msg=document.getElementById('modalMsg');
-  if(!email)return;
-  const{error}=await sb.from('lista_espera').upsert({email,plano:'PRO'});
-  msg.style.display='block';
-  if(!error){msg.textContent='✓ Registado! Entraremos em contacto em breve.';msg.style.color='var(--gold)';setTimeout(closeModal,2000);}
-  else{msg.textContent='Erro ao registar. Tente novamente.';msg.style.color='#ff6666';}
-}
-
-async function enviarContacto(){
-  const nome=document.getElementById('ctNome').value.trim();
-  const email=document.getElementById('ctEmail').value.trim();
-  const mensagem=document.getElementById('ctMsg').value.trim();
-  const result=document.getElementById('ctResult');
-  if(!nome||!email||!mensagem){result.textContent='Preencha todos os campos.';result.style.color='#ff6666';result.style.display='block';return;}
+async function loadTotalAnalises(){
   try{
-    const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({nome,email,mensagem})});
-    if(r.ok){result.textContent='✓ Mensagem enviada! Respondemos em 24h.';result.style.color='var(--gold)';}
-    else throw new Error();
-  }catch(e){result.textContent='Erro ao enviar. Tente: info@lexveritas.pt';result.style.color='#ff6666';}
-  result.style.display='block';
+    const{count}=await sbContactos.from('analises').select('*',{count:'exact',head:true});
+    const el=document.getElementById('total-analises');
+    if(el&&count!==null)el.textContent=count>0?count+'+':'—';
+  }catch(e){const el=document.getElementById('total-analises');if(el)el.textContent='—'}
 }
+loadTotalAnalises();
+
+// DEMO AO VIVO
+async function runDemo(){
+  const text=document.getElementById('demo-textarea').value.trim();
+  if(text.length<100){alert('Insira pelo menos 100 caracteres.');return;}
+  const btn=document.getElementById('demo-btn');
+  btn.disabled=true;btn.textContent='A analisar...';
+  document.getElementById('demo-results').style.display='none';
+  document.getElementById('demo-loading').style.display='block';
+  document.getElementById('demo-error').style.display='none';
+  try{
+    const r=await fetch('/api/analisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:text,modo:'judicial'})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.erro||'Erro do servidor.');}
+    const d=await r.json();
+    document.getElementById('demo-loading').style.display='none';
+    const titles={'IA_DETECTADA':'Inteligência Artificial Detectada','PROVAVELMENTE_IA':'Provavelmente Gerado por IA','INCONCLUSIVO':'Análise Inconclusiva','PROVAVELMENTE_HUMANO':'Provavelmente Autoria Humana','HUMANO':'Autoria Humana Confirmada'};
+    const colors={'IA_DETECTADA':'#c97850','PROVAVELMENTE_IA':'#c97850','INCONCLUSIVO':'#9a9a9a','PROVAVELMENTE_HUMANO':'#4a9a6a','HUMANO':'#4a9a6a'};
+    document.getElementById('demo-veredicto').textContent=titles[d.veredicto]||d.veredicto;
+    document.getElementById('demo-veredicto').style.color=colors[d.veredicto]||'var(--white)';
+    document.getElementById('demo-confianca').textContent=d.confianca+'%';
+    setTimeout(()=>{document.getElementById('demo-meter').style.width=d.confianca+'%';},100);
+    const indLabels={perplexidade:'Perplexidade',burstiness:'Burstiness',coesao_artificial:'Coesão Artificial',uniformidade_sintatica:'Uniformidade Sint.',riqueza_lexical:'Riqueza Lexical',marcadores_formulaicos:'Marc. Formulaicos'};
+    const indsEl=document.getElementById('demo-inds');
+    indsEl.innerHTML='<div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);margin-bottom:12px">Indicadores</div>';
+    for(const[k,v] of Object.entries(d.indicadores||{})){
+      const c=v>70?'#8b4513':v>40?'#c9a84c':'#1a5c3a';
+      indsEl.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-family:var(--mono);font-size:9px;color:rgba(248,246,241,0.4);width:110px;flex-shrink:0">${indLabels[k]||k}</span><div style="flex:1;height:2px;background:rgba(255,255,255,0.06)"><div style="height:100%;background:${c};width:${v}%;transition:width 1s"></div></div><span style="font-family:var(--mono);font-size:9px;color:rgba(248,246,241,0.4);width:24px;text-align:right">${v}</span></div>`;
+    }
+    document.getElementById('demo-narrativa').textContent=d.narrativa||'';
+    document.getElementById('demo-results').style.display='block';
+  }catch(e){
+    document.getElementById('demo-loading').style.display='none';
+    document.getElementById('demo-error').textContent='Erro: '+(e.message||'Tente novamente.');
+    document.getElementById('demo-error').style.display='block';
+  }finally{btn.disabled=false;btn.textContent='Analisar →';}
+}
+
+// MODAL LISTA DE ESPERA
+async function idxSubscrever(){
+  const email=document.getElementById('idx-email').value.trim();
+  const msg=document.getElementById('idx-msg');
+  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';return;}
+  try{
+    await sbContactos.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});
+    msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';
+    msg.style.color='#1a5c3a';msg.style.background='rgba(26,92,58,0.15)';msg.style.display='block';
+    document.getElementById('idx-email').value='';
+  }catch(e){
+    msg.textContent='Erro ao subscrever. Tente mais tarde.';
+    msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';
+  }
+}
+
+// FUNÇÃO DE CONTACTO — ENVIO PARA O SUPABASE
+async function enviarContacto(){
+  const nome = document.getElementById('c-nome').value.trim();
+  const email = document.getElementById('c-email').value.trim();
+  const assunto = document.getElementById('c-assunto').value;
+  const mensagem = document.getElementById('c-mensagem').value.trim();
+  const msg = document.getElementById('c-msg');
+
+  if(!nome || !email || !mensagem){
+    msg.textContent = 'Preencha nome, email e mensagem.';
+    msg.style.color = '#c97850';
+    msg.style.background = 'rgba(139,26,26,0.15)';
+    msg.style.display = 'block';
+    return;
+  }
+
+  try {
+    const { error } = await sbContactos
+      .from('contactos')
+      .insert([
+        { 
+          nome: nome, 
+          email: email, 
+          assunto: assunto || 'Geral', 
+          mensagem: mensagem 
+        }
+      ]);
+
+    if (error) throw error;
+
+    msg.textContent = '✓ Mensagem enviada com sucesso para a base de dados!';
+    msg.style.color = '#1a5c3a';
+    msg.style.background = 'rgba(26,92,58,0.15)';
+    msg.style.display = 'block';
+
+    document.getElementById('c-nome').value = '';
+    document.getElementById('c-email').value = '';
+    document.getElementById('c-assunto').value = '';
+    document.getElementById('c-mensagem').value = '';
+    
+    // Fecha o modal após 2 segundos de sucesso
+    setTimeout(() => {
+        document.getElementById('contacto-modal').classList.remove('visible');
+        msg.style.display = 'none';
+    }, 2500);
+
+  } catch (e) {
+    msg.textContent = 'Erro ao enviar: ' + e.message;
+    msg.style.color = '#c97850';
+    msg.style.background = 'rgba(139,26,26,0.15)';
+    msg.style.display = 'block';
+  }
+}
+
+// COOKIE BANNER
+function aceitarCookies(){localStorage.setItem('lv_cookies','aceite');document.getElementById('cookieBanner').classList.remove('visible')}
+function recusarCookies(){localStorage.setItem('lv_cookies','recusado');document.getElementById('cookieBanner').classList.remove('visible')}
+function verificarCookies(){if(!localStorage.getItem('lv_cookies')){setTimeout(()=>{document.getElementById('cookieBanner').classList.add('visible')},2500)}}
+verificarCookies();
 </script>
 </body>
 </html>
