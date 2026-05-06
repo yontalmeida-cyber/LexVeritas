@@ -196,6 +196,15 @@
   .meta-recurso-label { font-family: var(--mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: #888; margin-bottom: 3px; }
   .meta-recurso-value { font-family: var(--sans); font-size: 12px; font-weight: 600; color: #333; line-height: 1.4; }
   .admissibilidade-badge { display: inline-flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; margin-bottom: 12px; }
+  .minuta-card { background: white; border: 1px solid var(--rule); border-top: 3px solid var(--gold); margin-bottom: 16px; }
+  .minuta-header { padding: 14px 20px; background: var(--parchment); border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .minuta-title { font-family: var(--serif); font-size: 14px; font-weight: 700; }
+  .minuta-disclaimer { font-family: var(--mono); font-size: 9px; color: #888; letter-spacing: 0.05em; }
+  .minuta-body { padding: 20px; font-family: var(--serif); font-size: 13px; line-height: 1.9; color: #333; white-space: pre-wrap; max-height: 400px; overflow-y: auto; }
+  .minuta-footer { padding: 12px 20px; border-top: 1px solid var(--rule); background: var(--parchment); display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-copiar { background: var(--ink); color: white; border: none; padding: 8px 18px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+  .btn-copiar:hover { background: var(--gold); }
+  .btn-copiar.copiado { background: var(--green); }
   .admissivel-sim { background: rgba(26,92,58,0.08); color: #1a5c2a; }
   .admissivel-nao { background: rgba(139,26,26,0.08); color: #8b1a1a; }
   @media(max-width:760px){ .meta-recurso { grid-template-columns: 1fr; } }
@@ -521,6 +530,21 @@
         <div id="nulidades-container"></div>
         <div class="analysis-card" style="border-left:3px solid var(--gold)">
           <h3>Recomendação Estratégica</h3><p id="critica-conclusao">—</p>
+        </div>
+        <div id="minuta-container" style="display:none">
+          <div class="minuta-card">
+            <div class="minuta-header">
+              <div>
+                <div class="minuta-title">📄 Proposta de Texto para Recurso</div>
+                <div class="minuta-disclaimer">Rascunho gerado automaticamente — reveja, adapte e preencha os [PLACEHOLDERS] antes de submeter</div>
+              </div>
+            </div>
+            <div class="minuta-body" id="minuta-body"></div>
+            <div class="minuta-footer">
+              <button class="btn-copiar" id="btn-copiar-minuta" onclick="copiarMinuta()">📋 Copiar Texto</button>
+              <span id="copiar-msg" style="font-family:var(--mono);font-size:10px;color:var(--green);align-self:center;display:none">✓ Copiado!</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1142,7 +1166,7 @@ async function analyzeDecision(){
       dbRecord.veredicto=result.veredicto_recurso||'INCONCLUSIVO';
       dbRecord.confianca=result.confianca||0;
       dbRecord.narrativa=result.sumario||null;
-      dbRecord.relator_analise=result.conclusao||null;
+      dbRecord.relator_analise=(result.conclusao||'')+(result.minuta?'\n\n---MINUTA---\n\n'+result.minuta:'');
       dbRecord.marcadores=result.fundamentos||result.nulidades||null;
       dbRecord.indicadores=null;
     }else{
@@ -1271,8 +1295,37 @@ function renderResultsCritica(result){
     container.innerHTML='<div class="analysis-card"><h3>Fundamentos de Recurso</h3><p style="color:#888;font-style:italic">Não foram identificados fundamentos significativos para recurso.</p></div>';
   }
   document.getElementById('critica-conclusao').innerHTML=(result.conclusao||'').replace(/\n/g,'<br>');
+
+  // Minuta de recurso
+  const minutaContainer=document.getElementById('minuta-container');
+  const minutaBody=document.getElementById('minuta-body');
+  if(result.minuta&&result.minuta.trim()){
+    minutaBody.textContent=result.minuta;
+    minutaContainer.style.display='block';
+  }else{
+    minutaContainer.style.display='none';
+  }
+
   document.getElementById('results-area').classList.add('visible');
   document.getElementById('results-area').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function copiarMinuta(){
+  const text=document.getElementById('minuta-body').textContent;
+  if(!text)return;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.getElementById('btn-copiar-minuta');
+    const msg=document.getElementById('copiar-msg');
+    btn.classList.add('copiado');btn.textContent='✓ Copiado!';
+    msg.style.display='inline';
+    setTimeout(()=>{btn.classList.remove('copiado');btn.textContent='📋 Copiar Texto';msg.style.display='none';},3000);
+  }).catch(()=>{
+    // Fallback para browsers mais antigos
+    const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    const msg=document.getElementById('copiar-msg');msg.style.display='inline';
+    setTimeout(()=>msg.style.display='none',3000);
+  });
 }
 
 // ============================
