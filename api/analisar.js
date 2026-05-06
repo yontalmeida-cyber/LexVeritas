@@ -42,7 +42,7 @@ module.exports = async function handler(req, res) {
   let systemPrompt, userPrompt;
 
   // ══════════════════════════════════════════════════
-  // MODO CRÍTICA
+  // MODO CRÍTICA — Análise Jurídica Avançada
   // ══════════════════════════════════════════════════
   if (modo === 'critica') {
     const ctx = [
@@ -51,50 +51,101 @@ module.exports = async function handler(req, res) {
       parteRecorrente ? `Parte recorrente: ${parteRecorrente}` : null,
     ].filter(Boolean).join('\n');
 
-    systemPrompt = `Actua como Consultor Jurídico Sénior especialista em Processo Civil e Processo Penal português.
+    systemPrompt = `Actua como Consultor Jurídico Sénior com 25 anos de experiência em recursos nos tribunais portugueses — STJ, Tribunais da Relação, Tribunais Administrativos e Tribunal Constitucional.
 
-Analisa a decisão judicial e identifica nulidades, erros de julgamento e vícios processuais que fundamentem recurso.
+A tua tarefa é fazer uma análise forense completa da decisão judicial para identificar TODOS os fundamentos que possam sustentar um recurso, organizados por prioridade e dificuldade de prova.
 
 RESPONDE APENAS COM JSON PURO. Sem texto antes, sem texto depois, sem markdown, sem backticks.
 
-O JSON deve ter exactamente esta estrutura (substitui os valores pelos reais):
+Estrutura obrigatória do JSON:
 
 {
   "veredicto_recurso": "RECURSO_VIAVEL",
-  "confianca": 75,
-  "sumario": "Texto do sumário aqui.",
-  "nulidades": [
+  "confianca": 80,
+  "admissivel": true,
+  "tribunal_recurso": "Tribunal da Relação de Lisboa",
+  "prazo_recurso": "30 dias a partir da notificação (art. 638.º CPC)",
+  "sumario": "Resumo executivo da análise em 3-4 frases.",
+  "fundamentos": [
     {
-      "tipo": "Nome do vício",
-      "artigo": "Art. 615.º n.º 1 al. d) CPC",
+      "categoria": "nulidade",
+      "tipo": "Nome do fundamento",
+      "artigo": "Base legal principal",
       "gravidade": "grave",
-      "descricao": "Descrição do vício encontrado.",
-      "argumento": "Argumento jurídico para o recurso."
+      "prioridade": 1,
+      "dificuldade": "facil",
+      "descricao": "Descrição precisa do vício identificado na decisão, com referência ao texto concreto.",
+      "argumento": "Texto pronto a usar na peça processual, com linguagem jurídica formal e fundamento legal completo."
     }
   ],
-  "conclusao": "Recomendação final."
+  "conclusao": "Recomendação estratégica final do consultor."
 }
 
-VALORES VÁLIDOS:
-- veredicto_recurso: use exactamente uma destas strings: RECURSO_VIAVEL, RECURSO_PARCIAL, ou RECURSO_INVIAVEL
-- confianca: número entre 0 e 100
-- gravidade de cada nulidade: use exactamente uma destas strings: grave, moderada, ou leve
+VALORES VÁLIDOS — usa exactamente estas strings:
+- veredicto_recurso: RECURSO_VIAVEL, RECURSO_PARCIAL, ou RECURSO_INVIAVEL
+- categoria: nulidade, erro_direito, erro_facto, ou questao_constitucional
+- gravidade: grave, moderada, ou leve
+- dificuldade: facil, media, ou dificil
+- admissivel: true ou false
+- prioridade: número inteiro começando em 1 (1 = argumento mais forte)
 
-CRITÉRIOS:
-- RECURSO_VIAVEL: nulidades graves com fundamento jurídico sólido
-- RECURSO_PARCIAL: alguns argumentos mas com limitações
-- RECURSO_INVIAVEL: decisão devidamente fundamentada
+CRITÉRIOS DE VEREDICTO:
+- RECURSO_VIAVEL: um ou mais fundamentos graves com alto potencial de procedência
+- RECURSO_PARCIAL: fundamentos existem mas com limitações ou difíceis de provar
+- RECURSO_INVIAVEL: decisão correctamente fundamentada, sem vícios identificáveis
 
-NULIDADES A PESQUISAR:
-- Omissão de pronúncia: Art. 615.º n.º 1 al. d) CPC / Art. 379.º n.º 1 al. c) CPP
-- Contradição entre fundamentação e decisão: Art. 615.º n.º 1 al. c) CPC
-- Falta de fundamentação: Art. 615.º n.º 1 al. b) CPC / Art. 205.º CRP
-- Falta de exame crítico das provas: Art. 607.º n.º 4 CPC / Art. 374.º n.º 2 CPP
-- Excesso de pronúncia: Art. 615.º n.º 1 al. d) CPC
-- Erro notório na apreciação da prova: Art. 410.º n.º 2 al. c) CPP
-- Insuficiência para a decisão da matéria de facto: Art. 410.º n.º 2 al. a) CPP`;
+CRITÉRIOS DE ADMISSIBILIDADE:
+- admissivel: false se a decisão já transitou em julgado, ou se o valor da causa não atinge a alçada do tribunal de recurso
+- tribunal_recurso: indica o tribunal hierarquicamente superior competente
+- prazo_recurso: prazo legal aplicável com referência ao artigo
 
-    userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}DECISÃO JUDICIAL:\n\n${textoTruncado}\n\nResponde em JSON puro.`;
+CRITÉRIOS DE DIFICULDADE:
+- facil: o vício é evidente no texto, fácil de demonstrar, jurisprudência consolidada
+- media: requer análise aprofundada e boa argumentação
+- dificil: vício subtil, difícil de provar, jurisprudência divergente
+
+CATEGORIAS DE FUNDAMENTOS A ANALISAR SISTEMATICAMENTE:
+
+1. NULIDADES PROCESSUAIS (categoria: nulidade)
+Omissão de pronúncia: o tribunal não se pronunciou sobre questão que devia apreciar — Art. 615.º/1/d) CPC, Art. 379.º/1/c) CPP
+Contradição entre fundamentação e decisão: a conclusão contradiz a fundamentação — Art. 615.º/1/c) CPC
+Falta ou insuficiência de fundamentação: fundamentação genérica, formulaica ou ausente — Art. 615.º/1/b) CPC, Art. 205.º CRP
+Falta de exame crítico das provas: o tribunal não analisou criticamente os meios de prova — Art. 607.º/4 CPC, Art. 374.º/2 CPP
+Excesso de pronúncia: o tribunal pronunciou-se sobre questão não suscitada — Art. 615.º/1/d) CPC
+Violação do contraditório: decisão tomada sem ouvir as partes — Art. 3.º/3 CPC, Art. 32.º/5 CRP
+Falta de fundamentação dos pressupostos processuais: questões de forma não adequadamente tratadas
+
+2. ERROS DE DIREITO (categoria: erro_direito)
+Errada interpretação de norma jurídica: o tribunal aplicou a norma com sentido diferente do correcto
+Erro na determinação da norma aplicável: aplicou norma que não devia, ou não aplicou a que devia
+Violação de presunção legal: inverteu ou ignorou presunção estabelecida na lei
+Erro na determinação das consequências jurídicas: qualificação jurídica errada dos factos provados
+Violação do princípio da igualdade de tratamento das partes
+Desrespeito por jurisprudência uniformizada do STJ (Art. 686.º CPC)
+
+3. ERROS NA MATÉRIA DE FACTO (categoria: erro_facto)
+Erro notório na apreciação da prova: conclusão factual claramente contrária às provas — Art. 410.º/2/c) CPP, Art. 662.º CPC
+Insuficiência da matéria de facto para a decisão: factos provados insuficientes para suportar a conclusão — Art. 410.º/2/a) CPP
+Contradição insanável na matéria de facto: factos provados contradizem-se entre si — Art. 410.º/2/b) CPP
+Desrespeito pelas regras de valoração da prova: prova legal ou tarifada ignorada
+Omissão de prova relevante: prova admitida e produzida não considerada na decisão
+
+4. QUESTÕES CONSTITUCIONAIS (categoria: questao_constitucional)
+Violação do direito de acesso à justiça: Art. 20.º CRP
+Violação das garantias do processo criminal: Art. 32.º CRP
+Violação do direito de propriedade ou outros direitos fundamentais: Art. 62.º CRP
+Violação do princípio da proporcionalidade: Art. 18.º/2 CRP
+Outras violações constitucionais directamente aplicáveis
+
+INSTRUÇÕES IMPORTANTES:
+- O campo "argumento" deve conter texto pronto a inserir numa peça processual, com linguagem formal e citação exacta dos artigos
+- Ordena os fundamentos por "prioridade" do mais forte (1) para o mais fraco
+- Inclui TODOS os fundamentos identificados, não apenas os mais evidentes
+- Se não identificares fundamentos numa categoria, não a incluas
+- O "sumario" deve dar ao advogado uma visão imediata da força do recurso
+- A "conclusao" deve incluir recomendação estratégica concreta (ex: interpor recurso focando X e Y, desistir de Z)`;
+
+    userPrompt = `${ctx ? `CONTEXTO DO PROCESSO:\n${ctx}\n\n` : ''}DECISÃO JUDICIAL A ANALISAR:\n\n${textoTruncado}\n\nFaz a análise completa. Responde em JSON puro.`;
 
   // ══════════════════════════════════════════════════
   // MODO ACADÉMICO
@@ -174,7 +225,7 @@ VALORES VÁLIDOS para tipo de marcador: ai ou humano
 Todos os indicadores: números entre 0 e 100 (0=humano, 100=IA)
 
 NOTAS:
-- Analisa o corpo de fundamentação, não as fórmulas jurídicas fixas
+- Analisa principalmente o corpo de fundamentação, não as fórmulas jurídicas fixas
 - O português jurídico PT tem características formais próprias
 - Marcadores típicos de IA: "Neste contexto", "Importa salientar", "É de referir que", parágrafos de comprimento uniforme`;
 
@@ -214,21 +265,18 @@ NOTAS:
     // ── PARSE JSON ──
     let parsed;
     try {
-      // Limpar possíveis markdown fences
       const cleaned = rawText
         .replace(/^```json\s*/i, '')
         .replace(/^```\s*/i, '')
         .replace(/\s*```$/i, '')
         .trim();
       parsed = JSON.parse(cleaned);
-    } catch (e1) {
-      // Tentar extrair JSON por regex
+    } catch {
       const match = rawText.match(/\{[\s\S]*\}/);
       if (match) {
         try {
           parsed = JSON.parse(match[0]);
-        } catch (e2) {
-          // Tentar reparar JSON truncado
+        } catch {
           let jsonStr = match[0];
           jsonStr = jsonStr.replace(/,\s*$/, '').replace(/,\s*\}$/, '}').replace(/,\s*\]$/, ']');
           let depth = 0;
@@ -236,16 +284,18 @@ NOTAS:
           if (depth > 0) for (let i = 0; i < depth; i++) jsonStr += '}';
           try {
             parsed = JSON.parse(jsonStr);
-          } catch (e3) {
+          } catch {
             console.error('Parse failed. Raw[0-500]:', rawText.substring(0, 500));
-            // Fallback para modo crítica
             if (modo === 'critica') {
               parsed = {
                 veredicto_recurso: 'RECURSO_INVIAVEL',
                 confianca: 50,
-                sumario: 'Não foi possível concluir a análise. Por favor tente novamente com um texto mais curto.',
-                nulidades: [],
-                conclusao: 'Análise incompleta. Tente novamente.',
+                admissivel: true,
+                tribunal_recurso: 'Não determinado',
+                prazo_recurso: 'Consulte um advogado',
+                sumario: 'Análise incompleta. Por favor tente novamente.',
+                fundamentos: [],
+                conclusao: 'Não foi possível concluir a análise.',
               };
             } else {
               return res.status(500).json({ erro: 'Erro ao processar resposta. Tente novamente.' });
@@ -262,17 +312,41 @@ NOTAS:
     if (modo === 'critica') {
       const okV = ['RECURSO_VIAVEL', 'RECURSO_PARCIAL', 'RECURSO_INVIAVEL'];
       if (!okV.includes(parsed.veredicto_recurso)) parsed.veredicto_recurso = 'RECURSO_INVIAVEL';
-      parsed.confianca = clamp(parsed.confianca);
-      parsed.sumario   = String(parsed.sumario   || 'Análise concluída.');
-      parsed.conclusao = String(parsed.conclusao || 'Consulte um advogado.');
-      parsed.nulidades = Array.isArray(parsed.nulidades) ? parsed.nulidades.map(n => ({
-        tipo:      String(n.tipo      || 'Vício Processual'),
-        artigo:    String(n.artigo    || ''),
-        gravidade: ['grave','moderada','leve'].includes((n.gravidade||'').toLowerCase())
-                     ? n.gravidade.toLowerCase() : 'moderada',
-        descricao: String(n.descricao || ''),
-        argumento: String(n.argumento || ''),
-      })) : [];
+      parsed.confianca       = clamp(parsed.confianca);
+      parsed.admissivel      = parsed.admissivel !== false;
+      parsed.tribunal_recurso = String(parsed.tribunal_recurso || 'Não determinado');
+      parsed.prazo_recurso    = String(parsed.prazo_recurso    || 'Consulte um advogado');
+      parsed.sumario          = String(parsed.sumario          || 'Análise concluída.');
+      parsed.conclusao        = String(parsed.conclusao        || 'Consulte um advogado.');
+
+      const okCat  = ['nulidade','erro_direito','erro_facto','questao_constitucional'];
+      const okGrav = ['grave','moderada','leve'];
+      const okDif  = ['facil','media','dificil'];
+
+      // Suporte para resposta com "nulidades" (formato antigo) ou "fundamentos" (formato novo)
+      const items = Array.isArray(parsed.fundamentos)
+        ? parsed.fundamentos
+        : Array.isArray(parsed.nulidades)
+          ? parsed.nulidades.map((n, i) => ({ ...n, categoria: 'nulidade', prioridade: i + 1, dificuldade: 'media' }))
+          : [];
+
+      parsed.fundamentos = items.map((f, i) => ({
+        categoria:  okCat.includes(f.categoria)  ? f.categoria  : 'nulidade',
+        tipo:       String(f.tipo       || 'Vício Processual'),
+        artigo:     String(f.artigo     || ''),
+        gravidade:  okGrav.includes((f.gravidade||'').toLowerCase()) ? f.gravidade.toLowerCase() : 'moderada',
+        prioridade: Number(f.prioridade) || (i + 1),
+        dificuldade:okDif.includes((f.dificuldade||'').toLowerCase()) ? f.dificuldade.toLowerCase() : 'media',
+        descricao:  String(f.descricao  || ''),
+        argumento:  String(f.argumento  || ''),
+      }));
+
+      // Ordenar por prioridade
+      parsed.fundamentos.sort((a, b) => a.prioridade - b.prioridade);
+
+      // Remover campo antigo se existir
+      delete parsed.nulidades;
+
     } else {
       const okV = ['IA_DETECTADA','PROVAVELMENTE_IA','INCONCLUSIVO','PROVAVELMENTE_HUMANO','HUMANO'];
       if (!okV.includes(parsed.veredicto)) parsed.veredicto = 'INCONCLUSIVO';
