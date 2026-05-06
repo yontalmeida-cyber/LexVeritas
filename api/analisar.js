@@ -78,7 +78,8 @@ Estrutura obrigatória do JSON:
       "argumento": "Texto pronto a usar na peça processual, com linguagem jurídica formal e fundamento legal completo."
     }
   ],
-  "conclusao": "Recomendação estratégica final do consultor."
+  "conclusao": "Recomendação estratégica final do consultor.",
+  "minuta": "MINUTA DE RECURSO\n\n[A preencher pelo advogado: Exmo. Sr. Juiz Desembargador Presidente do [TRIBUNAL DE RECURSO]]\n\n[NOME DO RECORRENTE], [QUALIDADE], melhor identificado nos autos do processo n.º [NÚMERO DO PROCESSO], a correr termos no [TRIBUNAL A QUO], vem, nos termos dos artigos [ARTIGOS APLICÁVEIS], interpor RECURSO DE [TIPO DE RECURSO] da decisão proferida em [DATA], que [SUMÁRIO DA DECISÃO RECORRIDA], com base nos seguintes fundamentos:\n\nI. [PRIMEIRO FUNDAMENTO - TÍTULO]\n\n[Texto desenvolvido do primeiro argumento]\n\nII. [SEGUNDO FUNDAMENTO - TÍTULO]\n\n[Texto desenvolvido do segundo argumento]\n\nCONCLUSÕES\n\n1.ª [Primeira conclusão numerada]\n\n2.ª [Segunda conclusão numerada]\n\nN.ª Termos em que deve o presente recurso ser admitido e julgado procedente, revogando-se a decisão recorrida e substituindo-a por outra que [PEDIDO CONCRETO].\n\n[Local e data]\nO Mandatário,\n[NOME E CÉDULA PROFISSIONAL]"
 }
 
 VALORES VÁLIDOS — usa exactamente estas strings:
@@ -143,7 +144,12 @@ INSTRUÇÕES IMPORTANTES:
 - Inclui TODOS os fundamentos identificados, não apenas os mais evidentes
 - Se não identificares fundamentos numa categoria, não a incluas
 - O "sumario" deve dar ao advogado uma visão imediata da força do recurso
-- A "conclusao" deve incluir recomendação estratégica concreta (ex: interpor recurso focando X e Y, desistir de Z)`;
+- A "conclusao" deve incluir recomendação estratégica concreta (ex: interpor recurso focando X e Y, desistir de Z)
+- O campo "minuta" deve conter uma proposta de texto de recurso em português jurídico formal com:
+  PARTE I — Secção de fundamentos com cada argumento desenvolvido (um parágrafo por fundamento, com linguagem forense formal)
+  PARTE II — CONCLUSÕES numeradas (obrigatórias por lei), uma por fundamento identificado, em linguagem precisa e concisa, seguindo o formato "N.ª ..."
+  PARTE III — Pedido final
+  Usa [PLACEHOLDER] para dados que não conheces (nome, processo, data, tribunal). A minuta deve ser directamente utilizável após preenchimento dos placeholders.`;
 
     userPrompt = `${ctx ? `CONTEXTO DO PROCESSO:\n${ctx}\n\n` : ''}DECISÃO JUDICIAL A ANALISAR:\n\n${textoTruncado}\n\nFaz a análise completa. Responde em JSON puro.`;
 
@@ -243,7 +249,7 @@ NOTAS:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: modo === 'critica' ? 4000 : 2000,
+        max_tokens: modo === 'critica' ? 6000 : 2000,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],
       }),
@@ -296,6 +302,7 @@ NOTAS:
                 sumario: 'Análise incompleta. Por favor tente novamente.',
                 fundamentos: [],
                 conclusao: 'Não foi possível concluir a análise.',
+                minuta: '',
               };
             } else {
               return res.status(500).json({ erro: 'Erro ao processar resposta. Tente novamente.' });
@@ -318,6 +325,7 @@ NOTAS:
       parsed.prazo_recurso    = String(parsed.prazo_recurso    || 'Consulte um advogado');
       parsed.sumario          = String(parsed.sumario          || 'Análise concluída.');
       parsed.conclusao        = String(parsed.conclusao        || 'Consulte um advogado.');
+      parsed.minuta           = String(parsed.minuta           || '');
 
       const okCat  = ['nulidade','erro_direito','erro_facto','questao_constitucional'];
       const okGrav = ['grave','moderada','leve'];
