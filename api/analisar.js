@@ -1,15 +1,47 @@
 // /api/analisar.js — LexVeritas API Endpoint
 // Vercel Serverless Function — Node.js 18+ — CommonJS
 // Handles 3 analysis modes: judicial, academico, critica
+// Validates Supabase session token on every request
+
+const SUPABASE_URL     = 'https://bsbgizaftamufmmxeyer.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
 
-  // Safety: body may be undefined if Content-Type header is missing
+  // ═══════════════════════════════════════════════
+  // VALIDAÇÃO DE AUTENTICAÇÃO — Supabase JWT
+  // ═══════════════════════════════════════════════
+  const authHeader = (req.headers.authorization || '').trim();
+  if (!authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ erro: 'Autenticação necessária.' });
+  }
+  const token = authHeader.replace('Bearer ', '').trim();
+
+  let autenticado = false;
+  try {
+    const authCheck = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'apikey': SUPABASE_ANON_KEY,
+      },
+    });
+    autenticado = authCheck.ok;
+  } catch {
+    autenticado = false;
+  }
+
+  if (!autenticado) {
+    return res.status(401).json({ erro: 'Sessão inválida ou expirada. Por favor faça login novamente.' });
+  }
+
+  // ═══════════════════════════════════════════════
+  // CORPO DO PEDIDO
+  // ═══════════════════════════════════════════════
   const body = req.body || {};
   const {
     texto,
@@ -29,7 +61,6 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ erro: 'Serviço temporariamente indisponível.' });
   }
 
-  // Truncate to ~12 000 chars to keep token cost reasonable
   const textoTruncado =
     texto.length > 12000
       ? texto.substring(0, 12000) + '\n[...texto truncado para análise...]'
@@ -177,9 +208,9 @@ VEREDICTOS: IA_DETECTADA (≥75%), PROVAVELMENTE_IA (55-74%), INCONCLUSIVO (40-5
 
 NOTAS CRÍTICAS:
 - Fórmulas jurídicas fixas (ementas, dispositivos) NÃO são indicadores de IA
-- Analisa principalmente o corpo de fundamentação, não as partes formais obrigatórias
-- O português jurídico PT tem características formais próprias — não confundas com IA
-- Marcadores típicos de IA: "Neste contexto", "Importa salientar", "É de referir que", parágrafos de comprimento uniforme, ausência de referências específicas ao processo`;
+- Analisa principalmente o corpo de fundamentação
+- O português jurídico PT tem características formais próprias
+- Marcadores típicos de IA: "Neste contexto", "Importa salientar", parágrafos de comprimento uniforme`;
 
       userPrompt = `${ctx ? `CONTEXTO DA DECISÃO:\n${ctx}\n\n` : ''}TEXTO DA DECISÃO JUDICIAL:\n\n${textoTruncado}\n\nAnalisa esta decisão. Responde em JSON puro.`;
     }
@@ -227,7 +258,6 @@ NOTAS CRÍTICAS:
         .trim();
       parsed = JSON.parse(cleaned);
     } catch {
-      // Fallback: extract JSON by regex
       const match = rawText.match(/\{[\s\S]*\}/);
       if (match) {
         try { parsed = JSON.parse(match[0]); }
