@@ -3,190 +3,1125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LexVeritas — Painel Forense Profissional</title>
+<title>LexVeritas — Sistema de Análise Forense</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#060608">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--black:#060608;--white:#f8f6f1;--gold:#c9a84c;--gold-light:#e8c96a;--gold-dim:#8a6f2e;--grey:#9a9a9a;--dark:#0e0e12;--card:#13131a;--border:rgba(201,168,76,0.15);--sans:'Syne',sans-serif;--serif:'Instrument Serif',serif;--mono:'JetBrains Mono',monospace}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--black);color:var(--white);font-family:var(--sans);overflow-x:hidden;height:100vh;display:flex}
-::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--black)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
-
-/* PRELOADER FIX */
-#preloader{position:fixed;inset:0;background:var(--black);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s cubic-bezier(.16,1,.3,1)}
-.loader-content{text-align:center;animation:fadeIn 1s ease}
-.loader-logo{font-family:var(--serif);font-size:42px;font-style:italic;margin-bottom:10px}
-.loader-logo span{color:var(--gold)}
-.loader-bar-bg{width:240px;height:1px;background:rgba(255,255,255,.1);position:relative;overflow:hidden}
-.loader-bar-fill{position:absolute;width:0%;height:100%;background:var(--gold);animation:loadProgress 2.5s cubic-bezier(.16,1,.3,1) forwards}
-@keyframes loadProgress{to{width:100%}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* SIDEBAR LUXO */
-aside{width:280px;background:#08080a;border-right:1px solid var(--border);display:flex;flex-direction:column;padding:40px 24px;flex-shrink:0}
-.nav-logo{font-family:var(--serif);font-size:26px;font-style:italic;text-decoration:none;color:var(--white);margin-bottom:48px;display:block}
-.nav-logo span{color:var(--gold)}
-.nav-group{margin-bottom:32px}
-.nav-label{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;display:block;opacity:.6}
-.nav-link{display:flex;align-items:center;gap:14px;padding:14px;color:var(--grey);text-decoration:none;font-size:12px;font-weight:600;border-radius:4px;transition:.3s;margin-bottom:4px}
-.nav-link:hover,.nav-link.active{background:rgba(201,168,76,.08);color:var(--white)}
-.nav-link svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5}
-.nav-link.active{color:var(--gold)}
-
-/* MAIN CONTENT */
-main{flex:1;overflow-y:auto;background:radial-gradient(circle at top right,rgba(201,168,76,.04),transparent);display:flex;flex-direction:column}
-.top-header{padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:rgba(6,6,8,.5);backdrop-filter:blur(10px)}
-.status-pill{background:rgba(201,168,76,.1);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-family:var(--mono);font-size:9px;color:var(--gold);display:flex;align-items:center;gap:8px}
-.status-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;box-shadow:0 0 10px var(--gold)}
-
-/* DASHBOARD AREA */
-.content-body{padding:48px;max-width:1200px;width:100%;margin:0 auto}
-.hero-text{margin-bottom:40px}
-.hero-text h1{font-family:var(--serif);font-size:48px;font-weight:400;font-style:italic;margin-bottom:8px}
-.hero-text p{color:var(--grey);font-size:15px}
-
-/* UPLOAD BOX */
-.analysis-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:32px;margin-bottom:48px}
-.upload-card{background:var(--dark);border:1px solid var(--border);padding:60px 40px;text-align:center;position:relative;cursor:pointer;transition:.4s;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.upload-card:hover{border-color:var(--gold);background:rgba(201,168,76,.02)}
-.upload-icon{width:64px;height:64px;background:rgba(201,168,76,.05);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:24px;font-size:24px}
-.scanner-line{position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);box-shadow:0 0 15px var(--gold);display:none;animation:scanMove 2s infinite linear}
-@keyframes scanMove{0%{top:0%}100%{top:100%}}
-
-/* STATS */
-.stats-sidebar{display:flex;flex-direction:column;gap:20px}
-.stat-item{background:var(--card);border:1px solid var(--border);padding:24px;border-radius:4px}
-.stat-val{font-family:var(--serif);font-size:36px;margin:8px 0}
-.stat-label{font-family:var(--mono);font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:1px}
-
-/* RESULTS TABLE */
-.results-container{background:var(--dark);border:1px solid var(--border);margin-top:32px;display:none}
-.results-header{padding:20px;border-bottom:1px solid var(--border);font-family:var(--serif);font-size:20px;font-style:italic}
-.results-list{list-style:none}
-.result-row{padding:20px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 100px;align-items:center}
-.result-row:last-child{border-bottom:none}
-.vicio-tag{background:rgba(255,102,102,.1);color:#ff6666;padding:4px 8px;font-size:10px;font-family:var(--mono);text-transform:uppercase}
+  :root {
+    --black: #060608; --dark: #0e0e12; --card: #13131a; --ink: #0d0d0d;
+    --parchment: #f5f0e8; --cream: #f8f6f1; --gold: #c9a84c; --gold-light: #e8c96a;
+    --red: #8b1a1a; --green: #1a5c3a; --grey: #9a9a9a;
+    --rule: rgba(13,13,13,0.12); --rule-dark: rgba(201,168,76,0.15);
+    --serif: 'Instrument Serif', Georgia, serif;
+    --mono: 'JetBrains Mono', monospace; --sans: 'Syne', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--black); color: var(--ink); font-family: var(--sans); min-height: 100vh; }
+  .auth-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; background: var(--black); position: relative; overflow: hidden; }
+  .auth-page::before { content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 600px; height: 500px; background: radial-gradient(ellipse, rgba(201,168,76,0.12) 0%, transparent 60%); pointer-events: none; }
+  .auth-page::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+  .auth-logo { font-family: var(--serif); font-size: 52px; font-style: italic; margin-bottom: 8px; color: #f8f6f1; position: relative; z-index: 1; }
+  .auth-logo em { color: var(--gold); }
+  .auth-tagline { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 32px; text-align: center; }
+  .auth-card { background: var(--card); border: 1px solid var(--rule-dark); padding: 36px; width: 100%; max-width: 420px; position: relative; z-index: 1; box-shadow: 0 24px 64px rgba(0,0,0,0.4); }
+  .auth-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+  .auth-card h2 { font-family: var(--serif); font-size: 24px; font-style: italic; margin-bottom: 6px; color: #f8f6f1; }
+  .auth-card p { font-size: 13px; color: var(--grey); margin-bottom: 28px; line-height: 1.6; }
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 6px; }
+  .form-group input, .form-group select { width: 100%; padding: 12px 14px; border: 1px solid var(--rule-dark); background: rgba(255,255,255,0.05); font-family: var(--sans); font-size: 13px; color: #f8f6f1; outline: none; transition: border-color 0.2s; }
+  .form-group select option { background: var(--dark); color: #f8f6f1; }
+  .form-group input:focus, .form-group select:focus { border-color: var(--gold); }
+  .form-group input::placeholder { color: rgba(255,255,255,0.2); }
+  .btn-primary { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 14px; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.25s; margin-top: 8px; }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,168,76,0.3); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .auth-switch { text-align: center; margin-top: 20px; font-size: 12px; color: var(--grey); }
+  .auth-switch a { color: var(--gold); cursor: pointer; text-decoration: none; font-weight: 600; }
+  .auth-forgot { text-align: right; margin-top: -10px; margin-bottom: 16px; font-size: 11px; }
+  .auth-forgot a { color: var(--grey); cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .auth-forgot a:hover { color: var(--gold); }
+  .auth-error { background: rgba(139,26,26,0.2); border: 1px solid rgba(139,26,26,0.4); color: #ff9999; padding: 10px 14px; font-size: 12px; margin-bottom: 16px; display: none; }
+  .auth-success { background: rgba(26,92,58,0.2); border: 1px solid rgba(26,92,58,0.4); color: #99ffbb; padding: 10px 14px; font-size: 12px; margin-bottom: 16px; display: none; }
+  .plan-badge { display: inline-block; padding: 2px 8px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; border-radius: 2px; }
+  .plan-gratuito { background: rgba(255,255,255,0.08); color: var(--grey); }
+  .plan-profissional { background: rgba(201,168,76,0.15); color: var(--gold); }
+  header { border-bottom: 1px solid var(--rule-dark); padding: 0 clamp(20px, 5vw, 60px); background: var(--black); position: sticky; top: 0; z-index: 50; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--rule-dark); }
+  .header-date { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; color: var(--grey); text-transform: uppercase; }
+  .header-user { display: flex; align-items: center; gap: 12px; }
+  .header-user-info { font-family: var(--mono); font-size: 9px; color: var(--grey); text-align: right; }
+  .header-user-info div:first-child { color: #f8f6f1; font-size: 10px; }
+  .btn-logout { background: none; border: 1px solid var(--rule-dark); padding: 5px 12px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; color: var(--grey); transition: all 0.2s; }
+  .btn-logout:hover { border-color: var(--red); color: var(--red); }
+  .masthead { text-align: center; padding: 24px 0 18px; background: var(--black); }
+  .masthead-eyebrow { font-family: var(--mono); font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; display: block; }
+  .masthead h1 { font-family: var(--serif); font-size: clamp(38px, 6vw, 80px); font-style: italic; line-height: 0.92; letter-spacing: -0.02em; color: #f8f6f1; }
+  .masthead h1 em { font-style: italic; color: var(--gold); }
+  .masthead-sub { font-family: var(--sans); font-size: 12px; color: var(--grey); margin-top: 12px; }
+  .ornament { display: flex; align-items: center; gap: 10px; justify-content: center; margin: 8px 0; }
+  .ornament::before, .ornament::after { content: ''; height: 1px; width: 50px; background: var(--gold); opacity: 0.4; }
+  .ornament span { color: var(--gold); }
+  nav { display: flex; justify-content: center; gap: 24px; padding: 12px 0 10px; border-top: 1px solid var(--rule-dark); background: var(--black); flex-wrap: wrap; }
+  nav a { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color 0.2s; cursor: pointer; padding: 4px 0; }
+  nav a:hover { color: #f8f6f1; }
+  nav a.active { color: var(--gold); border-bottom: 1px solid var(--gold); }
+  .usage-bar-container { background: var(--dark); border-bottom: 1px solid var(--rule-dark); padding: 8px clamp(20px, 5vw, 60px); display: flex; align-items: center; gap: 16px; }
+  .mode-toggle-bar { background: var(--black); border-bottom: 1px solid var(--rule-dark); padding: 12px clamp(20px, 5vw, 60px); display: flex; align-items: center; gap: 8px; }
+  .mode-toggle-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-right: 8px; white-space: nowrap; }
+  .mode-btn { background: transparent; border: 1px solid var(--rule-dark); padding: 8px 18px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--grey); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+  .mode-btn:hover { border-color: rgba(201,168,76,0.4); color: #f8f6f1; }
+  .mode-btn.active { background: rgba(201,168,76,0.12); border-color: var(--gold); color: var(--gold); }
+  .usage-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--grey); white-space: nowrap; }
+  .usage-track { flex: 1; height: 2px; background: rgba(255,255,255,0.08); max-width: 200px; }
+  .usage-fill { height: 100%; background: var(--gold); transition: width 0.5s; }
+  .usage-count { font-family: var(--mono); font-size: 10px; color: var(--grey); white-space: nowrap; }
+  .usage-upgrade { font-family: var(--sans); font-size: 11px; font-weight: 600; color: var(--gold); cursor: pointer; margin-left: auto; letter-spacing: 0.05em; }
+  main { max-width: 1060px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: start; }
+  .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .section-label::after { content: ''; height: 1px; flex: 1; background: var(--gold); opacity: 0.4; }
+  .input-card { background: white; border: 1px solid var(--rule); box-shadow: 0 2px 16px rgba(0,0,0,0.04); }
+  .input-card-header { padding: 16px 20px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; background: var(--parchment); }
+  .input-card-title { font-family: var(--serif); font-size: 14px; font-weight: 700; }
+  .char-count { font-family: var(--mono); font-size: 11px; color: #aaa; }
+  textarea { width: 100%; height: 320px; border: none; outline: none; resize: vertical; padding: 20px; font-family: var(--mono); font-size: 12px; line-height: 1.8; color: var(--ink); background: white; min-height: 160px; max-height: 600px; }
+  textarea::placeholder { color: #ccc; font-style: italic; font-family: var(--serif); font-size: 13px; }
+  .input-card-footer { padding: 14px 20px; border-top: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; background: var(--parchment); }
+  .file-hint { font-family: var(--sans); font-size: 11px; color: #aaa; display: flex; align-items: center; gap: 5px; }
+  .btn-analyze { background: var(--ink); color: var(--cream); border: none; padding: 11px 28px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 8px; }
+  .btn-analyze:hover { background: var(--gold); }
+  .btn-analyze:disabled { opacity: 0.5; cursor: not-allowed; }
+  .loading-bar { height: 3px; background: var(--rule); overflow: hidden; display: none; }
+  .loading-bar.active { display: block; }
+  .loading-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--ink), var(--gold)); background-size: 200%; animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0% { background-position: 100%; } 100% { background-position: -100%; } }
+  .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .btn-analyze.loading .spinner { display: block; }
+  .drop-zone { border: 2px dashed var(--rule); padding: 16px; text-align: center; margin-top: 10px; cursor: pointer; transition: all 0.2s; }
+  .drop-zone:hover { border-color: var(--gold); background: #fffbf0; }
+  .drop-zone.has-file { border-color: rgba(201,168,76,0.4); background: #fffdf5; border-style: solid; cursor: default; }
+  .drop-zone-text { font-family: var(--sans); font-size: 12px; color: #bbb; line-height: 1.7; }
+  .drop-zone.has-file .drop-zone-text { color: #666; }
+  .analysis-overlay { position: fixed; inset: 0; background: rgba(13,13,13,0.93); z-index: 500; display: none; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(8px); }
+  .analysis-overlay.visible { display: flex; animation: overlayIn 0.4s ease; }
+  @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+  .overlay-inner { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 40px 32px; max-width: 380px; width: 100%; }
+  .overlay-logo { font-family: var(--serif); font-size: 28px; color: var(--cream); }
+  .overlay-logo em { font-style: italic; color: var(--gold); }
+  .scales-anim { width: 64px; height: 64px; animation: scalesTilt 2s ease-in-out infinite; }
+  @keyframes scalesTilt { 0%,100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
+  .overlay-progress-track { width: 100%; height: 2px; background: rgba(255,255,255,0.08); overflow: hidden; }
+  .overlay-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), #e8c96a); width: 0%; transition: width 0.6s ease; }
+  .overlay-status { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); text-align: center; min-height: 18px; }
+  .overlay-subtext { font-family: var(--sans); font-size: 11px; color: rgba(255,255,255,0.3); text-align: center; line-height: 1.6; }
+  .scanning-dots { display: flex; gap: 6px; align-items: center; justify-content: center; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); animation: dotPulse 1.4s ease-in-out infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; } .dot:nth-child(3) { animation-delay: 0.4s; } .dot:nth-child(4) { animation-delay: 0.6s; } .dot:nth-child(5) { animation-delay: 0.8s; }
+  @keyframes dotPulse { 0%,80%,100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1.3); } }
+  .overlay-indicators { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+  .overlay-ind { display: flex; align-items: center; gap: 8px; opacity: 0; transform: translateX(-8px); transition: opacity 0.4s, transform 0.4s; }
+  .overlay-ind.active { opacity: 1; transform: translateX(0); }
+  .overlay-ind-name { font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); text-transform: uppercase; width: 110px; flex-shrink: 0; }
+  .overlay-ind-track { flex: 1; height: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
+  .overlay-ind-fill { height: 100%; background: var(--gold); width: 0%; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+  .overlay-ind-val { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.3); width: 24px; text-align: right; }
+  .results-area { margin-top: 28px; display: none; }
+  .results-area.visible { display: block; animation: fadeUp 0.5s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .verdict-banner { padding: 24px 28px; border: 1px solid; margin-bottom: 20px; }
+  .verdict-banner.ai { background: #fff8f0; border-color: #e8c090; }
+  .verdict-banner.human { background: #f0f5f0; border-color: #90b890; }
+  .verdict-banner.uncertain { background: #f5f5f0; border-color: #c0c0b0; }
+  .verdict-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 6px; opacity: 0.6; }
+  .verdict-title { font-family: var(--serif); font-size: 26px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+  .verdict-banner.ai .verdict-title { color: #8b4513; }
+  .verdict-banner.human .verdict-title { color: #1a5c2a; }
+  .verdict-banner.uncertain .verdict-title { color: #555; }
+  .verdict-subtitle { font-family: var(--sans); font-size: 12px; font-weight: 300; color: #666; line-height: 1.6; }
+  .confidence-block { background: white; border: 1px solid var(--rule); padding: 18px 20px; margin-bottom: 16px; }
+  .confidence-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #888; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: baseline; }
+  .confidence-value { font-family: var(--serif); font-size: 20px; font-weight: 700; }
+  .meter-track { height: 6px; background: var(--rule); overflow: hidden; }
+  .meter-fill { height: 100%; background: linear-gradient(90deg, #90b890, #c9a84c, #c97850); transition: width 1.2s cubic-bezier(0.16,1,0.3,1); width: 0; }
+  .indicators-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .indicator-card { background: white; border: 1px solid var(--rule); padding: 14px 16px; }
+  .indicator-name { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #aaa; margin-bottom: 5px; }
+  .indicator-score { font-family: var(--serif); font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .indicator-bar { height: 3px; background: var(--rule); overflow: hidden; }
+  .indicator-bar-fill { height: 100%; transition: width 1.4s cubic-bezier(0.16,1,0.3,1); width: 0; }
+  .bar-high { background: var(--red); } .bar-mid { background: var(--gold); } .bar-low { background: var(--green); }
+  .analysis-card { background: white; border: 1px solid var(--rule); padding: 20px; margin-bottom: 16px; }
+  .analysis-card h3 { font-family: var(--serif); font-size: 15px; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  .analysis-card p { font-family: var(--sans); font-size: 13px; line-height: 1.8; color: #444; }
+  .evidence-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .evidence-item { display: flex; gap: 10px; align-items: flex-start; }
+  .evidence-marker { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0; margin-top: 2px; font-weight: 700; }
+  .marker-ai { background: #ffe0c0; color: #8b4513; }
+  .marker-ok { background: #d0e8d0; color: #1a5c2a; }
+  .evidence-text { font-family: var(--sans); font-size: 12px; line-height: 1.6; color: #555; }
+  .sidebar-widget { background: white; border: 1px solid var(--rule); margin-bottom: 20px; overflow: hidden; }
+  .widget-header { padding: 12px 16px; background: var(--parchment); border-bottom: 1px solid var(--rule); }
+  .widget-title { font-family: var(--serif); font-size: 13px; font-weight: 700; }
+  .widget-body { padding: 16px; }
+  .stat-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--rule); }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label { font-family: var(--sans); font-size: 11px; color: #888; }
+  .stat-value { font-family: var(--mono); font-size: 12px; font-weight: 500; }
+  .info-box { padding: 12px 14px; border-left: 3px solid; font-family: var(--sans); font-size: 12px; line-height: 1.6; color: #555; margin-bottom: 10px; }
+  .info-box:last-child { margin-bottom: 0; }
+  .info-box.tip { border-color: var(--gold); background: #fffbf0; }
+  .info-box.warn { border-color: var(--red); background: #fff8f8; }
+  .info-box.note { border-color: #aaa; background: #f8f8f8; }
+  .info-box strong { display: block; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 3px; color: #888; }
+  .history-page { max-width: 800px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); }
+  .history-item { background: white; border: 1px solid var(--rule); margin-bottom: 16px; overflow: hidden; }
+  .history-item-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; transition: background 0.2s; }
+  .history-item-header:hover { background: var(--parchment); }
+  .history-veredicto { font-family: var(--serif); font-size: 15px; font-weight: 700; }
+  .history-meta { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 3px; }
+  .history-confianca { font-family: var(--mono); font-size: 18px; font-weight: 500; color: var(--gold); flex-shrink: 0; }
+  .history-chevron { font-size: 12px; color: #aaa; transition: transform 0.3s; flex-shrink: 0; }
+  .history-item.open .history-chevron { transform: rotate(180deg); }
+  .history-details { display: none; padding: 20px; border-top: 1px solid var(--rule); }
+  .history-item.open .history-details { display: block; animation: fadeUp 0.3s ease; }
+  .empty-history { text-align: center; padding: 60px 20px; color: #aaa; font-family: var(--serif); font-size: 18px; font-style: italic; }
+  footer { border-top: 1px solid var(--rule); padding: 20px clamp(20px, 5vw, 60px); display: flex; justify-content: space-between; align-items: center; margin-top: 32px; flex-wrap: wrap; gap: 12px; }
+  .footer-brand { font-family: var(--serif); font-size: 16px; font-weight: 700; }
+  .footer-brand em { font-style: italic; color: var(--gold); }
+  .footer-copy { font-family: var(--mono); font-size: 9px; color: #bbb; letter-spacing: 0.1em; }
+  .footer-contact { font-family: var(--mono); font-size: 9px; color: var(--gold); cursor: pointer; letter-spacing: 0.1em; text-decoration: none; transition: opacity 0.2s; }
+  .footer-contact:hover { opacity: 0.7; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.visible { display: flex; }
+  .modal { background: white; max-width: 480px; width: 100%; padding: 36px; position: relative; }
+  .modal h2 { font-family: var(--serif); font-size: 24px; font-weight: 900; margin-bottom: 6px; }
+  .modal p { font-size: 13px; color: #666; margin-bottom: 28px; line-height: 1.6; }
+  .btn-close-modal { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: #aaa; }
+  .btn-pdf { display: flex; align-items: center; gap: 8px; background: white; color: var(--ink); border: 1px solid var(--rule); padding: 11px 20px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 16px; width: 100%; justify-content: center; }
+  .btn-pdf:hover { background: var(--parchment); border-color: var(--gold); color: var(--gold); }
+  .ref-number { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 6px; text-align: center; }
+  .hidden { display: none !important; }
+  .dark-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+  .dark-modal-overlay.visible { display: flex; }
+  .dark-modal-box { background: var(--card); border: 1px solid var(--rule-dark); padding: 36px; max-width: 460px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+  .dark-modal-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+  .dark-modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: #9a9a9a; font-size: 22px; cursor: pointer; }
+  .dark-modal-close:hover { color: #f8f6f1; }
+  .dark-form-group { margin-bottom: 14px; }
+  .dark-form-group label { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 6px; }
+  .dark-form-group input, .dark-form-group select, .dark-form-group textarea { width: 100%; padding: 11px 14px; border: 1px solid var(--rule-dark); background: rgba(255,255,255,0.04); font-family: var(--sans); font-size: 13px; color: #f8f6f1; outline: none; transition: border-color 0.2s; }
+  .dark-form-group select option { background: var(--dark); }
+  .dark-form-group input:focus, .dark-form-group select:focus, .dark-form-group textarea:focus { border-color: var(--gold); }
+  .dark-form-group textarea { resize: vertical; min-height: 90px; }
+  #lv-loading{position:fixed;inset:0;background:#060608;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s ease}
+  #lv-loading.done{opacity:0;pointer-events:none}
+  .lv-load-logo{font-family:var(--serif);font-size:48px;font-style:italic;color:#f8f6f1}
+  .lv-load-logo span{color:#c9a84c}
+  .lv-load-label{font-family:var(--mono);font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#9a9a9a}
+  .lv-load-track{width:200px;height:2px;background:rgba(255,255,255,0.08)}
+  .lv-load-fill{height:100%;background:linear-gradient(90deg,#c9a84c,#e8c96a);width:0;animation:lvload 2.5s ease forwards}
+  @keyframes lvload{0%{width:0}60%{width:80%}100%{width:95%}}
+  @media(max-width:760px){
+    main{grid-template-columns:1fr;gap:20px;padding:16px}
+    .sidebar{order:2}.content-area{order:1}
+    textarea{height:200px;font-size:13px;padding:14px}
+    .btn-analyze{width:100%;justify-content:center;padding:14px;font-size:12px}
+    .input-card-footer{flex-direction:column;gap:10px;align-items:stretch}
+    .file-hint{justify-content:center}
+    .indicators-grid{grid-template-columns:1fr 1fr;gap:8px}
+    .indicator-card{padding:10px 12px}
+    .indicator-name{font-size:8px}
+    .indicator-score{font-size:22px}
+    .masthead h1{font-size:clamp(28px,8vw,48px)}
+    .history-page{padding:16px}
+    footer{flex-direction:column;gap:8px;text-align:center;padding:16px}
+    .btn-pdf{font-size:12px;padding:12px 16px}
+    .widget-body{padding:12px}
+    .sidebar-widget{margin-bottom:12px}
+    .overlay-inner{padding:28px 20px;gap:20px}
+    .overlay-logo{font-size:22px}
+    .scales-anim{width:48px;height:48px}
+    .overlay-ind-name{width:90px;font-size:7px}
+    .overlay-status{font-size:9px}
+    .overlay-subtext{font-size:10px}
+    .usage-track{max-width:120px}
+    .mode-toggle-bar{flex-wrap:wrap;gap:6px}
+    .mode-btn{flex:1;justify-content:center;font-size:10px;padding:8px 10px}
+  }
+  @media(max-width:400px){.indicators-grid{grid-template-columns:1fr}.masthead h1{font-size:26px}}
 </style>
 </head>
 <body>
 
-<div id="preloader">
-    <div class="loader-content">
-        <div class="loader-logo">Lex<span>Veritas</span></div>
-        <div style="font-family:var(--mono);font-size:9px;letter-spacing:3px;margin-bottom:20px;opacity:.5">SISTEMA FORENSE ATIVO</div>
-        <div class="loader-bar-bg"><div class="loader-bar-fill"></div></div>
-    </div>
+<!-- LOADING -->
+<div id="lv-loading">
+  <div class="lv-load-logo">Lex<span>Veritas</span></div>
+  <div class="lv-load-label">Sistema de Análise Forense</div>
+  <div class="lv-load-track"><div class="lv-load-fill"></div></div>
 </div>
 
-<aside>
-    <a href="/" class="nav-logo">Lex<span>Veritas</span></a>
-    <div class="nav-group">
-        <span class="nav-label">Auditoria</span>
-        <a href="#" class="nav-link active">
-            <svg viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg>
-            Nova Análise
-        </a>
-        <a href="#" class="nav-link">
-            <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg>
-            Histórico
-        </a>
-    </div>
-    <div class="nav-group">
-        <span class="nav-label">Ferramentas</span>
-        <a href="#" class="nav-link">
-            <svg viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-            Gerador de Recurso
-        </a>
-        <a href="#" class="nav-link">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            Deteção de Nulidades
-        </a>
-    </div>
-</aside>
+<!-- LOGIN -->
+<div id="page-login" class="auth-page">
+  <div class="auth-logo">Lex<em>Veritas</em></div>
+  <div class="auth-tagline">Detector de IA em Jurisprudência Portuguesa</div>
+  <div style="display:flex;gap:20px;justify-content:center;margin-bottom:20px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em"><span style="color:var(--gold)">⚖</span> 6 INDICADORES FORENSES</div>
+    <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em"><span style="color:var(--gold)">📄</span> RELATÓRIO PDF</div>
+    <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em"><span style="color:var(--gold)">🏛</span> 9+ TRIBUNAIS</div>
+  </div>
+  <div class="auth-card">
+    <h2>Entrar na conta</h2>
+    <p>Aceda à sua conta para continuar a análise forense.</p>
+    <div class="auth-error" id="login-error"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="o-seu@email.pt" onkeydown="if(event.key==='Enter') fazerLogin()"></div>
+    <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter') fazerLogin()"></div>
+    <div class="auth-forgot"><a onclick="recuperarPassword()">Esqueceu a password?</a></div>
+    <button class="btn-primary" id="btn-login" onclick="fazerLogin()">Entrar</button>
+    <div class="auth-switch">Não tem conta? <a onclick="showPage('register')">Crie uma gratuitamente →</a></div>
+  </div>
+</div>
 
+<!-- REDEFINIR PASSWORD -->
+<div id="page-reset" class="auth-page hidden">
+  <div class="auth-logo">Lex<em>Veritas</em></div>
+  <div class="auth-tagline">Redefinir Password</div>
+  <div class="auth-card">
+    <h2>Nova password</h2>
+    <p>Introduza a sua nova password para aceder à plataforma.</p>
+    <div class="auth-error" id="reset-error"></div>
+    <div class="auth-success" id="reset-success"></div>
+    <div class="form-group"><label>Nova Password</label><input type="password" id="reset-password1" placeholder="Mínimo 6 caracteres"></div>
+    <div class="form-group"><label>Confirmar Password</label><input type="password" id="reset-password2" placeholder="Repita a password"></div>
+    <button class="btn-primary" id="btn-reset" onclick="guardarNovaPassword()">Guardar Nova Password</button>
+  </div>
+</div>
+
+<!-- REGISTO -->
+<div id="page-register" class="auth-page hidden">
+  <div class="auth-logo">Lex<em>Veritas</em></div>
+  <div class="auth-tagline">Detector de IA em Jurisprudência Portuguesa</div>
+  <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);padding:16px 20px;margin-bottom:20px;max-width:400px;width:100%">
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--gold);margin-bottom:10px">CONTA GRATUITA INCLUI</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> 5 análises por mês sem custos</div>
+      <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> 6 indicadores forenses calibrados para PT</div>
+      <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> Relatório PDF profissional com referência única</div>
+      <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> Histórico das suas análises</div>
+      <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> Sem cartão de crédito</div>
+    </div>
+  </div>
+  <div class="auth-card">
+    <h2>Criar conta gratuita</h2>
+    <p>Comece a analisar decisões judiciais em segundos.</p>
+    <div class="auth-error" id="register-error"></div>
+    <div class="auth-success" id="register-success"></div>
+    <div class="form-group"><label>Nome completo</label><input type="text" id="register-nome" placeholder="Dr. João Silva"></div>
+    <div class="form-group">
+      <label>Profissão</label>
+      <select id="register-profissao">
+        <option value="">— Seleccione —</option>
+        <option>Advogado/a</option><option>Magistrado/a Judicial</option><option>Magistrado/a do MP</option>
+        <option>Solicitador/a</option><option>Notário/a</option><option>Investigador/a Académico</option>
+        <option>Estudante de Direito</option><option>Outro</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Email</label><input type="email" id="register-email" placeholder="o-seu@email.pt"></div>
+    <div class="form-group"><label>Password</label><input type="password" id="register-password" placeholder="Mínimo 6 caracteres"></div>
+    <button class="btn-primary" id="btn-register" onclick="fazerRegisto()">Criar Conta Gratuita</button>
+    <div class="auth-switch">Já tem conta? <a onclick="showPage('login')">Entrar →</a></div>
+  </div>
+</div>
+
+<!-- APP PRINCIPAL -->
+<div id="page-app" class="hidden">
+<header>
+  <div class="header-top">
+    <span class="header-date" id="current-date"></span>
+    <div class="header-user">
+      <div class="header-user-info">
+        <div id="user-name-display">—</div>
+        <div id="user-plan-display"></div>
+      </div>
+      <button class="btn-logout" onclick="logout()">Sair</button>
+    </div>
+  </div>
+  <div class="masthead">
+    <span class="masthead-eyebrow">Sistema de Análise Forense Jurídica · Portugal</span>
+    <h1>Lex<em>Veritas</em></h1>
+    <div class="ornament"><span>⚖</span></div>
+    <p class="masthead-sub">Identificação de Inteligência Artificial em Jurisprudência dos Tribunais Portugueses</p>
+  </div>
+  <nav>
+    <a onclick="showTab('analise')" id="tab-analise" class="active">⚖ Análise</a>
+    <a onclick="showTab('historico')" id="tab-historico">📋 Histórico</a>
+    <a onclick="showTab('perfil')" id="tab-perfil">👤 Perfil</a>
+  </nav>
+</header>
+
+<div class="usage-bar-container">
+  <span class="usage-label">Análises este mês</span>
+  <div class="usage-track"><div class="usage-fill" id="usage-fill" style="width:0%"></div></div>
+  <span class="usage-count" id="usage-count">0 / 5</span>
+  <span class="usage-upgrade" onclick="showModal('upgrade')">⬆ Actualizar</span>
+</div>
+
+<div class="mode-toggle-bar">
+  <span class="mode-toggle-label">Modo</span>
+  <button class="mode-btn active" id="mode-btn-judicial" onclick="setModo('judicial')">⚖ Análise Judicial</button>
+  <button class="mode-btn" id="mode-btn-academico" onclick="setModo('academico')">🎓 Análise Académica</button>
+</div>
+
+<div id="tab-content-analise">
 <main>
-    <div class="top-header">
-        <div class="status-pill"><div class="status-dot"></div> Servidor Lisboa: Operacional</div>
-        <div style="display:flex;gap:24px;align-items:center">
-            <span style="font-family:var(--mono);font-size:11px;opacity:.6">Sessão: Dr. Magistrado</span>
-            <div style="width:32px;height:32px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--black);font-weight:700;font-size:12px">M</div>
-        </div>
+  <div class="analysis-section content-area">
+    <div class="section-label">Entrada do Documento</div>
+    <div class="input-card">
+      <div class="input-card-header">
+        <span class="input-card-title" id="input-card-title">Texto do Acórdão / Sentença / Despacho</span>
+        <span class="char-count" id="char-count">0 caracteres</span>
+      </div>
+      <div class="loading-bar" id="loading-bar"><div class="loading-bar-fill"></div></div>
+      <textarea id="decision-text" placeholder="Cole aqui o texto completo do acórdão, sentença ou despacho para análise forense...&#10;&#10;Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo."></textarea>
+      <div class="input-card-footer">
+        <span class="file-hint">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Aceita .pdf e .txt · até ~200 páginas
+        </span>
+        <button class="btn-analyze" id="btn-analyze" onclick="analyzeDecision()">
+          <div class="spinner" id="spinner"></div>
+          <span id="btn-analyze-text">Analisar Decisão</span>
+        </button>
+      </div>
     </div>
-
-    <div class="content-body">
-        <div class="hero-text">
-            <h1>Análise <span>Crítica</span></h1>
-            <p>Submeta a decisão judicial para escrutínio forense e identificação de padrões sintéticos.</p>
-        </div>
-
-        <div class="analysis-grid">
-            <div class="upload-card" id="dropZone">
-                <div class="scanner-line" id="scanner"></div>
-                <div class="upload-icon">⚖️</div>
-                <h3 style="font-family:var(--serif);font-size:24px;margin-bottom:8px">Carregar Peça Processual</h3>
-                <p style="font-size:13px;opacity:.5;max-width:280px">Arraste o PDF ou clique para iniciar a verificação de autoria e nulidades.</p>
-                <input type="file" id="fileInput" style="display:none">
-                <button class="btn" style="margin-top:24px;background:var(--gold);border:none;padding:12px 24px;font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:1px;cursor:pointer">Selecionar Ficheiro</button>
-            </div>
-
-            <div class="stats-sidebar">
-                <div class="stat-item">
-                    <span class="stat-label">Probabilidade IA</span>
-                    <div class="stat-val" id="iaVal">--%</div>
-                    <div style="width:100%;height:2px;background:rgba(255,255,255,.05)"><div id="iaBar" style="width:0%;height:100%;background:var(--gold);transition:1.5s"></div></div>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Vícios de Fundamentação</span>
-                    <div class="stat-val" id="vicioVal">0</div>
-                    <p style="font-size:10px;opacity:.4">Baseado no Art. 615º CPC</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="results-container" id="results">
-            <div class="results-header">Relatório de Auditoria Forense</div>
-            <ul class="results-list">
-                <li class="result-row"><div><strong>Omissão de Pronúncia</strong><br><small style="opacity:.5">O tribunal não se pronunciou sobre factos essenciais alegados.</small></div><span class="vicio-tag">Grave</span></li>
-                <li class="result-row"><div><strong>Contradição Lógica</strong><br><small style="opacity:.5">A fundamentação de facto colide com a decisão final.</small></div><span class="vicio-tag">Crítico</span></li>
-                <li class="result-row"><div><strong>Padronização de Texto (IA)</strong><br><small style="opacity:.5">Deteção de estrutura típica de modelos GPT-4 em português jurídico.</small></div><span class="vicio-tag" style="background:rgba(201,168,76,.1);color:var(--gold)">Alerta</span></li>
-            </ul>
-        </div>
+    <div class="drop-zone" id="drop-zone">
+      <div class="drop-zone-text" id="drop-zone-text">📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui</div>
+      <input type="file" id="file-input" accept=".txt,.pdf" style="display:none" onchange="handleFile(event)">
     </div>
+    <div class="results-area" id="results-area">
+      <div class="section-label" style="margin-top:28px">Resultado da Análise</div>
+      <div class="verdict-banner" id="verdict-banner">
+        <div class="verdict-label">Veredicto Forense</div>
+        <div class="verdict-title" id="verdict-title">—</div>
+        <div class="verdict-subtitle" id="verdict-subtitle">—</div>
+      </div>
+      <div class="confidence-block">
+        <div class="confidence-label">
+          <span>Índice de Confiança na Detecção</span>
+          <span class="confidence-value" id="confidence-value">—%</span>
+        </div>
+        <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
+      </div>
+      <div class="indicators-grid" id="indicators-grid"></div>
+      <div class="analysis-card"><h3>Fundamentação da Análise</h3><p id="analysis-narrative">—</p></div>
+      <div class="analysis-card" id="relator-card" style="display:none;border-left:3px solid var(--gold)">
+        <h3 id="relator-card-title">Análise do Estilo do Relator</h3><p id="relator-analise-text">—</p>
+      </div>
+      <div class="analysis-card"><h3>Marcadores Identificados</h3><ul class="evidence-list" id="evidence-list"></ul></div>
+      <button class="btn-pdf" onclick="gerarPDF()">📄 Descarregar Relatório PDF Profissional</button>
+      <div class="ref-number" id="ref-number"></div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="section-label">Tribunal & Relator</div>
+    <div class="sidebar-widget">
+      <div class="widget-header"><div class="widget-title" id="ctx-widget-title">Contexto do Documento</div></div>
+      <div class="widget-body" style="padding:14px">
+        <div id="ctx-judicial">
+          <select id="tribunal-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
+            <option value="">— Tribunal (opcional) —</option>
+            <optgroup label="Supremos Tribunais">
+              <option>STJ — Supremo Tribunal de Justiça</option>
+              <option>STA — Supremo Tribunal Administrativo</option>
+              <option>TC — Tribunal Constitucional</option>
+            </optgroup>
+            <optgroup label="Tribunais da Relação">
+              <option>TRL — Tribunal da Relação de Lisboa</option>
+              <option>TRP — Tribunal da Relação do Porto</option>
+              <option>TRC — Tribunal da Relação de Coimbra</option>
+              <option>TRG — Tribunal da Relação de Guimarães</option>
+              <option>TRE — Tribunal da Relação de Évora</option>
+            </optgroup>
+            <optgroup label="Tribunais Administrativos">
+              <option>TCAS — Tribunal Central Administrativo Sul</option>
+              <option>TCAN — Tribunal Central Administrativo Norte</option>
+            </optgroup>
+            <optgroup label="Outros">
+              <option>Tribunal de 1.ª Instância (Cível)</option>
+              <option>Tribunal de 1.ª Instância (Criminal)</option>
+              <option>Tribunal de Trabalho</option>
+              <option>Tribunal Administrativo e Fiscal</option>
+            </optgroup>
+          </select>
+          <input id="relator-input" type="text" placeholder="Nome do relator (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
+          <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>Cada tribunal e relator têm um estilo próprio. Indicar melhora a precisão.</div>
+        </div>
+        <div id="ctx-academico" style="display:none">
+          <input id="instituicao-input" type="text" placeholder="Universidade / Faculdade (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
+          <select id="tipo-doc-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
+            <option value="">— Tipo de documento —</option>
+            <option>Dissertação de Mestrado</option><option>Tese de Doutoramento</option>
+            <option>Trabalho de Licenciatura</option><option>Artigo Académico</option>
+            <option>Monografia</option><option>Outro</option>
+          </select>
+          <input id="orientador-input" type="text" placeholder="Orientador (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
+          <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>O tipo de documento e a instituição ajudam a calibrar a análise para o estilo académico-jurídico esperado.</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-widget">
+      <div class="widget-header"><div class="widget-title">A Sua Conta</div></div>
+      <div class="widget-body">
+        <div class="stat-row"><span class="stat-label">Plano actual</span><span class="stat-value" id="stat-plano">Gratuito</span></div>
+        <div class="stat-row"><span class="stat-label">Análises este mês</span><span class="stat-value" id="stat-mes">0 / 5</span></div>
+        <div class="stat-row"><span class="stat-label">Total de análises</span><span class="stat-value" id="stat-total">0</span></div>
+      </div>
+    </div>
+    <div class="sidebar-widget">
+      <div class="widget-header"><div class="widget-title">Referências Legais</div></div>
+      <div class="widget-body">
+        <div class="info-box note"><strong>Art. 205.º CRP</strong>Fundamentação obrigatória das decisões judiciais.</div>
+        <div class="info-box note"><strong>RGPD — Art. 22.º</strong>Decisões automatizadas com efeitos jurídicos.</div>
+        <div class="info-box note"><strong>EU AI Act 2024/1689</strong>IA de alto risco na administração da justiça.</div>
+      </div>
+    </div>
+  </div>
 </main>
+</div>
 
+<div id="tab-content-historico" class="hidden">
+  <div class="history-page">
+    <div class="section-label">Histórico de Análises</div>
+    <div id="history-list"><div class="empty-history">A carregar histórico...</div></div>
+  </div>
+</div>
+
+<div id="tab-content-perfil" class="hidden">
+  <div class="history-page">
+    <div class="section-label">O Meu Perfil</div>
+    <div class="input-card" style="margin-bottom:20px">
+      <div class="input-card-header"><span class="input-card-title">Dados Pessoais</span></div>
+      <div style="padding:20px;background:white;display:flex;flex-direction:column;gap:14px">
+        <div>
+          <label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Nome</label>
+          <input id="perfil-nome" type="text" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:var(--ink);outline:none;background:var(--parchment)" placeholder="O seu nome">
+        </div>
+        <div>
+          <label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Email</label>
+          <input id="perfil-email" type="text" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:#aaa;outline:none;background:#f8f8f8" disabled>
+        </div>
+        <div>
+          <label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Profissão</label>
+          <select id="perfil-profissao" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:var(--ink);outline:none;background:var(--parchment);cursor:pointer">
+            <option value="">— Seleccione —</option>
+            <option>Advogado/a</option><option>Magistrado/a Judicial</option><option>Magistrado/a do MP</option>
+            <option>Solicitador/a</option><option>Notário/a</option><option>Investigador/a Académico</option>
+            <option>Estudante de Direito</option><option>Outro</option>
+          </select>
+        </div>
+        <button onclick="guardarPerfil()" style="background:var(--ink);color:var(--cream);border:none;padding:11px 24px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;align-self:flex-start" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--ink)'">Guardar Alterações</button>
+        <div id="perfil-msg" style="font-size:12px;display:none"></div>
+      </div>
+    </div>
+    <div class="sidebar-widget" style="margin-bottom:20px">
+      <div class="widget-header"><div class="widget-title">Plano & Utilização</div></div>
+      <div class="widget-body">
+        <div class="stat-row"><span class="stat-label">Plano actual</span><span class="stat-value" id="perfil-plano">—</span></div>
+        <div class="stat-row"><span class="stat-label">Análises este mês</span><span class="stat-value" id="perfil-mes">—</span></div>
+        <div class="stat-row"><span class="stat-label">Total de análises</span><span class="stat-value" id="perfil-total">—</span></div>
+        <div class="stat-row"><span class="stat-label">Membro desde</span><span class="stat-value" id="perfil-desde">—</span></div>
+      </div>
+    </div>
+    <div class="input-card" style="margin-bottom:20px">
+      <div class="input-card-header"><span class="input-card-title">Segurança</span></div>
+      <div style="padding:20px;background:white;display:flex;flex-direction:column;gap:12px">
+        <p style="font-size:13px;color:#666;line-height:1.6">Para alterar a sua password, enviamos um link de recuperação para o seu email.</p>
+        <button onclick="alterarPassword()" style="background:white;color:var(--ink);border:1px solid var(--rule);padding:11px 24px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;align-self:flex-start" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--rule)';this.style.color='var(--ink)'">Alterar Password</button>
+        <div id="password-msg" style="font-size:12px;display:none"></div>
+      </div>
+    </div>
+    <div class="input-card">
+      <div class="input-card-header"><span class="input-card-title">Suporte & Contacto</span></div>
+      <div style="padding:20px;background:white;display:flex;flex-direction:column;gap:12px">
+        <p style="font-size:13px;color:#666;line-height:1.6">Tem alguma questão sobre o seu plano, suporte técnico ou parcerias? Envie-nos uma mensagem e respondemos em 24h.</p>
+        <button onclick="document.getElementById('contacto-modal').classList.add('visible')" style="background:var(--ink);color:var(--cream);border:none;padding:11px 24px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;align-self:flex-start" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--ink)'">✉ Enviar Mensagem</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">Lex<em>Veritas</em></div>
+  <a class="footer-contact" onclick="document.getElementById('contacto-modal').classList.add('visible')">✉ Contacto & Suporte</a>
+  <div class="footer-copy">© 2026 · Jurisprudência Portuguesa · Uso Profissional</div>
+</footer>
+
+<!-- OVERLAY ANÁLISE -->
+<div class="analysis-overlay" id="analysis-overlay">
+  <div class="overlay-inner">
+    <div class="overlay-logo">Lex<em>Veritas</em></div>
+    <svg class="scales-anim" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="32" y1="8" x2="32" y2="56" stroke="#c9a84c" stroke-width="2"/>
+      <line x1="8" y1="16" x2="56" y2="16" stroke="#c9a84c" stroke-width="2"/>
+      <circle cx="32" cy="8" r="3" fill="#c9a84c"/>
+      <line x1="8" y1="16" x2="16" y2="36" stroke="#c9a84c" stroke-width="1.5"/>
+      <line x1="56" y1="16" x2="48" y2="28" stroke="#c9a84c" stroke-width="1.5"/>
+      <ellipse cx="12" cy="37" rx="8" ry="3" stroke="#c9a84c" stroke-width="1.5" fill="rgba(201,168,76,0.15)"/>
+      <ellipse cx="52" cy="29" rx="8" ry="3" stroke="#c9a84c" stroke-width="1.5" fill="rgba(201,168,76,0.15)"/>
+      <line x1="20" y1="56" x2="44" y2="56" stroke="#c9a84c" stroke-width="2"/>
+    </svg>
+    <div class="scanning-dots">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="overlay-status" id="overlay-status">A iniciar análise...</div>
+    <div class="overlay-progress-track"><div class="overlay-progress-fill" id="overlay-progress"></div></div>
+    <div class="overlay-indicators">
+      <div class="overlay-ind" id="oi-1"><div class="overlay-ind-name">Perplexidade</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-1"></div></div><div class="overlay-ind-val" id="ov-1">—</div></div>
+      <div class="overlay-ind" id="oi-2"><div class="overlay-ind-name">Burstiness</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-2"></div></div><div class="overlay-ind-val" id="ov-2">—</div></div>
+      <div class="overlay-ind" id="oi-3"><div class="overlay-ind-name">Coesão Artificial</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-3"></div></div><div class="overlay-ind-val" id="ov-3">—</div></div>
+      <div class="overlay-ind" id="oi-4"><div class="overlay-ind-name">Uniformidade Sint.</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-4"></div></div><div class="overlay-ind-val" id="ov-4">—</div></div>
+      <div class="overlay-ind" id="oi-5"><div class="overlay-ind-name">Riqueza Lexical</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-5"></div></div><div class="overlay-ind-val" id="ov-5">—</div></div>
+      <div class="overlay-ind" id="oi-6"><div class="overlay-ind-name">Marc. Formulaicos</div><div class="overlay-ind-track"><div class="overlay-ind-fill" id="of-6"></div></div><div class="overlay-ind-val" id="ov-6">—</div></div>
+    </div>
+    <div class="overlay-subtext">A analisar padrões linguísticos forenses<br>calibrados para os tribunais portugueses</div>
+  </div>
+</div>
+</div>
+
+<!-- MODAL UPGRADE -->
+<div class="modal-overlay" id="modal-upgrade">
+  <div class="modal">
+    <button class="btn-close-modal" onclick="closeModal('upgrade')">×</button>
+    <h2>Plano Profissional</h2>
+    <p>100 análises/mês · Histórico ilimitado · Suporte prioritário · 19€/mês</p>
+    <div style="background:#fffbf0;border:1px solid rgba(201,168,76,0.3);padding:20px;margin-bottom:20px">
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--gold);margin-bottom:12px">LISTA DE ESPERA</div>
+      <p style="font-size:13px;color:#666;margin-bottom:16px;line-height:1.6">Os pagamentos abrem em breve. Deixe o seu email e será o primeiro a saber.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="email" id="upgrade-email" placeholder="o-seu@email.pt" style="flex:1;min-width:180px;padding:10px 12px;border:1px solid rgba(201,168,76,0.3);font-family:var(--sans);font-size:13px;outline:none">
+        <button onclick="inscreverListaEspera()" style="background:var(--gold);color:var(--black);border:none;padding:10px 20px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap">Avisar-me</button>
+      </div>
+      <div id="upgrade-msg" style="font-size:12px;margin-top:10px;display:none"></div>
+    </div>
+    <div class="info-box note"><strong>Plano Gratuito actual</strong>5 análises/mês · Relatório PDF · Histórico 30 dias</div>
+  </div>
+</div>
+
+<!-- MODAL CONTACTO -->
+<div class="dark-modal-overlay" id="contacto-modal" onclick="if(event.target===this)this.classList.remove('visible')">
+  <div class="dark-modal-box">
+    <button class="dark-modal-close" onclick="document.getElementById('contacto-modal').classList.remove('visible')">×</button>
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Suporte & Contacto</div>
+    <h2 style="font-family:var(--serif);font-size:22px;font-style:italic;color:#f8f6f1;margin-bottom:6px">Fale connosco</h2>
+    <p style="font-size:13px;color:var(--grey);margin-bottom:20px;line-height:1.6">Questões sobre o seu plano, suporte técnico ou parcerias. Respondemos em 24h.</p>
+    <div class="dark-form-group"><label>Nome</label><input type="text" id="cm-nome" placeholder="O seu nome"></div>
+    <div class="dark-form-group"><label>Email</label><input type="email" id="cm-email" placeholder="o-seu@email.pt"></div>
+    <div class="dark-form-group">
+      <label>Assunto</label>
+      <select id="cm-assunto">
+        <option value="">— Seleccione —</option>
+        <option>Questão sobre o meu plano</option>
+        <option>Plano Profissional</option>
+        <option>Suporte técnico</option>
+        <option>Parceria</option>
+        <option>Outro</option>
+      </select>
+    </div>
+    <div class="dark-form-group"><label>Mensagem</label><textarea id="cm-mensagem" placeholder="A sua mensagem..."></textarea></div>
+    <button onclick="enviarContacto()" style="width:100%;background:var(--gold);color:var(--black);border:none;padding:13px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;margin-top:4px" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">Enviar Mensagem →</button>
+    <div id="cm-msg" style="font-size:12px;margin-top:12px;display:none;padding:10px 14px"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-/* CORREÇÃO DO BLOQUEIO DE ECRÃ */
-window.addEventListener('load',()=>{
-    const p=document.getElementById('preloader');
-    setTimeout(()=>{
-        p.style.opacity='0';
-        setTimeout(()=>p.style.display='none',800);
-    },2200);
+const lvLoad=document.getElementById('lv-loading');
+if(lvLoad){lvLoad.classList.add('done');setTimeout(()=>lvLoad.style.display='none',500);}
+
+const SUPABASE_URL='https://bsbgizaftamufmmxeyer.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let currentUser=null,userProfile=null,lastResult=null,lastRef=null,loginInProgress=false;
+let pdfText=null,modoActual='judicial';
+
+function setModo(modo){
+  modoActual=modo;
+  document.getElementById('mode-btn-judicial').classList.toggle('active',modo==='judicial');
+  document.getElementById('mode-btn-academico').classList.toggle('active',modo==='academico');
+  document.getElementById('ctx-judicial').style.display=modo==='judicial'?'block':'none';
+  document.getElementById('ctx-academico').style.display=modo==='academico'?'block':'none';
+  document.getElementById('input-card-title').textContent=modo==='judicial'?'Texto do Acórdão / Sentença / Despacho':'Tese / Dissertação / Trabalho Académico';
+  document.getElementById('decision-text').placeholder=modo==='judicial'?'Cole aqui o texto completo do acórdão, sentença ou despacho para análise forense...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.':'Cole aqui o texto da tese, dissertação ou trabalho académico para verificação de autoria...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.';
+  document.getElementById('btn-analyze-text').textContent=modo==='judicial'?'Analisar Decisão':'Analisar Documento';
+  document.getElementById('relator-card-title').textContent=modo==='judicial'?'Análise do Estilo do Relator':'Análise do Estilo do Autor';
+  document.getElementById('results-area').classList.remove('visible');
+  limparPDF();
+}
+
+function showPage(page){['login','register','reset','app'].forEach(p=>document.getElementById('page-'+p).classList.add('hidden'));document.getElementById('page-'+page).classList.remove('hidden');}
+function showTab(tab){['analise','historico','perfil'].forEach(t=>{document.getElementById('tab-content-'+t).classList.add('hidden');document.getElementById('tab-'+t).classList.remove('active');});document.getElementById('tab-content-'+tab).classList.remove('hidden');document.getElementById('tab-'+tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(tab==='historico')loadHistory();if(tab==='perfil')loadPerfil();}
+function showModal(id){document.getElementById('modal-'+id).classList.add('visible');}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('visible');}
+
+async function fazerLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-password').value;
+  const errEl=document.getElementById('login-error');
+  const btn=document.getElementById('btn-login');
+  errEl.style.display='none';
+  if(!email||!pass){errEl.textContent='Preencha email e password.';errEl.style.display='block';return;}
+  btn.disabled=true;btn.textContent='A entrar...';loginInProgress=true;
+  const{data,error}=await sb.auth.signInWithPassword({email,password:pass});
+  if(error){loginInProgress=false;errEl.textContent='Email ou password incorrectos.';errEl.style.display='block';btn.disabled=false;btn.textContent='Entrar';return;}
+  currentUser=data.user;await loadProfile();initApp();showPage('app');
+}
+
+async function fazerRegisto(){
+  const nome=document.getElementById('register-nome').value.trim(),prof=document.getElementById('register-profissao').value;
+  const email=document.getElementById('register-email').value.trim(),pass=document.getElementById('register-password').value;
+  const errEl=document.getElementById('register-error'),succEl=document.getElementById('register-success');
+  const btn=document.getElementById('btn-register');
+  errEl.style.display='none';succEl.style.display='none';
+  if(!nome||!email||!pass){errEl.textContent='Preencha todos os campos.';errEl.style.display='block';return;}
+  if(pass.length<6){errEl.textContent='Password com mínimo 6 caracteres.';errEl.style.display='block';return;}
+  btn.disabled=true;btn.textContent='A criar conta...';
+  try{
+    const{data,error}=await sb.auth.signUp({email,password:pass,options:{data:{nome,profissao:prof}}});
+    if(error){errEl.textContent='Erro: '+error.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Criar Conta Gratuita';return;}
+    if(data?.user)await sb.from('perfis').upsert({id:data.user.id,email,nome,profissao:prof,mes_atual:new Date().toISOString().substring(0,7),analises_mes:0});
+    succEl.textContent='Conta criada! Já pode entrar na sua conta.';succEl.style.display='block';btn.textContent='Conta criada!';
+    fetch('https://bsbgizaftamufmmxeyer.supabase.co/functions/v1/rapid-service',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({record:{email,raw_user_meta_data:{nome}}})}).catch(()=>{});
+  }catch(e){errEl.textContent='Erro: '+e.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Criar Conta Gratuita';}
+}
+
+async function recuperarPassword(){
+  const email=document.getElementById('login-email').value.trim();
+  const errEl=document.getElementById('login-error');
+  if(!email){errEl.textContent='Introduza o seu email no campo acima primeiro.';errEl.style.display='block';return;}
+  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://www.lexveritas.pt/app'});
+  if(error){errEl.textContent='Erro ao enviar email: '+error.message;errEl.style.display='block';return;}
+  errEl.style.display='none';
+  const s=document.createElement('div');s.className='auth-success';s.style.display='block';
+  s.textContent='Email de recuperação enviado! Verifique a sua caixa de entrada.';
+  document.getElementById('login-error').after(s);setTimeout(()=>s.remove(),6000);
+}
+
+async function logout(){await sb.auth.signOut();currentUser=null;userProfile=null;showPage('login');}
+
+sb.auth.onAuthStateChange((event,session)=>{
+  if(loginInProgress)return;
+  if(event==='SIGNED_OUT')showPage('login');
+  if(event==='PASSWORD_RECOVERY'){
+    document.getElementById('lv-loading').style.display='none';
+    showPage('reset');
+  }
 });
 
-/* LÓGICA DE SIMULAÇÃO PRO */
-const dropZone=document.getElementById('dropZone');
-const fileInput=document.getElementById('fileInput');
-const scanner=document.getElementById('scanner');
+const _hashParams=new URLSearchParams(window.location.hash.substring(1));
+const _urlParams=new URLSearchParams(window.location.search);
 
-dropZone.onclick=()=>fileInput.click();
+if(_hashParams.get('type')==='recovery'){
+  document.getElementById('lv-loading').style.display='none';
+  showPage('reset');
+} else if(_urlParams.has('code')){
+  document.getElementById('lv-loading').style.display='none';
+  showPage('login');
+} else {
+  sb.auth.getSession().then(({data})=>{
+    if(loginInProgress)return;
+    if(!document.getElementById('page-reset').classList.contains('hidden'))return;
+    if(data.session?.user){currentUser=data.session.user;userProfile={nome:data.session.user.user_metadata?.nome||data.session.user.email.split('@')[0],plano:'gratuito',analises_mes:0};initApp();showPage('app');}
+    else showPage('login');
+  });
+}
 
-fileInput.onchange=(e)=>{
-    if(e.target.files[0]){
-        scanner.style.display='block';
-        dropZone.querySelector('h3').innerText="A Processar Auditoria...";
-        
-        setTimeout(()=>{
-            scanner.style.display='none';
-            document.getElementById('results').style.display='block';
-            document.getElementById('iaVal').innerText="87%";
-            document.getElementById('iaBar').style.width="87%";
-            document.getElementById('vicioVal').innerText="3";
-            dropZone.querySelector('h3').innerText="Análise Concluída";
-            alert(" Auditoria Finalizada: Documento com fortes indícios de supervisão algorítmica e 3 nulidades processuais identificadas.");
-        },3000);
+async function loadProfile(){
+  try{
+    const mes=new Date().toISOString().substring(0,7);
+    let{data}=await sb.from('perfis').select('*').eq('id',currentUser.id).single();
+    if(!data){const meta=currentUser.user_metadata||{};await sb.from('perfis').upsert({id:currentUser.id,email:currentUser.email,nome:meta.nome||currentUser.email.split('@')[0],profissao:meta.profissao||'',mes_atual:mes,analises_mes:0,plano:'gratuito'});({data}=await sb.from('perfis').select('*').eq('id',currentUser.id).single());}
+    if(data&&data.mes_atual!==mes){await sb.from('perfis').update({analises_mes:0,mes_atual:mes}).eq('id',currentUser.id);data.analises_mes=0;data.mes_atual=mes;}
+    userProfile=data||{nome:currentUser.email.split('@')[0],plano:'gratuito',analises_mes:0};
+  }catch(e){userProfile={nome:currentUser.email.split('@')[0],plano:'gratuito',analises_mes:0};}
+}
+
+function getLimite(){const p=userProfile?.plano;return(p==='profissional'||p==='institucional')?1000:5;}
+
+function initApp(){
+  const now=new Date();
+  document.getElementById('current-date').textContent=now.toLocaleDateString('pt-PT',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
+  const nome=userProfile?.nome||currentUser?.email||'—',plano=userProfile?.plano||'gratuito';
+  const usado=userProfile?.analises_mes||0,limite=getLimite();
+  document.getElementById('user-name-display').textContent=nome;
+  document.getElementById('user-plan-display').innerHTML=`<span class="plan-badge plan-${plano}">${plano}</span>`;
+  document.getElementById('usage-fill').style.width=Math.min(100,(usado/limite)*100)+'%';
+  document.getElementById('usage-count').textContent=usado+' / '+limite;
+  document.getElementById('stat-plano').textContent=plano.charAt(0).toUpperCase()+plano.slice(1);
+  document.getElementById('stat-mes').textContent=usado+' / '+limite;
+  const urlParams=new URLSearchParams(window.location.search);
+  if(urlParams.get('modo')==='academico')setTimeout(()=>setModo('academico'),100);
+}
+
+async function loadPerfil(){
+  if(!currentUser||!userProfile)return;
+  document.getElementById('perfil-nome').value=userProfile.nome||'';
+  document.getElementById('perfil-email').value=currentUser.email||'';
+  const profSel=document.getElementById('perfil-profissao');
+  if(userProfile.profissao){Array.from(profSel.options).forEach(o=>{if(o.value===userProfile.profissao)o.selected=true;});}
+  const plano=userProfile.plano||'gratuito',limite=getLimite();
+  document.getElementById('perfil-plano').textContent=plano.charAt(0).toUpperCase()+plano.slice(1);
+  document.getElementById('perfil-mes').textContent=(userProfile.analises_mes||0)+' / '+limite;
+  const{count}=await sb.from('analises').select('*',{count:'exact',head:true}).eq('user_id',currentUser.id);
+  document.getElementById('perfil-total').textContent=count||0;
+  document.getElementById('stat-total').textContent=count||0;
+  const created=new Date(currentUser.created_at);
+  document.getElementById('perfil-desde').textContent=created.toLocaleDateString('pt-PT',{month:'long',year:'numeric'});
+}
+
+async function guardarPerfil(){
+  const nome=document.getElementById('perfil-nome').value.trim();
+  const prof=document.getElementById('perfil-profissao').value;
+  const msg=document.getElementById('perfil-msg');
+  if(!nome){msg.textContent='Introduza o seu nome.';msg.style.color='#c97850';msg.style.display='block';return;}
+  await sb.from('perfis').update({nome,profissao:prof}).eq('id',currentUser.id);
+  userProfile.nome=nome;userProfile.profissao=prof;
+  document.getElementById('user-name-display').textContent=nome;
+  msg.textContent='✓ Perfil guardado com sucesso.';msg.style.color='var(--green)';msg.style.display='block';
+  setTimeout(()=>msg.style.display='none',3000);
+}
+
+async function alterarPassword(){
+  const msg=document.getElementById('password-msg');
+  const{error}=await sb.auth.resetPasswordForEmail(currentUser.email,{redirectTo:'https://www.lexveritas.pt/app'});
+  if(error){msg.textContent='Erro: '+error.message;msg.style.color='#c97850';}
+  else{msg.textContent='✓ Email de recuperação enviado. Verifique a sua caixa de entrada.';msg.style.color='var(--green)';}
+  msg.style.display='block';setTimeout(()=>msg.style.display='none',5000);
+}
+
+async function guardarNovaPassword(){
+  const p1=document.getElementById('reset-password1').value;
+  const p2=document.getElementById('reset-password2').value;
+  const errEl=document.getElementById('reset-error');
+  const succEl=document.getElementById('reset-success');
+  const btn=document.getElementById('btn-reset');
+  errEl.style.display='none';succEl.style.display='none';
+  if(!p1||p1.length<6){errEl.textContent='Password com mínimo 6 caracteres.';errEl.style.display='block';return;}
+  if(p1!==p2){errEl.textContent='As passwords não coincidem.';errEl.style.display='block';return;}
+  btn.disabled=true;btn.textContent='A guardar...';
+  const{error}=await sb.auth.updateUser({password:p1});
+  if(error){errEl.textContent='Erro: '+error.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Guardar Nova Password';return;}
+  succEl.textContent='✓ Password actualizada! A redirecionar...';succEl.style.display='block';
+  setTimeout(()=>{window.location.href='/app';},2000);
+}
+
+async function enviarContacto(){
+  const nome=document.getElementById('cm-nome').value.trim();
+  const email=document.getElementById('cm-email').value.trim();
+  const assunto=document.getElementById('cm-assunto').value;
+  const mensagem=document.getElementById('cm-mensagem').value.trim();
+  const msg=document.getElementById('cm-msg');
+  if(!nome||!email||!mensagem){msg.textContent='Preencha nome, email e mensagem.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';return;}
+  try{
+    const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({nome,email,assunto:assunto||'Questão geral',mensagem,user_id:currentUser?.id||'—'})});
+    if(r.ok){
+      msg.textContent='✓ Mensagem enviada! Respondemos em 24h.';msg.style.color='var(--green)';msg.style.background='rgba(26,92,58,0.15)';msg.style.display='block';
+      document.getElementById('cm-nome').value='';document.getElementById('cm-email').value='';
+      document.getElementById('cm-assunto').value='';document.getElementById('cm-mensagem').value='';
+    }else throw new Error();
+  }catch(e){msg.textContent='Erro ao enviar. Tente novamente.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';}
+}
+
+// FILE HANDLING
+const textarea=document.getElementById('decision-text');
+textarea.addEventListener('input',()=>{if(textarea.value.length>0&&pdfText){pdfText=null;limparDropZone();}actualizarContador();});
+function actualizarContador(){const len=pdfText?pdfText.length:textarea.value.length;document.getElementById('char-count').textContent=len.toLocaleString('pt-PT')+' caracteres';}
+const dropZone=document.getElementById('drop-zone');
+dropZone.addEventListener('click',()=>{if(!pdfText)document.getElementById('file-input').click();});
+dropZone.addEventListener('dragover',e=>{e.preventDefault();if(!pdfText)dropZone.style.borderColor='var(--gold)';});
+dropZone.addEventListener('dragleave',()=>{if(!pdfText)dropZone.style.borderColor='';});
+dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.style.borderColor='';const f=e.dataTransfer.files[0];if(f&&!pdfText)handleFile({target:{files:[f]}});});
+function handleFile(e){const file=e.target.files[0];if(!file)return;if(file.type==='application/pdf'||file.name.endsWith('.pdf'))extractPDF(file);else readTxt(file);}
+function readTxt(file){const reader=new FileReader();reader.onload=ev=>{pdfText=ev.target.result;actualizarContador();dropZone.classList.add('has-file');document.getElementById('drop-zone-text').innerHTML=`✅ <strong>${file.name}</strong> carregado<br><span style="font-size:11px;color:#888">${pdfText.length.toLocaleString('pt-PT')} caracteres</span> &nbsp;<span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover</span>`;};reader.readAsText(file);}
+async function extractPDF(file){
+  setDropText('⏳ A extrair texto do PDF...');
+  try{
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const ab=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+    setDropText('⏳ A ler '+pdf.numPages+' páginas...');
+    let txt='';
+    for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i);const content=await page.getTextContent();txt+=content.items.map(x=>x.str).join(' ')+'\n\n';}
+    txt=txt.trim();
+    if(!txt||txt.length<50){setDropText('⚠️ PDF sem texto extraível. Copie o texto manualmente.');return;}
+    pdfText=txt;actualizarContador();dropZone.classList.add('has-file');
+    document.getElementById('drop-zone-text').innerHTML=`✅ <strong>${file.name}</strong><br><span style="font-size:11px;color:#888">${pdf.numPages} páginas · ${txt.length.toLocaleString('pt-PT')} caracteres extraídos</span><br><span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover ficheiro</span>`;
+  }catch(err){setDropText('❌ Erro ao ler o PDF. Tente copiar o texto manualmente.');}
+}
+function limparPDF(){pdfText=null;document.getElementById('file-input').value='';dropZone.classList.remove('has-file');dropZone.style.borderColor='';setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui');actualizarContador();}
+function limparDropZone(){document.getElementById('file-input').value='';dropZone.classList.remove('has-file');dropZone.style.borderColor='';setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui');}
+function setDropText(t){document.getElementById('drop-zone-text').innerHTML=t;}
+
+// OVERLAY
+const overlayMessages=[{text:'A extrair padrões linguísticos...',pct:15},{text:'A calcular perplexidade textual...',pct:30},{text:'A analisar burstiness...',pct:45},{text:'A detectar coesão artificial...',pct:60},{text:'A verificar marcadores formulaicos...',pct:75},{text:'A comparar com estilo do tribunal...',pct:88},{text:'A gerar veredicto forense...',pct:96}];
+let overlayInterval=null,overlayMsgIdx=0;
+function showOverlay(){document.getElementById('analysis-overlay').classList.add('visible');document.getElementById('overlay-progress').style.width='0%';document.getElementById('overlay-status').textContent='A iniciar análise...';for(let i=1;i<=6;i++){document.getElementById('oi-'+i).classList.remove('active');document.getElementById('of-'+i).style.width='0%';document.getElementById('ov-'+i).textContent='—';}overlayMsgIdx=0;overlayInterval=setInterval(tickOverlay,1800);}
+function tickOverlay(){if(overlayMsgIdx>=overlayMessages.length)return;const msg=overlayMessages[overlayMsgIdx];document.getElementById('overlay-status').textContent=msg.text;document.getElementById('overlay-progress').style.width=msg.pct+'%';if(overlayMsgIdx>=1&&overlayMsgIdx<=6){const idx=overlayMsgIdx,val=Math.floor(Math.random()*40+40);document.getElementById('oi-'+idx).classList.add('active');setTimeout(()=>{document.getElementById('of-'+idx).style.width=val+'%';document.getElementById('ov-'+idx).textContent=val;},300);}overlayMsgIdx++;}
+function hideOverlay(result){clearInterval(overlayInterval);if(result&&result.indicadores){const keys=['perplexidade','burstiness','coesao_artificial','uniformidade_sintatica','riqueza_lexical','marcadores_formulaicos'];keys.forEach((k,i)=>{const val=result.indicadores[k]||0,idx=i+1;document.getElementById('oi-'+idx).classList.add('active');document.getElementById('of-'+idx).style.width=val+'%';document.getElementById('ov-'+idx).textContent=val;});document.getElementById('overlay-status').textContent='Análise concluída!';document.getElementById('overlay-progress').style.width='100%';}setTimeout(()=>{document.getElementById('analysis-overlay').classList.remove('visible');},result?800:0);}
+
+// ANÁLISE
+async function analyzeDecision(){
+  const text=(pdfText||textarea.value).trim();
+  if(text.length<100){alert('Insira pelo menos 100 caracteres ou carregue um PDF.');return;}
+  const usado=userProfile?.analises_mes||0,limite=getLimite();
+  if(usado>=limite){showModal('upgrade');return;}
+  const btn=document.getElementById('btn-analyze'),loadingBar=document.getElementById('loading-bar');
+  btn.disabled=true;btn.classList.add('loading');document.getElementById('spinner').style.display='block';loadingBar.classList.add('active');showOverlay();document.getElementById('results-area').classList.remove('visible');
+  try{
+    let tribunal=null,relator=null,instituicao=null,tipoDoc=null,orientador=null;
+    if(modoActual==='judicial'){tribunal=document.getElementById('tribunal-select').value||null;relator=document.getElementById('relator-input').value||null;}
+    else{instituicao=document.getElementById('instituicao-input').value||null;tipoDoc=document.getElementById('tipo-doc-select').value||null;orientador=document.getElementById('orientador-input').value||null;}
+    const response=await fetch('/api/analisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:text,modo:modoActual,tribunal,relator,instituicao,tipoDoc,orientador})});
+    if(!response.ok){const err=await response.json().catch(()=>({}));throw new Error(err.erro||'Erro do servidor.');}
+    const result=await response.json();
+    lastResult=result;lastResult._tribunal=tribunal;lastResult._relator=relator;lastResult._instituicao=instituicao;lastResult._tipoDoc=tipoDoc;lastResult._modo=modoActual;
+    lastRef='LV-'+Date.now().toString(36).toUpperCase();document.getElementById('ref-number').textContent='Referência: '+lastRef;
+    hideOverlay(result);renderResults(result);
+    if(window.innerWidth<=760){setTimeout(()=>{const el=document.getElementById('results-area');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},900);}
+    await sb.from('analises').insert({user_id:currentUser.id,tribunal:tribunal||instituicao||null,relator:relator||tipoDoc||null,veredicto:result.veredicto,confianca:result.confianca,narrativa:result.narrativa,indicadores:result.indicadores||null,marcadores:result.marcadores||null,relator_analise:result.relator_analise||null,modo:modoActual});
+    const novoTotal=usado+1;await sb.from('perfis').update({analises_mes:novoTotal}).eq('id',currentUser.id);userProfile.analises_mes=novoTotal;
+    const{count}=await sb.from('analises').select('*',{count:'exact',head:true}).eq('user_id',currentUser.id);
+    document.getElementById('stat-total').textContent=count||novoTotal;document.getElementById('stat-mes').textContent=novoTotal+' / '+limite;document.getElementById('usage-count').textContent=novoTotal+' / '+limite;document.getElementById('usage-fill').style.width=Math.min(100,(novoTotal/limite)*100)+'%';
+  }catch(err){hideOverlay(null);alert('Erro: '+(err.message||'Verifique a sua ligação.'));}
+  finally{btn.disabled=false;btn.classList.remove('loading');document.getElementById('spinner').style.display='none';loadingBar.classList.remove('active');}
+}
+
+function renderResults(result){
+  const titles={'IA_DETECTADA':'Inteligência Artificial Detectada','PROVAVELMENTE_IA':'Provavelmente Gerado por IA','INCONCLUSIVO':'Análise Inconclusiva','PROVAVELMENTE_HUMANO':'Provavelmente Autoria Humana','HUMANO':'Autoria Humana Confirmada'};
+  const subs={'IA_DETECTADA':'Os marcadores linguísticos indicam fortemente o uso de inteligência artificial.','PROVAVELMENTE_IA':'Vários indicadores sugerem uso significativo de IA.','INCONCLUSIVO':'Os indicadores não permitem determinar com segurança o uso de IA.','PROVAVELMENTE_HUMANO':'O texto apresenta características predominantemente humanas.','HUMANO':'Os marcadores são consistentes com autoria humana.'};
+  const cls={'IA_DETECTADA':'ai','PROVAVELMENTE_IA':'ai','INCONCLUSIVO':'uncertain','PROVAVELMENTE_HUMANO':'human','HUMANO':'human'};
+  const banner=document.getElementById('verdict-banner');
+  banner.className='verdict-banner '+(cls[result.veredicto]||'uncertain');
+  document.getElementById('verdict-title').textContent=titles[result.veredicto]||result.veredicto;
+  document.getElementById('verdict-subtitle').textContent=subs[result.veredicto]||'';
+  document.getElementById('confidence-value').textContent=result.confianca+'%';
+  setTimeout(()=>{document.getElementById('meter-fill').style.width=result.confianca+'%';},100);
+  const indLabels={perplexidade:'Perplexidade',burstiness:'Burstiness',coesao_artificial:'Coesão Artificial',uniformidade_sintatica:'Uniformidade Sint.',riqueza_lexical:'Riqueza Lexical',marcadores_formulaicos:'Marc. Formulaicos'};
+  const grid=document.getElementById('indicators-grid');grid.innerHTML='';
+  for(const[key,val]of Object.entries(result.indicadores||{})){const bc=val>70?'bar-high':val>40?'bar-mid':'bar-low';grid.innerHTML+=`<div class="indicator-card"><div class="indicator-name">${indLabels[key]||key}</div><div class="indicator-score">${val}<small style="font-size:10px;font-weight:400;color:#aaa">/100</small></div><div class="indicator-bar"><div class="indicator-bar-fill ${bc}" style="width:0" data-width="${val}%"></div></div></div>`;}
+  setTimeout(()=>{grid.querySelectorAll('.indicator-bar-fill').forEach(el=>{el.style.width=el.dataset.width;});},200);
+  document.getElementById('analysis-narrative').innerHTML=(result.narrativa||'').replace(/\n/g,'<br>');
+  const rc=document.getElementById('relator-card');
+  if(result.relator_analise&&!result.relator_analise.toLowerCase().includes('nao indicado')&&!result.relator_analise.toLowerCase().includes('não indicado')){rc.style.display='block';document.getElementById('relator-analise-text').textContent=result.relator_analise;}else rc.style.display='none';
+  document.getElementById('evidence-list').innerHTML=(result.marcadores||[]).map(m=>`<li class="evidence-item"><div class="evidence-marker ${m.tipo==='ai'?'marker-ai':'marker-ok'}">${m.tipo==='ai'?'⚠':'✓'}</div><span class="evidence-text">${m.texto}</span></li>`).join('');
+  document.getElementById('results-area').classList.add('visible');
+  document.getElementById('results-area').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function gerarPDF(){
+  if(!lastResult){alert('Faça primeiro uma análise.');return;}
+  try{
+    const{jsPDF}=window.jspdf;
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const W=210,margin=20,contentW=W-margin*2;let y=0;
+    const cGold=[201,168,76],cInk=[13,13,13],cLight=[245,240,232],cGrey=[140,140,140],cRed=[139,26,26],cGreen=[26,92,58],cOrange=[180,100,40];
+    const labels={'IA_DETECTADA':'IA Detectada','PROVAVELMENTE_IA':'Provavelmente Gerado por IA','INCONCLUSIVO':'Analise Inconclusiva','PROVAVELMENTE_HUMANO':'Provavelmente Autoria Humana','HUMANO':'Autoria Humana Confirmada'};
+    const indLabels={perplexidade:'Perplexidade',burstiness:'Burstiness',coesao_artificial:'Coesao Artificial',uniformidade_sintatica:'Uniformidade Sintatica',riqueza_lexical:'Riqueza Lexical',marcadores_formulaicos:'Marcadores Formulaicos'};
+    const vCls=lastResult.veredicto;
+    const vColor=(vCls==='IA_DETECTADA'||vCls==='PROVAVELMENTE_IA')?cRed:(vCls==='INCONCLUSIVO')?cGrey:cGreen;
+    const now=new Date(),dateStr=now.toLocaleDateString('pt-PT',{day:'2-digit',month:'long',year:'numeric'}),timeStr=now.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+    function sc(arr,type){if(type==='text')doc.setTextColor(arr[0],arr[1],arr[2]);if(type==='fill')doc.setFillColor(arr[0],arr[1],arr[2]);if(type==='draw')doc.setDrawColor(arr[0],arr[1],arr[2]);}
+    function addFooter(){sc(cGold,'draw');doc.setLineWidth(0.3);doc.line(margin,283,W-margin,283);doc.setFontSize(7);sc(cGrey,'text');doc.setFont('helvetica','normal');doc.text('LexVeritas - Analise Forense de IA - '+lastRef,margin,287);doc.text('Documento auxiliar. Nao constitui prova juridica definitiva.',W-margin,287,{align:'right'});}
+    function checkY(n){if(y+n>275){addFooter();doc.addPage();y=24;sc(cGold,'fill');doc.rect(0,0,W,10,'F');sc([255,255,255],'text');doc.setFontSize(7);doc.setFont('helvetica','bold');doc.text('LEXVERITAS - RELATORIO FORENSE',margin,7);doc.text(lastRef,W-margin,7,{align:'right'});}}
+    function sectionHeader(title){checkY(12);sc(cLight,'fill');doc.rect(margin,y,contentW,7,'F');sc(cGrey,'draw');doc.setLineWidth(0.1);doc.rect(margin,y,contentW,7,'S');sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','bold');doc.text(title,margin+3,y+5);y+=11;}
+    function bodyText(text,indent){const lines=doc.splitTextToSize(text,contentW-(indent||0));lines.forEach(l=>{checkY(6);sc(cInk,'text');doc.setFontSize(9);doc.setFont('helvetica','normal');doc.text(l,margin+(indent||0),y);y+=5.5;});}
+    sc(cGold,'fill');doc.rect(0,0,W,32,'F');sc([255,255,255],'text');doc.setFontSize(30);doc.setFont('helvetica','bold');doc.text('LexVeritas',margin,18);doc.setFontSize(8);doc.setFont('helvetica','normal');doc.text('RELATORIO FORENSE DE ANALISE DE INTELIGENCIA ARTIFICIAL',margin,26);doc.text(dateStr.toUpperCase()+' - '+timeStr,W-margin,18,{align:'right'});doc.text(lastRef,W-margin,26,{align:'right'});
+    y=42;
+    sc(cLight,'fill');doc.rect(margin,y,contentW,24,'F');sc(cGold,'draw');doc.setLineWidth(0.5);doc.rect(margin,y,contentW,24,'S');
+    const col1=margin+4,col2=margin+60,col3=margin+120;
+    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('TRIBUNAL',col1,y+6);doc.text('RELATOR',col2,y+6);doc.text('UTILIZADOR',col3,y+6);
+    sc(cInk,'text');doc.setFontSize(9);doc.setFont('helvetica','bold');
+    doc.text((lastResult._tribunal||'Nao indicado').substring(0,28),col1,y+15);
+    doc.text((lastResult._relator||'Nao indicado').substring(0,22),col2,y+15);
+    doc.text((userProfile?.nome||'Utilizador').substring(0,20),col3,y+15);
+    y+=32;
+    sc(vColor,'draw');doc.setLineWidth(1.2);doc.line(margin,y,margin,y+22);
+    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('VEREDICTO FORENSE',margin+5,y+5);
+    sc(vColor,'text');doc.setFontSize(20);doc.setFont('helvetica','bold');doc.text(labels[lastResult.veredicto]||lastResult.veredicto,margin+5,y+16);
+    const bx=W-margin-36,by=y+1,bw=34,bh=20;
+    sc(cLight,'fill');doc.rect(bx,by,bw,bh,'F');sc(vColor,'draw');doc.setLineWidth(0.8);doc.rect(bx,by,bw,bh,'S');
+    sc(vColor,'text');doc.setFontSize(18);doc.setFont('helvetica','bold');doc.text(lastResult.confianca+'%',bx+bw/2,by+12,{align:'center'});
+    sc(cGrey,'text');doc.setFontSize(6);doc.setFont('helvetica','normal');doc.text('CONFIANCA',bx+bw/2,by+18,{align:'center'});
+    y+=30;
+    sectionHeader('INDICADORES FORENSES');
+    const inds=Object.entries(lastResult.indicadores||{});
+    const halfW=contentW/2-3;
+    inds.forEach(([key,val],i)=>{
+      const isLeft=i%2===0,x0=isLeft?margin:margin+halfW+6;
+      checkY(16);sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text(indLabels[key]||key,x0,y);
+      sc(cInk,'text');doc.setFontSize(11);doc.setFont('helvetica','bold');doc.text(String(val),x0,y+7);
+      sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('/100',x0+9,y+7);
+      const barX=x0+22,barW2=halfW-26;
+      sc([220,215,205],'fill');doc.rect(barX,y+3,barW2,3,'F');
+      const fillC=val>70?cRed:val>40?cOrange:cGreen;
+      sc(fillC,'fill');doc.rect(barX,y+3,barW2*val/100,3,'F');
+      if(!isLeft)y+=16;
+    });
+    if(inds.length%2!==0)y+=16;y+=4;
+    sectionHeader('FUNDAMENTACAO DA ANALISE');bodyText(lastResult.narrativa||'Sem narrativa disponivel.');y+=4;
+    const rel=lastResult.relator_analise||'';
+    const relLabel=lastResult._modo==='academico'?'ANALISE DO ESTILO DO AUTOR':'ANALISE DO ESTILO DO RELATOR';
+    if(rel&&!rel.toLowerCase().includes('nao indicado')&&!rel.toLowerCase().includes('não indicado')){sectionHeader(relLabel);bodyText(rel);y+=4;}
+    sectionHeader('MARCADORES IDENTIFICADOS');
+    (lastResult.marcadores||[]).forEach(m=>{
+      checkY(12);const isAI=m.tipo==='ai';
+      const bgC=isAI?[255,242,230]:[230,245,235],txtC=isAI?cRed:cGreen;
+      sc(bgC,'fill');doc.rect(margin,y-3,contentW,9,'F');
+      sc(txtC,'text');doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text(isAI?'[!]':'[OK]',margin+2,y+3);
+      sc(cInk,'text');doc.setFontSize(8);doc.setFont('helvetica','normal');
+      const mLines=doc.splitTextToSize(m.texto||'',contentW-16);
+      doc.text(mLines[0]||'',margin+14,y+3);y+=11;
+      if(mLines.length>1){mLines.slice(1).forEach(l=>{checkY(6);doc.text(l,margin+14,y);y+=5.5;});}
+    });
+    y+=8;checkY(24);sc(cGold,'draw');doc.setLineWidth(0.3);doc.line(margin,y,W-margin,y);y+=6;
+    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','italic');
+    const disc='Este relatorio foi gerado automaticamente pelo sistema LexVeritas com base em analise linguistica por inteligencia artificial. Os resultados tem caracter auxiliar e probabilistico, nao constituindo prova juridica definitiva. Ref: '+lastRef+'. Data: '+dateStr+' '+timeStr+'.';
+    doc.splitTextToSize(disc,contentW).forEach(l=>{doc.text(l,margin,y);y+=4;});
+    addFooter();doc.save('LexVeritas-'+lastRef+'.pdf');
+  }catch(err){console.error('Erro PDF:',err);alert('Erro ao gerar PDF: '+err.message);}
+}
+
+// ============================================================
+// HISTÓRICO — mostra análise completa idêntica à aba Análise
+// ============================================================
+async function loadHistory(){
+  const listEl=document.getElementById('history-list');
+  listEl.innerHTML='<div class="empty-history">A carregar...</div>';
+  const{data,error}=await sb.from('analises').select('*').eq('user_id',currentUser.id).order('criado_em',{ascending:false}).limit(50);
+  if(error||!data||data.length===0){
+    listEl.innerHTML=`<div style="text-align:center;padding:48px 20px"><div style="font-size:48px;margin-bottom:16px">⚖️</div><div style="font-family:var(--serif);font-size:20px;font-style:italic;color:#888;margin-bottom:8px">Ainda não fez nenhuma análise</div><div style="font-family:var(--sans);font-size:13px;color:#bbb;margin-bottom:24px;line-height:1.6">Cole o texto de um acórdão, sentença ou despacho<br>e descubra se foi elaborado com IA.</div><button onclick="showTab('analise')" style="background:var(--ink);color:var(--cream);border:none;padding:12px 28px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer">Fazer primeira análise →</button></div>`;
+    return;
+  }
+
+  const colors={'IA_DETECTADA':'#8b4513','PROVAVELMENTE_IA':'#c97850','INCONCLUSIVO':'#888','PROVAVELMENTE_HUMANO':'#2a7a4a','HUMANO':'#1a5c2a'};
+  const labels={'IA_DETECTADA':'IA Detectada','PROVAVELMENTE_IA':'Provavelmente IA','INCONCLUSIVO':'Inconclusivo','PROVAVELMENTE_HUMANO':'Provavelmente Humano','HUMANO':'Humano'};
+  const bannerCls={'IA_DETECTADA':'ai','PROVAVELMENTE_IA':'ai','INCONCLUSIVO':'uncertain','PROVAVELMENTE_HUMANO':'human','HUMANO':'human'};
+  const bannerTitles={'IA_DETECTADA':'Inteligência Artificial Detectada','PROVAVELMENTE_IA':'Provavelmente Gerado por IA','INCONCLUSIVO':'Análise Inconclusiva','PROVAVELMENTE_HUMANO':'Provavelmente Autoria Humana','HUMANO':'Autoria Humana Confirmada'};
+  const bannerSubs={'IA_DETECTADA':'Os marcadores linguísticos indicam fortemente o uso de inteligência artificial.','PROVAVELMENTE_IA':'Vários indicadores sugerem uso significativo de IA.','INCONCLUSIVO':'Os indicadores não permitem determinar com segurança o uso de IA.','PROVAVELMENTE_HUMANO':'O texto apresenta características predominantemente humanas.','HUMANO':'Os marcadores são consistentes com autoria humana.'};
+  const indLabels={perplexidade:'Perplexidade',burstiness:'Var. Rítmica',coesao_artificial:'Coesão Artif.',uniformidade_sintatica:'Uniform. Sint.',riqueza_lexical:'Riqueza Lex.',marcadores_formulaicos:'Marc. Form.'};
+
+  listEl.innerHTML=data.map((a,idx)=>{
+    const df=new Date(a.criado_em).toLocaleString('pt-PT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const cor=colors[a.veredicto]||'#888';
+    const label=labels[a.veredicto]||a.veredicto;
+    const modoAcademico=a.modo==='academico';
+    const contexto=[a.tribunal,a.relator].filter(Boolean).join(' · ');
+    const modo=modoAcademico?'🎓 Académico':'⚖ Judicial';
+
+    // VERDICT BANNER
+    const bCls=bannerCls[a.veredicto]||'uncertain';
+    const bTitle=bannerTitles[a.veredicto]||a.veredicto;
+    const bSub=bannerSubs[a.veredicto]||'';
+    const bannerHtml=`<div class="verdict-banner ${bCls}" style="margin-bottom:16px">
+      <div class="verdict-label">Veredicto Forense</div>
+      <div class="verdict-title">${bTitle}</div>
+      <div class="verdict-subtitle">${bSub}</div>
+    </div>`;
+
+    // CONFIDENCE BLOCK
+    const confidenceHtml=`<div class="confidence-block" style="margin-bottom:16px">
+      <div class="confidence-label">
+        <span>Índice de Confiança na Detecção</span>
+        <span class="confidence-value">${a.confianca}%</span>
+      </div>
+      <div class="meter-track"><div class="meter-fill" style="width:${a.confianca}%"></div></div>
+    </div>`;
+
+    // INDICATORS GRID
+    let indsHtml='';
+    if(a.indicadores){
+      indsHtml=`<div class="indicators-grid" style="margin-bottom:16px">${Object.entries(a.indicadores).map(([k,v])=>{
+        const bc=v>70?'bar-high':v>40?'bar-mid':'bar-low';
+        return`<div class="indicator-card">
+          <div class="indicator-name">${indLabels[k]||k}</div>
+          <div class="indicator-score">${v}<small style="font-size:10px;font-weight:400;color:#aaa">/100</small></div>
+          <div class="indicator-bar"><div class="indicator-bar-fill ${bc}" style="width:${v}%"></div></div>
+        </div>`;
+      }).join('')}</div>`;
+    } else {
+      indsHtml=`<p style="font-family:var(--mono);font-size:10px;color:#bbb;margin-bottom:16px;font-style:italic">Indicadores não disponíveis — análise anterior ao histórico completo.</p>`;
     }
-};
+
+    // NARRATIVA
+    const narrativaHtml=a.narrativa?`<div class="analysis-card" style="margin-bottom:16px">
+      <h3>Fundamentação da Análise</h3>
+      <p>${(a.narrativa||'').replace(/\n/g,'<br>')}</p>
+    </div>`:'';
+
+    // RELATOR / AUTOR
+    const relatorLabel=modoAcademico?'Análise do Estilo do Autor':'Análise do Estilo do Relator';
+    const relatorValido=a.relator_analise
+      &&!a.relator_analise.toLowerCase().includes('nao indicado')
+      &&!a.relator_analise.toLowerCase().includes('não indicado');
+    const relatorHtml=relatorValido?`<div class="analysis-card" style="margin-bottom:16px;border-left:3px solid var(--gold)">
+      <h3>${relatorLabel}</h3>
+      <p>${a.relator_analise}</p>
+    </div>`:'';
+
+    // MARCADORES
+    let marcadoresHtml='';
+    if(a.marcadores&&a.marcadores.length>0){
+      marcadoresHtml=`<div class="analysis-card" style="margin-bottom:16px">
+        <h3>Marcadores Identificados</h3>
+        <ul class="evidence-list">${a.marcadores.map(m=>`
+          <li class="evidence-item">
+            <div class="evidence-marker ${m.tipo==='ai'?'marker-ai':'marker-ok'}">${m.tipo==='ai'?'⚠':'✓'}</div>
+            <span class="evidence-text">${m.texto}</span>
+          </li>`).join('')}
+        </ul>
+      </div>`;
+    }
+
+    return`<div class="history-item" id="hist-${idx}">
+      <div class="history-item-header" onclick="toggleHistory(${idx})">
+        <div style="flex:1;min-width:0">
+          <div class="history-veredicto" style="color:${cor}">${label}</div>
+          <div class="history-meta">${df}${contexto?' · '+contexto:''} · ${modo}</div>
+        </div>
+        <div class="history-confianca">${a.confianca}%</div>
+        <div class="history-chevron">▼</div>
+      </div>
+      <div class="history-details">
+        ${bannerHtml}
+        ${confidenceHtml}
+        ${indsHtml}
+        ${narrativaHtml}
+        ${relatorHtml}
+        ${marcadoresHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleHistory(idx){
+  const el=document.getElementById('hist-'+idx);
+  el.classList.toggle('open');
+}
+
+async function inscreverListaEspera(){
+  const email=document.getElementById('upgrade-email').value.trim();
+  const msg=document.getElementById('upgrade-msg');
+  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
+  try{await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});}catch(e){}
+  msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';msg.style.color='var(--green)';msg.style.display='block';
+  document.getElementById('upgrade-email').value='';
+}
 </script>
 </body>
 </html>
-
