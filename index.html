@@ -7,7 +7,7 @@
 <meta name="description" content="A primeira plataforma forense para advogados e magistrados portugueses. Detecte autoria de IA, identifique nulidades processuais e gere argumentos de recurso em segundos.">
 <meta name="robots" content="index, follow">
 
-<!-- Open Graph / Facebook -->
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://lexveritas.pt/">
 <meta property="og:title" content="LexVeritas — Detector de IA e Análise Crítica de Jurisprudência">
@@ -25,118 +25,187 @@
 
 <link rel="canonical" href="https://lexveritas.pt/">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--black:#060608;--white:#f8f6f1;--gold:#c9a84c;--gold-light:#e8c96a;--gold-dim:#8a6f2e;--grey:#9a9a9a;--dark:#0e0e12;--card:#13131a;--border:rgba(201,168,76,0.15);--sans:'Syne',sans-serif;--serif:'Instrument Serif',Georgia,serif;--mono:'JetBrains Mono',monospace}
-html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--white);font-family:var(--sans);overflow-x:hidden;cursor:none}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #060608; --white: #f8f6f1; --gold: #c9a84c; --gold-light: #e8c96a;
+    --gold-dim: #8a6f2e; --grey: #9a9a9a; --dark: #0e0e12; --card: #13131a;
+    --border: rgba(201,168,76,0.15);
+    --sans: 'Syne', sans-serif; --serif: 'Instrument Serif', Georgia, serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: var(--sans); overflow-x: hidden; cursor: none; }
 
-/* CURSOR */
-.cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:difference}
-.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(201,168,76,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .4s cubic-bezier(.16,1,.3,1),height .4s cubic-bezier(.16,1,.3,1),left .12s linear,top .12s linear}
+  /* CURSOR */
+  .cursor { position: fixed; width: 10px; height: 10px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); mix-blend-mode: difference; }
+  .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(201,168,76,.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width .4s cubic-bezier(.16,1,.3,1), height .4s cubic-bezier(.16,1,.3,1), left .12s linear, top .12s linear; }
 
-/* INTRO */
-.intro{position:fixed;inset:0;background:var(--black);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .8s ease,visibility .8s ease}
-.intro.done{opacity:0;visibility:hidden}
-.intro-logo{font-family:var(--serif);font-size:56px;font-style:italic;color:var(--white);opacity:0;transform:translateY(20px);animation:introFadeUp .8s .3s ease forwards}
-.intro-logo span{color:var(--gold)}
-.intro-bar-track{width:200px;height:1px;background:rgba(255,255,255,.1);overflow:hidden;opacity:0;animation:introFadeUp .5s .6s ease forwards}
-.intro-bar-fill{height:100%;background:var(--gold);width:0%;animation:introLoad 1.4s .8s cubic-bezier(.16,1,.3,1) forwards}
-@keyframes introFadeUp{to{opacity:1;transform:translateY(0)}}
-@keyframes introLoad{to{width:100%}}
+  /* INTRO */
+  .intro { position: fixed; inset: 0; background: var(--black); z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; transition: opacity .8s ease, visibility .8s ease; }
+  .intro.done { opacity: 0; visibility: hidden; }
+  .intro-logo { font-family: var(--serif); font-size: 56px; font-style: italic; color: var(--white); opacity: 0; transform: translateY(20px); animation: introFadeUp .8s .3s ease forwards; }
+  .intro-logo span { color: var(--gold); }
+  .intro-bar-track { width: 200px; height: 1px; background: rgba(255,255,255,.1); overflow: hidden; opacity: 0; animation: introFadeUp .5s .6s ease forwards; }
+  .intro-bar-fill { height: 100%; background: var(--gold); width: 0%; animation: introLoad 1.4s .8s cubic-bezier(.16,1,.3,1) forwards; }
+  @keyframes introFadeUp { to { opacity: 1; transform: translateY(0); } }
+  @keyframes introLoad { to { width: 100%; } }
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:rgba(6,6,8,0);border-bottom:1px solid transparent;transition:all .4s ease}
-nav.scrolled{background:rgba(6,6,8,.9);backdrop-filter:blur(24px);border-bottom-color:var(--border)}
-.nav-logo{font-family:var(--serif);font-size:22px;color:var(--white);text-decoration:none;font-style:italic}
-.nav-logo span{color:var(--gold)}
-.nav-links{display:flex;gap:36px;list-style:none;align-items:center}
-.nav-links a{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--grey);text-decoration:none;transition:color .2s}
-.nav-links a:hover{color:var(--white)}
-.nav-cta{background:var(--gold)!important;color:var(--black)!important;padding:10px 24px!important;font-weight:700!important}
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(6,6,8,0); border-bottom: 1px solid transparent; transition: all .4s ease; }
+  nav.scrolled { background: rgba(6,6,8,.9); backdrop-filter: blur(24px); border-bottom-color: var(--border); }
+  .nav-logo { font-family: var(--serif); font-size: 22px; color: var(--white); text-decoration: none; font-style: italic; }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+  .nav-links a { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta { background: var(--gold) !important; color: var(--black) !important; padding: 10px 24px !important; font-weight: 700 !important; }
 
-/* HERO */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 48px 80px;position:relative;overflow:hidden;text-align:center}
-.hero-glow{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(201,168,76,.15) 0%,transparent 60%)}
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.05) 1px,transparent 1px);background-size:80px 80px}
-.hero-content{position:relative;z-index:2}
-.hero-title{font-family:var(--serif);font-size:clamp(64px,10vw,140px);font-weight:400;line-height:.88;letter-spacing:-.02em;font-style:italic;margin-bottom:12px;opacity:0;animation:fadeUp .8s 2.5s ease forwards}
-.hero-title span{color:var(--gold)}
-.hero-sub{font-family:var(--sans);font-size:clamp(14px,1.8vw,18px);color:var(--grey);max-width:600px;margin:28px auto 48px;line-height:1.7;opacity:0;animation:fadeUp .8s 2.6s ease forwards}
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 120px 48px 80px; position: relative; overflow: hidden; text-align: center; }
+  .hero-glow { position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(201,168,76,.15) 0%, transparent 60%); }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(201,168,76,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,.05) 1px, transparent 1px); background-size: 80px 80px; }
+  .hero-content { position: relative; z-index: 2; }
+  .hero-title { font-family: var(--serif); font-size: clamp(64px,10vw,140px); font-weight: 400; line-height: .88; letter-spacing: -.02em; font-style: italic; margin-bottom: 12px; opacity: 0; animation: fadeUp .8s 2.5s ease forwards; }
+  .hero-title span { color: var(--gold); }
+  .hero-sub { font-family: var(--sans); font-size: clamp(14px,1.8vw,18px); color: var(--grey); max-width: 600px; margin: 28px auto 48px; line-height: 1.7; opacity: 0; animation: fadeUp .8s 2.6s ease forwards; }
+  .hero-stats { display: flex; gap: 48px; justify-content: center; margin-top: 48px; flex-wrap: wrap; opacity: 0; animation: fadeUp .8s 2.8s ease forwards; }
+  .hero-stat-value { font-family: var(--serif); font-size: 38px; font-style: italic; color: var(--gold); display: block; }
+  .hero-stat-label { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--grey); margin-top: 4px; display: block; }
 
-/* COMMON SECTIONS */
-.section-padding{padding:100px 48px}
-.container{max-width:1200px;margin:0 auto}
-.reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
-.reveal.visible{opacity:1;transform:translateY(0)}
-.section-label{font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:12px}
-.section-label::after{content:'';height:1px;width:48px;background:var(--gold);opacity:.4}
-.section-title{font-family:var(--serif);font-size:clamp(36px,4.5vw,64px);font-weight:400;font-style:italic;line-height:1.05;margin-bottom:24px}
-.section-title span{color:var(--gold)}
+  /* COMMON */
+  .section-padding { padding: 100px 48px; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+  .section-label::after { content: ''; height: 1px; width: 48px; background: var(--gold); opacity: .4; }
+  .section-title { font-family: var(--serif); font-size: clamp(36px,4.5vw,64px); font-weight: 400; font-style: italic; line-height: 1.05; margin-bottom: 24px; }
+  .section-title span { color: var(--gold); }
+  .section-intro { color: var(--grey); max-width: 600px; line-height: 1.8; font-size: 15px; margin-bottom: 0; }
 
-/* STEPS */
-.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:60px}
-.step-card{background:var(--black);padding:44px 36px;position:relative;overflow:hidden;transition:background .3s}
-.step-card:hover{background:var(--dark)}
-.step-num{font-family:var(--mono);font-size:60px;color:rgba(201,168,76,.07);position:absolute;top:20px;right:30px}
-.step-icon{font-size:32px;margin-bottom:24px;display:block}
+  /* METODOLOGIA */
+  .metodologia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; margin-top: 60px; }
+  .indicator-row { display: flex; align-items: flex-start; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+  .indicator-row:last-child { border-bottom: none; }
+  .ind-num { font-family: var(--mono); font-size: 10px; color: var(--gold); width: 22px; flex-shrink: 0; opacity: .6; padding-top: 2px; }
+  .ind-info { flex: 1; }
+  .ind-name { font-family: var(--sans); font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .ind-desc { font-family: var(--sans); font-size: 12px; color: var(--grey); line-height: 1.6; }
+  .ind-bar-track { width: 64px; height: 3px; background: rgba(255,255,255,.08); overflow: hidden; flex-shrink: 0; margin-top: 8px; }
+  .ind-bar-fill { height: 100%; background: var(--gold); }
+  .metod-stat-card { background: var(--card); border: 1px solid var(--border); padding: 28px; margin-bottom: 1px; position: relative; overflow: hidden; transition: background .3s; }
+  .metod-stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--gold); }
+  .metod-stat-card:hover { background: rgba(201,168,76,.04); }
+  .metod-stat-num { font-family: var(--serif); font-size: 44px; font-style: italic; color: var(--gold); line-height: 1; margin-bottom: 8px; }
+  .metod-stat-desc { font-family: var(--sans); font-size: 13px; color: var(--grey); line-height: 1.7; }
+  .metod-note { background: rgba(201,168,76,.05); border: 1px solid var(--border); padding: 20px 22px; margin-top: 1px; }
+  .metod-note-label { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .metod-note p { font-family: var(--sans); font-size: 12px; color: var(--grey); line-height: 1.7; }
 
-/* FEATURES */
-.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:60px}
-.feat-card{background:var(--black);padding:40px;transition:all .3s ease}
-.feat-card:hover{background:var(--dark)}
-.feat-icon{width:48px;height:48px;background:rgba(201,168,76,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:24px;font-size:20px}
+  /* STEPS */
+  .steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); margin-top: 60px; }
+  .step-card { background: var(--black); padding: 44px 36px; position: relative; overflow: hidden; transition: background .3s; }
+  .step-card:hover { background: var(--dark); }
+  .step-num { font-family: var(--mono); font-size: 60px; color: rgba(201,168,76,.07); position: absolute; top: 20px; right: 30px; }
+  .step-icon { font-size: 32px; margin-bottom: 24px; display: block; }
+  .step-card h3 { font-family: var(--serif); font-size: 24px; margin-bottom: 12px; }
+  .step-card p { color: var(--grey); font-size: 14px; line-height: 1.7; }
 
-/* PRICING */
-.pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:60px;max-width:800px;margin-left:auto;margin-right:auto}
-.price-card{background:var(--black);padding:48px 40px;text-align:center}
-.price-card.featured{background:var(--card);position:relative}
-.price-card.featured::before{content:'RECOMENDADO';position:absolute;top:0;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--black);font-family:var(--mono);font-size:9px;padding:4px 12px;letter-spacing:1px}
+  /* FEATURES */
+  .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 60px; }
+  .feat-card { background: var(--black); padding: 40px; transition: all .3s ease; }
+  .feat-card:hover { background: var(--dark); }
+  .feat-icon { width: 48px; height: 48px; background: rgba(201,168,76,.08); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 20px; }
+  .feat-card h4 { margin-bottom: 12px; font-size: 14px; }
+  .feat-card p { color: var(--grey); font-size: 13px; line-height: 1.7; }
 
-/* FAQ */
-.faq-list{margin-top:60px;max-width:800px;margin-left:auto;margin-right:auto}
-.faq-item{border-bottom:1px solid var(--border)}
-.faq-question{width:100%;padding:24px 0;background:none;border:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;text-align:left}
-.faq-question h3{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--white)}
-.faq-answer{max-height:0;overflow:hidden;transition:all .4s ease;color:var(--grey);font-size:14px;line-height:1.8}
-.faq-item.active .faq-answer{max-height:200px;padding-bottom:24px}
+  /* TESTIMONIALS */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 60px; }
+  .testimonial-card { background: var(--black); padding: 36px; transition: background .3s; }
+  .testimonial-card:hover { background: var(--dark); }
+  .testimonial-quote { font-family: var(--serif); font-size: 40px; color: var(--gold); line-height: 1; margin-bottom: 16px; opacity: .35; }
+  .testimonial-text { font-family: var(--serif); font-size: 16px; font-style: italic; line-height: 1.7; color: rgba(248,246,241,.8); margin-bottom: 24px; }
+  .testimonial-author { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+  .testimonial-role { font-family: var(--mono); font-size: 9px; color: var(--grey); margin-top: 4px; }
 
-/* MODAL */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:2000;display:none;align-items:center;justify-content:center;padding:24px}
-.modal.active{display:flex}
-.modal-content{background:var(--dark);border:1px solid var(--border);padding:48px;max-width:500px;width:100%;position:relative}
+  /* PRICING */
+  .pricing-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 60px; max-width: 800px; margin-left: auto; margin-right: auto; }
+  .price-card { background: var(--black); padding: 48px 40px; text-align: center; }
+  .price-card.featured { background: var(--card); position: relative; }
+  .price-card.featured::before { content: 'RECOMENDADO'; position: absolute; top: 0; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--black); font-family: var(--mono); font-size: 9px; padding: 4px 12px; letter-spacing: 1px; }
+  .price-plan-label { font-family: var(--mono); font-size: 10px; margin-bottom: 20px; color: var(--grey); }
+  .price-amount { font-size: 48px; font-family: var(--serif); margin-bottom: 24px; }
+  .price-amount small { font-size: 16px; font-family: var(--sans); color: var(--grey); }
+  .price-features { list-style: none; color: var(--grey); font-size: 13px; margin-bottom: 32px; line-height: 2.5; }
+  .price-features li.highlight { color: var(--white); font-weight: 700; }
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  /* FAQ */
+  .faq-list { margin-top: 60px; max-width: 800px; margin-left: auto; margin-right: auto; }
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-question { width: 100%; padding: 24px 0; background: none; border: none; display: flex; justify-content: space-between; align-items: center; cursor: pointer; text-align: left; gap: 16px; }
+  .faq-question h3 { font-family: var(--serif); font-size: 20px; font-style: italic; color: var(--white); }
+  .faq-icon { color: var(--gold); font-size: 20px; transition: transform .3s; flex-shrink: 0; }
+  .faq-item.active .faq-icon { transform: rotate(45deg); }
+  .faq-answer { max-height: 0; overflow: hidden; transition: all .4s ease; color: var(--grey); font-size: 14px; line-height: 1.8; }
+  .faq-item.active .faq-answer { max-height: 240px; padding-bottom: 24px; }
 
-/* FOOTER */
-footer{padding:60px 48px 40px;border-top:1px solid var(--border)}
-.footer-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:32px}
-.footer-brand{font-family:var(--serif);font-size:28px;font-style:italic}
-.footer-brand span{color:var(--gold)}
-.footer-nav{display:flex;gap:32px;flex-wrap:wrap;justify-content:center}
-.footer-nav a{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--grey);text-decoration:none;transition:color .2s}
-.footer-nav a:hover{color:var(--gold)}
-.footer-divider{width:100%;height:1px;background:var(--border)}
-.footer-bottom{display:flex;align-items:center;justify-content:space-between;width:100%;flex-wrap:wrap;gap:12px}
-.footer-copy{color:var(--grey);font-size:11px;font-family:var(--mono);letter-spacing:.08em}
-.footer-legal{display:flex;gap:24px}
-.footer-legal a{font-family:var(--mono);font-size:10px;color:rgba(154,154,154,.6);text-decoration:none;transition:color .2s;letter-spacing:.08em}
-.footer-legal a:hover{color:var(--grey)}
+  /* FOOTER */
+  footer { padding: 60px 48px 40px; border-top: 1px solid var(--border); }
+  .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 32px; }
+  .footer-brand { font-family: var(--serif); font-size: 28px; font-style: italic; }
+  .footer-brand span { color: var(--gold); }
+  .footer-tagline { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--grey); text-align: center; }
+  .footer-nav { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
+  .footer-nav a { font-family: var(--mono); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color .2s; }
+  .footer-nav a:hover { color: var(--gold); }
+  .footer-divider { width: 100%; height: 1px; background: var(--border); }
+  .footer-bottom { display: flex; align-items: center; justify-content: space-between; width: 100%; flex-wrap: wrap; gap: 12px; }
+  .footer-copy { color: var(--grey); font-size: 11px; font-family: var(--mono); letter-spacing: .08em; }
+  .footer-legal { display: flex; gap: 24px; flex-wrap: wrap; }
+  .footer-legal a { font-family: var(--mono); font-size: 10px; color: rgba(154,154,154,.6); text-decoration: none; transition: color .2s; letter-spacing: .08em; }
+  .footer-legal a:hover { color: var(--grey); }
 
-/* RESPONSIVE */
-@media(max-width:900px){
-  .nav-links,.cursor,.cursor-ring{display:none}
-  .steps-grid,.features-grid,.pricing-grid{grid-template-columns:1fr}
-  .section-padding{padding:80px 24px}
-  nav{padding:16px 24px}
-  .hero{padding:100px 24px 60px}
-  footer{padding:48px 24px 32px}
-  .footer-bottom{flex-direction:column;text-align:center}
-}
+  /* MODALS */
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,.8); backdrop-filter: blur(10px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 24px; }
+  .modal.active { display: flex; }
+  .modal-content { background: var(--dark); border: 1px solid var(--border); padding: 48px; max-width: 500px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,.5); }
+  .modal-content::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+  .btn-close-modal { position: absolute; top: 16px; right: 18px; background: none; border: none; color: var(--grey); font-size: 24px; cursor: pointer; transition: color .2s; }
+  .btn-close-modal:hover { color: var(--white); }
+  .modal-label { font-family: var(--mono); font-size: 9px; letter-spacing: .25em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+  .modal-title { font-family: var(--serif); font-size: 26px; font-style: italic; margin-bottom: 8px; }
+  .modal-sub { color: var(--grey); font-size: 13px; margin-bottom: 24px; line-height: 1.6; }
+  .modal-input { width: 100%; padding: 13px 14px; background: rgba(255,255,255,.04); border: 1px solid var(--border); color: var(--white); font-family: var(--sans); font-size: 13px; outline: none; margin-bottom: 12px; transition: border-color .2s; }
+  .modal-input:focus { border-color: var(--gold); }
+  .modal-input::placeholder { color: rgba(255,255,255,.2); }
+  .modal-input option { background: var(--dark); }
+  .btn-modal-cta { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 14px; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; transition: background .2s; }
+  .btn-modal-cta:hover { background: var(--gold-light); }
+  .modal-msg { margin-top: 14px; font-size: 12px; display: none; padding: 10px 12px; line-height: 1.5; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .nav-links, .cursor, .cursor-ring { display: none; }
+    .steps-grid, .features-grid, .testimonials-grid, .metodologia-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .section-padding { padding: 80px 24px; }
+    nav { padding: 16px 24px; }
+    .hero { padding: 100px 24px 60px; }
+    .hero-stats { gap: 28px; }
+    footer { padding: 48px 24px 32px; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+    .footer-legal { justify-content: center; }
+    .metodologia-grid { gap: 40px; }
+  }
+  @media (max-width: 480px) {
+    .hero-stats { flex-direction: column; align-items: center; gap: 20px; }
+  }
 </style>
 </head>
 <body>
@@ -161,6 +230,7 @@ footer{padding:60px 48px 40px;border-top:1px solid var(--border)}
   </ul>
 </nav>
 
+<!-- ═══ HERO ═══ -->
 <section class="hero">
   <div class="hero-glow"></div>
   <div class="hero-grid"></div>
@@ -170,164 +240,298 @@ footer{padding:60px 48px 40px;border-top:1px solid var(--border)}
     <p class="hero-sub">A primeira plataforma forense para advogados e magistrados portugueses. Detecte a autoria de IA, identifique nulidades processuais e gere argumentos de recurso em segundos.</p>
     <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
       <a href="/app" style="background:var(--gold);color:var(--black);padding:18px 36px;text-decoration:none;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase">Começar Agora</a>
-      <a href="#analise-critica" style="border:1px solid var(--border);color:var(--white);padding:18px 36px;text-decoration:none;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase">Ver Funcionalidades</a>
+      <a href="#metodologia" style="border:1px solid var(--border);color:var(--white);padding:18px 36px;text-decoration:none;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase">Ver Metodologia</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <span class="hero-stat-value">6</span>
+        <span class="hero-stat-label">Indicadores Forenses</span>
+      </div>
+      <div>
+        <span class="hero-stat-value">3</span>
+        <span class="hero-stat-label">Modos de Análise</span>
+      </div>
+      <div>
+        <span class="hero-stat-value">PT-PT</span>
+        <span class="hero-stat-label">Calibrado para Portugal</span>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="analise-critica" class="section-padding" style="background:var(--dark)">
+<!-- ═══ METODOLOGIA ═══ -->
+<section id="metodologia" class="section-padding" style="background:var(--dark)">
+  <div class="container">
+    <div class="section-label reveal">Ciência da Detecção</div>
+    <h2 class="section-title reveal">Como a <span>Detecção Funciona.</span></h2>
+    <p class="section-intro reveal">Seis indicadores linguísticos calibrados para o português jurídico. Cada texto é avaliado independentemente e o resultado cruzado para produzir um veredicto forense com grau de confiança expresso em percentagem.</p>
+
+    <div class="metodologia-grid">
+      <!-- 6 Indicadores -->
+      <div class="reveal">
+        <div class="indicator-row">
+          <span class="ind-num">01</span>
+          <div class="ind-info">
+            <div class="ind-name">Perplexidade Linguística</div>
+            <div class="ind-desc">Mede a previsibilidade do texto. A IA produz frases mais "esperadas" do que um jurista a redigir com genuína deliberação e escolha vocabular.</div>
+          </div>
+          <div class="ind-bar-track"><div class="ind-bar-fill" style="width:92%"></div></div>
+        </div>
+        <div class="indicator-row">
+          <span class="ind-num">02</span>
+          <div class="ind-info">
+            <div class="ind-name">Variabilidade Rítmica</div>
+            <div class="ind-desc">Analisa a "burstiness" — a tendência humana para alternar frases longas e curtas de forma irregular. Os modelos de IA tendem a uma cadência uniforme.</div>
+          </div>
+          <div class="ind-bar-track"><div class="ind-bar-fill" style="width:87%"></div></div>
+        </div>
+        <div class="indicator-row">
+          <span class="ind-num">03</span>
+          <div class="ind-info">
+            <div class="ind-name">Coesão Artificial</div>
+            <div class="ind-desc">Detecta a sobre-utilização de conectores lógicos e transições fluidas que são marca característica dos grandes modelos de linguagem.</div>
+          </div>
+          <div class="ind-bar-track"><div class="ind-bar-fill" style="width:78%"></div></div>
+        </div>
+        <div class="indicator-row">
+          <span class="ind-num">04</span>
+          <div class="ind-info">
+            <div class="ind-name">Uniformidade Sintáctica</div>
+            <div class="ind-desc">Avalia a repetição de estruturas frásicas. Humanos cometem "imperfeições" e variações naturais ausentes em textos gerados por IA.</div>
+          </div>
+          <div class="ind-bar-track"><div class="ind-bar-fill" style="width:83%"></div></div>
+        </div>
+        <div class="indicator-row">
+          <span class="ind-num">05</span>
+          <div class="ind-info">
+            <div class="ind-name">Riqueza Lexical</div>
+            <div class="ind-desc">Compara a variedade de vocabulário com os padrões esperados em decisões do mesmo tribunal, área jurídica e nível hierárquico.</div>
+          </div>
+          <div class="ind-bar-track"><div class="ind-bar-fill" style="width:70%"></div></div>
+        </div>
+        <div class="indicator-row">
+          <span class="ind-num">06</span>
+          <div class="ind-info">
+            <div class="ind-name">Marcadores Formulaicos</div>
+            <div class="ind-desc">Identifica expressões e padrões típicos dos modelos GPT, Claude e Gemini quando produzem texto em contexto jurídico português.</div>
+          </div>
+          <div class="ind-bar-track"><div class="ind-bar-fill" style="width:95%"></div></div>
+        </div>
+      </div>
+
+      <!-- Stats & notas -->
+      <div class="reveal">
+        <div class="metod-stat-card">
+          <div class="metod-stat-num">Art. 205.º</div>
+          <div class="metod-stat-desc">Fundamento constitucional. A Constituição da República Portuguesa obriga à fundamentação das decisões judiciais. O LexVeritas verifica se essa fundamentação é genuína ou gerada automaticamente.</div>
+        </div>
+        <div class="metod-stat-card">
+          <div class="metod-stat-num">PT‑PT</div>
+          <div class="metod-stat-desc">Calibrado exclusivamente para o português de Portugal e para a linguagem jurídica dos tribunais portugueses — STJ, Relações, tribunais administrativos e de 1.ª instância.</div>
+        </div>
+        <div class="metod-stat-card">
+          <div class="metod-stat-num">RGPD</div>
+          <div class="metod-stat-desc">Totalmente conforme. Os textos são processados em memória volátil e nunca utilizados para treino de modelos externos. Servidores na União Europeia. Privacidade por defeito.</div>
+        </div>
+        <div class="metod-note">
+          <div class="metod-note-label">Aviso de Responsabilidade</div>
+          <p>Os resultados têm carácter auxiliar e probabilístico. Não constituem prova jurídica definitiva. O LexVeritas é uma ferramenta de apoio à decisão — não um oráculo.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ANÁLISE CRÍTICA ═══ -->
+<section id="analise-critica" class="section-padding">
   <div class="container">
     <div class="section-label reveal">Nova Funcionalidade</div>
     <h2 class="section-title reveal">Além da Detecção: <span>Auditoria Jurídica.</span></h2>
-    <p style="color:var(--grey);max-width:600px;margin-bottom:0" class="reveal">Não dizemos apenas se foi a IA a escrever. O LexVeritas analisa se a decisão cumpre os requisitos de fundamentação do Art. 205.º da CRP e identifica potenciais nulidades e fundamentos para recurso.</p>
+    <p class="section-intro reveal">Não dizemos apenas se foi a IA a escrever. O LexVeritas analisa se a decisão cumpre os requisitos de fundamentação do Art. 205.º da CRP e identifica nulidades e fundamentos para recurso.</p>
     <div class="steps-grid">
       <div class="step-card reveal">
         <span class="step-num">01</span>
         <span class="step-icon">⚖️</span>
-        <h3 style="margin-bottom:12px;font-family:var(--serif);font-size:24px">Escaneamento de Vícios</h3>
-        <p style="color:var(--grey);font-size:14px;line-height:1.6">Identificamos omissões de pronúncia, contradições entre fundamentação e decisão e falta de exame crítico das provas.</p>
+        <h3>Escaneamento de Vícios</h3>
+        <p>Identificamos omissões de pronúncia, contradições entre fundamentação e decisão e falta de exame crítico das provas nos termos do Art. 615.º CPC e Art. 379.º CPP.</p>
       </div>
       <div class="step-card reveal">
         <span class="step-num">02</span>
         <span class="step-icon">🔬</span>
-        <h3 style="margin-bottom:12px;font-family:var(--serif);font-size:24px">Análise de Autoria</h3>
-        <p style="color:var(--grey);font-size:14px;line-height:1.6">Cruzamento de 6 indicadores linguísticos para confirmar se houve supervisão humana real na redacção da decisão.</p>
+        <h3>Análise de Autoria</h3>
+        <p>Cruzamento de 6 indicadores linguísticos para confirmar se houve supervisão humana real e se a fundamentação resulta de deliberação genuína ou de geração automática.</p>
       </div>
       <div class="step-card reveal">
         <span class="step-num">03</span>
         <span class="step-icon">📝</span>
-        <h3 style="margin-bottom:12px;font-family:var(--serif);font-size:24px">Argumentos de Recurso</h3>
-        <p style="color:var(--grey);font-size:14px;line-height:1.6">Geração de argumentos técnicos baseados nas nulidades encontradas para fundamentar a sua peça processual de recurso.</p>
+        <h3>Argumentos de Recurso</h3>
+        <p>Geração de argumentos técnicos baseados nas nulidades encontradas, com indicação dos artigos violados e dos fundamentos jurídicos para a peça processual de recurso.</p>
       </div>
+    </div>
+    <div style="margin-top:48px;text-align:center" class="reveal">
+      <a href="/app?modo=critica" style="background:var(--gold);color:var(--black);padding:16px 40px;text-decoration:none;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase">Experimentar Análise Crítica →</a>
     </div>
   </div>
 </section>
 
-<section id="funcionalidades" class="section-padding">
+<!-- ═══ FUNCIONALIDADES ═══ -->
+<section id="funcionalidades" class="section-padding" style="background:var(--dark)">
   <div class="container">
     <div class="section-label reveal">Capacidades</div>
     <h2 class="section-title reveal">Tecnologia de <span>Elite.</span></h2>
     <div class="features-grid">
       <div class="feat-card reveal">
         <div class="feat-icon">🎯</div>
-        <h4 style="margin-bottom:12px">Precisão Forense</h4>
-        <p style="color:var(--grey);font-size:13px">Calibrado especificamente para o português jurídico (PT-PT), evitando falsos positivos comuns em ferramentas globais.</p>
+        <h4>Precisão Forense</h4>
+        <p>Calibrado especificamente para o português jurídico (PT-PT), evitando os falsos positivos comuns em ferramentas globais não adaptadas ao contexto português.</p>
       </div>
       <div class="feat-card reveal">
         <div class="feat-icon">🛡️</div>
-        <h4 style="margin-bottom:12px">Sigilo Absoluto</h4>
-        <p style="color:var(--grey);font-size:13px">Os documentos carregados são processados em memória volátil e nunca são utilizados para treinar modelos externos.</p>
+        <h4>Sigilo Absoluto</h4>
+        <p>Os documentos são processados em memória volátil e nunca utilizados para treinar modelos externos. Conformidade total com o RGPD e servidores na União Europeia.</p>
       </div>
       <div class="feat-card reveal">
         <div class="feat-icon">📊</div>
-        <h4 style="margin-bottom:12px">Relatórios PDF</h4>
-        <p style="color:var(--grey);font-size:13px">Emita relatórios técnicos prontos a serem anexados como prova documental ou suporte de consulta jurídica.</p>
+        <h4>Relatórios PDF</h4>
+        <p>Emita relatórios técnicos profissionais com referência única, prontos a ser anexados como prova documental ou suporte de consulta jurídica.</p>
       </div>
       <div class="feat-card reveal">
         <div class="feat-icon">🏛</div>
-        <h4 style="margin-bottom:12px">Análise Crítica</h4>
-        <p style="color:var(--grey);font-size:13px">Modo exclusivo de auditoria: identifica nulidades processuais e gera argumentos jurídicos fundamentados para recurso.</p>
+        <h4>Análise Crítica</h4>
+        <p>Modo exclusivo de auditoria: identifica nulidades processuais, erros de julgamento e gera argumentos técnicos fundamentados para interposição de recurso.</p>
       </div>
       <div class="feat-card reveal">
         <div class="feat-icon">🔄</div>
-        <h4 style="margin-bottom:12px">Múltiplos Modos</h4>
-        <p style="color:var(--grey);font-size:13px">Análise judicial, académica e de recurso — adaptados ao contexto, ao tribunal e ao tipo de documento analisado.</p>
+        <h4>Múltiplos Modos</h4>
+        <p>Análise judicial, académica e de recurso — adaptados ao contexto, ao tribunal e ao tipo de documento. Inclui teses e dissertações jurídicas em PT-PT.</p>
       </div>
       <div class="feat-card reveal">
         <div class="feat-icon">📋</div>
-        <h4 style="margin-bottom:12px">Histórico Seguro</h4>
-        <p style="color:var(--grey);font-size:13px">Aceda a todas as suas análises anteriores com os resultados completos, organizadas por data e tipo de modo utilizado.</p>
+        <h4>Histórico Seguro</h4>
+        <p>Aceda a todas as suas análises anteriores com resultados completos — indicadores, marcadores, análise do relator e nulidades — organizados por data.</p>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ═══ TESTEMUNHOS ═══ -->
+<section class="section-padding">
+  <div class="container">
+    <div class="section-label reveal" style="justify-content:center">Primeiros Utilizadores</div>
+    <h2 class="section-title reveal" style="text-align:center">Confiança de <span>Profissionais.</span></h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Utilizei o LexVeritas numa sentença que me parecia demasiado fluida para o contexto. O veredicto foi claro: IA com 89% de confiança. Serviu de ponto de partida sólido para o recurso.</p>
+        <div class="testimonial-author">Advogado, Lisboa</div>
+        <div class="testimonial-role">Área Cível · Tribunal da Relação de Lisboa</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">A análise crítica identificou uma omissão de pronúncia que eu suspeitava mas não conseguia articular tecnicamente. Os argumentos gerados foram um excelente ponto de partida para a peça.</p>
+        <div class="testimonial-author">Solicitadora, Porto</div>
+        <div class="testimonial-role">Processo de Insolvência · 1.ª Instância</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Ferramenta essencial no meu fluxo de trabalho académico. Verifico sempre a autoria dos trabalhos submetidos antes de os enviar ao orientador para avaliação final.</p>
+        <div class="testimonial-author">Docente Universitária</div>
+        <div class="testimonial-role">Faculdade de Direito · Lisboa</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PREÇOS ═══ -->
 <section id="precos" class="section-padding" style="background:var(--dark)">
   <div class="container">
     <div class="section-label reveal" style="justify-content:center">Planos de Acesso</div>
     <h2 class="section-title reveal" style="text-align:center">Investimento no <span>Rigor.</span></h2>
     <div class="pricing-grid">
       <div class="price-card reveal">
-        <div style="font-family:var(--mono);font-size:10px;margin-bottom:20px;color:var(--grey)">PLANO BÁSICO</div>
-        <div style="font-size:48px;font-family:var(--serif);margin-bottom:24px">0€<span style="font-size:16px;font-family:var(--sans);color:var(--grey)">/mês</span></div>
-        <ul style="list-style:none;color:var(--grey);font-size:13px;margin-bottom:32px;line-height:2.5">
+        <div class="price-plan-label">PLANO BÁSICO</div>
+        <div class="price-amount">0€<small>/mês</small></div>
+        <ul class="price-features">
           <li>5 Análises Mensais</li>
-          <li>Indicadores de IA</li>
+          <li>6 Indicadores Forenses</li>
           <li>Relatório PDF</li>
           <li>Histórico 30 dias</li>
+          <li>Suporte Comunitário</li>
         </ul>
-        <a href="/app" style="display:block;border:1px solid var(--border);padding:14px;color:var(--white);text-decoration:none;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Começar Grátis</a>
+        <a href="/app" style="display:block;border:1px solid var(--border);padding:14px;color:var(--white);text-decoration:none;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;text-align:center;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--white)'">Começar Grátis</a>
       </div>
       <div class="price-card featured reveal">
-        <div style="font-family:var(--mono);font-size:10px;margin-bottom:20px;color:var(--gold)">PLANO PRO</div>
-        <div style="font-size:48px;font-family:var(--serif);margin-bottom:24px;color:var(--gold)">19€<span style="font-size:16px;font-family:var(--sans);color:var(--grey)">/mês</span></div>
-        <ul style="list-style:none;color:var(--grey);font-size:13px;margin-bottom:32px;line-height:2.5">
+        <div class="price-plan-label" style="color:var(--gold)">PLANO PRO</div>
+        <div class="price-amount" style="color:var(--gold)">19€<small>/mês</small></div>
+        <ul class="price-features">
           <li>100 Análises Mensais</li>
-          <li><strong style="color:var(--white)">Análise Crítica de Nulidades</strong></li>
-          <li>Argumentos de Recurso</li>
+          <li class="highlight">🏛 Análise Crítica de Nulidades</li>
+          <li class="highlight">📝 Argumentos de Recurso</li>
           <li>Relatórios PDF Profissionais</li>
+          <li>Histórico Ilimitado</li>
         </ul>
-        <button onclick="openModal()" style="width:100%;background:var(--gold);border:none;padding:14px;color:var(--black);font-weight:800;font-size:11px;text-transform:uppercase;cursor:pointer">Lista de Espera Pro</button>
+        <button onclick="openModal('waitlist')" style="width:100%;background:var(--gold);border:none;padding:14px;color:var(--black);font-weight:800;font-size:11px;text-transform:uppercase;cursor:pointer;letter-spacing:.1em;transition:background .2s" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">Lista de Espera Pro →</button>
       </div>
     </div>
+    <p style="text-align:center;font-family:var(--mono);font-size:10px;color:var(--grey);margin-top:24px;letter-spacing:.1em">Os pagamentos abrem em breve. Sem cartão de crédito. Sem surpresas.</p>
   </div>
 </section>
 
+<!-- ═══ FAQ ═══ -->
 <section id="faq" class="section-padding">
   <div class="container">
     <div class="section-label reveal">Dúvidas Frequentes</div>
     <h2 class="section-title reveal">Transparência <span>Total.</span></h2>
     <div class="faq-list">
       <div class="faq-item reveal">
-        <button class="faq-question">
-          <h3>Como é feita a detecção em português?</h3>
-          <span>+</span>
-        </button>
-        <div class="faq-answer">
-          O nosso algoritmo foi treinado com milhares de acórdãos reais do DGSI e comparado com textos gerados por modelos GPT, Claude e Gemini em português de Portugal. Analisamos a variabilidade rítmica e a perplexidade específica da linguagem jurídica portuguesa.
-        </div>
+        <button class="faq-question"><h3>Como é feita a detecção em português?</h3><span class="faq-icon">+</span></button>
+        <div class="faq-answer">O nosso algoritmo foi desenvolvido com milhares de acórdãos reais do DGSI e comparado com textos gerados por GPT, Claude e Gemini em português de Portugal. Analisamos seis indicadores que incluem a variabilidade rítmica ("burstiness") e a perplexidade específica da linguagem jurídica portuguesa.</div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">
-          <h3>A análise de nulidades substitui o advogado?</h3>
-          <span>+</span>
-        </button>
-        <div class="faq-answer">
-          Não. O LexVeritas é uma ferramenta de apoio. Apontamos onde a decisão falhou logicamente ou onde a fundamentação é genérica, mas cabe ao advogado validar e subscrever a estratégia no recurso. Os resultados têm carácter auxiliar e probabilístico.
-        </div>
+        <button class="faq-question"><h3>A análise de nulidades substitui o advogado?</h3><span class="faq-icon">+</span></button>
+        <div class="faq-answer">Não. O LexVeritas é uma ferramenta de apoio técnico. Identificamos onde a decisão pode ter vícios processuais e geramos argumentos jurídicos fundamentados, mas cabe ao advogado validar, adaptar e subscrever profissionalmente a estratégia processual. Os resultados têm carácter auxiliar e probabilístico.</div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">
-          <h3>Os meus dados estão protegidos pelo RGPD?</h3>
-          <span>+</span>
-        </button>
-        <div class="faq-answer">
-          Sim. Todos os servidores estão localizados na União Europeia. Não guardamos cópias dos textos analisados após o encerramento da sessão, a menos que o utilizador opte por guardar no seu histórico pessoal.
-        </div>
+        <button class="faq-question"><h3>Os meus dados estão protegidos pelo RGPD?</h3><span class="faq-icon">+</span></button>
+        <div class="faq-answer">Sim. Todos os servidores estão localizados na União Europeia. Não guardamos cópias dos textos analisados após o encerramento da sessão, a menos que o utilizador opte por guardar no seu histórico pessoal encriptado. Os dados nunca são partilhados com terceiros nem utilizados para treino de modelos externos.</div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">
-          <h3>Funciona para que tipos de decisão?</h3>
-          <span>+</span>
-        </button>
-        <div class="faq-answer">
-          O LexVeritas funciona com acórdãos, sentenças e despachos de todos os tribunais portugueses — STJ, Relações, tribunais administrativos e de 1.ª instância. Suporta também análise académica de teses e dissertações jurídicas.
-        </div>
+        <button class="faq-question"><h3>Funciona para que tipos de decisão?</h3><span class="faq-icon">+</span></button>
+        <div class="faq-answer">O LexVeritas funciona com acórdãos, sentenças e despachos de todos os tribunais portugueses — STJ, Relações, tribunais administrativos e de 1.ª instância. Suporta também análise académica de teses e dissertações jurídicas em português de Portugal.</div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question"><h3>O resultado pode ser usado como prova em tribunal?</h3><span class="faq-icon">+</span></button>
+        <div class="faq-answer">Os relatórios PDF do LexVeritas podem ser utilizados como documento auxiliar de suporte técnico, mas não constituem prova pericial nos termos do Código de Processo Civil. O seu valor probatório depende sempre da estratégia processual do advogado e da aceitação pelo tribunal no caso concreto.</div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ═══ CTA FINAL ═══ -->
+<section class="section-padding" style="text-align:center;background:var(--dark);padding:80px 48px">
+  <div class="container">
+    <div class="section-label reveal" style="justify-content:center">Comece Hoje</div>
+    <h2 class="section-title reveal">A Verdade está <span>no Texto.</span></h2>
+    <p style="color:var(--grey);max-width:500px;margin:0 auto 40px;line-height:1.8;font-size:15px" class="reveal">5 análises gratuitas por mês. Sem cartão de crédito. Resultados em segundos.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap" class="reveal">
+      <a href="/app" style="background:var(--gold);color:var(--black);padding:18px 48px;text-decoration:none;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase">Criar Conta Gratuita</a>
+      <a href="#" onclick="openModal('contacto');return false" style="border:1px solid var(--border);color:var(--white);padding:18px 36px;text-decoration:none;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase">Falar connosco →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">Lex<span>Veritas</span></div>
+    <div class="footer-tagline">Tecnologia Forense Jurídica · Lisboa, Portugal · 2026</div>
     <nav class="footer-nav">
       <a href="/app">Plataforma</a>
       <a href="/blog">Blog</a>
       <a href="#funcionalidades">Funcionalidades</a>
       <a href="#precos">Preços</a>
       <a href="#faq">FAQ</a>
-      <a href="#" onclick="document.getElementById('contactoModal').classList.add('active');return false;">Contacto</a>
+      <a href="#" onclick="openModal('contacto');return false">Contacto</a>
     </nav>
     <div class="footer-divider"></div>
     <div class="footer-bottom">
@@ -342,81 +546,142 @@ footer{padding:60px 48px 40px;border-top:1px solid var(--border)}
 </footer>
 
 <!-- MODAL LISTA DE ESPERA -->
-<div class="modal" id="waitlistModal">
+<div class="modal" id="modal-waitlist">
   <div class="modal-content">
-    <button onclick="closeModal()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer">×</button>
-    <h3 style="font-family:var(--serif);font-size:28px;font-style:italic;margin-bottom:12px">Plano Profissional</h3>
-    <p style="color:var(--grey);font-size:14px;margin-bottom:24px">O acesso à Análise Crítica está a ser libertado gradualmente. Junte-se à lista de espera prioritária.</p>
-    <input type="email" id="modalEmail" placeholder="O seu email profissional" style="width:100%;padding:14px;background:var(--black);border:1px solid var(--border);color:var(--white);margin-bottom:16px;outline:none;font-family:var(--sans)">
-    <button onclick="saveWaitlist()" style="width:100%;background:var(--gold);color:var(--black);border:none;padding:14px;font-weight:800;text-transform:uppercase;cursor:pointer;font-family:var(--sans)">Garantir Acesso</button>
-    <div id="modalMsg" style="margin-top:16px;font-size:12px;display:none"></div>
+    <button class="btn-close-modal" onclick="closeModal('waitlist')">×</button>
+    <div class="modal-label">Plano Profissional</div>
+    <h3 class="modal-title">Lista de Espera Pro</h3>
+    <p class="modal-sub">O acesso à Análise Crítica e ao plano Pro está a ser libertado gradualmente. Junte-se à lista prioritária e seja o primeiro a saber quando os pagamentos abrirem.</p>
+    <input type="email" id="waitlist-email" class="modal-input" placeholder="o-seu@email.pt" onkeydown="if(event.key==='Enter')saveWaitlist()">
+    <select id="waitlist-profissao" class="modal-input">
+      <option value="">— A sua profissão (opcional) —</option>
+      <option>Advogado/a</option><option>Magistrado/a Judicial</option>
+      <option>Magistrado/a do MP</option><option>Solicitador/a</option>
+      <option>Investigador/a Académico</option><option>Outro</option>
+    </select>
+    <button class="btn-modal-cta" onclick="saveWaitlist()">Garantir Acesso Prioritário →</button>
+    <div class="modal-msg" id="waitlist-msg"></div>
   </div>
 </div>
 
 <!-- MODAL CONTACTO -->
-<div class="modal" id="contactoModal" onclick="if(event.target===this)this.classList.remove('active')">
+<div class="modal" id="modal-contacto" onclick="if(event.target===this)closeModal('contacto')">
   <div class="modal-content">
-    <button onclick="document.getElementById('contactoModal').classList.remove('active')" style="position:absolute;top:20px;right:20px;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer">×</button>
-    <div style="font-family:var(--mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Contacto</div>
-    <h3 style="font-family:var(--serif);font-size:26px;font-style:italic;margin-bottom:8px">Fale connosco</h3>
-    <p style="color:var(--grey);font-size:13px;margin-bottom:24px;line-height:1.6">Questões sobre planos, suporte técnico ou parcerias. Respondemos em 24h.</p>
-    <input type="text" id="ctNome" placeholder="O seu nome" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--white);margin-bottom:12px;outline:none;font-family:var(--sans)">
-    <input type="email" id="ctEmail" placeholder="O seu email" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--white);margin-bottom:12px;outline:none;font-family:var(--sans)">
-    <textarea id="ctMsg" placeholder="A sua mensagem..." rows="4" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--white);margin-bottom:16px;outline:none;resize:vertical;font-family:var(--sans)"></textarea>
-    <button onclick="enviarContacto()" style="width:100%;background:var(--gold);color:var(--black);border:none;padding:14px;font-weight:800;text-transform:uppercase;cursor:pointer;font-family:var(--sans)">Enviar Mensagem →</button>
-    <div id="ctResult" style="margin-top:14px;font-size:12px;display:none"></div>
+    <button class="btn-close-modal" onclick="closeModal('contacto')">×</button>
+    <div class="modal-label">Contacto</div>
+    <h3 class="modal-title">Fale connosco</h3>
+    <p class="modal-sub">Questões sobre planos, suporte técnico ou parcerias. Respondemos em 24h úteis.</p>
+    <input type="text" id="ct-nome" class="modal-input" placeholder="O seu nome">
+    <input type="email" id="ct-email" class="modal-input" placeholder="O seu email profissional">
+    <select id="ct-assunto" class="modal-input">
+      <option value="">— Assunto —</option>
+      <option>Questão sobre o meu plano</option>
+      <option>Plano Profissional</option>
+      <option>Suporte técnico</option>
+      <option>Parceria / Press</option>
+      <option>Outro</option>
+    </select>
+    <textarea id="ct-mensagem" class="modal-input" rows="4" placeholder="A sua mensagem..." style="resize:vertical"></textarea>
+    <button class="btn-modal-cta" onclick="enviarContacto()">Enviar Mensagem →</button>
+    <div class="modal-msg" id="ct-msg"></div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const supabaseUrl='https://bsbgizaftamufmmxeyer.supabase.co';
-const supabaseKey='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
-const sb=supabase.createClient(supabaseUrl,supabaseKey);
+  const sb = supabase.createClient(
+    'https://bsbgizaftamufmmxeyer.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ'
+  );
 
-window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('intro').classList.add('done'),2000);});
+  // Intro
+  window.addEventListener('load', () => {
+    setTimeout(() => document.getElementById('intro').classList.add('done'), 2000);
+  });
 
-const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
-function moveRing(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(moveRing);}
-moveRing();
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  });
+  (function moveRing() {
+    rx += (mx - rx) * .15; ry += (my - ry) * .15;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(moveRing);
+  })();
 
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50));
+  // Nav scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+  });
 
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  // Reveal on scroll
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-document.querySelectorAll('.faq-question').forEach(btn=>{
-  btn.addEventListener('click',()=>btn.parentElement.classList.toggle('active'));
-});
+  // FAQ
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => btn.parentElement.classList.toggle('active'));
+  });
 
-function openModal(){document.getElementById('waitlistModal').classList.add('active');}
-function closeModal(){document.getElementById('waitlistModal').classList.remove('active');}
+  // Modais
+  function openModal(id) { document.getElementById('modal-' + id).classList.add('active'); }
+  function closeModal(id) { document.getElementById('modal-' + id).classList.remove('active'); }
 
-async function saveWaitlist(){
-  const email=document.getElementById('modalEmail').value;
-  const msg=document.getElementById('modalMsg');
-  if(!email)return;
-  const{error}=await sb.from('lista_espera').upsert({email,plano:'PRO'});
-  msg.style.display='block';
-  if(!error){msg.textContent='✓ Registado! Entraremos em contacto em breve.';msg.style.color='var(--gold)';setTimeout(closeModal,2000);}
-  else{msg.textContent='Erro ao registar. Tente novamente.';msg.style.color='#ff6666';}
-}
+  // Lista espera
+  async function saveWaitlist() {
+    const email = document.getElementById('waitlist-email').value.trim();
+    const profissao = document.getElementById('waitlist-profissao').value;
+    const msg = document.getElementById('waitlist-msg');
+    if (!email || !email.includes('@')) {
+      msg.textContent = 'Introduza um email válido.';
+      msg.style.color = '#ff9999'; msg.style.display = 'block'; return;
+    }
+    const { error } = await sb.from('lista_espera').upsert({ email, plano: 'PRO', profissao: profissao || null });
+    msg.style.display = 'block';
+    if (!error) {
+      msg.textContent = '✓ Registado! Entraremos em contacto assim que os pagamentos abrirem.';
+      msg.style.color = 'var(--gold)';
+      document.getElementById('waitlist-email').value = '';
+      setTimeout(() => closeModal('waitlist'), 3000);
+    } else {
+      msg.textContent = 'Erro ao registar. Tente novamente.';
+      msg.style.color = '#ff6666';
+    }
+  }
 
-async function enviarContacto(){
-  const nome=document.getElementById('ctNome').value.trim();
-  const email=document.getElementById('ctEmail').value.trim();
-  const mensagem=document.getElementById('ctMsg').value.trim();
-  const result=document.getElementById('ctResult');
-  if(!nome||!email||!mensagem){result.textContent='Preencha todos os campos.';result.style.color='#ff6666';result.style.display='block';return;}
-  try{
-    const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({nome,email,mensagem})});
-    if(r.ok){result.textContent='✓ Mensagem enviada! Respondemos em 24h.';result.style.color='var(--gold)';}
-    else throw new Error();
-  }catch(e){result.textContent='Erro ao enviar. Tente: info@lexveritas.pt';result.style.color='#ff6666';}
-  result.style.display='block';
-}
+  // Contacto
+  async function enviarContacto() {
+    const nome = document.getElementById('ct-nome').value.trim();
+    const email = document.getElementById('ct-email').value.trim();
+    const assunto = document.getElementById('ct-assunto').value;
+    const mensagem = document.getElementById('ct-mensagem').value.trim();
+    const msg = document.getElementById('ct-msg');
+    if (!nome || !email || !mensagem) {
+      msg.textContent = 'Preencha nome, email e mensagem.';
+      msg.style.color = '#ff9999'; msg.style.background = 'rgba(139,26,26,.1)'; msg.style.display = 'block'; return;
+    }
+    try {
+      const r = await fetch('https://formspree.io/f/mzdornkq', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ nome, email, assunto: assunto || 'Questão geral', mensagem })
+      });
+      if (r.ok) {
+        msg.textContent = '✓ Mensagem enviada! Respondemos em 24h.';
+        msg.style.color = '#99ffbb'; msg.style.background = 'rgba(26,92,58,.1)'; msg.style.display = 'block';
+        ['ct-nome','ct-email','ct-assunto','ct-mensagem'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      } else throw new Error();
+    } catch (e) {
+      msg.textContent = 'Erro ao enviar. Tente: info@lexveritas.pt';
+      msg.style.color = '#ff6666'; msg.style.display = 'block';
+    }
+  }
 </script>
 </body>
 </html>
