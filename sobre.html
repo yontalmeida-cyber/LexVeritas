@@ -1,391 +1,294 @@
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre — LexVeritas</title>
-    <meta name="description" content="Tony de Almeida da Costa Branco — Fundador do LexVeritas. Jurista e especialista em integração de IA.">
-    <meta name="theme-color" content="#060608">
-    
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --black: #060608;
-            --dark: #0e0e12;
-            --card: #13131a;
-            --gold: #c9a84c;
-            --gold-light: #e8c96a;
-            --cream: #f8f6f1;
-            --grey: #9a9a9a;
-            --rule-dark: rgba(201,168,76,0.15);
-            --serif: 'Instrument Serif', Georgia, serif;
-            --mono: 'JetBrains Mono', monospace;
-            --sans: 'Syne', sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sobre — LexVeritas</title>
+<meta name="description" content="Tony de Almeida da Costa Branco — Fundador do LexVeritas. Jurista e especialista em integração de IA, criou o primeiro sistema de análise forense de IA para o direito português.">
+<meta name="theme-color" content="#060608">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#060608;--dark:#0e0e12;--card:#13131a;
+  --gold:#c9a84c;--gold-light:#e8c96a;
+  --cream:#f8f6f1;--grey:#9a9a9a;
+  --rule-dark:rgba(201,168,76,0.15);
+  --serif:'Instrument Serif',Georgia,serif;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Syne',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--cream);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body { 
-            background: var(--black); 
-            color: var(--cream); 
-            font-family: var(--sans); 
-            min-height: 100vh; 
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px clamp(20px,5vw,60px);display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,8,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule-dark)}
+.nav-logo{font-family:var(--serif);font-size:22px;font-style:italic;color:var(--cream);text-decoration:none}
+.nav-logo em{color:var(--gold);font-style:italic}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--cream)}
+.nav-cta{background:var(--gold);color:var(--black);padding:8px 20px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;transition:all 0.2s}
+.nav-cta:hover{background:var(--gold-light)}
 
-        /* NAVEGAÇÃO */
-        nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-            padding: 15px clamp(20px, 5vw, 60px);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(6, 6, 8, 0.9);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--rule-dark);
-        }
-        .nav-logo {
-            font-family: var(--serif);
-            font-size: 24px;
-            font-style: italic;
-            color: var(--cream);
-            text-decoration: none;
-        }
-        .nav-logo em { color: var(--gold); font-style: italic; }
-        .nav-links { display: flex; align-items: center; gap: 28px; }
-        .nav-links a {
-            font-family: var(--mono);
-            font-size: 10px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--grey);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover { color: var(--gold); }
-        .nav-cta {
-            background: var(--gold);
-            color: var(--black);
-            padding: 8px 18px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            text-decoration: none;
-        }
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:120px clamp(20px,5vw,60px) 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 60% 40%,rgba(201,168,76,0.08) 0%,transparent 60%);pointer-events:none}
+.hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.03) 1px,transparent 1px);background-size:80px 80px;pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 420px;gap:80px;align-items:center;position:relative;z-index:1}
+.hero-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.hero-eyebrow::before{content:'';height:1px;width:40px;background:var(--gold);opacity:0.5}
+.hero-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--grey);text-transform:uppercase;background:rgba(201,168,76,0.08);border:1px solid var(--rule-dark);padding:5px 12px;display:inline-block;margin-bottom:24px}
+h1{font-family:var(--serif);font-size:clamp(48px,7vw,88px);font-style:italic;line-height:0.9;letter-spacing:-0.02em;color:var(--cream);margin-bottom:12px}
+h1 em{color:var(--gold);font-style:italic}
+.hero-role{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;opacity:0.8}
+.hero-bio{font-family:var(--sans);font-size:16px;line-height:1.8;color:rgba(248,246,241,0.65);margin-bottom:36px;max-width:520px}
+.hero-bio strong{color:var(--cream);font-weight:600}
+.hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.btn-linkedin{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:var(--black);padding:14px 28px;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;transition:all 0.25s}
+.btn-linkedin:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,0.25)}
+.btn-site{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--grey);border:1px solid var(--rule-dark);padding:14px 28px;font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;transition:all 0.25s}
+.btn-site:hover{border-color:var(--gold);color:var(--cream)}
 
-        /* HERO SECTION */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 120px clamp(20px, 5vw, 60px) 60px;
-            position: relative;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 70% 30%, rgba(201,168,76,0.07) 0%, transparent 70%);
-            pointer-events: none;
-        }
+/* PHOTO */
+.photo-wrap{position:relative;display:flex;justify-content:center;align-items:center}
+.photo-frame{position:relative;width:360px;height:420px}
+.photo-frame::before{content:'';position:absolute;top:-16px;left:-16px;right:16px;bottom:16px;border:1px solid rgba(201,168,76,0.2);z-index:0}
+.photo-frame::after{content:'';position:absolute;top:16px;left:16px;right:-16px;bottom:-16px;border:1px solid rgba(201,168,76,0.08);z-index:0}
+.photo-img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1;filter:grayscale(20%) contrast(1.05)}
+.photo-badge{position:absolute;bottom:-20px;right:-20px;background:var(--gold);padding:14px 20px;z-index:2}
+.photo-badge-text{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--black);font-weight:700}
+.photo-badge-year{font-family:var(--serif);font-size:22px;font-style:italic;color:var(--black);line-height:1}
 
-        .hero-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 60px;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
+/* STATS */
+.stats-bar{border-top:1px solid var(--rule-dark);border-bottom:1px solid var(--rule-dark);padding:32px clamp(20px,5vw,60px);display:flex;justify-content:center;gap:60px;flex-wrap:wrap}
+.stat-item{text-align:center}
+.stat-num{font-family:var(--serif);font-size:36px;font-style:italic;color:var(--gold);line-height:1;margin-bottom:6px}
+.stat-label{font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--grey)}
 
-        /* CONTEÚDO */
-        .hero-eyebrow {
-            font-family: var(--mono);
-            font-size: 10px;
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .hero-eyebrow::before { content: ''; height: 1px; width: 30px; background: var(--gold); opacity: 0.5; }
+/* STORY */
+.story-section{padding:clamp(60px,8vw,100px) clamp(20px,5vw,60px);max-width:1100px;margin:0 auto}
+.section-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.section-eyebrow::after{content:'';height:1px;flex:1;max-width:60px;background:var(--gold);opacity:0.4}
+.section-title{font-family:var(--serif);font-size:clamp(32px,4vw,52px);font-style:italic;line-height:1.1;margin-bottom:40px;color:var(--cream)}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.story-card{background:var(--card);border:1px solid var(--rule-dark);padding:36px;position:relative;overflow:hidden}
+.story-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+.story-card-icon{font-size:28px;margin-bottom:16px}
+.story-card-title{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--cream);margin-bottom:12px}
+.story-card-text{font-family:var(--sans);font-size:13px;line-height:1.8;color:rgba(248,246,241,0.55)}
 
-        .hero-tag {
-            font-family: var(--mono);
-            font-size: 9px;
-            letter-spacing: 0.15em;
-            color: var(--grey);
-            text-transform: uppercase;
-            background: rgba(201,168,76,0.08);
-            border: 1px solid var(--rule-dark);
-            padding: 6px 12px;
-            display: inline-block;
-            margin-bottom: 30px;
-        }
+/* PROFILE */
+.profile-section{padding:clamp(40px,6vw,80px) clamp(20px,5vw,60px);background:var(--dark);border-top:1px solid var(--rule-dark);border-bottom:1px solid var(--rule-dark)}
+.profile-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.profile-details{display:flex;flex-direction:column;gap:20px}
+.profile-item{display:flex;flex-direction:column;gap:4px;padding-bottom:20px;border-bottom:1px solid var(--rule-dark)}
+.profile-item:last-child{border-bottom:none;padding-bottom:0}
+.profile-item-label{font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);opacity:0.7}
+.profile-item-value{font-family:var(--sans);font-size:14px;color:var(--cream);font-weight:500}
+.profile-item-sub{font-family:var(--sans);font-size:12px;color:var(--grey)}
+.skills-wrap{display:flex;flex-direction:column;gap:14px}
+.skill-item{display:flex;flex-direction:column;gap:8px}
+.skill-label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:var(--grey)}
+.skill-label span:last-child{color:var(--gold)}
+.skill-track{height:2px;background:rgba(255,255,255,0.06)}
+.skill-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light))}
 
-        h1 {
-            font-family: var(--serif);
-            font-size: clamp(54px, 8vw, 96px);
-            font-style: italic;
-            line-height: 0.85;
-            letter-spacing: -0.03em;
-            margin-bottom: 15px;
-        }
-        h1 em { color: var(--gold); font-style: italic; }
+/* MISSION */
+.mission-section{padding:clamp(60px,8vw,100px) clamp(20px,5vw,60px)}
+.mission-inner{max-width:800px;margin:0 auto;text-align:center}
+.mission-quote{font-family:var(--serif);font-size:clamp(22px,3.5vw,38px);font-style:italic;line-height:1.4;color:var(--cream);margin-bottom:20px;position:relative}
+.mission-quote::before{content:'❝';position:absolute;top:-20px;left:-20px;font-size:60px;color:var(--gold);opacity:0.15;font-family:Georgia,serif}
+.mission-author{font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold)}
+.mission-divider{width:60px;height:1px;background:var(--gold);margin:24px auto;opacity:0.4}
 
-        .hero-role {
-            font-family: var(--mono);
-            font-size: 11px;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 32px;
-            opacity: 0.9;
-        }
+/* CTA */
+.cta-section{padding:clamp(60px,8vw,100px) clamp(20px,5vw,60px);text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(201,168,76,0.08) 0%,transparent 60%);pointer-events:none}
+.cta-inner{position:relative;z-index:1}
+.cta-title{font-family:var(--serif);font-size:clamp(32px,5vw,64px);font-style:italic;line-height:0.95;margin-bottom:20px}
+.cta-title em{color:var(--gold)}
+.cta-sub{font-family:var(--sans);font-size:14px;color:var(--grey);margin-bottom:36px;line-height:1.6}
+.cta-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
 
-        .hero-bio {
-            font-size: 16px;
-            line-height: 1.8;
-            color: rgba(248, 246, 241, 0.7);
-            margin-bottom: 40px;
-            max-width: 540px;
-        }
-        .hero-bio strong { color: var(--cream); font-weight: 600; }
+/* FOOTER */
+footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-brand{font-family:var(--serif);font-size:18px;font-style:italic;color:var(--cream)}
+.footer-brand em{color:var(--gold)}
+.footer-copy{font-family:var(--mono);font-size:9px;color:var(--grey);letter-spacing:0.1em}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--gold)}
 
-        .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
-        .btn-primary {
-            background: var(--gold);
-            color: var(--black);
-            padding: 16px 32px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .btn-primary:hover { transform: translateY(-2px); background: var(--gold-light); }
-        
-        .btn-secondary {
-            border: 1px solid var(--rule-dark);
-            color: var(--grey);
-            padding: 16px 32px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .btn-secondary:hover { border-color: var(--gold); color: var(--cream); }
-
-        /* FOTO */
-        .photo-container { 
-            position: relative; 
-            width: 100%; 
-            display: flex;
-            justify-content: center;
-        }
-        .photo-frame {
-            position: relative;
-            width: clamp(280px, 30vw, 400px);
-            aspect-ratio: 4/5;
-            background: var(--dark);
-            overflow: hidden;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
-        }
-        
-        /* Linhas decorativas (apenas para Desktop) */
-        .photo-frame::before {
-            content: '';
-            position: absolute;
-            top: -15px; left: -15px; right: 15px; bottom: 15px;
-            border: 1px solid rgba(201,168,76,0.2);
-            z-index: 0;
-        }
-        
-        .photo-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: relative;
-            z-index: 1;
-            filter: grayscale(15%) contrast(1.05);
-            display: block;
-        }
-        
-        .photo-badge {
-            position: absolute;
-            bottom: -15px;
-            right: -15px;
-            background: var(--gold);
-            padding: 15px 25px;
-            z-index: 2;
-            box-shadow: 10px 10px 30px rgba(0,0,0,0.3);
-        }
-        .badge-label {
-            font-family: var(--mono);
-            font-size: 9px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--black);
-            font-weight: 800;
-            display: block;
-            margin-bottom: 2px;
-        }
-        .badge-year {
-            font-family: var(--serif);
-            font-size: 28px;
-            font-style: italic;
-            color: var(--black);
-            line-height: 1;
-        }
-
-        /* AJUSTES MOBILE */
-        @media (max-width: 850px) {
-            .hero-inner { 
-                grid-template-columns: 1fr; 
-                gap: 40px; /* Reduzi o buraco entre foto e texto */
-                text-align: center; 
-            }
-            .hero { padding-top: 100px; }
-            .hero-eyebrow { justify-content: center; }
-            .hero-eyebrow::before { display: none; }
-            .hero-bio { margin-left: auto; margin-right: auto; }
-            .hero-actions { justify-content: center; }
-            
-            .photo-container { 
-                order: -1; /* Foto aparece primeiro no telemóvel */
-                margin-bottom: 20px;
-            }
-            .photo-frame {
-                width: clamp(260px, 80vw, 320px);
-                margin-top: 0;
-            }
-            /* Remover as linhas decorativas no telemóvel para ficar limpo */
-            .photo-frame::before { display: none; }
-            
-            .nav-links { display: none; }
-            h1 { font-size: 60px; margin-top: 20px; }
-        }
-
-        /* STORY SECTION */
-        .story { padding: 80px clamp(20px, 5vw, 60px); max-width: 1100px; margin: 0 auto; }
-        .grid-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-        .card {
-            background: var(--card);
-            border: 1px solid var(--rule-dark);
-            padding: 40px;
-            transition: 0.3s;
-        }
-        .card:hover { border-color: var(--gold); transform: translateY(-5px); }
-        .card h3 { font-family: var(--serif); font-size: 24px; font-style: italic; margin-bottom: 15px; color: var(--gold); }
-        .card p { font-size: 14px; line-height: 1.7; color: rgba(248,246,241,0.6); }
-
-        footer {
-            padding: 40px clamp(20px, 5vw, 60px);
-            border-top: 1px solid var(--rule-dark);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: var(--mono);
-            font-size: 9px;
-            color: var(--grey);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-        @media (max-width: 600px) {
-            footer { flex-direction: column; gap: 15px; text-align: center; }
-        }
-    </style>
+@media(max-width:768px){
+  .hero-inner{grid-template-columns:1fr;gap:40px}
+  .photo-wrap{order:-1}
+  .photo-frame{width:280px;height:320px}
+  .story-grid{grid-template-columns:1fr}
+  .profile-inner{grid-template-columns:1fr}
+  .stats-bar{gap:32px}
+  .nav-links{display:none}
+}
+</style>
 </head>
 <body>
 
 <nav>
-    <a href="/" class="nav-logo">Lex<em>Veritas</em></a>
-    <div class="nav-links">
-        <a href="/">Início</a>
-        <a href="/academico">Académico</a>
-        <a href="/sobre">Sobre</a>
-        <a href="/app" class="nav-cta">Entrar</a>
-    </div>
+  <a href="/" class="nav-logo">Lex<em>Veritas</em></a>
+  <div class="nav-links">
+    <a href="/">Início</a>
+    <a href="/academico">Académico</a>
+    <a href="/blog">Blog</a>
+    <a href="/sobre">Sobre</a>
+    <a href="/app" class="nav-cta">Entrar</a>
+  </div>
 </nav>
 
 <section class="hero">
-    <div class="hero-inner">
-        <div class="hero-content">
-            <div class="hero-eyebrow">Fundador & Criador</div>
-            <div class="hero-tag">Almada, Setúbal · Portugal · 2026</div>
-            
-            <h1>Tony<br><em>Branco</em></h1>
-            
-            <div class="hero-role">Jurista · QA Analyst II · Lean Six Sigma · AI Integration</div>
-            
-            <p class="hero-bio">
-                Formado em Direito pela <strong>Faculdade de Direito da Universidade de Lisboa</strong>, 
-                Tony une o rigor jurídico à vanguarda tecnológica. 
-                <br><br>
-                O LexVeritas nasceu da sua convicção de que o sistema jurídico português necessitava de uma ferramenta forense nativa, calibrada especificamente para a nossa língua e estrutura judicial.
-            </p>
-            
-            <div class="hero-actions">
-                <a href="https://linkedin.com/in/tony-branco-b069b097" target="_blank" class="btn-primary">LinkedIn Profissional</a>
-                <a href="/app" class="btn-secondary">Analisar Documento →</a>
-            </div>
-        </div>
-
-        <div class="photo-container">
-            <div class="photo-frame">
-                <img src="foto-tony.png" alt="Tony Branco — Fundador LexVeritas" class="photo-img">
-            </div>
-            <div class="photo-badge">
-                <span class="badge-label">Fundador</span>
-                <span class="badge-year">2026</span>
-            </div>
-        </div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Fundador & Criador</div>
+      <div class="hero-tag">Almada, Setúbal · Portugal · 2026</div>
+      <h1>Tony<br><em>Branco</em></h1>
+      <div class="hero-role">Jurista · QA Analyst II · Lean Six Sigma · AI Integration</div>
+      <p class="hero-bio">
+        Formado em Direito pela <strong>Faculdade de Direito da Universidade de Lisboa</strong>,
+        com experiência em garantia de qualidade e integração de IA na <strong>Teleperformance</strong>.
+        <br><br>
+        Estudou Direito e apaixonou-se pela Inteligência Artificial. O LexVeritas nasceu dessa combinação — a convicção de que o sistema jurídico português merecia uma ferramenta construída especificamente para ele. O resultado é o primeiro sistema forense de detecção de IA
+        construído especificamente para o universo jurídico português.
+      </p>
+      <div class="hero-actions">
+        <a href="https://linkedin.com/in/tony-branco-b069b097" target="_blank" rel="noopener" class="btn-linkedin">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </a>
+        <a href="/app" class="btn-site">Experimentar LexVeritas →</a>
+      </div>
     </div>
+    <div class="photo-wrap">
+      <div class="photo-frame">
+        <img src="/foto-tony.png" alt="Tony Branco — Fundador LexVeritas" class="photo-img">
+        <div class="photo-badge">
+          <div class="photo-badge-text">Fundador</div>
+          <div class="photo-badge-year">2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="story">
-    <div class="hero-eyebrow">A Visão</div>
-    <h2 style="font-family: var(--serif); font-size: 42px; font-style: italic; margin-bottom: 20px;">Porquê o LexVeritas?</h2>
-    
-    <div class="grid-cards">
-        <div class="card">
-            <h3>A Lacuna Judicial</h3>
-            <p>As ferramentas globais de deteção de IA ignoram as nuances do Direito Português. O LexVeritas foi treinado com jurisprudência real para identificar padrões que outros não veem.</p>
-        </div>
-        <div class="card">
-            <h3>Rigor Académico</h3>
-            <p>Protegemos a integridade das instituições de ensino jurídico, garantindo que o pensamento crítico humano permanece no centro da formação dos futuros juristas.</p>
-        </div>
-        <div class="card">
-            <h3>Soberania de Dados</h3>
-            <p>Como projeto português, priorizamos a conformidade com o RGPD, com processamento e alojamento de dados estritamente dentro da União Europeia.</p>
-        </div>
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">14+</div><div class="stat-label">Tribunais cobertos</div></div>
+  <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">Indicadores forenses</div></div>
+  <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">Modos de análise</div></div>
+  <div class="stat-item"><div class="stat-num">PT</div><div class="stat-label">Dados na UE</div></div>
+</div>
+
+<section class="story-section">
+  <div class="section-eyebrow">A História</div>
+  <div class="section-title">Porquê o LexVeritas?</div>
+  <div class="story-grid">
+    <div class="story-card">
+      <div class="story-card-icon">⚖️</div>
+      <div class="story-card-title">O Problema</div>
+      <div class="story-card-text">Com a proliferação de ferramentas de IA generativa, surgiu uma preocupação crescente no sistema judicial e académico português: como garantir a autenticidade das decisões judiciais e dos trabalhos académicos de direito? As ferramentas existentes foram construídas para o inglês e desconhecem por completo o estilo do STJ ou do TRL.</div>
     </div>
+    <div class="story-card">
+      <div class="story-card-icon">🎓</div>
+      <div class="story-card-title">A Formação</div>
+      <div class="story-card-text">Formado em Direito pela Faculdade de Direito da Universidade de Lisboa, Tony conhece por dentro a linguagem jurídica portuguesa — os seus idiomatismos, a estrutura dos acórdãos, o estilo singular de cada tribunal. É esse conhecimento que torna o LexVeritas diferente de qualquer outro detector.</div>
+    </div>
+    <div class="story-card">
+      <div class="story-card-icon">🤖</div>
+      <div class="story-card-title">O Fascínio pela IA</div>
+      <div class="story-card-text">Como Quality Assurance Analyst II com especialização em AI Integration e Lean Six Sigma na Teleperformance, Tony acompanha de perto a transformação que a IA está a provocar no mundo do trabalho. O LexVeritas é a materialização desse fascínio ao serviço do Direito.</div>
+    </div>
+    <div class="story-card">
+      <div class="story-card-icon">🇵🇹</div>
+      <div class="story-card-title">A Solução Portuguesa</div>
+      <div class="story-card-text">O LexVeritas foi construído do zero para o sistema jurídico português. Calibrado com jurisprudência real, treinado para reconhecer os padrões de cada tribunal, em conformidade com o RGPD e com dados alojados na União Europeia. Não é uma adaptação — é uma criação original.</div>
+    </div>
+  </div>
+</section>
+
+<section class="profile-section">
+  <div class="profile-inner">
+    <div>
+      <div class="section-eyebrow" style="margin-bottom:16px">Perfil Profissional</div>
+      <div class="profile-details">
+        <div class="profile-item">
+          <span class="profile-item-label">Nome completo</span>
+          <span class="profile-item-value">Tony de Almeida da Costa Branco</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-item-label">Cargo actual</span>
+          <span class="profile-item-value">Quality Assurance Analyst II</span>
+          <span class="profile-item-sub">Lean Six Sigma · AI Integration · Teleperformance</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-item-label">Formação académica</span>
+          <span class="profile-item-value">Licenciatura em Direito</span>
+          <span class="profile-item-sub">Faculdade de Direito da Universidade de Lisboa</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-item-label">Localização</span>
+          <span class="profile-item-value">Almada, Setúbal, Portugal</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-item-label">LinkedIn</span>
+          <span class="profile-item-value">
+            <a href="https://linkedin.com/in/tony-branco-b069b097" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none">tony-branco-b069b097</a>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-eyebrow" style="margin-bottom:24px">Competências</div>
+      <div class="skills-wrap">
+        <div class="skill-item"><div class="skill-label"><span>Direito Português</span><span>95</span></div><div class="skill-track"><div class="skill-fill" style="width:95%"></div></div></div>
+        <div class="skill-item"><div class="skill-label"><span>Integração de IA</span><span>88</span></div><div class="skill-track"><div class="skill-fill" style="width:88%"></div></div></div>
+        <div class="skill-item"><div class="skill-label"><span>Quality Assurance</span><span>90</span></div><div class="skill-track"><div class="skill-fill" style="width:90%"></div></div></div>
+        <div class="skill-item"><div class="skill-label"><span>Lean Six Sigma</span><span>82</span></div><div class="skill-track"><div class="skill-fill" style="width:82%"></div></div></div>
+        <div class="skill-item"><div class="skill-label"><span>Análise Forense Linguística</span><span>85</span></div><div class="skill-track"><div class="skill-fill" style="width:85%"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mission-section">
+  <div class="mission-inner">
+    <div class="section-eyebrow" style="justify-content:center;margin-bottom:32px"><span style="margin-left:auto">A Visão</span><span style="margin-right:auto"></span></div>
+    <div class="mission-quote">"Estudei Direito e apaixonei-me pela IA. O LexVeritas nasceu dessa combinação — a convicção de que o sistema jurídico português merecia uma ferramenta construída especificamente para ele."</div>
+    <div class="mission-divider"></div>
+    <div class="mission-author">Tony Branco · Fundador, LexVeritas</div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="section-eyebrow" style="justify-content:center;margin-bottom:20px">Experimente</div>
+    <div class="cta-title">Comece a analisar<br><em>gratuitamente</em></div>
+    <p class="cta-sub">5 análises por mês · Sem cartão de crédito · Dados na União Europeia</p>
+    <div class="cta-buttons">
+      <a href="/app" class="btn-linkedin">Criar conta gratuita →</a>
+      <a href="https://linkedin.com/in/tony-branco-b069b097" target="_blank" rel="noopener" class="btn-site">Seguir no LinkedIn</a>
+    </div>
+  </div>
 </section>
 
 <footer>
-    <div>© 2026 LexVeritas · Lisboa, Portugal</div>
-    <div>Design & Código por Tony Branco</div>
+  <div class="footer-brand">Lex<em>Veritas</em></div>
+  <div class="footer-copy">© 2026 · Fundado por Tony Branco · Portugal</div>
+  <div class="footer-links">
+    <a href="/">Início</a>
+    <a href="/blog">Blog</a>
+    <a href="/sobre">Sobre</a>
+    <a href="/privacidade">Privacidade</a>
+    <a href="/termos">Termos</a>
+  </div>
 </footer>
 
 </body>
