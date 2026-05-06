@@ -1,178 +1,326 @@
-// api/analisar.js — LexVeritas v6
-// Suporte a modo judicial e académico · limite 300.000 chars
+// /api/analisar.js — LexVeritas API Endpoint
+// Vercel Serverless Function — Node.js 18+
+// Handles 3 analysis modes: judicial, academico, critica
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ erro: 'Método não permitido.' });
+  // CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
+
+  const { texto, modo = 'judicial', tribunal, relator, instituicao, tipoDoc, orientador, tipoProcesso, parteRecorrente } = req.body;
+
+  if (!texto || texto.length < 50) {
+    return res.status(400).json({ erro: 'Texto insuficiente para análise.' });
   }
 
-  const { texto, tribunal, relator, modo, instituicao, tipoDoc, orientador } = req.body || {};
-
-  if (!texto || typeof texto !== 'string' || texto.trim().length < 100) {
-    return res.status(400).json({ erro: 'Texto demasiado curto (mínimo 100 caracteres).' });
-  }
-  if (texto.length > 300000) {
-    return res.status(400).json({ erro: 'Texto demasiado longo (máximo 300 000 caracteres / ~200 páginas).' });
+  const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+  if (!ANTHROPIC_API_KEY) {
+    return res.status(500).json({ erro: 'Chave API não configurada.' });
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return res.status(500).json({ erro: 'Servidor mal configurado.' });
-  }
+  // Truncate text to ~12000 chars to control token usage
+  const textoTruncado = texto.length > 12000 ? texto.substring(0, 12000) + '\n[...texto truncado para análise...]' : texto;
 
-  // ── EXTRACÇÃO DE AMOSTRAS ──────────────────────────────────
-  const len = texto.length;
-  let textoAnalise;
-  if (len <= 8000) {
-    textoAnalise = texto;
-  } else {
-    const ini = texto.substring(0, 2500);
-    const q1  = texto.substring(Math.floor(len * 0.25) - 500, Math.floor(len * 0.25) + 500);
-    const mid = texto.substring(Math.floor(len * 0.50) - 800, Math.floor(len * 0.50) + 800);
-    const q3  = texto.substring(Math.floor(len * 0.75) - 500, Math.floor(len * 0.75) + 500);
-    const fim = texto.substring(len - 1500);
-    textoAnalise = ini + '\n\n[...]\n\n' + q1 + '\n\n[...]\n\n' + mid + '\n\n[...]\n\n' + q3 + '\n\n[...]\n\n' + fim;
-  }
+  try {
+    let systemPrompt, userPrompt;
 
-  // ── ESTILOS DE TRIBUNAL ────────────────────────────────────
-  const estilosTribunal = {
-    'STJ — Supremo Tribunal de Justiça': 'ESTILO STJ: linguagem técnica densa, frases longas (50-120 palavras), doutrina clássica (Antunes Varela, Menezes Cordeiro, Menezes Leitão), latim jurídico natural (ex vi, ad quem, a quo, in casu), variação NOTÁVEL no tamanho dos parágrafos. Expressões humanas: afigura-se-nos, temos por seguro que, sem embargo, ora. SINAIS DE IA: parágrafos uniformes, ausência de latim, neste conspecto excessivo.',
-    'TRL — Tribunal da Relação de Lisboa': 'ESTILO TRL: estilo directo, fundamentação concisa, citações do próprio TRL com número de processo, matéria de facto em lista numerada. Expressões: como resulta dos autos, conforme se extrai de. SINAIS DE IA: estrutura perfeitamente simétrica, falta de referências processuais específicas.',
-    'TRP — Tribunal da Relação do Porto': 'ESTILO TRP: directo e pragmático, frases curtas (20-40 palavras), matéria de facto estruturada em itens. SINAIS DE IA: frases longas e elaboradas, parágrafos uniformes.',
-    'TRC — Tribunal da Relação de Coimbra': 'ESTILO TRC: influência académica, citações doutrinárias extensas com obra e página, subtítulos frequentes. SINAIS DE IA: ausência de citações doutrinárias precisas.',
-    'TRG — Tribunal da Relação de Guimarães': 'ESTILO TRG: conciso e prático, acórdãos curtos. SINAIS DE IA: introduções longas, parágrafos uniformes.',
-    'TRE — Tribunal da Relação de Évora': 'ESTILO TRE: equilibrado, jurisprudência do STJ como referência, extensão moderada.',
-    'TC — Tribunal Constitucional': 'ESTILO TC: linguagem constitucional específica, direito comparado (TEDH, BVerfG), acórdãos muito longos. SINAIS DE IA: ausência de referências comparatistas.',
-    'TCAS — Tribunal Central Administrativo Sul': 'ESTILO TCAS: linguagem administrativa (acto administrativo, vício de forma), referências ao CPA e CPTA com artigos específicos. SINAIS DE IA: ausência de referências legislativas específicas.',
-    'TCAN — Tribunal Central Administrativo Norte': 'Partilha características com TCAS: especialização administrativa e fiscal.',
-  };
+    // ═══════════════════════════════════════════════
+    // MODO CRÍTICA — Consultor Jurídico Sénior
+    // ═══════════════════════════════════════════════
+    if (modo === 'critica') {
+      const contextoProcesso = [
+        tribunal ? `Tribunal: ${tribunal}` : null,
+        tipoProcesso ? `Tipo de processo: ${tipoProcesso}` : null,
+        parteRecorrente ? `Parte recorrente: ${parteRecorrente}` : null,
+      ].filter(Boolean).join('\n');
 
-  // ── CONTEXTO ───────────────────────────────────────────────
-  const estiloCtx = tribunal && estilosTribunal[tribunal]
-    ? `\n${estilosTribunal[tribunal]}`
-    : tribunal ? `\nTribunal: ${tribunal}` : '';
+      systemPrompt = `Actua como um Consultor Jurídico Sénior especialista em Processo Civil e Processo Penal português. Tens 20 anos de experiência em recursos nos tribunais portugueses, com especial domínio em:
+- Nulidades processuais (Art. 615.º CPC / Art. 379.º CPP)
+- Erros de julgamento e violação de regras de prova
+- Falta de fundamentação e exame crítico das provas
+- Violações ao Art. 205.º da Constituição da República Portuguesa
+- Recursos para as Relações e para o STJ
 
-  const relatorCtx = relator?.trim()
-    ? `\nRELATOR: "${relator.trim()}" — verifica se o texto tem marcas pessoais deste magistrado.`
-    : '';
+A tua tarefa é analisar a decisão judicial e identificar todos os vícios, nulidades e erros que possam fundamentar um recurso. Deves ser técnico, preciso e fundamentado em lei.
 
-  const academicCtx = [
-    instituicao ? `\nINSTITUIÇÃO: ${instituicao}` : '',
-    tipoDoc     ? `\nTIPO DE DOCUMENTO: ${tipoDoc}` : '',
-    orientador  ? `\nORIENTADOR: ${orientador}` : '',
-  ].filter(Boolean).join('');
+INSTRUÇÕES DE RESPOSTA:
+- Responde EXCLUSIVAMENTE em JSON válido, sem markdown, sem backticks, sem texto antes ou depois do JSON
+- Não uses aspas tipográficas — usa apenas aspas retas "
+- O JSON deve ter exactamente esta estrutura:
 
-  // ── PROMPTS ────────────────────────────────────────────────
-  const JSON_FORMAT = `
-RESPONDE APENAS COM JSON VÁLIDO. SEM TEXTO ANTES OU DEPOIS:
 {
-  "veredicto": "IA_DETECTADA|PROVAVELMENTE_IA|INCONCLUSIVO|PROVAVELMENTE_HUMANO|HUMANO",
-  "confianca": 0-100,
+  "veredicto_recurso": "RECURSO_VIAVEL" | "RECURSO_PARCIAL" | "RECURSO_INVIAVEL",
+  "confianca": <número 0-100>,
+  "sumario": "<resumo executivo em 2-3 frases>",
+  "nulidades": [
+    {
+      "tipo": "<nome do vício ex: Omissão de Pronúncia>",
+      "artigo": "<artigo legal ex: Art. 615.º n.º 1 al. d) CPC>",
+      "gravidade": "grave" | "moderada" | "leve",
+      "descricao": "<descrição objectiva do vício identificado no texto>",
+      "argumento": "<argumento técnico-jurídico para usar no recurso>"
+    }
+  ],
+  "conclusao": "<recomendação final do consultor em 2-4 frases>"
+}
+
+CRITÉRIOS DE VEREDICTO:
+- RECURSO_VIAVEL: Existem uma ou mais nulidades graves com fundamento jurídico sólido. Alta probabilidade de procedência.
+- RECURSO_PARCIAL: Existem argumentos mas com limitações — nulidades leves ou de difícil prova. Recurso possível mas incerto.
+- RECURSO_INVIAVEL: A decisão está fundamentada, os vícios são mínimos ou inexistentes. Recurso improvável de proceder.
+
+NULIDADES A PESQUISAR (não exclusivo):
+1. Omissão de pronúncia — Art. 615.º n.º 1 al. d) CPC / Art. 379.º n.º 1 al. c) CPP
+2. Contradição entre fundamentação e decisão — Art. 615.º n.º 1 al. c) CPC
+3. Falta ou insuficiência de fundamentação — Art. 615.º n.º 1 al. b) CPC / Art. 205.º CRP
+4. Falta de exame crítico das provas — Art. 607.º n.º 4 CPC / Art. 374.º n.º 2 CPP
+5. Excesso de pronúncia — Art. 615.º n.º 1 al. d) CPC
+6. Violação do princípio da imediação — Art. 607.º CPC
+7. Erro notório na apreciação da prova — Art. 410.º n.º 2 al. c) CPP
+8. Presunções ilícitas ou inversão do ónus da prova
+9. Violação de normas imperativas de direito substantivo
+10. Insuficiência para a decisão da matéria de facto provada — Art. 410.º n.º 2 al. a) CPP`;
+
+      userPrompt = `${contextoProcesso ? `CONTEXTO DO PROCESSO:\n${contextoProcesso}\n\n` : ''}DECISÃO JUDICIAL A ANALISAR:
+
+${textoTruncado}
+
+Analisa esta decisão e identifica todas as nulidades, erros de julgamento e vícios processuais. Responde em JSON puro.`;
+    }
+
+    // ═══════════════════════════════════════════════
+    // MODO ACADÉMICO
+    // ═══════════════════════════════════════════════
+    else if (modo === 'academico') {
+      const contextoAcademico = [
+        instituicao ? `Instituição: ${instituicao}` : null,
+        tipoDoc ? `Tipo de documento: ${tipoDoc}` : null,
+        orientador ? `Orientador: ${orientador}` : null,
+      ].filter(Boolean).join('\n');
+
+      systemPrompt = `És um perito forense em análise linguística especializado em detectar autoria de Inteligência Artificial em textos académicos jurídicos em português de Portugal. Tens experiência na análise de dissertações, teses e trabalhos académicos jurídicos.
+
+Analisa o texto fornecido e avalia 6 indicadores de autoria humana vs. IA, com especial atenção ao estilo académico-jurídico português.
+
+INSTRUÇÕES DE RESPOSTA:
+- Responde EXCLUSIVAMENTE em JSON válido, sem markdown, sem backticks, sem texto antes ou depois
+- Usa apenas aspas retas ", nunca aspas tipográficas
+- Estrutura obrigatória:
+
+{
+  "veredicto": "IA_DETECTADA" | "PROVAVELMENTE_IA" | "INCONCLUSIVO" | "PROVAVELMENTE_HUMANO" | "HUMANO",
+  "confianca": <número 0-100>,
   "indicadores": {
-    "perplexidade": 0-100,
-    "burstiness": 0-100,
-    "coesao_artificial": 0-100,
-    "uniformidade_sintatica": 0-100,
-    "riqueza_lexical": 0-100,
-    "marcadores_formulaicos": 0-100
+    "perplexidade": <0-100>,
+    "burstiness": <0-100>,
+    "coesao_artificial": <0-100>,
+    "uniformidade_sintatica": <0-100>,
+    "riqueza_lexical": <0-100>,
+    "marcadores_formulaicos": <0-100>
   },
-  "narrativa": "Explicacao em 3-4 frases em portugues europeu com evidencias concretas.",
-  "relator_analise": "Analise do estilo ou contexto do documento.",
+  "narrativa": "<análise fundamentada em 2-3 parágrafos>",
+  "relator_analise": "<análise do estilo do autor - se não há info sobre o autor, indica que não foi fornecido>",
   "marcadores": [
-    {"tipo": "ai|ok", "texto": "Descricao especifica com exemplo concreto do texto"}
+    { "tipo": "ai" | "humano", "texto": "<descrição do marcador observado>" }
   ]
 }
-Entre 4 e 6 marcadores. Sem aspas dentro de strings JSON.`;
 
-  const promptJudicial = `És o melhor especialista mundial em análise forense linguística de textos jurídicos portugueses. Determina com máxima precisão se um documento judicial foi elaborado por magistrado humano ou com auxílio de IA.
+VALORES DOS INDICADORES (0=humano, 100=IA):
+- perplexidade: 0=texto imprevisível/humano, 100=muito previsível/IA
+- burstiness: 0=grande variação rítmica/humano, 100=ritmo uniforme/IA
+- coesao_artificial: 0=transições naturais, 100=conectores excessivamente fluidos
+- uniformidade_sintatica: 0=estruturas variadas, 100=estruturas repetitivas
+- riqueza_lexical: 0=vocabulário rico e variado, 100=vocabulário limitado e repetido
+- marcadores_formulaicos: 0=expressões originais, 100=frases-clichê típicas de IA
 
-MARCADORES DE ALTA SUSPEIÇÃO DE IA:
-- "cumpre apreciar e decidir", "importa referir que", "neste conspecto"
-- "por todo o exposto", "nos termos e com os fundamentos supra expostos", "nesta conformidade"
-- "há que salientar", "importa sublinhar", "face ao exposto", "em suma"
-- "conforme resulta da jurisprudência dominante", "carreados para os autos"
-- "demais disso" (brasileirismo), parágrafos com comprimento muito uniforme
+VEREDICTOS:
+- IA_DETECTADA: confiança ≥75%, múltiplos indicadores acima de 70
+- PROVAVELMENTE_IA: confiança 55-74%, padrão sugere IA mas inconclusivo
+- INCONCLUSIVO: confiança 40-54%, sinais mistos
+- PROVAVELMENTE_HUMANO: confiança 25-39%, maioritariamente humano
+- HUMANO: confiança <25%, texto claramente humano`;
 
-MARCADORES DE ESCRITA HUMANA:
-- "ora", "vejamos", "com efeito", "aliás", "sem embargo", "afigura-se-nos"
-- Travessão intercalado no meio de frases
-- Referências documentais: "cfr. doc. 3 junto com a p.i.", "a fls. 45 dos autos"
-- Latim jurídico natural: ex vi, ad quem, in casu
-- Erros leves de pontuação, variação no tamanho dos parágrafos
+      userPrompt = `${contextoAcademico ? `CONTEXTO DO DOCUMENTO:\n${contextoAcademico}\n\n` : ''}TEXTO ACADÉMICO A ANALISAR:
 
-CALIBRAÇÃO: perplexidade 0=previsível(IA) 100=imprevisível(humano); burstiness 0=uniforme(IA) 100=variado(humano); coesao_artificial 0=natural(humano) 100=excessiva(IA); uniformidade_sintatica 0=variada(humano) 100=uniforme(IA); riqueza_lexical 0=pobre 100=rico; marcadores_formulaicos 0=sem 100=cheio.
+${textoTruncado}
 
-SER CONSERVADOR: prefere INCONCLUSIVO a falsos positivos.
-${JSON_FORMAT}`;
+Analisa este documento académico jurídico. Responde em JSON puro.`;
+    }
 
-  const promptAcademico = `És o melhor especialista mundial em análise forense linguística de textos académicos jurídicos em português europeu. Determina se um trabalho académico (tese, dissertação, monografia) foi escrito por um ser humano ou com auxílio significativo de IA.
+    // ═══════════════════════════════════════════════
+    // MODO JUDICIAL (default)
+    // ═══════════════════════════════════════════════
+    else {
+      const contextoJudicial = [
+        tribunal ? `Tribunal: ${tribunal}` : null,
+        relator ? `Relator: ${relator}` : null,
+      ].filter(Boolean).join('\n');
 
-MARCADORES DE IA EM TEXTOS ACADÉMICOS:
-- Introduções genéricas sem posicionamento do autor
-- "No âmbito da presente dissertação", "importa referir que", "cumpre analisar"
-- Estrutura excessivamente simétrica (exactamente 3 pontos em cada secção)
-- Ausência de voz própria — tom neutro e impessoal em excesso
-- Citações sem página específica ("conforme refere a doutrina")
-- Transições excessivamente fluidas entre parágrafos
-- "em suma", "por todo o exposto", "neste sentido", "face ao exposto"
-- Parágrafos com comprimento muito uniforme
+      systemPrompt = `És um perito forense em análise linguística especializado em detectar autoria de Inteligência Artificial em decisões judiciais portuguesas. Trabalhas com acórdãos, sentenças e despachos dos tribunais portugueses — STJ, Tribunais da Relação e tribunais de 1.ª instância.
 
-MARCADORES DE ESCRITA HUMANA ACADÉMICA:
-- Posicionamento crítico claro ("entendemos que", "discordamos de", "a nossa posição é")
-- Citações precisas: "SILVA, João, Direito Civil, vol. II, 3.ª ed., Almedina, 2019, p. 142"
-- Notas de rodapé densas e variadas
-- Irregularidades naturais: parênteses intercalados, travessões, variação de comprimento
-- Referências a jurisprudência específica com número de processo
-- Comentários críticos à doutrina maioritária
+Analisa o texto fornecido e avalia 6 indicadores de autoria humana vs. IA, calibrados especificamente para o estilo jurídico-judicial português.
 
-CALIBRAÇÃO: perplexidade 0=genérico(IA) 100=voz própria(humano); burstiness 0=uniforme(IA) 100=variado(humano); coesao_artificial 0=natural(humano) 100=formulaica(IA); uniformidade_sintatica 0=variada(humano) 100=uniforme(IA); riqueza_lexical 0=pobre 100=rico e técnico; marcadores_formulaicos 0=sem 100=cheio.
+INSTRUÇÕES DE RESPOSTA:
+- Responde EXCLUSIVAMENTE em JSON válido, sem markdown, sem backticks, sem texto antes ou depois
+- Usa apenas aspas retas ", nunca aspas tipográficas
+- Estrutura obrigatória:
 
-SER CONSERVADOR: prefere INCONCLUSIVO a falsos positivos.
-${JSON_FORMAT}`;
+{
+  "veredicto": "IA_DETECTADA" | "PROVAVELMENTE_IA" | "INCONCLUSIVO" | "PROVAVELMENTE_HUMANO" | "HUMANO",
+  "confianca": <número 0-100>,
+  "indicadores": {
+    "perplexidade": <0-100>,
+    "burstiness": <0-100>,
+    "coesao_artificial": <0-100>,
+    "uniformidade_sintatica": <0-100>,
+    "riqueza_lexical": <0-100>,
+    "marcadores_formulaicos": <0-100>
+  },
+  "narrativa": "<análise fundamentada em 2-3 parágrafos concisos>",
+  "relator_analise": "<análise do estilo do relator — se não foi indicado relator, descreve o estilo geral da decisão>",
+  "marcadores": [
+    { "tipo": "ai" | "humano", "texto": "<descrição concisa do marcador observado no texto>" }
+  ]
+}
 
-  const systemPrompt = modo === 'academico' ? promptAcademico : promptJudicial;
+VALORES DOS INDICADORES (0=humano, 100=IA):
+- perplexidade: 0=texto imprevisível/genuíno, 100=muito previsível/gerado
+- burstiness: 0=grande variação rítmica/humano, 100=ritmo uniforme/IA
+- coesao_artificial: 0=transições naturais, 100=fluidez excessivamente homogénea
+- uniformidade_sintatica: 0=estruturas frásicas variadas, 100=estruturas repetitivas
+- riqueza_lexical: 0=vocabulário rico e específico, 100=vocabulário limitado/genérico
+- marcadores_formulaicos: 0=linguagem jurídica autêntica, 100=frases-clichê de IA
 
-  const userMsg = modo === 'academico'
-    ? ['Analisa este trabalho academico juridico portugues.', academicCtx, '', 'DOCUMENTO:', textoAnalise].filter(Boolean).join('\n')
-    : ['Analisa este documento judicial portugues com maxima precisao.', estiloCtx, relatorCtx, '', 'DOCUMENTO:', textoAnalise].filter(Boolean).join('\n');
+VEREDICTOS:
+- IA_DETECTADA: confiança ≥75%, vários indicadores acima de 70
+- PROVAVELMENTE_IA: confiança 55-74%, padrão sugere IA
+- INCONCLUSIVO: confiança 40-54%, sinais contraditórios
+- PROVAVELMENTE_HUMANO: confiança 25-39%, maioritariamente humano
+- HUMANO: confiança <25%, texto claramente de autoria humana
 
-  // ── CHAMADA À API ──────────────────────────────────────────
-  try {
-    const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
+CONTEXTO IMPORTANTE:
+- As decisões judiciais têm fórmulas jurídicas fixas (ementas, dispositivos) que não são indicadores de IA
+- Analisa principalmente o corpo de fundamentação, não as partes formais obrigatórias
+- O português jurídico português tem características próprias — não confundas estilo formal com IA
+- Marcadores típicos de IA em contexto judicial: transições como "Neste contexto", "Importa salientar", "É de referir que", uniformidade no comprimento dos parágrafos, ausência de referências específicas ao processo`;
+
+      userPrompt = `${contextoJudicial ? `CONTEXTO DA DECISÃO:\n${contextoJudicial}\n\n` : ''}TEXTO DA DECISÃO JUDICIAL A ANALISAR:
+
+${textoTruncado}
+
+Analisa esta decisão judicial. Responde em JSON puro.`;
+    }
+
+    // ═══════════════════════════════════════════════
+    // CHAMADA À API ANTHROPIC
+    // ═══════════════════════════════════════════════
+    const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1200,
+        model: 'claude-opus-4-5',
+        max_tokens: 2000,
         system: systemPrompt,
-        messages: [{ role: 'user', content: userMsg }]
-      })
+        messages: [{ role: 'user', content: userPrompt }],
+      }),
     });
 
-    if (!anthropicRes.ok) {
-      const err = await anthropicRes.json().catch(() => ({}));
-      console.error('Erro Anthropic:', anthropicRes.status, JSON.stringify(err));
-      return res.status(502).json({ erro: 'Erro no servico de analise. Tente novamente.' });
+    if (!anthropicResponse.ok) {
+      const errText = await anthropicResponse.text();
+      console.error('Anthropic API error:', anthropicResponse.status, errText);
+      return res.status(502).json({ erro: 'Erro na API de análise. Tente novamente.' });
     }
 
-    const data = await anthropicRes.json();
-    const raw = data.content?.map(i => i.text || '').join('') || '{}';
+    const anthropicData = await anthropicResponse.json();
+    const rawText = anthropicData.content?.[0]?.text || '';
 
-    const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      console.error('Sem JSON:', raw);
-      return res.status(500).json({ erro: 'Resposta invalida. Tente novamente.' });
+    // ═══════════════════════════════════════════════
+    // PARSE DA RESPOSTA JSON
+    // ═══════════════════════════════════════════════
+    let parsed;
+    try {
+      // Remove possíveis markdown fences
+      const cleaned = rawText
+        .replace(/^```json\s*/i, '')
+        .replace(/^```\s*/i, '')
+        .replace(/\s*```$/i, '')
+        .trim();
+      parsed = JSON.parse(cleaned);
+    } catch (parseErr) {
+      console.error('JSON parse error:', parseErr, 'Raw:', rawText.substring(0, 500));
+
+      // Fallback: tentar extrair JSON por regex
+      const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        try {
+          parsed = JSON.parse(jsonMatch[0]);
+        } catch {
+          return res.status(500).json({
+            erro: 'Erro ao processar resposta da análise. Tente novamente.',
+            detalhe: 'parse_error',
+          });
+        }
+      } else {
+        return res.status(500).json({ erro: 'Resposta inválida do modelo. Tente novamente.' });
+      }
     }
 
-    const result = JSON.parse(jsonMatch[0]);
-    return res.status(200).json(result);
+    // ═══════════════════════════════════════════════
+    // VALIDAÇÃO E NORMALIZAÇÃO DA RESPOSTA
+    // ═══════════════════════════════════════════════
+    if (modo === 'critica') {
+      // Validar e normalizar resposta critica
+      const veredictosCritica = ['RECURSO_VIAVEL', 'RECURSO_PARCIAL', 'RECURSO_INVIAVEL'];
+      if (!veredictosCritica.includes(parsed.veredicto_recurso)) {
+        parsed.veredicto_recurso = 'RECURSO_INVIAVEL';
+      }
+      parsed.confianca = Math.max(0, Math.min(100, Number(parsed.confianca) || 50));
+      parsed.sumario = parsed.sumario || 'Análise concluída.';
+      parsed.nulidades = Array.isArray(parsed.nulidades) ? parsed.nulidades : [];
+      parsed.conclusao = parsed.conclusao || 'Consulte um advogado para validar estes resultados.';
+
+      // Normalizar gravidade de cada nulidade
+      parsed.nulidades = parsed.nulidades.map(n => ({
+        tipo: n.tipo || 'Vício Processual',
+        artigo: n.artigo || '',
+        gravidade: ['grave', 'moderada', 'leve'].includes(n.gravidade) ? n.gravidade : 'moderada',
+        descricao: n.descricao || '',
+        argumento: n.argumento || '',
+      }));
+
+    } else {
+      // Validar e normalizar resposta standard (judicial/academico)
+      const veredictos = ['IA_DETECTADA', 'PROVAVELMENTE_IA', 'INCONCLUSIVO', 'PROVAVELMENTE_HUMANO', 'HUMANO'];
+      if (!veredictos.includes(parsed.veredicto)) {
+        parsed.veredicto = 'INCONCLUSIVO';
+      }
+      parsed.confianca = Math.max(0, Math.min(100, Number(parsed.confianca) || 50));
+
+      // Normalizar indicadores
+      const indKeys = ['perplexidade', 'burstiness', 'coesao_artificial', 'uniformidade_sintatica', 'riqueza_lexical', 'marcadores_formulaicos'];
+      if (!parsed.indicadores || typeof parsed.indicadores !== 'object') {
+        parsed.indicadores = {};
+      }
+      indKeys.forEach(k => {
+        parsed.indicadores[k] = Math.max(0, Math.min(100, Number(parsed.indicadores[k]) || 50));
+      });
+
+      parsed.narrativa = parsed.narrativa || 'Análise concluída.';
+      parsed.relator_analise = parsed.relator_analise || 'Relator/autor não indicado.';
+      parsed.marcadores = Array.isArray(parsed.marcadores) ? parsed.marcadores.slice(0, 8) : [];
+    }
+
+    return res.status(200).json(parsed);
 
   } catch (err) {
-    console.error('Erro interno:', err.message);
-    return res.status(500).json({ erro: 'Erro interno: ' + err.message });
+    console.error('Handler error:', err);
+    return res.status(500).json({ erro: 'Erro interno. Tente novamente em alguns instantes.' });
   }
 }
