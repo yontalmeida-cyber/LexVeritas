@@ -188,35 +188,34 @@
   .modal-msg { margin-top: 14px; font-size: 12px; display: none; padding: 10px 12px; line-height: 1.5; }
 
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-           /* 1. ESCONDER MENU DUPLICADO */
-        /* 1. ESCONDER MENU DUPLICADO */
-        header .nav-links, nav .nav-links, .nav-links {
-            display: none !important;
-        }
 
-        @media (min-width: 1281px) {
-            .nav-links {
-                display: flex !important;
-                gap: 20px;
-            }
-        }
-
-        /* 2. CORRIGIR VISTA MOBILE */
-        @media (max-width: 768px) {
-            .features-grid, .pricing-grid {
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 20px !important;
-            }
-            .feat-card, .price-card {
-                width: 100% !important;
-                display: block !important;
-                margin-bottom: 20px !important;
-            }
-        }
-    </style>
+  /* RESPONSIVE */
+  /* Mostrar nav APENAS em ecrãs grandes — oculto por defeito */
+  @media (min-width: 1280px) {
+    .nav-links { display: flex !important; }
+  }
+  @media (max-width: 1280px) {
+    .cursor, .cursor-ring { display: none; }
+    .steps-grid, .features-grid, .testimonials-grid, .metodologia-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .section-padding { padding: 80px 24px; }
+    nav { padding: 14px 20px; }
+    .hero { padding: 100px 24px 60px; }
+    .hero-stats { gap: 28px; }
+    footer { padding: 48px 24px 32px; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+    .footer-legal { justify-content: center; }
+    .metodologia-grid { gap: 40px; }
+  }
+  @media (max-width: 480px) {
+    .hero-stats { flex-direction: column; align-items: center; gap: 20px; }
+  }
+</style>
 </head>
+<body>
 
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
 <div class="intro" id="intro">
   <div class="intro-logo">Lex<span>Veritas</span></div>
@@ -431,6 +430,21 @@
         <p class="testimonial-text">Utilizei o LexVeritas numa sentença que me parecia demasiado fluida para o contexto. O veredicto foi claro: IA com 89% de confiança. Serviu de ponto de partida sólido para o recurso.</p>
         <div class="testimonial-author">Advogado, Lisboa</div>
         <div class="testimonial-role">Área Cível · Tribunal da Relação de Lisboa</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">A análise crítica identificou uma omissão de pronúncia que eu suspeitava mas não conseguia articular tecnicamente. Os argumentos gerados foram um excelente ponto de partida para a peça.</p>
+        <div class="testimonial-author">Solicitadora, Porto</div>
+        <div class="testimonial-role">Processo de Insolvência · 1.ª Instância</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Ferramenta essencial no meu fluxo de trabalho académico. Verifico sempre a autoria dos trabalhos submetidos antes de os enviar ao orientador para avaliação final.</p>
+        <div class="testimonial-author">Docente Universitária</div>
+        <div class="testimonial-role">Faculdade de Direito · Lisboa</div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ═══ PREÇOS ═══ -->
@@ -527,7 +541,7 @@
     </nav>
     <div class="footer-divider"></div>
     <div class="footer-bottom">
-      <div class="footer-copy">&copy; 2026 LexVeritas. Todos os direitos reservados.<br>Marca e conteúdos protegidos nos termos do CDADC & CPI.</div>
+      <div class="footer-copy">© 2026 LexVeritas · Lisboa, Portugal · Tecnologia Forense Jurídica</div>
       <div class="footer-legal">
         <a href="#">Política de Privacidade</a>
         <a href="#">Termos de Uso</a>
