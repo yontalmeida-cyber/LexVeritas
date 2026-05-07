@@ -34,7 +34,7 @@
   .auth-card p { font-size: 13px; color: var(--grey); margin-bottom: 28px; line-height: 1.6; }
   .form-group { margin-bottom: 18px; }
   .form-group label { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 6px; }
-  .form-group input, .form-group select { width: 100%; padding: 12px 14px; border: 1px solid var(--rule-dark); background: rgba(255,255,255,0.05); font-family: var(--sans); font-size: 13px; color: #f8f6f1; outline: none; transition: border-color 0.2s; }
+  .form-group input, .form-group select { width: 100%; padding: 12px 14px; border: 1px solid var(--rule-dark); background: rgba(255,255,255,0.05); font-family: var(--sans); font-size: 16px; color: #f8f6f1; outline: none; transition: border-color 0.2s; }
   .form-group select option { background: var(--dark); color: #f8f6f1; }
   .form-group input:focus, .form-group select:focus { border-color: var(--gold); }
   .form-group input::placeholder { color: rgba(255,255,255,0.2); }
@@ -530,6 +530,12 @@
         <div id="nulidades-container"></div>
         <div class="analysis-card" style="border-left:3px solid var(--gold)">
           <h3>Recomendação Estratégica</h3><p id="critica-conclusao">—</p>
+        </div>
+        <div id="minuta-btn-container" style="display:none;margin-bottom:16px">
+          <button class="btn-pdf" id="btn-gerar-minuta" onclick="gerarMinuta()" style="background:#f8f5ff;border-color:rgba(107,46,168,0.3);color:#6b2ea8">
+            📄 Gerar Proposta de Texto para Recurso
+          </button>
+          <div id="minuta-loading" style="display:none;font-family:var(--mono);font-size:10px;color:#888;text-align:center;margin-top:10px;letter-spacing:0.1em">A redigir proposta de recurso...</div>
         </div>
         <div id="minuta-container" style="display:none">
           <div class="minuta-card">
@@ -1296,15 +1302,10 @@ function renderResultsCritica(result){
   }
   document.getElementById('critica-conclusao').innerHTML=(result.conclusao||'').replace(/\n/g,'<br>');
 
-  // Minuta de recurso
-  const minutaContainer=document.getElementById('minuta-container');
-  const minutaBody=document.getElementById('minuta-body');
-  if(result.minuta&&result.minuta.trim()){
-    minutaBody.textContent=result.minuta;
-    minutaContainer.style.display='block';
-  }else{
-    minutaContainer.style.display='none';
-  }
+  // Botão gerar minuta
+  document.getElementById('minuta-btn-container').style.display='block';
+  document.getElementById('minuta-container').style.display='none';
+  document.getElementById('minuta-body').textContent='';
 
   document.getElementById('results-area').classList.add('visible');
   document.getElementById('results-area').scrollIntoView({behavior:'smooth',block:'start'});
@@ -1320,12 +1321,53 @@ function copiarMinuta(){
     msg.style.display='inline';
     setTimeout(()=>{btn.classList.remove('copiado');btn.textContent='📋 Copiar Texto';msg.style.display='none';},3000);
   }).catch(()=>{
-    // Fallback para browsers mais antigos
     const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
     document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
     const msg=document.getElementById('copiar-msg');msg.style.display='inline';
     setTimeout(()=>msg.style.display='none',3000);
   });
+}
+
+async function gerarMinuta(){
+  if(!lastResult||!lastResult.fundamentos||!lastResult.fundamentos.length){
+    alert('Faça primeiro uma análise crítica.');return;
+  }
+  const btn=document.getElementById('btn-gerar-minuta');
+  const loading=document.getElementById('minuta-loading');
+  btn.disabled=true;btn.textContent='⏳ A gerar...';loading.style.display='block';
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    if(!session?.access_token){alert('Sessão expirada. Faça login novamente.');logout();return;}
+    const payload={
+      modo:'minuta',
+      texto:'n/a',
+      fundamentos:lastResult.fundamentos,
+      veredicto_recurso:lastResult.veredicto_recurso,
+      tribunal_recurso:lastResult.tribunal_recurso||null,
+      tipoProcesso:lastResult._tipoProcesso||null,
+      parteRecorrente:lastResult._parteRecorrente||null,
+    };
+    const response=await fetch('/api/analisar',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${session.access_token}`},
+      body:JSON.stringify(payload)
+    });
+    if(!response.ok){const err=await response.json().catch(()=>({}));throw new Error(err.erro||'Erro do servidor.');}
+    const result=await response.json();
+    if(result.minuta&&result.minuta.trim()){
+      document.getElementById('minuta-body').textContent=result.minuta;
+      document.getElementById('minuta-container').style.display='block';
+      document.getElementById('minuta-btn-container').style.display='none';
+      document.getElementById('minuta-container').scrollIntoView({behavior:'smooth',block:'start'});
+    }else{
+      alert('Não foi possível gerar a minuta. Tente novamente.');
+    }
+  }catch(err){
+    alert('Erro: '+(err.message||'Tente novamente.'));
+  }finally{
+    btn.disabled=false;btn.textContent='📄 Gerar Proposta de Texto para Recurso';
+    loading.style.display='none';
+  }
 }
 
 // ============================
