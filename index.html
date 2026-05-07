@@ -189,27 +189,30 @@
 
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* RESPONSIVE */
-  /* Mostrar nav APENAS em ecrãs grandes — oculto por defeito */
-  @media (min-width: 1280px) {
-    .nav-links { display: flex !important; }
-  }
-  @media (max-width: 1280px) {
-    .cursor, .cursor-ring { display: none; }
-    .steps-grid, .features-grid, .testimonials-grid, .metodologia-grid { grid-template-columns: 1fr; }
-    .pricing-grid { grid-template-columns: 1fr; }
-    .section-padding { padding: 80px 24px; }
-    nav { padding: 14px 20px; }
-    .hero { padding: 100px 24px 60px; }
-    .hero-stats { gap: 28px; }
-    footer { padding: 48px 24px 32px; }
-    .footer-bottom { flex-direction: column; text-align: center; }
-    .footer-legal { justify-content: center; }
-    .metodologia-grid { gap: 40px; }
-  }
-  @media (max-width: 480px) {
-    .hero-stats { flex-direction: column; align-items: center; gap: 20px; }
-  }
+          /* RESOLVE MENU DUPLICADO E FUNDO ROXO */
+        .nav-links {
+            display: none !important;
+        }
+
+        @media (min-width: 1281px) {
+            .nav-links {
+                display: flex !important;
+                gap: 20px;
+            }
+        }
+
+        #home, section:first-of-type {
+            background-color: #000000 !important;
+            padding-top: 320px !important;
+        }
+
+        @media (min-width: 481px) {
+            #home, section:first-of-type {
+                padding-top: 120px !important;
+                background-color: #000000 !important;
+            }
+        }
+
 </style>
 </head>
 <body>
