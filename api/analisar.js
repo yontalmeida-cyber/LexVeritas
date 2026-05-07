@@ -226,6 +226,11 @@ NOTAS:
       return res.status(500).json({ erro: 'Resposta vazia. Tente novamente.' });
     }
 
+    // Modo minuta: resposta em texto simples — retorna sem parse JSON
+    if (modo === 'minuta') {
+      return res.status(200).json({ minuta: fullText });
+    }
+
     const rawText = fullText;
     const minutaRaw = '';
 
