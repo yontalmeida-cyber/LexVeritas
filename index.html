@@ -92,7 +92,32 @@
   .section-label { 
     display: none !important; 
 }
-  .section-title { font-family: var(--serif); font-size: clamp(36px,4.5vw,64px); font-weight: 400; font-style: italic; line-height: 1.05; margin-bottom: 24px; }
+    @media (max-width: 768px) {
+        nav {
+            height: auto !important;
+            padding: 10px !important;
+            flex-direction: column !important;
+            gap: 5px !important;
+        }
+        .nav-links {
+            display: flex !important;
+            gap: 8px !important;
+            justify-content: center !important;
+            flex-wrap: wrap !important;
+            width: 100% !important;
+        }
+        nav a {
+            font-size: 9px !important;
+            padding: 4px !important;
+            white-space: nowrap;
+        }
+        .section-padding {
+            padding-top: 160px !important;
+        }
+    }
+
+ 
+ .section-title { font-family: var(--serif); font-size: clamp(36px,4.5vw,64px); font-weight: 400; font-style: italic; line-height: 1.05; margin-bottom: 24px; }
   .section-title span { color: var(--gold); }
   .section-intro { color: var(--grey); max-width: 600px; line-height: 1.8; font-size: 15px; margin-bottom: 0; }
 
