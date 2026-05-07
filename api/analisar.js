@@ -37,7 +37,7 @@ module.exports = async function handler(req, res) {
   const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
   if (!ANTHROPIC_API_KEY) return res.status(500).json({ erro: 'Serviço indisponível.' });
 
-  const textoTruncado = texto.length > 12000 ? texto.substring(0, 12000) + '\n[texto truncado]' : texto;
+  const textoTruncado = (modo === 'critica' && texto.length > 8000) ? texto.substring(0, 8000) : texto.length > 12000 ? texto.substring(0, 12000) + '\n[texto truncado]' : texto;
 
   let systemPrompt, userPrompt;
 
@@ -248,7 +248,7 @@ NOTAS:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: modo === 'critica' ? 6000 : 2000,
+        max_tokens: modo === 'critica' ? 3500 : 2000,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],
       }),
