@@ -123,6 +123,15 @@
   .feat-card h4 { margin-bottom: 12px; font-size: 14px; }
   .feat-card p { color: var(--grey); font-size: 13px; line-height: 1.7; }
 
+  /* TESTIMONIALS */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 60px; }
+  .testimonial-card { background: var(--black); padding: 36px; transition: background .3s; }
+  .testimonial-card:hover { background: var(--dark); }
+  .testimonial-quote { font-family: var(--serif); font-size: 40px; color: var(--gold); line-height: 1; margin-bottom: 16px; opacity: .35; }
+  .testimonial-text { font-family: var(--serif); font-size: 16px; font-style: italic; line-height: 1.7; color: rgba(248,246,241,.8); margin-bottom: 24px; }
+  .testimonial-author { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+  .testimonial-role { font-family: var(--mono); font-size: 9px; color: var(--grey); margin-top: 4px; }
+
   /* PRICING */
   .pricing-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 60px; max-width: 800px; margin-left: auto; margin-right: auto; }
   .price-card { background: var(--black); padding: 48px 40px; text-align: center; }
@@ -213,6 +222,18 @@
   <div class="intro-bar-track"><div class="intro-bar-fill"></div></div>
 </div>
 
+<nav id="nav">
+  <a href="#" class="nav-logo">Lex<span>Veritas</span></a>
+  <ul class="nav-links">
+    <li><a href="#metodologia">Metodologia</a></li>
+    <li><a href="#analise-critica">Análise Crítica</a></li>
+    <li><a href="#funcionalidades">Funcionalidades</a></li>
+    <li><a href="#precos">Preços</a></li>
+    <li><a href="/sobre">Sobre</a></li>
+    <li><a href="/blog">Blog</a></li>
+    <li><a href="/app" class="nav-cta">Aceder ao App</a></li>
+  </ul>
+</nav>
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
@@ -396,6 +417,35 @@
       </div>
     </div>
   </div>
+</section>
+
+<!-- ═══ TESTEMUNHOS ═══ -->
+<section class="section-padding">
+  <div class="container">
+    <div class="section-label reveal" style="justify-content:center">Primeiros Utilizadores</div>
+    <h2 class="section-title reveal" style="text-align:center">Confiança de <span>Profissionais.</span></h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Utilizei o LexVeritas numa sentença que me parecia demasiado fluida para o contexto. O veredicto foi claro: IA com 89% de confiança. Serviu de ponto de partida sólido para o recurso.</p>
+        <div class="testimonial-author">Advogado, Lisboa</div>
+        <div class="testimonial-role">Área Cível · Tribunal da Relação de Lisboa</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">A análise crítica identificou uma omissão de pronúncia que eu suspeitava mas não conseguia articular tecnicamente. Os argumentos gerados foram um excelente ponto de partida para a peça.</p>
+        <div class="testimonial-author">Solicitadora, Porto</div>
+        <div class="testimonial-role">Processo de Insolvência · 1.ª Instância</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Ferramenta essencial no meu fluxo de trabalho académico. Verifico sempre a autoria dos trabalhos submetidos antes de os enviar ao orientador para avaliação final.</p>
+        <div class="testimonial-author">Docente Universitária</div>
+        <div class="testimonial-role">Faculdade de Direito · Lisboa</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ═══ PREÇOS ═══ -->
 <section id="precos" class="section-padding" style="background:var(--dark)">
@@ -491,12 +541,11 @@
     </nav>
     <div class="footer-divider"></div>
     <div class="footer-bottom">
-      <div class="footer-copy">© 2026 LexVeritas. Todos os direitos reservados.
-Marca e conteúdos protegidos nos termos do CDADC & CPI. Tecnologia Forense Jurídica</div>
+      <div class="footer-copy">© 2026 LexVeritas · Lisboa, Portugal · Tecnologia Forense Jurídica</div>
       <div class="footer-legal">
         <a href="#">Política de Privacidade</a>
         <a href="#">Termos de Uso</a>
-        <a href="mailto:yont.almeida@lexveritas.pt">yont.almeida@lexveritas.pt</a>
+        <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a>
       </div>
     </div>
   </div>
