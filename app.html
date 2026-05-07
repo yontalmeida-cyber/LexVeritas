@@ -333,8 +333,9 @@
     .overlay-status{font-size:9px}
     .overlay-subtext{font-size:10px}
     .usage-track{max-width:120px}
-    .mode-toggle-bar{gap:6px}
-    .mode-btn{font-size:10px;padding:7px 10px}
+    .mode-toggle-label{display:none}
+    .mode-toggle-bar{gap:4px;padding:8px 12px}
+    .mode-btn{flex:1;justify-content:center;font-size:9px;padding:8px 4px;letter-spacing:0}
   }
   @media(max-width:400px){.indicators-grid{grid-template-columns:1fr}.masthead h1{font-size:26px}}
 </style>
@@ -456,8 +457,8 @@
 <div class="mode-toggle-bar">
   <span class="mode-toggle-label">Modo</span>
   <button class="mode-btn active" id="mode-btn-judicial" onclick="setModo('judicial')">⚖ Análise Judicial</button>
-  <button class="mode-btn" id="mode-btn-academico" onclick="setModo('academico')">🎓 Análise Académica</button>
   <button class="mode-btn critica" id="mode-btn-critica" onclick="setModo('critica')">🏛 Análise Crítica</button>
+  <button class="mode-btn" id="mode-btn-academico" onclick="setModo('academico')">🎓 Análise Académica</button>
 </div>
 
 <div id="tab-content-analise">
