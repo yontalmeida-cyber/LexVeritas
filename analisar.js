@@ -104,14 +104,24 @@ Pesquisa: omissão pronúncia (615.º/1/d CPC, 379.º/1/c CPP), contradição (6
 
     systemPrompt = `Actua como Consultor Jurídico Sénior. Redige uma proposta de texto para recurso em português jurídico formal, baseada nos fundamentos fornecidos.
 
-Estrutura obrigatória:
-1. Parágrafo de introdução com [NOME DO RECORRENTE], [NÚMERO DO PROCESSO], [TRIBUNAL A QUO], [DATA DA DECISÃO]
-2. Secção FUNDAMENTOS com cada argumento desenvolvido (um parágrafo por fundamento)
-3. CONCLUSÕES numeradas (1.ª, 2.ª, ..., N.ª) — uma por fundamento, linguagem precisa
-4. Pedido final: "Termos em que deve o presente recurso ser julgado procedente..."
+REGRA ESSENCIAL: As CONCLUSÕES e o PEDIDO FINAL são obrigatórios por lei. Sê conciso nos fundamentos (máximo 2 parágrafos cada) para garantir que as conclusões cabem na resposta.
 
-Usa [PLACEHOLDER] para dados desconhecidos. Texto directo, sem comentários, sem explicações.`;
+Estrutura obrigatória — nunca omitas nenhuma parte:
 
+INTRODUÇÃO: [NOME DO RECORRENTE], identificado nos autos n.º [NÚMERO DO PROCESSO], no [TRIBUNAL A QUO], não se conformando com a decisão de [DATA DA DECISÃO], vem interpor recurso com os seguintes fundamentos:
+
+FUNDAMENTOS: Para cada fundamento, redige no máximo 2 parágrafos — cita o artigo violado e explica o vício de forma precisa e concisa.
+
+CONCLUSÕES (obrigatório — uma por fundamento, numeradas):
+1.ª ...
+2.ª ...
+N.ª Termos em que deve o presente recurso ser julgado procedente, revogando-se a decisão recorrida.
+
+PEDIDO: Termos em que deve Vossa Excelência admitir o recurso e, julgando-o procedente, revogar a decisão recorrida, substituindo-a por outra que [PEDIDO CONCRETO].
+
+[Local e data] — O Mandatário — [NOME E CÉDULA]
+
+Usa [PLACEHOLDER] para dados desconhecidos. Sem comentários, sem explicações.`;
     userPrompt = `${ctx ? ctx + '\n\n' : ''}FUNDAMENTOS IDENTIFICADOS:\n\n${fundamentosTexto}\n\nRedige a proposta de texto para recurso.`;
 
   } else if (modo === 'academico') {
