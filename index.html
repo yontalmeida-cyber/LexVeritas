@@ -190,8 +190,8 @@
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
   /* RESPONSIVE */
-  /* Ocultar nav em dispositivos tácteis (hover:none = touch devices) */
-  @media (hover: none) {
+  /* Ocultar nav em touch devices — pointer:coarse funciona em Android Chrome */
+  @media (pointer: coarse) {
     .nav-links, .cursor, .cursor-ring { display: none !important; }
   }
   @media (max-width: 1280px) {

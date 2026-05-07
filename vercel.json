@@ -1,7 +1,13 @@
 {
   "rewrites": [
-    { "source": "/app", "destination": "/app.html" },
-    { "source": "/app/(.*)", "destination": "/app.html" }
+    { "source": "/app",          "destination": "/app.html" },
+    { "source": "/app/(.*)",     "destination": "/app.html" },
+    { "source": "/sobre",        "destination": "/sobre.html" },
+    { "source": "/privacidade",  "destination": "/privacidade.html" },
+    { "source": "/termos",       "destination": "/termos.html" },
+    { "source": "/manutencao",   "destination": "/manutencao.html" },
+    { "source": "/confirm",      "destination": "/confirm.html" },
+    { "source": "/landing",      "destination": "/landing.html" }
   ],
   "headers": [
     {
@@ -9,7 +15,7 @@
       "headers": [
         { "key": "Access-Control-Allow-Origin",  "value": "*" },
         { "key": "Access-Control-Allow-Methods", "value": "POST, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
       ]
     },
     {
