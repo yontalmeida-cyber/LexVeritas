@@ -30,7 +30,7 @@ module.exports = async function handler(req, res) {
   const body = req.body || {};
   const { texto, modo = 'judicial', tribunal, relator, instituicao, tipoDoc, orientador, tipoProcesso, parteRecorrente } = body;
 
-  if (!texto || typeof texto !== 'string' || texto.trim().length < 50) {
+  if (modo !== 'minuta' && (!texto || typeof texto !== 'string' || texto.trim().length < 50)) {
     return res.status(400).json({ erro: 'Texto insuficiente. Mínimo 50 caracteres.' });
   }
 
@@ -51,20 +51,15 @@ module.exports = async function handler(req, res) {
       parteRecorrente ? `Parte recorrente: ${parteRecorrente}` : null,
     ].filter(Boolean).join('\n');
 
-    systemPrompt = `Actua como Consultor Jurídico Sénior especialista em recursos portugueses.
+    systemPrompt = `Actua como Consultor Jurídico Sénior especialista em recursos portugueses. Responde APENAS com JSON puro, sem backticks, sem texto antes ou depois.
 
-Analisa a decisão e identifica os fundamentos mais sólidos para recurso.
-
-RESPONDE EM DUAS PARTES SEPARADAS:
-
-PARTE 1 — JSON puro (sem backticks, sem texto antes):
 {
   "veredicto_recurso": "RECURSO_VIAVEL",
   "confianca": 80,
   "admissivel": true,
   "tribunal_recurso": "Tribunal da Relação de Lisboa",
   "prazo_recurso": "30 dias (art. 638.º CPC)",
-  "sumario": "Resumo em 2-3 frases.",
+  "sumario": "Resumo em 2 frases.",
   "fundamentos": [
     {
       "categoria": "nulidade",
@@ -73,32 +68,52 @@ PARTE 1 — JSON puro (sem backticks, sem texto antes):
       "gravidade": "grave",
       "prioridade": 1,
       "dificuldade": "facil",
-      "descricao": "Descrição objectiva.",
-      "argumento": "Argumento para a peça processual."
+      "descricao": "Descrição objectiva do vício.",
+      "argumento": "Argumento jurídico para a peça processual."
     }
   ],
-  "conclusao": "Recomendação estratégica."
+  "conclusao": "Recomendação estratégica em 2 frases."
 }
 
-PARTE 2 — Após o JSON, escreve exactamente ---MINUTA--- e a proposta de texto de recurso com: fundamentos desenvolvidos, CONCLUSÕES numeradas (N.ª ...) e pedido final. Usa [PLACEHOLDER] para dados desconhecidos.
+Valores: veredicto_recurso deve ser RECURSO_VIAVEL, RECURSO_PARCIAL ou RECURSO_INVIAVEL. categoria deve ser nulidade, erro_direito, erro_facto ou questao_constitucional. gravidade deve ser grave, moderada ou leve. dificuldade deve ser facil, media ou dificil. Máximo 4 fundamentos por ordem de prioridade.
 
-VALORES VÁLIDOS:
-- veredicto_recurso: RECURSO_VIAVEL, RECURSO_PARCIAL, ou RECURSO_INVIAVEL
-- categoria: nulidade, erro_direito, erro_facto, ou questao_constitucional
-- gravidade: grave, moderada, ou leve
-- dificuldade: facil, media, ou dificil
-- Máximo 4 fundamentos. Ordena do mais forte (prioridade 1) para o mais fraco.
+Pesquisa: omissão pronúncia (615.º/1/d CPC, 379.º/1/c CPP), contradição (615.º/1/c), falta fundamentação (615.º/1/b, 205.º CRP), falta exame crítico provas (607.º/4 CPC, 374.º/2 CPP), excesso pronúncia, errada interpretação legal, erro notório (410.º/2/c CPP), insuficiência matéria facto (410.º/2/a), violação Art. 20.º/32.º CRP.`
 
-NULIDADES: omissão pronúncia (615.º/1/d CPC), contradição (615.º/1/c), falta fundamentação (615.º/1/b, 205.º CRP), falta exame crítico provas (607.º/4 CPC, 374.º/2 CPP), excesso pronúncia.
-ERROS DIREITO: errada interpretação/aplicação de norma, violação presunção legal.
-ERROS FACTO: erro notório (410.º/2/c CPP), insuficiência (410.º/2/a), contradição (410.º/2/b).
-QUESTÕES CONST.: Art. 20.º, 32.º, 18.º/2 CRP.`
-
-    userPrompt = `${ctx ? `CONTEXTO DO PROCESSO:\n${ctx}\n\n` : ''}DECISÃO JUDICIAL A ANALISAR:\n\n${textoTruncado}\n\nFaz a análise completa. Primeiro o JSON puro, depois o separador ---MINUTA--- e o texto da minuta.`;
+    userPrompt = `${ctx ? `CONTEXTO DO PROCESSO:\n${ctx}\n\n` : ''}DECISÃO JUDICIAL A ANALISAR:\n\n${textoTruncado}\n\nResponde em JSON puro.`;
 
   // ══════════════════════════════════════════════════
   // MODO ACADÉMICO
   // ══════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════
+  // MODO MINUTA — Gera proposta de texto separadamente
+  // ══════════════════════════════════════════════════
+  } else if (modo === 'minuta') {
+    const { fundamentos = [], veredicto_recurso, tribunal_recurso, tipoProcesso, parteRecorrente } = body;
+    if (!fundamentos.length) {
+      return res.status(400).json({ erro: 'Fundamentos em falta para gerar minuta.' });
+    }
+    const ctx = [
+      tribunal_recurso ? `Tribunal de recurso: ${tribunal_recurso}` : null,
+      tipoProcesso     ? `Tipo de processo: ${tipoProcesso}`        : null,
+      parteRecorrente  ? `Parte recorrente: ${parteRecorrente}`      : null,
+    ].filter(Boolean).join('\n');
+
+    const fundamentosTexto = fundamentos.map((f, i) =>
+      `${i+1}. ${f.tipo} (${f.artigo||''}) — ${f.descricao}\nArgumento: ${f.argumento}`
+    ).join('\n\n');
+
+    systemPrompt = `Actua como Consultor Jurídico Sénior. Redige uma proposta de texto para recurso em português jurídico formal, baseada nos fundamentos fornecidos.
+
+Estrutura obrigatória:
+1. Parágrafo de introdução com [NOME DO RECORRENTE], [NÚMERO DO PROCESSO], [TRIBUNAL A QUO], [DATA DA DECISÃO]
+2. Secção FUNDAMENTOS com cada argumento desenvolvido (um parágrafo por fundamento)
+3. CONCLUSÕES numeradas (1.ª, 2.ª, ..., N.ª) — uma por fundamento, linguagem precisa
+4. Pedido final: "Termos em que deve o presente recurso ser julgado procedente..."
+
+Usa [PLACEHOLDER] para dados desconhecidos. Texto directo, sem comentários, sem explicações.`;
+
+    userPrompt = `${ctx ? ctx + '\n\n' : ''}FUNDAMENTOS IDENTIFICADOS:\n\n${fundamentosTexto}\n\nRedige a proposta de texto para recurso.`;
+
   } else if (modo === 'academico') {
     const ctx = [
       instituicao ? `Instituição: ${instituicao}` : null,
@@ -192,7 +207,7 @@ NOTAS:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: modo === 'critica' ? 3500 : 2000,
+        max_tokens: modo === 'minuta' ? 3000 : 2000,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],
       }),
@@ -211,10 +226,13 @@ NOTAS:
       return res.status(500).json({ erro: 'Resposta vazia. Tente novamente.' });
     }
 
-    // Separar JSON da minuta (se existir separador ---MINUTA---)
-    const minutaSep = fullText.indexOf('---MINUTA---');
-    const rawText = minutaSep > -1 ? fullText.substring(0, minutaSep).trim() : fullText;
-    const minutaRaw = minutaSep > -1 ? fullText.substring(minutaSep + 12).trim() : '';
+    // Modo minuta: resposta em texto simples — retorna sem parse JSON
+    if (modo === 'minuta') {
+      return res.status(200).json({ minuta: fullText });
+    }
+
+    const rawText = fullText;
+    const minutaRaw = '';
 
     // ── PARSE JSON ──
     let parsed;
@@ -264,6 +282,12 @@ NOTAS:
     }
 
     // ── NORMALIZAÇÃO ──
+    // Modo minuta: retorna texto simples
+    if (modo === 'minuta') {
+      const minutaText = (anthropicData.content?.[0]?.text || '').trim();
+      return res.status(200).json({ minuta: minutaText });
+    }
+
     if (modo === 'critica') {
       const okV = ['RECURSO_VIAVEL', 'RECURSO_PARCIAL', 'RECURSO_INVIAVEL'];
       if (!okV.includes(parsed.veredicto_recurso)) parsed.veredicto_recurso = 'RECURSO_INVIAVEL';
