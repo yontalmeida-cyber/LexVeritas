@@ -102,24 +102,22 @@ Pesquisa: omissão pronúncia (615.º/1/d CPC, 379.º/1/c CPP), contradição (6
       `${i+1}. ${f.tipo} (${f.artigo||''}) — ${f.descricao}\nArgumento: ${f.argumento}`
     ).join('\n\n');
 
-    systemPrompt = `Actua como Consultor Jurídico Sénior. Redige uma proposta de texto para recurso em português jurídico formal, baseada nos fundamentos fornecidos.
+    systemPrompt = `Actua como Consultor Jurídico Sénior. Redige uma proposta de texto para recurso em português jurídico formal.
 
-REGRA ESSENCIAL: As CONCLUSÕES e o PEDIDO FINAL são obrigatórios por lei. Sê conciso nos fundamentos (máximo 2 parágrafos cada) para garantir que as conclusões cabem na resposta.
+GERA EXACTAMENTE NESTA ORDEM — nunca saltes nenhuma secção:
 
-Estrutura obrigatória — nunca omitas nenhuma parte:
+SECÇÃO 1 — CABEÇALHO E INTRODUÇÃO
+Identificação das partes com [PLACEHOLDERS] e parágrafo de interposição do recurso.
 
-INTRODUÇÃO: [NOME DO RECORRENTE], identificado nos autos n.º [NÚMERO DO PROCESSO], no [TRIBUNAL A QUO], não se conformando com a decisão de [DATA DA DECISÃO], vem interpor recurso com os seguintes fundamentos:
+SECÇÃO 2 — CONCLUSÕES (gera IMEDIATAMENTE a seguir à introdução — nunca deixes para o fim)
+Numeradas: 1.ª, 2.ª, 3.ª... uma por fundamento. Linguagem precisa e técnica.
+Última conclusão: "N.ª Termos em que deve o presente recurso ser julgado procedente, revogando-se a decisão recorrida e substituindo-a por outra que [PEDIDO]."
 
-FUNDAMENTOS: Para cada fundamento, redige no máximo 2 parágrafos — cita o artigo violado e explica o vício de forma precisa e concisa.
+SECÇÃO 3 — PEDIDO
+"Termos em que deve Vossa Excelência admitir o presente recurso e, julgando-o procedente, [PEDIDO CONCRETO]."
 
-CONCLUSÕES (obrigatório — uma por fundamento, numeradas):
-1.ª ...
-2.ª ...
-N.ª Termos em que deve o presente recurso ser julgado procedente, revogando-se a decisão recorrida.
-
-PEDIDO: Termos em que deve Vossa Excelência admitir o recurso e, julgando-o procedente, revogar a decisão recorrida, substituindo-a por outra que [PEDIDO CONCRETO].
-
-[Local e data] — O Mandatário — [NOME E CÉDULA]
+SECÇÃO 4 — DESENVOLVIMENTO DOS FUNDAMENTOS
+Para cada fundamento: máximo 2 parágrafos. Cita o artigo violado. Explica o vício.
 
 Usa [PLACEHOLDER] para dados desconhecidos. Sem comentários, sem explicações.`;
     userPrompt = `${ctx ? ctx + '\n\n' : ''}FUNDAMENTOS IDENTIFICADOS:\n\n${fundamentosTexto}\n\nRedige a proposta de texto para recurso.`;
@@ -217,7 +215,7 @@ NOTAS:
       },
       body: JSON.stringify({
         model: modo === 'critica' ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001',
-        max_tokens: modo === 'minuta' ? 4500 : 2000,
+        max_tokens: modo === 'minuta' ? 6000 : 2000,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],
       }),
