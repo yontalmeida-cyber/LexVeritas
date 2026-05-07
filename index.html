@@ -57,7 +57,7 @@
   /* NAV */
   nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(6,6,8,0); border-bottom: 1px solid transparent; transition: all .4s ease; }
   nav.scrolled { background: rgba(6,6,8,.9); backdrop-filter: blur(24px); border-bottom-color: var(--border); }
-  .nav-logo { font-family: var(--serif); font-size: 22px; color: var(--white); text-decoration: none; font-style: italic; }
+  .nav-logo { font-family: var(--serif); font-size: 22px; color: var(--white); text-decoration: none; font-style: italic; flex-shrink: 0; margin-right: 24px; }
   .nav-logo span { color: var(--gold); }
   .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
   .nav-links a { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color .2s; }
@@ -190,12 +190,12 @@
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
   /* RESPONSIVE */
-  @media (max-width: 900px) {
+  @media (max-width: 1024px) {
     .nav-links, .cursor, .cursor-ring { display: none; }
     .steps-grid, .features-grid, .testimonials-grid, .metodologia-grid { grid-template-columns: 1fr; }
     .pricing-grid { grid-template-columns: 1fr; }
     .section-padding { padding: 80px 24px; }
-    nav { padding: 16px 24px; }
+    nav { padding: 14px 20px; }
     .hero { padding: 100px 24px 60px; }
     .hero-stats { gap: 28px; }
     footer { padding: 48px 24px 32px; }
