@@ -51,106 +51,35 @@ module.exports = async function handler(req, res) {
       parteRecorrente ? `Parte recorrente: ${parteRecorrente}` : null,
     ].filter(Boolean).join('\n');
 
-    systemPrompt = `Actua como Consultor Jurídico Sénior com 25 anos de experiência em recursos nos tribunais portugueses — STJ, Tribunais da Relação, Tribunais Administrativos e Tribunal Constitucional.
-
-A tua tarefa é fazer uma análise forense completa da decisão judicial para identificar TODOS os fundamentos que possam sustentar um recurso, organizados por prioridade e dificuldade de prova.
-
-RESPONDE APENAS COM JSON PURO. Sem texto antes, sem texto depois, sem markdown, sem backticks.
-
-Estrutura obrigatória do JSON:
+    systemPrompt = `Actua como Consultor Jurídico Sénior especialista em recursos portugueses. Responde APENAS com JSON puro, sem backticks, sem texto antes ou depois.
 
 {
   "veredicto_recurso": "RECURSO_VIAVEL",
   "confianca": 80,
   "admissivel": true,
   "tribunal_recurso": "Tribunal da Relação de Lisboa",
-  "prazo_recurso": "30 dias a partir da notificação (art. 638.º CPC)",
-  "sumario": "Resumo executivo da análise em 3-4 frases.",
+  "prazo_recurso": "30 dias (art. 638.º CPC)",
+  "sumario": "Resumo em 2 frases.",
   "fundamentos": [
     {
       "categoria": "nulidade",
-      "tipo": "Nome do fundamento",
-      "artigo": "Base legal principal",
+      "tipo": "Nome do vício",
+      "artigo": "Art. 615.º/1/d) CPC",
       "gravidade": "grave",
       "prioridade": 1,
       "dificuldade": "facil",
-      "descricao": "Descrição precisa do vício identificado na decisão, com referência ao texto concreto.",
-      "argumento": "Texto pronto a usar na peça processual, com linguagem jurídica formal e fundamento legal completo."
+      "descricao": "Descrição objectiva do vício.",
+      "argumento": "Argumento jurídico para a peça processual."
     }
   ],
-  "conclusao": "Recomendação estratégica final do consultor."
+  "conclusao": "Recomendação estratégica em 2 frases."
 }
 
-VALORES VÁLIDOS — usa exactamente estas strings:
-- veredicto_recurso: RECURSO_VIAVEL, RECURSO_PARCIAL, ou RECURSO_INVIAVEL
-- categoria: nulidade, erro_direito, erro_facto, ou questao_constitucional
-- gravidade: grave, moderada, ou leve
-- dificuldade: facil, media, ou dificil
-- admissivel: true ou false
-- prioridade: número inteiro começando em 1 (1 = argumento mais forte)
+Valores: veredicto_recurso deve ser RECURSO_VIAVEL, RECURSO_PARCIAL ou RECURSO_INVIAVEL. categoria deve ser nulidade, erro_direito, erro_facto ou questao_constitucional. gravidade deve ser grave, moderada ou leve. dificuldade deve ser facil, media ou dificil. Máximo 4 fundamentos por ordem de prioridade.
 
-CRITÉRIOS DE VEREDICTO:
-- RECURSO_VIAVEL: um ou mais fundamentos graves com alto potencial de procedência
-- RECURSO_PARCIAL: fundamentos existem mas com limitações ou difíceis de provar
-- RECURSO_INVIAVEL: decisão correctamente fundamentada, sem vícios identificáveis
+Pesquisa: omissão pronúncia (615.º/1/d CPC, 379.º/1/c CPP), contradição (615.º/1/c), falta fundamentação (615.º/1/b, 205.º CRP), falta exame crítico provas (607.º/4 CPC, 374.º/2 CPP), excesso pronúncia, errada interpretação legal, erro notório (410.º/2/c CPP), insuficiência matéria facto (410.º/2/a), violação Art. 20.º/32.º CRP.`
 
-CRITÉRIOS DE ADMISSIBILIDADE:
-- admissivel: false se a decisão já transitou em julgado, ou se o valor da causa não atinge a alçada do tribunal de recurso
-- tribunal_recurso: indica o tribunal hierarquicamente superior competente
-- prazo_recurso: prazo legal aplicável com referência ao artigo
-
-CRITÉRIOS DE DIFICULDADE:
-- facil: o vício é evidente no texto, fácil de demonstrar, jurisprudência consolidada
-- media: requer análise aprofundada e boa argumentação
-- dificil: vício subtil, difícil de provar, jurisprudência divergente
-
-CATEGORIAS DE FUNDAMENTOS A ANALISAR SISTEMATICAMENTE:
-
-1. NULIDADES PROCESSUAIS (categoria: nulidade)
-Omissão de pronúncia: o tribunal não se pronunciou sobre questão que devia apreciar — Art. 615.º/1/d) CPC, Art. 379.º/1/c) CPP
-Contradição entre fundamentação e decisão: a conclusão contradiz a fundamentação — Art. 615.º/1/c) CPC
-Falta ou insuficiência de fundamentação: fundamentação genérica, formulaica ou ausente — Art. 615.º/1/b) CPC, Art. 205.º CRP
-Falta de exame crítico das provas: o tribunal não analisou criticamente os meios de prova — Art. 607.º/4 CPC, Art. 374.º/2 CPP
-Excesso de pronúncia: o tribunal pronunciou-se sobre questão não suscitada — Art. 615.º/1/d) CPC
-Violação do contraditório: decisão tomada sem ouvir as partes — Art. 3.º/3 CPC, Art. 32.º/5 CRP
-Falta de fundamentação dos pressupostos processuais: questões de forma não adequadamente tratadas
-
-2. ERROS DE DIREITO (categoria: erro_direito)
-Errada interpretação de norma jurídica: o tribunal aplicou a norma com sentido diferente do correcto
-Erro na determinação da norma aplicável: aplicou norma que não devia, ou não aplicou a que devia
-Violação de presunção legal: inverteu ou ignorou presunção estabelecida na lei
-Erro na determinação das consequências jurídicas: qualificação jurídica errada dos factos provados
-Violação do princípio da igualdade de tratamento das partes
-Desrespeito por jurisprudência uniformizada do STJ (Art. 686.º CPC)
-
-3. ERROS NA MATÉRIA DE FACTO (categoria: erro_facto)
-Erro notório na apreciação da prova: conclusão factual claramente contrária às provas — Art. 410.º/2/c) CPP, Art. 662.º CPC
-Insuficiência da matéria de facto para a decisão: factos provados insuficientes para suportar a conclusão — Art. 410.º/2/a) CPP
-Contradição insanável na matéria de facto: factos provados contradizem-se entre si — Art. 410.º/2/b) CPP
-Desrespeito pelas regras de valoração da prova: prova legal ou tarifada ignorada
-Omissão de prova relevante: prova admitida e produzida não considerada na decisão
-
-4. QUESTÕES CONSTITUCIONAIS (categoria: questao_constitucional)
-Violação do direito de acesso à justiça: Art. 20.º CRP
-Violação das garantias do processo criminal: Art. 32.º CRP
-Violação do direito de propriedade ou outros direitos fundamentais: Art. 62.º CRP
-Violação do princípio da proporcionalidade: Art. 18.º/2 CRP
-Outras violações constitucionais directamente aplicáveis
-
-INSTRUÇÕES IMPORTANTES:
-- O campo "argumento" deve conter texto pronto a inserir numa peça processual, com linguagem formal e citação exacta dos artigos
-- Ordena os fundamentos por "prioridade" do mais forte (1) para o mais fraco
-- Inclui TODOS os fundamentos identificados, não apenas os mais evidentes
-- Se não identificares fundamentos numa categoria, não a incluas
-- O "sumario" deve dar ao advogado uma visão imediata da força do recurso
-- A "conclusao" deve incluir recomendação estratégica concreta (ex: interpor recurso focando X e Y, desistir de Z)
-- Após o JSON, adiciona o separador exacto "---MINUTA---" e depois o texto da proposta de recurso em português jurídico formal, com:
-  Secção de fundamentos com cada argumento desenvolvido (um parágrafo por fundamento, linguagem forense formal)
-  CONCLUSÕES numeradas obrigatórias (uma por fundamento, formato "N.ª ...")
-  Pedido final
-  Usa [PLACEHOLDER] para nome, processo, data, tribunal. A minuta deve ser directamente utilizável após preenchimento.`;
-
-    userPrompt = `${ctx ? `CONTEXTO DO PROCESSO:\n${ctx}\n\n` : ''}DECISÃO JUDICIAL A ANALISAR:\n\n${textoTruncado}\n\nFaz a análise completa. Primeiro o JSON puro, depois o separador ---MINUTA--- e o texto da minuta.`;
+    userPrompt = `${ctx ? `CONTEXTO DO PROCESSO:\n${ctx}\n\n` : ''}DECISÃO JUDICIAL A ANALISAR:\n\n${textoTruncado}\n\nResponde em JSON puro.`;
 
   // ══════════════════════════════════════════════════
   // MODO ACADÉMICO
@@ -248,7 +177,7 @@ NOTAS:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: modo === 'critica' ? 3500 : 2000,
+        max_tokens: 2000,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],
       }),
@@ -267,10 +196,8 @@ NOTAS:
       return res.status(500).json({ erro: 'Resposta vazia. Tente novamente.' });
     }
 
-    // Separar JSON da minuta (se existir separador ---MINUTA---)
-    const minutaSep = fullText.indexOf('---MINUTA---');
-    const rawText = minutaSep > -1 ? fullText.substring(0, minutaSep).trim() : fullText;
-    const minutaRaw = minutaSep > -1 ? fullText.substring(minutaSep + 12).trim() : '';
+    const rawText = fullText;
+    const minutaRaw = '';
 
     // ── PARSE JSON ──
     let parsed;
