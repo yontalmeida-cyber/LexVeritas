@@ -111,15 +111,21 @@
             padding: 2px !important;
             white-space: nowrap;
         }
-                .section-padding {
+        /* Ajuste apenas para o topo do site */
+        #home, section:first-of-type {
             padding-top: 320px !important;
         }
 
+        /* Se for modo computador ou ecrã largo, reduz o espaço */
         @media (min-width: 481px) {
+            #home, section:first-of-type {
+                padding-top: 100px !important;
+            }
             .section-padding {
                 padding-top: 80px !important;
             }
         }
+
 
                 
 
