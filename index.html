@@ -111,18 +111,17 @@
             padding: 2px !important;
             white-space: nowrap;
         }
-        /* Ajuste apenas para o topo do site */
-        #home, section:first-of-type {
+                /* Forçar fundo preto e ajuste de topo */
+        #home, section:first-of-type, .section-padding {
+            background-color: #000000 !important;
             padding-top: 320px !important;
         }
 
-        /* Se for modo computador ou ecrã largo, reduz o espaço */
+        /* Ajuste para ecrãs largos (Visão PC / Horizontal) */
         @media (min-width: 481px) {
-            #home, section:first-of-type {
+            #home, section:first-of-type, .section-padding {
                 padding-top: 100px !important;
-            }
-            .section-padding {
-                padding-top: 80px !important;
+                background-color: #000000 !important;
             }
         }
 
