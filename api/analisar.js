@@ -30,7 +30,7 @@ module.exports = async function handler(req, res) {
   const body = req.body || {};
   const { texto, modo = 'judicial', tribunal, relator, instituicao, tipoDoc, orientador, tipoProcesso, parteRecorrente } = body;
 
-  if (!texto || typeof texto !== 'string' || texto.trim().length < 50) {
+  if (modo !== 'minuta' && (!texto || typeof texto !== 'string' || texto.trim().length < 50)) {
     return res.status(400).json({ erro: 'Texto insuficiente. Mínimo 50 caracteres.' });
   }
 
