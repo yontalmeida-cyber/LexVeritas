@@ -140,18 +140,30 @@
   .price-plan-label { font-family: var(--mono); font-size: 10px; margin-bottom: 20px; color: var(--grey); }
   .price-amount { font-size: 48px; font-family: var(--serif); margin-bottom: 24px; }
   .price-amount small { font-size: 16px; font-family: var(--sans); color: var(--grey); }
-  .price-features { list-style: none; color: var(--grey); font-size: 13px; margin-bottom: 32px; line-height: 2.5; }
-  .price-features li.highlight { color: var(--white); font-weight: 700; }
+  .p        /* 1. CORREÇÃO DE LINKS DUPLICADOS */
+        .nav-links {
+            display: none !important; /* Esconde por padrão */
+        }
 
-  /* FAQ */
-  .faq-list { margin-top: 60px; max-width: 800px; margin-left: auto; margin-right: auto; }
-  .faq-item { border-bottom: 1px solid var(--border); }
-  .faq-question { width: 100%; padding: 24px 0; background: none; border: none; display: flex; justify-content: space-between; align-items: center; cursor: pointer; text-align: left; gap: 16px; }
-  .faq-question h3 { font-family: var(--serif); font-size: 20px; font-style: italic; color: var(--white); }
-  .faq-icon { color: var(--gold); font-size: 20px; transition: transform .3s; flex-shrink: 0; }
-  .faq-item.active .faq-icon { transform: rotate(45deg); }
-  .faq-answer { max-height: 0; overflow: hidden; transition: all .4s ease; color: var(--grey); font-size: 14px; line-height: 1.8; }
-  .faq-item.active .faq-answer { max-height: 240px; padding-bottom: 24px; }
+        @media (min-width: 1281px) {
+            .nav-links {
+                display: flex !important; /* Mostra apenas no PC */
+                gap: 20px;
+            }
+        }
+
+        /* 2. RESOLVE SOBREPOSIÇÃO E FUNDO ROXO */
+        #home, section:first-of-type {
+            background-color: #000000 !important;
+            padding-top: 320px !important;
+        }
+
+        @media (min-width: 481px) {
+            #home, section:first-of-type {
+                padding-top: 120px !important;
+                background-color: #000000 !important;
+            }
+        }
 
   /* FOOTER */
   footer { padding: 60px 48px 40px; border-top: 1px solid var(--border); }
