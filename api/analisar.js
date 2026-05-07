@@ -84,6 +84,36 @@ Pesquisa: omissão pronúncia (615.º/1/d CPC, 379.º/1/c CPP), contradição (6
   // ══════════════════════════════════════════════════
   // MODO ACADÉMICO
   // ══════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════
+  // MODO MINUTA — Gera proposta de texto separadamente
+  // ══════════════════════════════════════════════════
+  } else if (modo === 'minuta') {
+    const { fundamentos = [], veredicto_recurso, tribunal_recurso, tipoProcesso, parteRecorrente } = body;
+    if (!fundamentos.length) {
+      return res.status(400).json({ erro: 'Fundamentos em falta para gerar minuta.' });
+    }
+    const ctx = [
+      tribunal_recurso ? `Tribunal de recurso: ${tribunal_recurso}` : null,
+      tipoProcesso     ? `Tipo de processo: ${tipoProcesso}`        : null,
+      parteRecorrente  ? `Parte recorrente: ${parteRecorrente}`      : null,
+    ].filter(Boolean).join('\n');
+
+    const fundamentosTexto = fundamentos.map((f, i) =>
+      `${i+1}. ${f.tipo} (${f.artigo||''}) — ${f.descricao}\nArgumento: ${f.argumento}`
+    ).join('\n\n');
+
+    systemPrompt = `Actua como Consultor Jurídico Sénior. Redige uma proposta de texto para recurso em português jurídico formal, baseada nos fundamentos fornecidos.
+
+Estrutura obrigatória:
+1. Parágrafo de introdução com [NOME DO RECORRENTE], [NÚMERO DO PROCESSO], [TRIBUNAL A QUO], [DATA DA DECISÃO]
+2. Secção FUNDAMENTOS com cada argumento desenvolvido (um parágrafo por fundamento)
+3. CONCLUSÕES numeradas (1.ª, 2.ª, ..., N.ª) — uma por fundamento, linguagem precisa
+4. Pedido final: "Termos em que deve o presente recurso ser julgado procedente..."
+
+Usa [PLACEHOLDER] para dados desconhecidos. Texto directo, sem comentários, sem explicações.`;
+
+    userPrompt = `${ctx ? ctx + '\n\n' : ''}FUNDAMENTOS IDENTIFICADOS:\n\n${fundamentosTexto}\n\nRedige a proposta de texto para recurso.`;
+
   } else if (modo === 'academico') {
     const ctx = [
       instituicao ? `Instituição: ${instituicao}` : null,
@@ -247,6 +277,12 @@ NOTAS:
     }
 
     // ── NORMALIZAÇÃO ──
+    // Modo minuta: retorna texto simples
+    if (modo === 'minuta') {
+      const minutaText = (anthropicData.content?.[0]?.text || '').trim();
+      return res.status(200).json({ minuta: minutaText });
+    }
+
     if (modo === 'critica') {
       const okV = ['RECURSO_VIAVEL', 'RECURSO_PARCIAL', 'RECURSO_INVIAVEL'];
       if (!okV.includes(parsed.veredicto_recurso)) parsed.veredicto_recurso = 'RECURSO_INVIAVEL';
