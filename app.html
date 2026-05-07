@@ -945,10 +945,10 @@ const _urlParams=new URLSearchParams(window.location.search);
 if(_hashParams.get('type')==='recovery'){document.getElementById('lv-loading').style.display='none';showPage('reset');}
 else if(_urlParams.has('code')){document.getElementById('lv-loading').style.display='none';showPage('login');}
 else{
-  sb.auth.getSession().then(({data})=>{
+  sb.auth.getSession().then(async ({data})=>{
     if(loginInProgress)return;
     if(!document.getElementById('page-reset').classList.contains('hidden'))return;
-    if(data.session?.user){currentUser=data.session.user;userProfile={nome:data.session.user.user_metadata?.nome||data.session.user.email.split('@')[0],plano:'gratuito',analises_mes:0};initApp();showPage('app');}
+    if(data.session?.user){currentUser=data.session.user;await loadProfile();initApp();showPage('app');}
     else showPage('login');
   });
 }
@@ -958,7 +958,7 @@ async function loadProfile(){
     const mes=new Date().toISOString().substring(0,7);
     let{data}=await sb.from('perfis').select('*').eq('id',currentUser.id).single();
     if(!data){const meta=currentUser.user_metadata||{};await sb.from('perfis').upsert({id:currentUser.id,email:currentUser.email,nome:meta.nome||currentUser.email.split('@')[0],profissao:meta.profissao||'',mes_atual:mes,analises_mes:0,plano:'gratuito'});({data}=await sb.from('perfis').select('*').eq('id',currentUser.id).single());}
-    if(data&&data.mes_atual!==mes){await sb.from('perfis').update({analises_mes:0,mes_atual:mes}).eq('id',currentUser.id);data.analises_mes=0;data.mes_atual=mes;}
+    if(data&&data.mes_atual&&data.mes_atual!==mes){await sb.from('perfis').update({analises_mes:0,mes_atual:mes}).eq('id',currentUser.id);data.analises_mes=0;data.mes_atual=mes;}
     userProfile=data||{nome:currentUser.email.split('@')[0],plano:'gratuito',analises_mes:0};
   }catch(e){userProfile={nome:currentUser.email.split('@')[0],plano:'gratuito',analises_mes:0};}
 }
