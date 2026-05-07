@@ -190,7 +190,11 @@
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
   /* RESPONSIVE */
-  @media (max-width: 1024px) {
+  /* Ocultar nav em dispositivos tácteis (hover:none = touch devices) */
+  @media (hover: none) {
+    .nav-links, .cursor, .cursor-ring { display: none !important; }
+  }
+  @media (max-width: 1280px) {
     .nav-links, .cursor, .cursor-ring { display: none; }
     .steps-grid, .features-grid, .testimonials-grid, .metodologia-grid { grid-template-columns: 1fr; }
     .pricing-grid { grid-template-columns: 1fr; }
