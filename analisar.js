@@ -206,8 +206,8 @@ NOTAS:
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: (modo === 'critica' || modo === 'minuta') ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001',
-        max_tokens: modo === 'minuta' ? 3000 : 2000,
+        model: modo === 'critica' ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001',
+        max_tokens: modo === 'minuta' ? 4500 : 2000,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],
       }),
