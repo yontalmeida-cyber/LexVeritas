@@ -159,7 +159,7 @@
   .marker-ok { background: #d0e8d0; color: #1a5c2a; }
   .evidence-text { font-family: var(--sans); font-size: 12px; line-height: 1.6; color: #555; }
 
-  /* NULIDADES (Análise Crítica) */
+  /* NULIDADES */
   .nulidades-section-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #888; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
   .nulidades-section-label::after { content: ''; height: 1px; flex: 1; background: rgba(0,0,0,0.1); }
   .nulidade-card { background: white; border: 1px solid var(--rule); border-left: 3px solid var(--red); padding: 18px 20px; margin-bottom: 12px; }
@@ -192,10 +192,11 @@
   .nulidade-argumento-label { font-family: var(--mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: #888; display: block; margin-bottom: 4px; }
   .nulidade-argumento-text { font-family: var(--sans); font-size: 12px; line-height: 1.7; color: #555; }
   .meta-recurso { background: #f8f5ff; border: 1px solid rgba(107,46,168,0.15); border-left: 3px solid #6b2ea8; padding: 14px 16px; margin-bottom: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .meta-recurso-item { }
   .meta-recurso-label { font-family: var(--mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: #888; margin-bottom: 3px; }
   .meta-recurso-value { font-family: var(--sans); font-size: 12px; font-weight: 600; color: #333; line-height: 1.4; }
   .admissibilidade-badge { display: inline-flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; margin-bottom: 12px; }
+  .admissivel-sim { background: rgba(26,92,58,0.08); color: #1a5c2a; }
+  .admissivel-nao { background: rgba(139,26,26,0.08); color: #8b1a1a; }
   .minuta-card { background: white; border: 1px solid var(--rule); border-top: 3px solid var(--gold); margin-bottom: 16px; }
   .minuta-header { padding: 14px 20px; background: var(--parchment); border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .minuta-title { font-family: var(--serif); font-size: 14px; font-weight: 700; }
@@ -205,8 +206,6 @@
   .btn-copiar { background: var(--ink); color: white; border: none; padding: 8px 18px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
   .btn-copiar:hover { background: var(--gold); }
   .btn-copiar.copiado { background: var(--green); }
-  .admissivel-sim { background: rgba(26,92,58,0.08); color: #1a5c2a; }
-  .admissivel-nao { background: rgba(139,26,26,0.08); color: #8b1a1a; }
   @media(max-width:760px){ .meta-recurso { grid-template-columns: 1fr; } }
 
   /* SIDEBAR */
@@ -275,82 +274,85 @@
   .footer-contact { font-family: var(--mono); font-size: 9px; color: var(--gold); cursor: pointer; letter-spacing: 0.1em; text-decoration: none; transition: opacity 0.2s; }
   .footer-contact:hover { opacity: 0.7; }
 
-  /* MODALS */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
-  .modal-overlay.visible { display: flex; }
-  .modal { background: white; max-width: 480px; width: 100%; padding: 36px; position: relative; }
-  .modal h2 { font-family: var(--serif); font-size: 24px; font-weight: 900; margin-bottom: 6px; }
-  .modal p { font-size: 13px; color: #666; margin-bottom: 28px; line-height: 1.6; }
-  .btn-close-modal { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: #aaa; }
-  .btn-pdf { display: flex; align-items: center; gap: 8px; background: white; color: var(--ink); border: 1px solid var(--rule); padding: 11px 20px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 16px; width: 100%; justify-content: center; }
-  .btn-pdf:hover { background: var(--parchment); border-color: var(--gold); color: var(--gold); }
-  .ref-number { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 6px; text-align: center; }
-  .hidden { display: none !important; }
-  .dark-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+  /* MODALS — unified dark style */
+  .dark-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; backdrop-filter: blur(6px); }
   .dark-modal-overlay.visible { display: flex; }
-  .dark-modal-box { background: var(--card); border: 1px solid var(--rule-dark); padding: 36px; max-width: 460px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+  .dark-modal-box { background: var(--card); border: 1px solid var(--rule-dark); padding: 36px; max-width: 480px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
   .dark-modal-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
-  .dark-modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: #9a9a9a; font-size: 22px; cursor: pointer; }
+  .dark-modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: #9a9a9a; font-size: 26px; cursor: pointer; }
   .dark-modal-close:hover { color: #f8f6f1; }
+  .dark-modal-title { font-family: var(--serif); font-size: 24px; font-style: italic; color: #f8f6f1; margin-bottom: 6px; }
+  .dark-modal-sub { font-size: 13px; color: var(--grey); margin-bottom: 24px; line-height: 1.6; }
+  .dark-modal-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
   .dark-form-group { margin-bottom: 14px; }
   .dark-form-group label { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 6px; }
   .dark-form-group input, .dark-form-group select, .dark-form-group textarea { width: 100%; padding: 11px 14px; border: 1px solid var(--rule-dark); background: rgba(255,255,255,0.04); font-family: var(--sans); font-size: 13px; color: #f8f6f1; outline: none; transition: border-color 0.2s; }
   .dark-form-group select option { background: var(--dark); }
   .dark-form-group input:focus, .dark-form-group select:focus, .dark-form-group textarea:focus { border-color: var(--gold); }
   .dark-form-group textarea { resize: vertical; min-height: 90px; }
+  .dark-form-group input::placeholder, .dark-form-group textarea::placeholder { color: rgba(255,255,255,0.2); }
+  .btn-dark-submit { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 13px; font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
+  .btn-dark-submit:hover { background: var(--gold-light); }
+  .btn-dark-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-pdf { display: flex; align-items: center; gap: 8px; background: white; color: var(--ink); border: 1px solid var(--rule); padding: 11px 20px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 16px; width: 100%; justify-content: center; }
+  .btn-pdf:hover { background: var(--parchment); border-color: var(--gold); color: var(--gold); }
+  .ref-number { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 6px; text-align: center; }
 
   /* LOADING SCREEN */
-  #lv-loading{position:fixed;inset:0;background:#060608;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s ease}
-  #lv-loading.done{opacity:0;pointer-events:none}
-  .lv-load-logo{font-family:var(--serif);font-size:48px;font-style:italic;color:#f8f6f1}
-  .lv-load-logo span{color:#c9a84c}
-  .lv-load-label{font-family:var(--mono);font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#9a9a9a}
-  .lv-load-track{width:200px;height:2px;background:rgba(255,255,255,0.08)}
-  .lv-load-fill{height:100%;background:linear-gradient(90deg,#c9a84c,#e8c96a);width:0;animation:lvload 2.5s ease forwards}
-  @keyframes lvload{0%{width:0}60%{width:80%}100%{width:95%}}
+  #lv-loading { position: fixed; inset: 0; background: #060608; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: opacity .6s ease; }
+  #lv-loading.done { opacity: 0; pointer-events: none; }
+  .lv-load-logo { font-family: var(--serif); font-size: 48px; font-style: italic; color: #f8f6f1; }
+  .lv-load-logo span { color: #c9a84c; }
+  .lv-load-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #9a9a9a; }
+  .lv-load-track { width: 200px; height: 2px; background: rgba(255,255,255,0.08); }
+  .lv-load-fill { height: 100%; background: linear-gradient(90deg, #c9a84c, #e8c96a); width: 0; animation: lvload 2s ease forwards; }
+  @keyframes lvload { 0% { width: 0; } 70% { width: 85%; } 100% { width: 95%; } }
+
+  .hidden { display: none !important; }
 
   @media(max-width:760px){
-    main{grid-template-columns:1fr;gap:20px;padding:16px}
-    .sidebar{order:2}.content-area{order:1}
-    textarea{height:200px;font-size:13px;padding:14px}
-    .btn-analyze{width:100%;justify-content:center;padding:14px;font-size:12px}
-    .input-card-footer{flex-direction:column;gap:10px;align-items:stretch}
-    .file-hint{justify-content:center}
-    .indicators-grid{grid-template-columns:1fr 1fr;gap:8px}
-    .indicator-card{padding:10px 12px}
-    .indicator-name{font-size:8px}
-    .indicator-score{font-size:22px}
-    .masthead h1{font-size:clamp(28px,8vw,48px)}
-    .history-page{padding:16px}
-    footer{flex-direction:column;gap:8px;text-align:center;padding:16px}
-    .btn-pdf{font-size:12px;padding:12px 16px}
-    .widget-body{padding:12px}
-    .sidebar-widget{margin-bottom:12px}
-    .overlay-inner{padding:28px 20px;gap:20px}
-    .overlay-logo{font-size:22px}
-    .scales-anim{width:48px;height:48px}
-    .overlay-ind-name{width:100px;font-size:7px}
-    .overlay-status{font-size:9px}
-    .overlay-subtext{font-size:10px}
-    .usage-track{max-width:120px}
-    .mode-toggle-label{display:none}
-    .mode-toggle-bar{gap:4px;padding:8px 12px}
-    .mode-btn{flex:1;justify-content:center;font-size:9px;padding:8px 4px;letter-spacing:0}
+    main { grid-template-columns: 1fr; gap: 20px; padding: 16px; }
+    .sidebar { order: 2; } .content-area { order: 1; }
+    textarea { height: 200px; font-size: 13px; padding: 14px; }
+    .btn-analyze { width: 100%; justify-content: center; padding: 14px; font-size: 12px; }
+    .input-card-footer { flex-direction: column; gap: 10px; align-items: stretch; }
+    .file-hint { justify-content: center; }
+    .indicators-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .indicator-card { padding: 10px 12px; }
+    .indicator-name { font-size: 8px; }
+    .indicator-score { font-size: 22px; }
+    .masthead h1 { font-size: clamp(28px,8vw,48px); }
+    .history-page { padding: 16px; }
+    footer { flex-direction: column; gap: 8px; text-align: center; padding: 16px; }
+    .btn-pdf { font-size: 12px; padding: 12px 16px; }
+    .widget-body { padding: 12px; }
+    .sidebar-widget { margin-bottom: 12px; }
+    .overlay-inner { padding: 28px 20px; gap: 20px; }
+    .overlay-logo { font-size: 22px; }
+    .scales-anim { width: 48px; height: 48px; }
+    .overlay-ind-name { width: 100px; font-size: 7px; }
+    .overlay-status { font-size: 9px; }
+    .overlay-subtext { font-size: 10px; }
+    .usage-track { max-width: 120px; }
+    .mode-toggle-label { display: none; }
+    .mode-toggle-bar { gap: 4px; padding: 8px 12px; }
+    .mode-btn { flex: 1; justify-content: center; font-size: 9px; padding: 8px 4px; letter-spacing: 0; }
+    .dark-modal-box { padding: 28px 20px; }
   }
-  @media(max-width:400px){.indicators-grid{grid-template-columns:1fr}.masthead h1{font-size:26px}}
+  @media(max-width:400px) { .indicators-grid { grid-template-columns: 1fr; } .masthead h1 { font-size: 26px; } }
 </style>
 </head>
 <body>
 
-<!-- LOADING -->
+<!-- ═══ LOADING SCREEN ═══ -->
 <div id="lv-loading">
   <div class="lv-load-logo">Lex<span>Veritas</span></div>
   <div class="lv-load-label">Sistema de Análise Forense</div>
   <div class="lv-load-track"><div class="lv-load-fill"></div></div>
 </div>
 
-<!-- LOGIN -->
-<div id="page-login" class="auth-page">
+<!-- ═══ LOGIN ═══ -->
+<div id="page-login" class="auth-page hidden">
   <div class="auth-logo">Lex<em>Veritas</em></div>
   <div class="auth-tagline">Detector de IA em Jurisprudência Portuguesa</div>
   <div style="display:flex;gap:20px;justify-content:center;margin-bottom:20px;flex-wrap:wrap">
@@ -370,7 +372,7 @@
   </div>
 </div>
 
-<!-- REDEFINIR PASSWORD -->
+<!-- ═══ REDEFINIR PASSWORD ═══ -->
 <div id="page-reset" class="auth-page hidden">
   <div class="auth-logo">Lex<em>Veritas</em></div>
   <div class="auth-tagline">Redefinir Password</div>
@@ -385,7 +387,7 @@
   </div>
 </div>
 
-<!-- REGISTO -->
+<!-- ═══ REGISTO ═══ -->
 <div id="page-register" class="auth-page hidden">
   <div class="auth-logo">Lex<em>Veritas</em></div>
   <div class="auth-tagline">Detector de IA em Jurisprudência Portuguesa</div>
@@ -421,8 +423,9 @@
   </div>
 </div>
 
-<!-- APP PRINCIPAL -->
+<!-- ═══ APP PRINCIPAL ═══ -->
 <div id="page-app" class="hidden">
+
 <header>
   <div class="header-top">
     <span class="header-date" id="current-date"></span>
@@ -461,6 +464,7 @@
   <button class="mode-btn" id="mode-btn-academico" onclick="setModo('academico')">🎓 Análise Académica</button>
 </div>
 
+<!-- TAB ANÁLISE -->
 <div id="tab-content-analise">
 <main>
   <div class="analysis-section content-area">
@@ -487,10 +491,11 @@
       <div class="drop-zone-text" id="drop-zone-text">📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui</div>
       <input type="file" id="file-input" accept=".txt,.pdf" style="display:none" onchange="handleFile(event)">
     </div>
+
     <div class="results-area" id="results-area">
       <div class="section-label" style="margin-top:28px">Resultado da Análise</div>
 
-      <!-- RESULTADOS MODO JUDICIAL / ACADÉMICO -->
+      <!-- RESULTADOS JUDICIAL / ACADÉMICO -->
       <div id="results-standard">
         <div class="verdict-banner" id="verdict-banner">
           <div class="verdict-label">Veredicto Forense</div>
@@ -498,10 +503,7 @@
           <div class="verdict-subtitle" id="verdict-subtitle">—</div>
         </div>
         <div class="confidence-block">
-          <div class="confidence-label">
-            <span>Índice de Confiança na Detecção</span>
-            <span class="confidence-value" id="confidence-value">—%</span>
-          </div>
+          <div class="confidence-label"><span>Índice de Confiança na Detecção</span><span class="confidence-value" id="confidence-value">—%</span></div>
           <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
         </div>
         <div class="indicators-grid" id="indicators-grid"></div>
@@ -512,7 +514,7 @@
         <div class="analysis-card"><h3>Marcadores Identificados</h3><ul class="evidence-list" id="evidence-list"></ul></div>
       </div>
 
-      <!-- RESULTADOS MODO CRÍTICA -->
+      <!-- RESULTADOS CRÍTICA -->
       <div id="results-critica" style="display:none">
         <div class="verdict-banner" id="verdict-banner-critica">
           <div class="verdict-label">Avaliação de Recurso — Consultor Jurídico Sénior</div>
@@ -520,10 +522,7 @@
           <div class="verdict-subtitle" id="verdict-subtitle-critica">—</div>
         </div>
         <div class="confidence-block">
-          <div class="confidence-label">
-            <span>Grau de Fundamentação do Recurso</span>
-            <span class="confidence-value" id="confidence-value-critica">—%</span>
-          </div>
+          <div class="confidence-label"><span>Grau de Fundamentação do Recurso</span><span class="confidence-value" id="confidence-value-critica">—%</span></div>
           <div class="meter-track"><div class="meter-fill" id="meter-fill-critica"></div></div>
         </div>
         <div id="meta-recurso-container"></div>
@@ -565,99 +564,47 @@
     <div class="sidebar-widget">
       <div class="widget-header"><div class="widget-title" id="ctx-widget-title">Contexto do Documento</div></div>
       <div class="widget-body" style="padding:14px">
-
         <!-- JUDICIAL -->
         <div id="ctx-judicial">
           <select id="tribunal-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tribunal (opcional) —</option>
-            <optgroup label="Supremos Tribunais">
-              <option>STJ — Supremo Tribunal de Justiça</option>
-              <option>STA — Supremo Tribunal Administrativo</option>
-              <option>TC — Tribunal Constitucional</option>
-            </optgroup>
-            <optgroup label="Tribunais da Relação">
-              <option>TRL — Tribunal da Relação de Lisboa</option>
-              <option>TRP — Tribunal da Relação do Porto</option>
-              <option>TRC — Tribunal da Relação de Coimbra</option>
-              <option>TRG — Tribunal da Relação de Guimarães</option>
-              <option>TRE — Tribunal da Relação de Évora</option>
-            </optgroup>
-            <optgroup label="Tribunais Administrativos">
-              <option>TCAS — Tribunal Central Administrativo Sul</option>
-              <option>TCAN — Tribunal Central Administrativo Norte</option>
-            </optgroup>
-            <optgroup label="Outros">
-              <option>Tribunal de 1.ª Instância (Cível)</option>
-              <option>Tribunal de 1.ª Instância (Criminal)</option>
-              <option>Tribunal de Trabalho</option>
-              <option>Tribunal Administrativo e Fiscal</option>
-            </optgroup>
+            <optgroup label="Supremos Tribunais"><option>STJ — Supremo Tribunal de Justiça</option><option>STA — Supremo Tribunal Administrativo</option><option>TC — Tribunal Constitucional</option></optgroup>
+            <optgroup label="Tribunais da Relação"><option>TRL — Tribunal da Relação de Lisboa</option><option>TRP — Tribunal da Relação do Porto</option><option>TRC — Tribunal da Relação de Coimbra</option><option>TRG — Tribunal da Relação de Guimarães</option><option>TRE — Tribunal da Relação de Évora</option></optgroup>
+            <optgroup label="Tribunais Administrativos"><option>TCAS — Tribunal Central Administrativo Sul</option><option>TCAN — Tribunal Central Administrativo Norte</option></optgroup>
+            <optgroup label="Outros"><option>Tribunal de 1.ª Instância (Cível)</option><option>Tribunal de 1.ª Instância (Criminal)</option><option>Tribunal de Trabalho</option><option>Tribunal Administrativo e Fiscal</option></optgroup>
           </select>
           <input id="relator-input" type="text" placeholder="Nome do relator (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
           <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>Cada tribunal e relator têm um estilo próprio. Indicar melhora a precisão.</div>
         </div>
-
         <!-- ACADÉMICO -->
         <div id="ctx-academico" style="display:none">
           <input id="instituicao-input" type="text" placeholder="Universidade / Faculdade (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
           <select id="tipo-doc-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tipo de documento —</option>
-            <option>Dissertação de Mestrado</option><option>Tese de Doutoramento</option>
-            <option>Trabalho de Licenciatura</option><option>Artigo Académico</option>
-            <option>Monografia</option><option>Outro</option>
+            <option>Dissertação de Mestrado</option><option>Tese de Doutoramento</option><option>Trabalho de Licenciatura</option><option>Artigo Académico</option><option>Monografia</option><option>Outro</option>
           </select>
           <input id="orientador-input" type="text" placeholder="Orientador (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
           <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>O tipo de documento ajuda a calibrar a análise para o estilo académico-jurídico esperado.</div>
         </div>
-
         <!-- CRÍTICA -->
         <div id="ctx-critica" style="display:none">
-          <div class="critica-banner" style="margin-bottom:10px">
-            <strong>Consultor Jurídico Sénior</strong>
-            <p>Análise de nulidades, vícios processuais e erros de julgamento. Geração de argumentos para recurso.</p>
-          </div>
+          <div class="critica-banner" style="margin-bottom:10px"><strong>Consultor Jurídico Sénior</strong><p>Análise de nulidades, vícios processuais e erros de julgamento. Geração de argumentos para recurso.</p></div>
           <select id="tribunal-critica-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tribunal (opcional) —</option>
-            <optgroup label="Supremos Tribunais">
-              <option>STJ — Supremo Tribunal de Justiça</option>
-              <option>STA — Supremo Tribunal Administrativo</option>
-              <option>TC — Tribunal Constitucional</option>
-            </optgroup>
-            <optgroup label="Tribunais da Relação">
-              <option>TRL — Tribunal da Relação de Lisboa</option>
-              <option>TRP — Tribunal da Relação do Porto</option>
-              <option>TRC — Tribunal da Relação de Coimbra</option>
-              <option>TRG — Tribunal da Relação de Guimarães</option>
-              <option>TRE — Tribunal da Relação de Évora</option>
-            </optgroup>
-            <optgroup label="Outros">
-              <option>Tribunal de 1.ª Instância (Cível)</option>
-              <option>Tribunal de 1.ª Instância (Criminal)</option>
-              <option>Tribunal de Trabalho</option>
-              <option>Tribunal Administrativo e Fiscal</option>
-            </optgroup>
+            <optgroup label="Supremos Tribunais"><option>STJ — Supremo Tribunal de Justiça</option><option>STA — Supremo Tribunal Administrativo</option><option>TC — Tribunal Constitucional</option></optgroup>
+            <optgroup label="Tribunais da Relação"><option>TRL — Tribunal da Relação de Lisboa</option><option>TRP — Tribunal da Relação do Porto</option><option>TRC — Tribunal da Relação de Coimbra</option><option>TRG — Tribunal da Relação de Guimarães</option><option>TRE — Tribunal da Relação de Évora</option></optgroup>
+            <optgroup label="Outros"><option>Tribunal de 1.ª Instância (Cível)</option><option>Tribunal de 1.ª Instância (Criminal)</option><option>Tribunal de Trabalho</option><option>Tribunal Administrativo e Fiscal</option></optgroup>
           </select>
           <select id="tipo-processo-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tipo de processo (opcional) —</option>
-            <option>Processo Civil</option>
-            <option>Processo Penal</option>
-            <option>Processo Administrativo</option>
-            <option>Processo Laboral</option>
-            <option>Processo de Família</option>
-            <option>Processo de Insolvência</option>
+            <option>Processo Civil</option><option>Processo Penal</option><option>Processo Administrativo</option><option>Processo Laboral</option><option>Processo de Família</option><option>Processo de Insolvência</option>
           </select>
           <select id="parte-recorrente-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Parte recorrente (opcional) —</option>
-            <option>Autor / Demandante</option>
-            <option>Réu / Demandado</option>
-            <option>Arguido</option>
-            <option>Ministério Público</option>
-            <option>Assistente</option>
-            <option>Interveniente</option>
+            <option>Autor / Demandante</option><option>Réu / Demandado</option><option>Arguido</option><option>Ministério Público</option><option>Assistente</option><option>Interveniente</option>
           </select>
-          <div class="info-box warn" style="margin:0;font-size:11px"><strong>Aviso Legal</strong>Esta análise é um apoio técnico. Não substitui consulta jurídica profissional. Os resultados têm carácter auxiliar.</div>
+          <div class="info-box warn" style="margin:0;font-size:11px"><strong>Aviso Legal</strong>Esta análise é um apoio técnico. Não substitui consulta jurídica profissional.</div>
         </div>
-
       </div>
     </div>
     <div class="sidebar-widget">
@@ -679,7 +626,7 @@
     <div class="sidebar-widget hidden" id="ref-critica-widget">
       <div class="widget-header"><div class="widget-title">Bases de Recurso Analisadas</div></div>
       <div class="widget-body">
-        <div class="info-box note"><strong>Art. 615.º CPC</strong>Causas de nulidade da sentença — omissão de pronúncia, contradição, excesso.</div>
+        <div class="info-box note"><strong>Art. 615.º CPC</strong>Causas de nulidade da sentença.</div>
         <div class="info-box note"><strong>Art. 379.º CPP</strong>Nulidade da sentença em processo penal.</div>
         <div class="info-box note"><strong>Art. 662.º CPC</strong>Poderes da Relação na modificação da matéria de facto.</div>
         <div class="info-box note"><strong>Art. 5.º CPC</strong>Ónus de alegação e dever de pronúncia.</div>
@@ -689,7 +636,7 @@
 </main>
 </div>
 
-<!-- HISTÓRICO -->
+<!-- TAB HISTÓRICO -->
 <div id="tab-content-historico" class="hidden">
   <div class="history-page">
     <div class="section-label">Histórico de Análises</div>
@@ -697,28 +644,19 @@
   </div>
 </div>
 
-<!-- PERFIL -->
+<!-- TAB PERFIL -->
 <div id="tab-content-perfil" class="hidden">
   <div class="history-page">
     <div class="section-label">O Meu Perfil</div>
     <div class="input-card" style="margin-bottom:20px">
       <div class="input-card-header"><span class="input-card-title">Dados Pessoais</span></div>
       <div style="padding:20px;background:white;display:flex;flex-direction:column;gap:14px">
-        <div>
-          <label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Nome</label>
-          <input id="perfil-nome" type="text" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:var(--ink);outline:none;background:var(--parchment)" placeholder="O seu nome">
-        </div>
-        <div>
-          <label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Email</label>
-          <input id="perfil-email" type="text" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:#aaa;outline:none;background:#f8f8f8" disabled>
-        </div>
-        <div>
-          <label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Profissão</label>
+        <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Nome</label><input id="perfil-nome" type="text" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:var(--ink);outline:none;background:var(--parchment)" placeholder="O seu nome"></div>
+        <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Email</label><input id="perfil-email" type="text" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:#aaa;outline:none;background:#f8f8f8" disabled></div>
+        <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Profissão</label>
           <select id="perfil-profissao" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:var(--ink);outline:none;background:var(--parchment);cursor:pointer">
             <option value="">— Seleccione —</option>
-            <option>Advogado/a</option><option>Magistrado/a Judicial</option><option>Magistrado/a do MP</option>
-            <option>Solicitador/a</option><option>Notário/a</option><option>Investigador/a Académico</option>
-            <option>Estudante de Direito</option><option>Outro</option>
+            <option>Advogado/a</option><option>Magistrado/a Judicial</option><option>Magistrado/a do MP</option><option>Solicitador/a</option><option>Notário/a</option><option>Investigador/a Académico</option><option>Estudante de Direito</option><option>Outro</option>
           </select>
         </div>
         <button onclick="guardarPerfil()" style="background:var(--ink);color:var(--cream);border:none;padding:11px 24px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;align-self:flex-start" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--ink)'">Guardar Alterações</button>
@@ -738,7 +676,7 @@
       <div class="input-card-header"><span class="input-card-title">Segurança</span></div>
       <div style="padding:20px;background:white;display:flex;flex-direction:column;gap:12px">
         <p style="font-size:13px;color:#666;line-height:1.6">Para alterar a sua password, enviamos um link de recuperação para o seu email.</p>
-        <button onclick="alterarPassword()" style="background:white;color:var(--ink);border:1px solid var(--rule);padding:11px 24px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;align-self:flex-start" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--rule)';this.style.color='var(--ink)'">Alterar Password</button>
+        <button id="btn-alterar-pass" onclick="alterarPassword()" style="background:white;color:var(--ink);border:1px solid var(--rule);padding:11px 24px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;align-self:flex-start" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--rule)';this.style.color='var(--ink)'">Alterar Password</button>
         <div id="password-msg" style="font-size:12px;display:none"></div>
       </div>
     </div>
@@ -755,8 +693,7 @@
 <footer>
   <div class="footer-brand">Lex<em>Veritas</em></div>
   <a class="footer-contact" onclick="document.getElementById('contacto-modal').classList.add('visible')">✉ Contacto & Suporte</a>
-  <div class="footer-copy">© 2026 LexVeritas. Todos os direitos reservados.
-Marca e conteúdos protegidos nos termos do CDADC & CPI.</div>
+  <div class="footer-copy">© 2026 LexVeritas. Todos os direitos reservados.<br>Marca e conteúdos protegidos nos termos do CDADC &amp; CPI.</div>
 </footer>
 
 <!-- OVERLAY ANÁLISE -->
@@ -773,9 +710,7 @@ Marca e conteúdos protegidos nos termos do CDADC & CPI.</div>
       <ellipse cx="52" cy="29" rx="8" ry="3" stroke="#c9a84c" stroke-width="1.5" fill="rgba(201,168,76,0.15)"/>
       <line x1="20" y1="56" x2="44" y2="56" stroke="#c9a84c" stroke-width="2"/>
     </svg>
-    <div class="scanning-dots">
-      <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-    </div>
+    <div class="scanning-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
     <div class="overlay-status" id="overlay-status">A iniciar análise...</div>
     <div class="overlay-progress-track"><div class="overlay-progress-fill" id="overlay-progress"></div></div>
     <div class="overlay-indicators" id="overlay-indicators-list">
@@ -789,860 +724,835 @@ Marca e conteúdos protegidos nos termos do CDADC & CPI.</div>
     <div class="overlay-subtext" id="overlay-subtext">A analisar padrões linguísticos forenses<br>calibrados para os tribunais portugueses</div>
   </div>
 </div>
-</div>
 
-<!-- MODAL UPGRADE -->
-<div class="modal-overlay" id="modal-upgrade">
-  <div class="modal">
-    <button class="btn-close-modal" onclick="closeModal('upgrade')">×</button>
-    <h2>Plano Profissional</h2>
-    <p>100 análises/mês · Análise Crítica de Nulidades · Histórico ilimitado · 19€/mês</p>
-    <div style="background:#fffbf0;border:1px solid rgba(201,168,76,0.3);padding:20px;margin-bottom:20px">
+<!-- MODAL UPGRADE (dark, unified) -->
+<div class="dark-modal-overlay" id="modal-upgrade" onclick="if(event.target===this)this.classList.remove('visible')">
+  <div class="dark-modal-box">
+    <button class="dark-modal-close" onclick="document.getElementById('modal-upgrade').classList.remove('visible')">×</button>
+    <div class="dark-modal-label">Plano Profissional</div>
+    <h2 class="dark-modal-title">Actualizar Plano</h2>
+    <p class="dark-modal-sub">100 análises/mês · Análise Crítica de Nulidades · Histórico ilimitado · 19€/mês</p>
+    <div style="background:rgba(201,168,76,0.06);border:1px solid var(--rule-dark);padding:20px;margin-bottom:20px">
       <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--gold);margin-bottom:12px">LISTA DE ESPERA</div>
-      <p style="font-size:13px;color:#666;margin-bottom:16px;line-height:1.6">Os pagamentos abrem em breve. Deixe o seu email e será o primeiro a saber.</p>
+      <p style="font-size:13px;color:var(--grey);margin-bottom:16px;line-height:1.6">Os pagamentos abrem em breve. Deixe o seu email e será o primeiro a saber.</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <input type="email" id="upgrade-email" placeholder="o-seu@email.pt" style="flex:1;min-width:180px;padding:10px 12px;border:1px solid rgba(201,168,76,0.3);font-family:var(--sans);font-size:13px;outline:none">
+        <input type="email" id="upgrade-email" placeholder="o-seu@email.pt" style="flex:1;min-width:180px;padding:10px 12px;border:1px solid var(--rule-dark);background:rgba(255,255,255,0.05);font-family:var(--sans);font-size:13px;color:#f8f6f1;outline:none">
         <button onclick="inscreverListaEspera()" style="background:var(--gold);color:var(--black);border:none;padding:10px 20px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap">Avisar-me</button>
       </div>
-      <div id="upgrade-msg" style="font-size:12px;margin-top:10px;display:none"></div>
+      <div id="upgrade-msg" style="font-size:12px;margin-top:10px;display:none;color:#99ffbb"></div>
     </div>
-    <div class="info-box note"><strong>Plano Gratuito actual</strong>5 análises/mês · Relatório PDF · Histórico 30 dias</div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid var(--rule-dark);padding:12px 14px;font-family:var(--sans);font-size:11px;color:var(--grey);line-height:1.6">
+      <strong style="display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:4px">Plano Gratuito actual</strong>
+      5 análises/mês · Relatório PDF · Histórico 30 dias
+    </div>
   </div>
 </div>
 
-<!-- MODAL CONTACTO -->
+<!-- MODAL CONTACTO (dark, unified) -->
 <div class="dark-modal-overlay" id="contacto-modal" onclick="if(event.target===this)this.classList.remove('visible')">
   <div class="dark-modal-box">
     <button class="dark-modal-close" onclick="document.getElementById('contacto-modal').classList.remove('visible')">×</button>
-    <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Suporte & Contacto</div>
-    <h2 style="font-family:var(--serif);font-size:22px;font-style:italic;color:#f8f6f1;margin-bottom:6px">Fale connosco</h2>
-    <p style="font-size:13px;color:var(--grey);margin-bottom:20px;line-height:1.6">Questões sobre o seu plano, suporte técnico ou parcerias. Respondemos em 24h.</p>
+    <div class="dark-modal-label">Suporte & Contacto</div>
+    <h2 class="dark-modal-title">Fale connosco</h2>
+    <p class="dark-modal-sub">Questões sobre o seu plano, suporte técnico ou parcerias. Respondemos em 24h.</p>
     <div class="dark-form-group"><label>Nome</label><input type="text" id="cm-nome" placeholder="O seu nome"></div>
     <div class="dark-form-group"><label>Email</label><input type="email" id="cm-email" placeholder="o-seu@email.pt"></div>
     <div class="dark-form-group">
       <label>Assunto</label>
       <select id="cm-assunto">
         <option value="">— Seleccione —</option>
-        <option>Questão sobre o meu plano</option><option>Plano Profissional</option>
-        <option>Suporte técnico</option><option>Parceria</option><option>Outro</option>
+        <option>Questão sobre o meu plano</option><option>Plano Profissional</option><option>Suporte técnico</option><option>Parceria</option><option>Outro</option>
       </select>
     </div>
     <div class="dark-form-group"><label>Mensagem</label><textarea id="cm-mensagem" placeholder="A sua mensagem..."></textarea></div>
-    <button onclick="enviarContacto()" style="width:100%;background:var(--gold);color:var(--black);border:none;padding:13px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;margin-top:4px" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">Enviar Mensagem →</button>
+    <button class="btn-dark-submit" id="btn-enviar-contacto" onclick="enviarContacto()">Enviar Mensagem →</button>
     <div id="cm-msg" style="font-size:12px;margin-top:12px;display:none;padding:10px 14px"></div>
   </div>
 </div>
+
+</div><!-- fim #page-app -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-const lvLoad=document.getElementById('lv-loading');
-if(lvLoad){lvLoad.classList.add('done');setTimeout(()=>lvLoad.style.display='none',500);}
+const SUPABASE_URL = 'https://bsbgizaftamufmmxeyer.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const SUPABASE_URL='https://bsbgizaftamufmmxeyer.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let currentUser = null, userProfile = null, lastRef = null;
+let pdfText = null, modoActual = 'judicial', loginInProgress = false;
 
-let currentUser=null,userProfile=null,lastResult=null,lastRef=null,loginInProgress=false;
-let pdfText=null,modoActual='judicial';
+// lastResult persiste em sessionStorage para sobreviver à navegação entre tabs
+function getLastResult() {
+  try { const s = sessionStorage.getItem('lv_last_result'); return s ? JSON.parse(s) : null; } catch { return null; }
+}
+function setLastResult(r) {
+  try { sessionStorage.setItem('lv_last_result', JSON.stringify(r)); } catch {}
+}
+// Alias para compatibilidade com código existente
+Object.defineProperty(window, 'lastResult', {
+  get() { return getLastResult(); },
+  set(v) { setLastResult(v); },
+  configurable: true
+});
 
-// ============================
-// MODO
-// ============================
-function setModo(modo){
-  modoActual=modo;
-  ['judicial','academico','critica'].forEach(m=>{
-    document.getElementById('mode-btn-'+m).classList.toggle('active',m===modo);
-    document.getElementById('ctx-'+m).style.display=m===modo?'block':'none';
+const lvLoad = document.getElementById('lv-loading');
+
+// ── MODO ──
+function setModo(modo) {
+  modoActual = modo;
+  ['judicial','academico','critica'].forEach(m => {
+    document.getElementById('mode-btn-' + m).classList.toggle('active', m === modo);
+    document.getElementById('ctx-' + m).style.display = m === modo ? 'block' : 'none';
   });
-  document.getElementById('ref-legais-widget').classList.toggle('hidden',modo==='critica');
-  document.getElementById('ref-critica-widget').classList.toggle('hidden',modo!=='critica');
-
-  const titles={judicial:'Texto do Acórdão / Sentença / Despacho',academico:'Tese / Dissertação / Trabalho Académico',critica:'Texto da Decisão Judicial a Atacar'};
-  const placeholders={
-    judicial:'Cole aqui o texto completo do acórdão, sentença ou despacho para análise forense...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.',
-    academico:'Cole aqui o texto da tese, dissertação ou trabalho académico para verificação de autoria...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.',
-    critica:'Cole aqui o texto completo da decisão judicial que pretende analisar criticamente.\n\nO consultor jurídico sénior identificará nulidades, erros de julgamento e gerará argumentos para recurso.'
+  document.getElementById('ref-legais-widget').classList.toggle('hidden', modo === 'critica');
+  document.getElementById('ref-critica-widget').classList.toggle('hidden', modo !== 'critica');
+  const titles = { judicial: 'Texto do Acórdão / Sentença / Despacho', academico: 'Tese / Dissertação / Trabalho Académico', critica: 'Texto da Decisão Judicial a Atacar' };
+  const placeholders = {
+    judicial: 'Cole aqui o texto completo do acórdão, sentença ou despacho para análise forense...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.',
+    academico: 'Cole aqui o texto da tese, dissertação ou trabalho académico para verificação de autoria...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.',
+    critica: 'Cole aqui o texto completo da decisão judicial que pretende analisar criticamente.\n\nO consultor jurídico sénior identificará nulidades, erros de julgamento e gerará argumentos para recurso.'
   };
-  const btnTexts={judicial:'Analisar Decisão',academico:'Analisar Documento',critica:'Analisar Recurso'};
-  const relatorTitles={judicial:'Análise do Estilo do Relator',academico:'Análise do Estilo do Autor',critica:''};
-  const sidebarLabels={judicial:'Tribunal & Relator',academico:'Instituição & Documento',critica:'Contexto do Recurso'};
-
-  document.getElementById('input-card-title').textContent=titles[modo];
-  document.getElementById('decision-text').placeholder=placeholders[modo];
-  document.getElementById('btn-analyze-text').textContent=btnTexts[modo];
-  document.getElementById('btn-analyze').classList.toggle('critica-mode',modo==='critica');
-  if(relatorTitles[modo])document.getElementById('relator-card-title').textContent=relatorTitles[modo];
-  document.getElementById('sidebar-section-label').textContent=sidebarLabels[modo];
+  const btnTexts = { judicial: 'Analisar Decisão', academico: 'Analisar Documento', critica: 'Analisar para Recurso' };
+  const sidebarLabels = { judicial: 'Tribunal & Relator', academico: 'Instituição & Documento', critica: 'Contexto do Recurso' };
+  document.getElementById('input-card-title').textContent = titles[modo];
+  document.getElementById('decision-text').placeholder = placeholders[modo];
+  document.getElementById('btn-analyze-text').textContent = btnTexts[modo];
+  document.getElementById('btn-analyze').classList.toggle('critica-mode', modo === 'critica');
+  document.getElementById('sidebar-section-label').textContent = sidebarLabels[modo];
   document.getElementById('results-area').classList.remove('visible');
   limparPDF();
 }
 
-// ============================
-// NAVEGAÇÃO
-// ============================
-function showPage(page){['login','register','reset','app'].forEach(p=>document.getElementById('page-'+p).classList.add('hidden'));document.getElementById('page-'+page).classList.remove('hidden');}
-function showTab(tab){['analise','historico','perfil'].forEach(t=>{document.getElementById('tab-content-'+t).classList.add('hidden');document.getElementById('tab-'+t).classList.remove('active');});document.getElementById('tab-content-'+tab).classList.remove('hidden');document.getElementById('tab-'+tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(tab==='historico')loadHistory();if(tab==='perfil')loadPerfil();}
-function showModal(id){document.getElementById('modal-'+id).classList.add('visible');}
-function closeModal(id){document.getElementById('modal-'+id).classList.remove('visible');}
+// ── NAVEGAÇÃO ──
+function showPage(page) {
+  ['login','register','reset','app'].forEach(p => document.getElementById('page-' + p).classList.add('hidden'));
+  document.getElementById('page-' + page).classList.remove('hidden');
+}
+function showTab(tab) {
+  ['analise','historico','perfil'].forEach(t => {
+    document.getElementById('tab-content-' + t).classList.add('hidden');
+    document.getElementById('tab-' + t).classList.remove('active');
+  });
+  document.getElementById('tab-content-' + tab).classList.remove('hidden');
+  document.getElementById('tab-' + tab).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (tab === 'historico') loadHistory();
+  if (tab === 'perfil') loadPerfil();
+}
+function showModal(id) { document.getElementById('modal-' + id).classList.add('visible'); }
 
-// ============================
-// AUTH
-// ============================
-async function fazerLogin(){
-  const email=document.getElementById('login-email').value.trim();
-  const pass=document.getElementById('login-password').value;
-  const errEl=document.getElementById('login-error');
-  const btn=document.getElementById('btn-login');
-  errEl.style.display='none';
-  if(!email||!pass){errEl.textContent='Preencha email e password.';errEl.style.display='block';return;}
-  btn.disabled=true;btn.textContent='A entrar...';loginInProgress=true;
-  const{data,error}=await sb.auth.signInWithPassword({email,password:pass});
-  if(error){loginInProgress=false;errEl.textContent='Email ou password incorrectos.';errEl.style.display='block';btn.disabled=false;btn.textContent='Entrar';return;}
-  currentUser=data.user;await loadProfile();initApp();showPage('app');
+// ── AUTH ──
+async function fazerLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('btn-login');
+  errEl.style.display = 'none';
+  if (!email || !pass) { errEl.textContent = 'Preencha email e password.'; errEl.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'A entrar...'; loginInProgress = true;
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) {
+    loginInProgress = false;
+    errEl.textContent = 'Email ou password incorrectos.'; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Entrar'; return;
+  }
+  currentUser = data.user;
+  await loadProfile();
+  initApp();
+  showPage('app');
+  loginInProgress = false;
 }
 
-async function fazerRegisto(){
-  const nome=document.getElementById('register-nome').value.trim(),prof=document.getElementById('register-profissao').value;
-  const email=document.getElementById('register-email').value.trim(),pass=document.getElementById('register-password').value;
-  const errEl=document.getElementById('register-error'),succEl=document.getElementById('register-success');
-  const btn=document.getElementById('btn-register');
-  errEl.style.display='none';succEl.style.display='none';
-  if(!nome||!email||!pass){errEl.textContent='Preencha todos os campos.';errEl.style.display='block';return;}
-  if(pass.length<6){errEl.textContent='Password com mínimo 6 caracteres.';errEl.style.display='block';return;}
-  btn.disabled=true;btn.textContent='A criar conta...';
-  try{
-    const{data,error}=await sb.auth.signUp({email,password:pass,options:{data:{nome,profissao:prof}}});
-    if(error){errEl.textContent='Erro: '+error.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Criar Conta Gratuita';return;}
-    if(data?.user)await sb.from('perfis').upsert({id:data.user.id,email,nome,profissao:prof,mes_atual:new Date().toISOString().substring(0,7),analises_mes:0});
-    succEl.textContent='Conta criada! Já pode entrar na sua conta.';succEl.style.display='block';btn.textContent='Conta criada!';
-    fetch('https://bsbgizaftamufmmxeyer.supabase.co/functions/v1/rapid-service',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({record:{email,raw_user_meta_data:{nome}}})}).catch(()=>{});
-  }catch(e){errEl.textContent='Erro: '+e.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Criar Conta Gratuita';}
+async function fazerRegisto() {
+  const nome = document.getElementById('register-nome').value.trim();
+  const prof = document.getElementById('register-profissao').value;
+  const email = document.getElementById('register-email').value.trim();
+  const pass = document.getElementById('register-password').value;
+  const errEl = document.getElementById('register-error');
+  const succEl = document.getElementById('register-success');
+  const btn = document.getElementById('btn-register');
+  errEl.style.display = 'none'; succEl.style.display = 'none';
+  if (!nome || !email || !pass) { errEl.textContent = 'Preencha todos os campos.'; errEl.style.display = 'block'; return; }
+  if (pass.length < 6) { errEl.textContent = 'Password com mínimo 6 caracteres.'; errEl.style.display = 'block'; return; }
+  if (!email.includes('@') || !email.includes('.')) { errEl.textContent = 'Introduza um email válido.'; errEl.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'A criar conta...';
+  try {
+    const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data: { nome, profissao: prof } } });
+    if (error) { errEl.textContent = 'Erro: ' + error.message; errEl.style.display = 'block'; btn.disabled = false; btn.textContent = 'Criar Conta Gratuita'; return; }
+    if (data?.user) await sb.from('perfis').upsert({ id: data.user.id, email, nome, profissao: prof, mes_atual: new Date().toISOString().substring(0, 7), analises_mes: 0 });
+    succEl.textContent = 'Conta criada! Já pode entrar na sua conta.'; succEl.style.display = 'block'; btn.textContent = 'Conta criada!';
+    fetch('https://bsbgizaftamufmmxeyer.supabase.co/functions/v1/rapid-service', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ record: { email, raw_user_meta_data: { nome } } }) }).catch(() => {});
+  } catch (e) { errEl.textContent = 'Erro: ' + e.message; errEl.style.display = 'block'; btn.disabled = false; btn.textContent = 'Criar Conta Gratuita'; }
 }
 
-async function recuperarPassword(){
-  const email=document.getElementById('login-email').value.trim();
-  const errEl=document.getElementById('login-error');
-  if(!email){errEl.textContent='Introduza o seu email no campo acima primeiro.';errEl.style.display='block';return;}
-  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://www.lexveritas.pt/app'});
-  if(error){errEl.textContent='Erro ao enviar email: '+error.message;errEl.style.display='block';return;}
-  errEl.style.display='none';
-  const s=document.createElement('div');s.className='auth-success';s.style.display='block';
-  s.textContent='Email de recuperação enviado! Verifique a sua caixa de entrada.';
-  document.getElementById('login-error').after(s);setTimeout(()=>s.remove(),6000);
+async function recuperarPassword() {
+  const email = document.getElementById('login-email').value.trim();
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+  if (!email) { errEl.textContent = 'Introduza o seu email no campo acima primeiro.'; errEl.style.display = 'block'; return; }
+  const btn = document.querySelector('#page-login .auth-forgot a');
+  if (btn) { btn.style.pointerEvents = 'none'; btn.textContent = 'A enviar...'; }
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: 'https://www.lexveritas.pt/app' });
+  if (btn) { btn.style.pointerEvents = ''; btn.textContent = 'Esqueceu a password?'; }
+  if (error) { errEl.textContent = 'Erro ao enviar email: ' + error.message; errEl.style.display = 'block'; return; }
+  const s = document.createElement('div'); s.className = 'auth-success'; s.style.display = 'block';
+  s.textContent = 'Email de recuperação enviado! Verifique a sua caixa de entrada.';
+  errEl.after(s); setTimeout(() => s.remove(), 6000);
 }
 
-async function logout(){await sb.auth.signOut();currentUser=null;userProfile=null;showPage('login');}
+async function logout() { await sb.auth.signOut(); currentUser = null; userProfile = null; showPage('login'); }
 
-sb.auth.onAuthStateChange((event,session)=>{
-  if(loginInProgress)return;
-  if(event==='SIGNED_OUT')showPage('login');
-  if(event==='PASSWORD_RECOVERY'){document.getElementById('lv-loading').style.display='none';showPage('reset');}
+// ── AUTH STATE ──
+sb.auth.onAuthStateChange((event, session) => {
+  if (loginInProgress) return;
+  if (event === 'SIGNED_OUT') { hideLvLoad(); showPage('login'); }
+  if (event === 'PASSWORD_RECOVERY') { hideLvLoad(); showPage('reset'); }
 });
 
-const _hashParams=new URLSearchParams(window.location.hash.substring(1));
-const _urlParams=new URLSearchParams(window.location.search);
-if(_hashParams.get('type')==='recovery'){document.getElementById('lv-loading').style.display='none';showPage('reset');}
-else if(_urlParams.has('code')){document.getElementById('lv-loading').style.display='none';showPage('login');}
-else{
-  sb.auth.getSession().then(async ({data})=>{
-    if(loginInProgress)return;
-    if(!document.getElementById('page-reset').classList.contains('hidden'))return;
-    if(data.session?.user){currentUser=data.session.user;await loadProfile();initApp();showPage('app');}
-    else showPage('login');
+function hideLvLoad() {
+  if (lvLoad) { lvLoad.classList.add('done'); setTimeout(() => lvLoad.style.display = 'none', 600); }
+}
+
+// ── INIT: verificar sessão antes de esconder loading ──
+const _hashParams = new URLSearchParams(window.location.hash.substring(1));
+const _urlParams = new URLSearchParams(window.location.search);
+
+if (_hashParams.get('type') === 'recovery') {
+  hideLvLoad(); showPage('reset');
+} else if (_urlParams.has('code')) {
+  hideLvLoad(); showPage('login');
+} else {
+  sb.auth.getSession().then(async ({ data }) => {
+    if (loginInProgress) return;
+    if (!document.getElementById('page-reset').classList.contains('hidden')) return;
+    if (data.session?.user) {
+      currentUser = data.session.user;
+      await loadProfile();
+      initApp();
+      showPage('app');
+    } else {
+      showPage('login');
+    }
+    hideLvLoad(); // esconde DEPOIS de verificar sessão
   });
 }
 
-async function loadProfile(){
-  try{
-    const mes=new Date().toISOString().substring(0,7);
-    let{data}=await sb.from('perfis').select('*').eq('id',currentUser.id).single();
-    if(!data){const meta=currentUser.user_metadata||{};await sb.from('perfis').upsert({id:currentUser.id,email:currentUser.email,nome:meta.nome||currentUser.email.split('@')[0],profissao:meta.profissao||'',mes_atual:mes,analises_mes:0,plano:'gratuito'});({data}=await sb.from('perfis').select('*').eq('id',currentUser.id).single());}
-    if(data&&data.mes_atual&&data.mes_atual!==mes){await sb.from('perfis').update({analises_mes:0,mes_atual:mes}).eq('id',currentUser.id);data.analises_mes=0;data.mes_atual=mes;}
-    userProfile=data||{nome:currentUser.email.split('@')[0],plano:'gratuito',analises_mes:0};
-  }catch(e){userProfile={nome:currentUser.email.split('@')[0],plano:'gratuito',analises_mes:0};}
-}
-
-function getLimite(){const p=userProfile?.plano;return(p==='profissional'||p==='institucional')?1000:5;}
-
-function initApp(){
-  const now=new Date();
-  document.getElementById('current-date').textContent=now.toLocaleDateString('pt-PT',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
-  const nome=userProfile?.nome||currentUser?.email||'—',plano=userProfile?.plano||'gratuito';
-  const usado=userProfile?.analises_mes||0,limite=getLimite();
-  document.getElementById('user-name-display').textContent=nome;
-  document.getElementById('user-plan-display').innerHTML=`<span class="plan-badge plan-${plano}">${plano}</span>`;
-  document.getElementById('usage-fill').style.width=Math.min(100,(usado/limite)*100)+'%';
-  document.getElementById('usage-count').textContent=usado+' / '+limite;
-  document.getElementById('stat-plano').textContent=plano.charAt(0).toUpperCase()+plano.slice(1);
-  document.getElementById('stat-mes').textContent=usado+' / '+limite;
-  const urlParams=new URLSearchParams(window.location.search);
-  if(urlParams.get('modo')==='academico')setTimeout(()=>setModo('academico'),100);
-  if(urlParams.get('modo')==='critica')setTimeout(()=>setModo('critica'),100);
-}
-
-async function loadPerfil(){
-  if(!currentUser||!userProfile)return;
-  document.getElementById('perfil-nome').value=userProfile.nome||'';
-  document.getElementById('perfil-email').value=currentUser.email||'';
-  const profSel=document.getElementById('perfil-profissao');
-  if(userProfile.profissao){Array.from(profSel.options).forEach(o=>{if(o.value===userProfile.profissao)o.selected=true;});}
-  const plano=userProfile.plano||'gratuito',limite=getLimite();
-  document.getElementById('perfil-plano').textContent=plano.charAt(0).toUpperCase()+plano.slice(1);
-  document.getElementById('perfil-mes').textContent=(userProfile.analises_mes||0)+' / '+limite;
-  const{count}=await sb.from('analises').select('*',{count:'exact',head:true}).eq('user_id',currentUser.id);
-  document.getElementById('perfil-total').textContent=count||0;
-  document.getElementById('stat-total').textContent=count||0;
-  const created=new Date(currentUser.created_at);
-  document.getElementById('perfil-desde').textContent=created.toLocaleDateString('pt-PT',{month:'long',year:'numeric'});
-}
-
-async function guardarPerfil(){
-  const nome=document.getElementById('perfil-nome').value.trim();
-  const prof=document.getElementById('perfil-profissao').value;
-  const msg=document.getElementById('perfil-msg');
-  if(!nome){msg.textContent='Introduza o seu nome.';msg.style.color='#c97850';msg.style.display='block';return;}
-  await sb.from('perfis').update({nome,profissao:prof}).eq('id',currentUser.id);
-  userProfile.nome=nome;userProfile.profissao=prof;
-  document.getElementById('user-name-display').textContent=nome;
-  msg.textContent='✓ Perfil guardado com sucesso.';msg.style.color='var(--green)';msg.style.display='block';
-  setTimeout(()=>msg.style.display='none',3000);
-}
-
-async function alterarPassword(){
-  const msg=document.getElementById('password-msg');
-  const{error}=await sb.auth.resetPasswordForEmail(currentUser.email,{redirectTo:'https://www.lexveritas.pt/app'});
-  if(error){msg.textContent='Erro: '+error.message;msg.style.color='#c97850';}
-  else{msg.textContent='✓ Email de recuperação enviado. Verifique a sua caixa de entrada.';msg.style.color='var(--green)';}
-  msg.style.display='block';setTimeout(()=>msg.style.display='none',5000);
-}
-
-async function guardarNovaPassword(){
-  const p1=document.getElementById('reset-password1').value;
-  const p2=document.getElementById('reset-password2').value;
-  const errEl=document.getElementById('reset-error'),succEl=document.getElementById('reset-success'),btn=document.getElementById('btn-reset');
-  errEl.style.display='none';succEl.style.display='none';
-  if(!p1||p1.length<6){errEl.textContent='Password com mínimo 6 caracteres.';errEl.style.display='block';return;}
-  if(p1!==p2){errEl.textContent='As passwords não coincidem.';errEl.style.display='block';return;}
-  btn.disabled=true;btn.textContent='A guardar...';
-  const{error}=await sb.auth.updateUser({password:p1});
-  if(error){errEl.textContent='Erro: '+error.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Guardar Nova Password';return;}
-  succEl.textContent='✓ Password actualizada! A redirecionar...';succEl.style.display='block';
-  setTimeout(()=>{window.location.href='/app';},2000);
-}
-
-async function enviarContacto(){
-  const nome=document.getElementById('cm-nome').value.trim(),email=document.getElementById('cm-email').value.trim();
-  const assunto=document.getElementById('cm-assunto').value,mensagem=document.getElementById('cm-mensagem').value.trim();
-  const msg=document.getElementById('cm-msg');
-  if(!nome||!email||!mensagem){msg.textContent='Preencha nome, email e mensagem.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';return;}
-  try{
-    const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({nome,email,assunto:assunto||'Questão geral',mensagem,user_id:currentUser?.id||'—'})});
-    if(r.ok){msg.textContent='✓ Mensagem enviada! Respondemos em 24h.';msg.style.color='var(--green)';msg.style.background='rgba(26,92,58,0.15)';msg.style.display='block';document.getElementById('cm-nome').value='';document.getElementById('cm-email').value='';document.getElementById('cm-assunto').value='';document.getElementById('cm-mensagem').value='';}
-    else throw new Error();
-  }catch(e){msg.textContent='Erro ao enviar. Tente novamente.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';}
-}
-
-// ============================
-// FILE HANDLING
-// ============================
-const textarea=document.getElementById('decision-text');
-textarea.addEventListener('input',()=>{if(textarea.value.length>0&&pdfText){pdfText=null;limparDropZone();}actualizarContador();});
-function actualizarContador(){const len=pdfText?pdfText.length:textarea.value.length;document.getElementById('char-count').textContent=len.toLocaleString('pt-PT')+' caracteres';}
-const dropZone=document.getElementById('drop-zone');
-dropZone.addEventListener('click',()=>{if(!pdfText)document.getElementById('file-input').click();});
-dropZone.addEventListener('dragover',e=>{e.preventDefault();if(!pdfText)dropZone.style.borderColor='var(--gold)';});
-dropZone.addEventListener('dragleave',()=>{if(!pdfText)dropZone.style.borderColor='';});
-dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.style.borderColor='';const f=e.dataTransfer.files[0];if(f&&!pdfText)handleFile({target:{files:[f]}});});
-function handleFile(e){const file=e.target.files[0];if(!file)return;if(file.type==='application/pdf'||file.name.endsWith('.pdf'))extractPDF(file);else readTxt(file);}
-function readTxt(file){const reader=new FileReader();reader.onload=ev=>{pdfText=ev.target.result;actualizarContador();dropZone.classList.add('has-file');document.getElementById('drop-zone-text').innerHTML=`✅ <strong>${file.name}</strong> carregado<br><span style="font-size:11px;color:#888">${pdfText.length.toLocaleString('pt-PT')} caracteres</span> &nbsp;<span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover</span>`;};reader.readAsText(file);}
-async function extractPDF(file){
-  setDropText('⏳ A extrair texto do PDF...');
-  try{
-    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    const ab=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;
-    setDropText('⏳ A ler '+pdf.numPages+' páginas...');
-    let txt='';
-    for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i);const content=await page.getTextContent();txt+=content.items.map(x=>x.str).join(' ')+'\n\n';}
-    txt=txt.trim();
-    if(!txt||txt.length<50){setDropText('⚠️ PDF sem texto extraível. Copie o texto manualmente.');return;}
-    pdfText=txt;actualizarContador();dropZone.classList.add('has-file');
-    document.getElementById('drop-zone-text').innerHTML=`✅ <strong>${file.name}</strong><br><span style="font-size:11px;color:#888">${pdf.numPages} páginas · ${txt.length.toLocaleString('pt-PT')} caracteres extraídos</span><br><span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover ficheiro</span>`;
-  }catch(err){setDropText('❌ Erro ao ler o PDF. Tente copiar o texto manualmente.');}
-}
-function limparPDF(){pdfText=null;document.getElementById('file-input').value='';dropZone.classList.remove('has-file');dropZone.style.borderColor='';setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui');actualizarContador();}
-function limparDropZone(){document.getElementById('file-input').value='';dropZone.classList.remove('has-file');dropZone.style.borderColor='';setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui');}
-function setDropText(t){document.getElementById('drop-zone-text').innerHTML=t;}
-
-// ============================
-// OVERLAY
-// ============================
-const overlayMsgs={
-  judicial:[{text:'A extrair padrões linguísticos...',pct:15},{text:'A calcular perplexidade textual...',pct:30},{text:'A analisar variabilidade rítmica...',pct:45},{text:'A detectar coesão artificial...',pct:60},{text:'A verificar marcadores formulaicos...',pct:75},{text:'A comparar com estilo do tribunal...',pct:88},{text:'A gerar veredicto forense...',pct:96}],
-  academico:[{text:'A extrair padrões de escrita...',pct:15},{text:'A analisar estrutura argumentativa...',pct:30},{text:'A verificar citações jurídicas...',pct:45},{text:'A detectar homogeneidade sintáctica...',pct:60},{text:'A comparar com estilo académico...',pct:75},{text:'A analisar perfil do autor...',pct:88},{text:'A gerar veredicto de autoria...',pct:96}],
-  critica:[{text:'A identificar vícios processuais...',pct:15},{text:'A verificar fundamentação da decisão...',pct:30},{text:'A analisar exame crítico das provas...',pct:45},{text:'A pesquisar nulidades processuais...',pct:60},{text:'A verificar artigos violados...',pct:75},{text:'A gerar argumentos de recurso...',pct:88},{text:'A formular recomendação jurídica...',pct:96}]
-};
-const overlayIndNames={
-  judicial:['Perplexidade','Var. Rítmica','Coesão Artificial','Uniform. Sint.','Riqueza Lexical','Marc. Formulaicos'],
-  academico:['Perplexidade','Var. Rítmica','Coesão Artificial','Uniform. Sint.','Riqueza Lexical','Marc. Formulaicos'],
-  critica:['Vícios Processuais','Fund. da Decisão','Exame das Provas','Coerência Lógica','Citações Legais','Omissões Detect.']
-};
-let overlayInterval=null,overlayMsgIdx=0;
-
-function showOverlay(){
-  document.getElementById('analysis-overlay').classList.add('visible');
-  document.getElementById('overlay-progress').style.width='0%';
-  document.getElementById('overlay-status').textContent='A iniciar análise...';
-  const names=overlayIndNames[modoActual]||overlayIndNames.judicial;
-  for(let i=1;i<=6;i++){
-    document.getElementById('oi-'+i).classList.remove('active');
-    document.getElementById('of-'+i).style.width='0%';
-    document.getElementById('ov-'+i).textContent='—';
-    document.getElementById('on-'+i).textContent=names[i-1];
+async function loadProfile() {
+  try {
+    const mes = new Date().toISOString().substring(0, 7);
+    let { data } = await sb.from('perfis').select('*').eq('id', currentUser.id).single();
+    if (!data) {
+      const meta = currentUser.user_metadata || {};
+      await sb.from('perfis').upsert({ id: currentUser.id, email: currentUser.email, nome: meta.nome || currentUser.email.split('@')[0], profissao: meta.profissao || '', mes_atual: mes, analises_mes: 0, plano: 'gratuito' });
+      ({ data } = await sb.from('perfis').select('*').eq('id', currentUser.id).single());
+    }
+    if (data && data.mes_atual && data.mes_atual !== mes) {
+      await sb.from('perfis').update({ analises_mes: 0, mes_atual: mes }).eq('id', currentUser.id);
+      data.analises_mes = 0; data.mes_atual = mes;
+    }
+    userProfile = data || { nome: currentUser.email.split('@')[0], plano: 'gratuito', analises_mes: 0 };
+  } catch (e) {
+    userProfile = { nome: currentUser.email.split('@')[0], plano: 'gratuito', analises_mes: 0 };
   }
-  const subTexts={judicial:'A analisar padrões linguísticos forenses<br>calibrados para os tribunais portugueses',academico:'A analisar padrões de autoria académica<br>calibrados para o português jurídico',critica:'A actuar como Consultor Jurídico Sénior<br>a identificar nulidades e vícios processuais'};
-  document.getElementById('overlay-subtext').innerHTML=subTexts[modoActual]||subTexts.judicial;
-  overlayMsgIdx=0;
-  const msgs=overlayMsgs[modoActual]||overlayMsgs.judicial;
-  overlayInterval=setInterval(()=>{
-    if(overlayMsgIdx>=msgs.length)return;
-    const msg=msgs[overlayMsgIdx];
-    document.getElementById('overlay-status').textContent=msg.text;
-    document.getElementById('overlay-progress').style.width=msg.pct+'%';
-    if(overlayMsgIdx>=1&&overlayMsgIdx<=6){
-      const idx=overlayMsgIdx,val=Math.floor(Math.random()*40+40);
-      document.getElementById('oi-'+idx).classList.add('active');
-      setTimeout(()=>{document.getElementById('of-'+idx).style.width=val+'%';document.getElementById('ov-'+idx).textContent=val;},300);
+}
+
+function getLimite() { const p = userProfile?.plano; return (p === 'profissional' || p === 'institucional') ? 1000 : 5; }
+
+function initApp() {
+  const now = new Date();
+  document.getElementById('current-date').textContent = now.toLocaleDateString('pt-PT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
+  const nome = userProfile?.nome || currentUser?.email || '—';
+  const plano = userProfile?.plano || 'gratuito';
+  const usado = userProfile?.analises_mes || 0;
+  const limite = getLimite();
+  document.getElementById('user-name-display').textContent = nome;
+  document.getElementById('user-plan-display').innerHTML = `<span class="plan-badge plan-${plano}">${plano}</span>`;
+  document.getElementById('usage-fill').style.width = Math.min(100, (usado / limite) * 100) + '%';
+  document.getElementById('usage-count').textContent = usado + ' / ' + limite;
+  document.getElementById('stat-plano').textContent = plano.charAt(0).toUpperCase() + plano.slice(1);
+  document.getElementById('stat-mes').textContent = usado + ' / ' + limite;
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('modo') === 'academico') setTimeout(() => setModo('academico'), 100);
+  if (urlParams.get('modo') === 'critica') setTimeout(() => setModo('critica'), 100);
+}
+
+async function loadPerfil() {
+  if (!currentUser || !userProfile) return;
+  document.getElementById('perfil-nome').value = userProfile.nome || '';
+  document.getElementById('perfil-email').value = currentUser.email || '';
+  const profSel = document.getElementById('perfil-profissao');
+  if (userProfile.profissao) Array.from(profSel.options).forEach(o => { if (o.value === userProfile.profissao) o.selected = true; });
+  const plano = userProfile.plano || 'gratuito', limite = getLimite();
+  document.getElementById('perfil-plano').textContent = plano.charAt(0).toUpperCase() + plano.slice(1);
+  document.getElementById('perfil-mes').textContent = (userProfile.analises_mes || 0) + ' / ' + limite;
+  const { count } = await sb.from('analises').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id);
+  document.getElementById('perfil-total').textContent = count || 0;
+  document.getElementById('stat-total').textContent = count || 0;
+  const created = new Date(currentUser.created_at);
+  document.getElementById('perfil-desde').textContent = created.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });
+}
+
+async function guardarPerfil() {
+  const nome = document.getElementById('perfil-nome').value.trim();
+  const prof = document.getElementById('perfil-profissao').value;
+  const msg = document.getElementById('perfil-msg');
+  if (!nome) { msg.textContent = 'Introduza o seu nome.'; msg.style.color = '#c97850'; msg.style.display = 'block'; return; }
+  await sb.from('perfis').update({ nome, profissao: prof }).eq('id', currentUser.id);
+  userProfile.nome = nome; userProfile.profissao = prof;
+  document.getElementById('user-name-display').textContent = nome;
+  msg.textContent = '✓ Perfil guardado com sucesso.'; msg.style.color = 'var(--green)'; msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 3000);
+}
+
+async function alterarPassword() {
+  const btn = document.getElementById('btn-alterar-pass');
+  const msg = document.getElementById('password-msg');
+  btn.disabled = true; btn.textContent = 'A enviar...';
+  const { error } = await sb.auth.resetPasswordForEmail(currentUser.email, { redirectTo: 'https://www.lexveritas.pt/app' });
+  btn.disabled = false; btn.textContent = 'Alterar Password';
+  if (error) { msg.textContent = 'Erro: ' + error.message; msg.style.color = '#c97850'; }
+  else { msg.textContent = '✓ Email de recuperação enviado. Verifique a sua caixa de entrada.'; msg.style.color = 'var(--green)'; }
+  msg.style.display = 'block'; setTimeout(() => msg.style.display = 'none', 5000);
+}
+
+async function guardarNovaPassword() {
+  const p1 = document.getElementById('reset-password1').value;
+  const p2 = document.getElementById('reset-password2').value;
+  const errEl = document.getElementById('reset-error'), succEl = document.getElementById('reset-success'), btn = document.getElementById('btn-reset');
+  errEl.style.display = 'none'; succEl.style.display = 'none';
+  if (!p1 || p1.length < 6) { errEl.textContent = 'Password com mínimo 6 caracteres.'; errEl.style.display = 'block'; return; }
+  if (p1 !== p2) { errEl.textContent = 'As passwords não coincidem.'; errEl.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'A guardar...';
+  const { error } = await sb.auth.updateUser({ password: p1 });
+  if (error) { errEl.textContent = 'Erro: ' + error.message; errEl.style.display = 'block'; btn.disabled = false; btn.textContent = 'Guardar Nova Password'; return; }
+  succEl.textContent = '✓ Password actualizada! A redirecionar...'; succEl.style.display = 'block';
+  setTimeout(() => { window.location.href = '/app'; }, 2000);
+}
+
+async function enviarContacto() {
+  const nome = document.getElementById('cm-nome').value.trim();
+  const email = document.getElementById('cm-email').value.trim();
+  const assunto = document.getElementById('cm-assunto').value;
+  const mensagem = document.getElementById('cm-mensagem').value.trim();
+  const msg = document.getElementById('cm-msg');
+  const btn = document.getElementById('btn-enviar-contacto');
+  if (!nome || !email || !mensagem) { msg.textContent = 'Preencha nome, email e mensagem.'; msg.style.color = '#ff9999'; msg.style.background = 'rgba(139,26,26,0.15)'; msg.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'A enviar...';
+  try {
+    const r = await fetch('https://formspree.io/f/mzdornkq', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ nome, email, assunto: assunto || 'Questão geral', mensagem, user_id: currentUser?.id || '—' }) });
+    if (r.ok) {
+      msg.textContent = '✓ Mensagem enviada! Respondemos em 24h.'; msg.style.color = '#99ffbb'; msg.style.background = 'rgba(26,92,58,0.15)'; msg.style.display = 'block';
+      ['cm-nome','cm-email','cm-assunto','cm-mensagem'].forEach(id => { document.getElementById(id).value = ''; });
+    } else throw new Error();
+  } catch (e) { msg.textContent = 'Erro ao enviar. Tente novamente.'; msg.style.color = '#ff9999'; msg.style.background = 'rgba(139,26,26,0.15)'; msg.style.display = 'block'; }
+  btn.disabled = false; btn.textContent = 'Enviar Mensagem →';
+}
+
+// ── FILE HANDLING ──
+const textarea = document.getElementById('decision-text');
+textarea.addEventListener('input', () => { if (textarea.value.length > 0 && pdfText) { pdfText = null; limparDropZone(); } actualizarContador(); });
+function actualizarContador() { const len = pdfText ? pdfText.length : textarea.value.length; document.getElementById('char-count').textContent = len.toLocaleString('pt-PT') + ' caracteres'; }
+const dropZone = document.getElementById('drop-zone');
+dropZone.addEventListener('click', () => { if (!pdfText) document.getElementById('file-input').click(); });
+dropZone.addEventListener('dragover', e => { e.preventDefault(); if (!pdfText) dropZone.style.borderColor = 'var(--gold)'; });
+dropZone.addEventListener('dragleave', () => { if (!pdfText) dropZone.style.borderColor = ''; });
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.style.borderColor = ''; const f = e.dataTransfer.files[0]; if (f && !pdfText) handleFile({ target: { files: [f] } }); });
+function handleFile(e) { const file = e.target.files[0]; if (!file) return; if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) extractPDF(file); else readTxt(file); }
+function readTxt(file) { const reader = new FileReader(); reader.onload = ev => { pdfText = ev.target.result; actualizarContador(); dropZone.classList.add('has-file'); document.getElementById('drop-zone-text').innerHTML = `✅ <strong>${file.name}</strong> carregado<br><span style="font-size:11px;color:#888">${pdfText.length.toLocaleString('pt-PT')} caracteres</span> &nbsp;<span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover</span>`; }; reader.readAsText(file); }
+async function extractPDF(file) {
+  setDropText('⏳ A extrair texto do PDF...');
+  try {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const ab = await file.arrayBuffer(); const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
+    setDropText('⏳ A ler ' + pdf.numPages + ' páginas...');
+    let txt = '';
+    for (let i = 1; i <= pdf.numPages; i++) { const page = await pdf.getPage(i); const content = await page.getTextContent(); txt += content.items.map(x => x.str).join(' ') + '\n\n'; }
+    txt = txt.trim();
+    if (!txt || txt.length < 50) { setDropText('⚠️ PDF sem texto extraível. Copie o texto manualmente.'); return; }
+    pdfText = txt; actualizarContador(); dropZone.classList.add('has-file');
+    document.getElementById('drop-zone-text').innerHTML = `✅ <strong>${file.name}</strong><br><span style="font-size:11px;color:#888">${pdf.numPages} páginas · ${txt.length.toLocaleString('pt-PT')} caracteres extraídos</span><br><span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover ficheiro</span>`;
+  } catch (err) { setDropText('❌ Erro ao ler o PDF. Tente copiar o texto manualmente.'); }
+}
+function limparPDF() { pdfText = null; document.getElementById('file-input').value = ''; dropZone.classList.remove('has-file'); dropZone.style.borderColor = ''; setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui'); actualizarContador(); }
+function limparDropZone() { document.getElementById('file-input').value = ''; dropZone.classList.remove('has-file'); dropZone.style.borderColor = ''; setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui'); }
+function setDropText(t) { document.getElementById('drop-zone-text').innerHTML = t; }
+
+// ── OVERLAY ──
+const overlayMsgs = {
+  judicial: [{text:'A extrair padrões linguísticos...',pct:15},{text:'A calcular perplexidade textual...',pct:30},{text:'A analisar variabilidade rítmica...',pct:45},{text:'A detectar coesão artificial...',pct:60},{text:'A verificar marcadores formulaicos...',pct:75},{text:'A comparar com estilo do tribunal...',pct:88},{text:'A gerar veredicto forense...',pct:96}],
+  academico: [{text:'A extrair padrões de escrita...',pct:15},{text:'A analisar estrutura argumentativa...',pct:30},{text:'A verificar citações jurídicas...',pct:45},{text:'A detectar homogeneidade sintáctica...',pct:60},{text:'A comparar com estilo académico...',pct:75},{text:'A analisar perfil do autor...',pct:88},{text:'A gerar veredicto de autoria...',pct:96}],
+  critica: [{text:'A identificar vícios processuais...',pct:15},{text:'A verificar fundamentação da decisão...',pct:30},{text:'A analisar exame crítico das provas...',pct:45},{text:'A pesquisar nulidades processuais...',pct:60},{text:'A verificar artigos violados...',pct:75},{text:'A gerar argumentos de recurso...',pct:88},{text:'A formular recomendação jurídica...',pct:96}]
+};
+const overlayIndNames = {
+  judicial: ['Perplexidade','Var. Rítmica','Coesão Artificial','Uniform. Sint.','Riqueza Lexical','Marc. Formulaicos'],
+  academico: ['Perplexidade','Var. Rítmica','Coesão Artificial','Uniform. Sint.','Riqueza Lexical','Marc. Formulaicos'],
+  critica: ['Vícios Processuais','Fund. da Decisão','Exame das Provas','Coerência Lógica','Citações Legais','Omissões Detect.']
+};
+let overlayInterval = null, overlayMsgIdx = 0;
+
+function showOverlay() {
+  document.getElementById('analysis-overlay').classList.add('visible');
+  document.getElementById('overlay-progress').style.width = '0%';
+  document.getElementById('overlay-status').textContent = 'A iniciar análise...';
+  const names = overlayIndNames[modoActual] || overlayIndNames.judicial;
+  for (let i = 1; i <= 6; i++) { document.getElementById('oi-' + i).classList.remove('active'); document.getElementById('of-' + i).style.width = '0%'; document.getElementById('ov-' + i).textContent = '—'; document.getElementById('on-' + i).textContent = names[i - 1]; }
+  const subTexts = { judicial: 'A analisar padrões linguísticos forenses<br>calibrados para os tribunais portugueses', academico: 'A analisar padrões de autoria académica<br>calibrados para o português jurídico', critica: 'A actuar como Consultor Jurídico Sénior<br>a identificar nulidades e vícios processuais' };
+  document.getElementById('overlay-subtext').innerHTML = subTexts[modoActual] || subTexts.judicial;
+  overlayMsgIdx = 0;
+  const msgs = overlayMsgs[modoActual] || overlayMsgs.judicial;
+  overlayInterval = setInterval(() => {
+    if (overlayMsgIdx >= msgs.length) return;
+    const msg = msgs[overlayMsgIdx];
+    document.getElementById('overlay-status').textContent = msg.text;
+    document.getElementById('overlay-progress').style.width = msg.pct + '%';
+    if (overlayMsgIdx >= 1 && overlayMsgIdx <= 6) {
+      const idx = overlayMsgIdx, val = Math.floor(Math.random() * 40 + 40);
+      document.getElementById('oi-' + idx).classList.add('active');
+      setTimeout(() => { document.getElementById('of-' + idx).style.width = val + '%'; document.getElementById('ov-' + idx).textContent = val; }, 300);
     }
     overlayMsgIdx++;
-  },1800);
+  }, 1800);
 }
-
-function hideOverlay(result){
+function hideOverlay(result) {
   clearInterval(overlayInterval);
-  document.getElementById('overlay-status').textContent='Análise concluída!';
-  document.getElementById('overlay-progress').style.width='100%';
-  setTimeout(()=>document.getElementById('analysis-overlay').classList.remove('visible'),result?800:0);
+  document.getElementById('overlay-status').textContent = 'Análise concluída!';
+  document.getElementById('overlay-progress').style.width = '100%';
+  setTimeout(() => document.getElementById('analysis-overlay').classList.remove('visible'), result ? 800 : 0);
 }
 
-// ============================
-// ANÁLISE PRINCIPAL
-// ============================
-async function analyzeDecision(){
-  const text=(pdfText||textarea.value).trim();
-  if(text.length<100){alert('Insira pelo menos 100 caracteres ou carregue um PDF.');return;}
-  const usado=userProfile?.analises_mes||0,limite=getLimite();
-  if(usado>=limite){showModal('upgrade');return;}
-  const btn=document.getElementById('btn-analyze'),loadingBar=document.getElementById('loading-bar');
-  btn.disabled=true;btn.classList.add('loading');document.getElementById('spinner').style.display='block';loadingBar.classList.add('active');
-  showOverlay();document.getElementById('results-area').classList.remove('visible');
-  try{
-    let payload={texto:text,modo:modoActual};
-    if(modoActual==='judicial'){
-      payload.tribunal=document.getElementById('tribunal-select').value||null;
-      payload.relator=document.getElementById('relator-input').value||null;
-    }else if(modoActual==='academico'){
-      payload.instituicao=document.getElementById('instituicao-input').value||null;
-      payload.tipoDoc=document.getElementById('tipo-doc-select').value||null;
-      payload.orientador=document.getElementById('orientador-input').value||null;
-    }else if(modoActual==='critica'){
-      payload.tribunal=document.getElementById('tribunal-critica-select').value||null;
-      payload.tipoProcesso=document.getElementById('tipo-processo-select').value||null;
-      payload.parteRecorrente=document.getElementById('parte-recorrente-select').value||null;
-    }
-    const{data:{session}}=await sb.auth.getSession();
-    if(!session?.access_token){hideOverlay(null);btn.disabled=false;btn.classList.remove('loading');document.getElementById('spinner').style.display='none';loadingBar.classList.remove('active');alert('Sessão expirada. Por favor faça login novamente.');logout();return;}
-    const response=await fetch('/api/analisar',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${session.access_token}`},body:JSON.stringify(payload)});
-    if(!response.ok){const err=await response.json().catch(()=>({}));throw new Error(err.erro||'Erro do servidor.');}
-    const result=await response.json();
-    lastResult=result;
-    lastResult._modo=modoActual;
-    lastResult._tribunal=payload.tribunal;
-    lastResult._relator=payload.relator||payload.tipoDoc||null;
-    lastResult._tipoProcesso=payload.tipoProcesso||null;
-    lastResult._parteRecorrente=payload.parteRecorrente||null;
-    lastRef='LV-'+Date.now().toString(36).toUpperCase();
-    document.getElementById('ref-number').textContent='Referência: '+lastRef;
+// ── ANÁLISE PRINCIPAL ──
+async function analyzeDecision() {
+  const text = (pdfText || textarea.value).trim();
+  if (text.length < 100) { alert('Insira pelo menos 100 caracteres ou carregue um PDF.'); return; }
+  const usado = userProfile?.analises_mes || 0, limite = getLimite();
+  if (usado >= limite) { showModal('upgrade'); return; }
+  const btn = document.getElementById('btn-analyze'), loadingBar = document.getElementById('loading-bar');
+  btn.disabled = true; btn.classList.add('loading'); document.getElementById('spinner').style.display = 'block'; loadingBar.classList.add('active');
+  showOverlay(); document.getElementById('results-area').classList.remove('visible');
+  try {
+    let payload = { texto: text, modo: modoActual };
+    if (modoActual === 'judicial') { payload.tribunal = document.getElementById('tribunal-select').value || null; payload.relator = document.getElementById('relator-input').value || null; }
+    else if (modoActual === 'academico') { payload.instituicao = document.getElementById('instituicao-input').value || null; payload.tipoDoc = document.getElementById('tipo-doc-select').value || null; payload.orientador = document.getElementById('orientador-input').value || null; }
+    else if (modoActual === 'critica') { payload.tribunal = document.getElementById('tribunal-critica-select').value || null; payload.tipoProcesso = document.getElementById('tipo-processo-select').value || null; payload.parteRecorrente = document.getElementById('parte-recorrente-select').value || null; }
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session?.access_token) { hideOverlay(null); btn.disabled = false; btn.classList.remove('loading'); document.getElementById('spinner').style.display = 'none'; loadingBar.classList.remove('active'); alert('Sessão expirada. Por favor faça login novamente.'); logout(); return; }
+    const response = await fetch('/api/analisar', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` }, body: JSON.stringify(payload) });
+    if (!response.ok) { const err = await response.json().catch(() => ({})); throw new Error(err.erro || 'Erro do servidor.'); }
+    const result = await response.json();
+    lastResult = result;
+    lastResult._modo = modoActual;
+    lastResult._tribunal = payload.tribunal;
+    lastResult._relator = payload.relator || payload.tipoDoc || null;
+    lastResult._tipoProcesso = payload.tipoProcesso || null;
+    lastResult._parteRecorrente = payload.parteRecorrente || null;
+    lastRef = 'LV-' + Date.now().toString(36).toUpperCase();
+    document.getElementById('ref-number').textContent = 'Referência: ' + lastRef;
     hideOverlay(result);
-    if(modoActual==='critica')renderResultsCritica(result);else renderResults(result);
-    if(window.innerWidth<=760){setTimeout(()=>{const el=document.getElementById('results-area');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},900);}
+    if (modoActual === 'critica') renderResultsCritica(result); else renderResults(result);
+    if (window.innerWidth <= 760) setTimeout(() => { const el = document.getElementById('results-area'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 900);
 
     // Guardar no Supabase
-    let dbRecord={user_id:currentUser.id,modo:modoActual,tribunal:payload.tribunal||payload.instituicao||null,relator:payload.relator||payload.tipoDoc||null};
-    if(modoActual==='critica'){
-      dbRecord.veredicto=result.veredicto_recurso||'INCONCLUSIVO';
-      dbRecord.confianca=result.confianca||0;
-      dbRecord.narrativa=result.sumario||null;
-      dbRecord.relator_analise=(result.conclusao||'')+(result.minuta?'\n\n---MINUTA---\n\n'+result.minuta:'');
-      dbRecord.marcadores=result.fundamentos||result.nulidades||null;
-      dbRecord.indicadores=null;
-    }else{
-      dbRecord.veredicto=result.veredicto;
-      dbRecord.confianca=result.confianca;
-      dbRecord.narrativa=result.narrativa;
-      dbRecord.indicadores=result.indicadores||null;
-      dbRecord.marcadores=result.marcadores||null;
-      dbRecord.relator_analise=result.relator_analise||null;
+    let dbRecord = { user_id: currentUser.id, modo: modoActual, tribunal: payload.tribunal || payload.instituicao || null, relator: payload.relator || payload.tipoDoc || null };
+    if (modoActual === 'critica') {
+      dbRecord.veredicto = result.veredicto_recurso || 'INCONCLUSIVO';
+      dbRecord.confianca = result.confianca || 0;
+      dbRecord.narrativa = result.sumario || null;
+      dbRecord.relator_analise = result.conclusao || null;
+      dbRecord.marcadores = result.fundamentos || result.nulidades || null;
+      dbRecord.indicadores = null;
+    } else {
+      dbRecord.veredicto = result.veredicto;
+      dbRecord.confianca = result.confianca;
+      dbRecord.narrativa = result.narrativa;
+      dbRecord.indicadores = result.indicadores || null;
+      dbRecord.marcadores = result.marcadores || null;
+      dbRecord.relator_analise = result.relator_analise || null;
     }
     await sb.from('analises').insert(dbRecord);
-    const novoTotal=usado+1;
-    await sb.from('perfis').update({analises_mes:novoTotal}).eq('id',currentUser.id);
-    userProfile.analises_mes=novoTotal;
-    const{count}=await sb.from('analises').select('*',{count:'exact',head:true}).eq('user_id',currentUser.id);
-    document.getElementById('stat-total').textContent=count||novoTotal;
-    document.getElementById('stat-mes').textContent=novoTotal+' / '+limite;
-    document.getElementById('usage-count').textContent=novoTotal+' / '+limite;
-    document.getElementById('usage-fill').style.width=Math.min(100,(novoTotal/limite)*100)+'%';
-  }catch(err){hideOverlay(null);alert('Erro: '+(err.message||'Verifique a sua ligação.'));}
-  finally{btn.disabled=false;btn.classList.remove('loading');document.getElementById('spinner').style.display='none';loadingBar.classList.remove('active');}
-}
-
-// ============================
-// RENDER — JUDICIAL / ACADÉMICO
-// ============================
-function renderResults(result){
-  document.getElementById('results-standard').style.display='block';
-  document.getElementById('results-critica').style.display='none';
-  const titles={'IA_DETECTADA':'Inteligência Artificial Detectada','PROVAVELMENTE_IA':'Provavelmente Gerado por IA','INCONCLUSIVO':'Análise Inconclusiva','PROVAVELMENTE_HUMANO':'Provavelmente Autoria Humana','HUMANO':'Autoria Humana Confirmada'};
-  const subs={'IA_DETECTADA':'Os marcadores linguísticos indicam fortemente o uso de inteligência artificial.','PROVAVELMENTE_IA':'Vários indicadores sugerem uso significativo de IA.','INCONCLUSIVO':'Os indicadores não permitem determinar com segurança o uso de IA.','PROVAVELMENTE_HUMANO':'O texto apresenta características predominantemente humanas.','HUMANO':'Os marcadores são consistentes com autoria humana.'};
-  const cls={'IA_DETECTADA':'ai','PROVAVELMENTE_IA':'ai','INCONCLUSIVO':'uncertain','PROVAVELMENTE_HUMANO':'human','HUMANO':'human'};
-  const banner=document.getElementById('verdict-banner');
-  banner.className='verdict-banner '+(cls[result.veredicto]||'uncertain');
-  document.getElementById('verdict-title').textContent=titles[result.veredicto]||result.veredicto;
-  document.getElementById('verdict-subtitle').textContent=subs[result.veredicto]||'';
-  document.getElementById('confidence-value').textContent=result.confianca+'%';
-  setTimeout(()=>{document.getElementById('meter-fill').style.width=result.confianca+'%';},100);
-  const indLabels={perplexidade:'Perplexidade',burstiness:'Var. Rítmica',coesao_artificial:'Coesão Artificial',uniformidade_sintatica:'Uniformidade Sint.',riqueza_lexical:'Riqueza Lexical',marcadores_formulaicos:'Marc. Formulaicos'};
-  const grid=document.getElementById('indicators-grid');grid.innerHTML='';
-  for(const[key,val]of Object.entries(result.indicadores||{})){const bc=val>70?'bar-high':val>40?'bar-mid':'bar-low';grid.innerHTML+=`<div class="indicator-card"><div class="indicator-name">${indLabels[key]||key}</div><div class="indicator-score">${val}<small style="font-size:10px;font-weight:400;color:#aaa">/100</small></div><div class="indicator-bar"><div class="indicator-bar-fill ${bc}" style="width:0" data-width="${val}%"></div></div></div>`;}
-  setTimeout(()=>{grid.querySelectorAll('.indicator-bar-fill').forEach(el=>{el.style.width=el.dataset.width;});},200);
-  document.getElementById('analysis-narrative').innerHTML=(result.narrativa||'').replace(/\n/g,'<br>');
-  const rc=document.getElementById('relator-card');
-  if(result.relator_analise&&!result.relator_analise.toLowerCase().includes('nao indicado')&&!result.relator_analise.toLowerCase().includes('não indicado')){rc.style.display='block';document.getElementById('relator-analise-text').textContent=result.relator_analise;}else rc.style.display='none';
-  document.getElementById('evidence-list').innerHTML=(result.marcadores||[]).map(m=>`<li class="evidence-item"><div class="evidence-marker ${m.tipo==='ai'?'marker-ai':'marker-ok'}">${m.tipo==='ai'?'⚠':'✓'}</div><span class="evidence-text">${m.texto}</span></li>`).join('');
-  document.getElementById('results-area').classList.add('visible');
-  document.getElementById('results-area').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-// ============================
-// RENDER — ANÁLISE CRÍTICA
-// ============================
-function renderResultsCritica(result){
-  document.getElementById('results-standard').style.display='none';
-  document.getElementById('results-critica').style.display='block';
-  const vertitulos={'RECURSO_VIAVEL':'Recurso Viável — Fundamentos Identificados','RECURSO_PARCIAL':'Recurso Parcialmente Fundamentado','RECURSO_INVIAVEL':'Sem Fundamentos Sólidos para Recurso'};
-  const versubs={'RECURSO_VIAVEL':'Foram identificados fundamentos jurídicos sólidos para interposição de recurso.','RECURSO_PARCIAL':'Existem argumentos para recurso, mas com limitações. Avaliação cuidadosa recomendada.','RECURSO_INVIAVEL':'A decisão encontra-se devidamente fundamentada. Fundamentos para recurso fracos ou inexistentes.'};
-  const vercls={'RECURSO_VIAVEL':'recurso-viavel','RECURSO_PARCIAL':'recurso-parcial','RECURSO_INVIAVEL':'recurso-inviavel'};
-  const veredicto=result.veredicto_recurso||'RECURSO_INVIAVEL';
-  const bannerC=document.getElementById('verdict-banner-critica');
-  bannerC.className='verdict-banner '+(vercls[veredicto]||'uncertain');
-  document.getElementById('verdict-title-critica').textContent=vertitulos[veredicto]||veredicto;
-  document.getElementById('verdict-subtitle-critica').textContent=versubs[veredicto]||'';
-  document.getElementById('confidence-value-critica').textContent=(result.confianca||0)+'%';
-  setTimeout(()=>{document.getElementById('meter-fill-critica').style.width=(result.confianca||0)+'%';},100);
-
-  // Meta-recurso: tribunal, prazo, admissibilidade
-  const metaContainer=document.getElementById('meta-recurso-container');
-  metaContainer.innerHTML='';
-  if(result.tribunal_recurso||result.prazo_recurso){
-    const admissivel=result.admissivel!==false;
-    metaContainer.innerHTML=`
-      <span class="admissibilidade-badge ${admissivel?'admissivel-sim':'admissivel-nao'}">${admissivel?'✓ Decisão Recorrível':'✗ Verificar Admissibilidade'}</span>
-      <div class="meta-recurso">
-        <div class="meta-recurso-item">
-          <div class="meta-recurso-label">Tribunal Competente</div>
-          <div class="meta-recurso-value">${result.tribunal_recurso||'—'}</div>
-        </div>
-        <div class="meta-recurso-item">
-          <div class="meta-recurso-label">Prazo de Recurso</div>
-          <div class="meta-recurso-value">${result.prazo_recurso||'—'}</div>
-        </div>
-      </div>`;
+    const novoTotal = usado + 1;
+    await sb.from('perfis').update({ analises_mes: novoTotal }).eq('id', currentUser.id);
+    userProfile.analises_mes = novoTotal;
+    const { count } = await sb.from('analises').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id);
+    document.getElementById('stat-total').textContent = count || novoTotal;
+    document.getElementById('stat-mes').textContent = novoTotal + ' / ' + limite;
+    document.getElementById('usage-count').textContent = novoTotal + ' / ' + limite;
+    document.getElementById('usage-fill').style.width = Math.min(100, (novoTotal / limite) * 100) + '%';
+  } catch (err) {
+    hideOverlay(null); alert('Erro: ' + (err.message || 'Verifique a sua ligação.'));
+  } finally {
+    btn.disabled = false; btn.classList.remove('loading'); document.getElementById('spinner').style.display = 'none'; loadingBar.classList.remove('active');
   }
+}
 
-  document.getElementById('critica-sumario').innerHTML=(result.sumario||'Sem sumário disponível.').replace(/\n/g,'<br>');
+// ── RENDER JUDICIAL / ACADÉMICO ──
+function renderResults(result) {
+  document.getElementById('results-standard').style.display = 'block';
+  document.getElementById('results-critica').style.display = 'none';
+  const titles = { 'IA_DETECTADA': 'Inteligência Artificial Detectada', 'PROVAVELMENTE_IA': 'Provavelmente Gerado por IA', 'INCONCLUSIVO': 'Análise Inconclusiva', 'PROVAVELMENTE_HUMANO': 'Provavelmente Autoria Humana', 'HUMANO': 'Autoria Humana Confirmada' };
+  const subs = { 'IA_DETECTADA': 'Os marcadores linguísticos indicam fortemente o uso de inteligência artificial.', 'PROVAVELMENTE_IA': 'Vários indicadores sugerem uso significativo de IA.', 'INCONCLUSIVO': 'Os indicadores não permitem determinar com segurança o uso de IA.', 'PROVAVELMENTE_HUMANO': 'O texto apresenta características predominantemente humanas.', 'HUMANO': 'Os marcadores são consistentes com autoria humana.' };
+  const cls = { 'IA_DETECTADA': 'ai', 'PROVAVELMENTE_IA': 'ai', 'INCONCLUSIVO': 'uncertain', 'PROVAVELMENTE_HUMANO': 'human', 'HUMANO': 'human' };
+  const banner = document.getElementById('verdict-banner');
+  banner.className = 'verdict-banner ' + (cls[result.veredicto] || 'uncertain');
+  document.getElementById('verdict-title').textContent = titles[result.veredicto] || result.veredicto;
+  document.getElementById('verdict-subtitle').textContent = subs[result.veredicto] || '';
+  document.getElementById('confidence-value').textContent = result.confianca + '%';
+  setTimeout(() => { document.getElementById('meter-fill').style.width = result.confianca + '%'; }, 100);
+  const indLabels = { perplexidade: 'Perplexidade', burstiness: 'Var. Rítmica', coesao_artificial: 'Coesão Artificial', uniformidade_sintatica: 'Uniformidade Sint.', riqueza_lexical: 'Riqueza Lexical', marcadores_formulaicos: 'Marc. Formulaicos' };
+  const grid = document.getElementById('indicators-grid'); grid.innerHTML = '';
+  for (const [key, val] of Object.entries(result.indicadores || {})) {
+    const bc = val > 70 ? 'bar-high' : val > 40 ? 'bar-mid' : 'bar-low';
+    grid.innerHTML += `<div class="indicator-card"><div class="indicator-name">${indLabels[key] || key}</div><div class="indicator-score">${val}<small style="font-size:10px;font-weight:400;color:#aaa">/100</small></div><div class="indicator-bar"><div class="indicator-bar-fill ${bc}" style="width:0" data-width="${val}%"></div></div></div>`;
+  }
+  setTimeout(() => { grid.querySelectorAll('.indicator-bar-fill').forEach(el => { el.style.width = el.dataset.width; }); }, 200);
+  document.getElementById('analysis-narrative').innerHTML = (result.narrativa || '').replace(/\n/g, '<br>');
+  const rc = document.getElementById('relator-card');
+  if (result.relator_analise && !result.relator_analise.toLowerCase().includes('nao indicado') && !result.relator_analise.toLowerCase().includes('não indicado')) {
+    rc.style.display = 'block';
+    document.getElementById('relator-card-title').textContent = modoActual === 'academico' ? 'Análise do Estilo do Autor' : 'Análise do Estilo do Relator';
+    document.getElementById('relator-analise-text').textContent = result.relator_analise;
+  } else rc.style.display = 'none';
+  document.getElementById('evidence-list').innerHTML = (result.marcadores || []).map(m => `<li class="evidence-item"><div class="evidence-marker ${m.tipo === 'ai' ? 'marker-ai' : 'marker-ok'}">${m.tipo === 'ai' ? '⚠' : '✓'}</div><span class="evidence-text">${m.texto}</span></li>`).join('');
+  document.getElementById('results-area').classList.add('visible');
+  document.getElementById('results-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
-  // Fundamentos (novo formato) ou nulidades (formato antigo)
-  const container=document.getElementById('nulidades-container');container.innerHTML='';
-  const fundamentos=result.fundamentos||result.nulidades||[];
-  const catLabels={nulidade:'Nulidade Processual',erro_direito:'Erro de Direito',erro_facto:'Erro de Facto',questao_constitucional:'Questão Constitucional'};
-  const difLabels={facil:'Fácil de provar',media:'Dificuldade média',dificil:'Difícil de provar'};
+// ── RENDER ANÁLISE CRÍTICA ──
+function renderResultsCritica(result) {
+  document.getElementById('results-standard').style.display = 'none';
+  document.getElementById('results-critica').style.display = 'block';
+  const vertitulos = { 'RECURSO_VIAVEL': 'Recurso Viável — Fundamentos Identificados', 'RECURSO_PARCIAL': 'Recurso Parcialmente Fundamentado', 'RECURSO_INVIAVEL': 'Sem Fundamentos Sólidos para Recurso' };
+  const versubs = { 'RECURSO_VIAVEL': 'Foram identificados fundamentos jurídicos sólidos para interposição de recurso.', 'RECURSO_PARCIAL': 'Existem argumentos para recurso, mas com limitações. Avaliação cuidadosa recomendada.', 'RECURSO_INVIAVEL': 'A decisão encontra-se devidamente fundamentada. Fundamentos para recurso fracos ou inexistentes.' };
+  const vercls = { 'RECURSO_VIAVEL': 'recurso-viavel', 'RECURSO_PARCIAL': 'recurso-parcial', 'RECURSO_INVIAVEL': 'recurso-inviavel' };
+  const veredicto = result.veredicto_recurso || 'RECURSO_INVIAVEL';
+  const bannerC = document.getElementById('verdict-banner-critica');
+  bannerC.className = 'verdict-banner ' + (vercls[veredicto] || 'uncertain');
+  document.getElementById('verdict-title-critica').textContent = vertitulos[veredicto] || veredicto;
+  document.getElementById('verdict-subtitle-critica').textContent = versubs[veredicto] || '';
+  document.getElementById('confidence-value-critica').textContent = (result.confianca || 0) + '%';
+  setTimeout(() => { document.getElementById('meter-fill-critica').style.width = (result.confianca || 0) + '%'; }, 100);
 
-  if(fundamentos.length>0){
-    const totalLabel=document.createElement('div');
-    totalLabel.className='nulidades-section-label';
-    totalLabel.style.marginBottom='12px';
-    totalLabel.textContent=`${fundamentos.length} Fundamento${fundamentos.length>1?'s':''} Identificado${fundamentos.length>1?'s':''}`;
+  const metaContainer = document.getElementById('meta-recurso-container'); metaContainer.innerHTML = '';
+  if (result.tribunal_recurso || result.prazo_recurso) {
+    const admissivel = result.admissivel !== false;
+    metaContainer.innerHTML = `<span class="admissibilidade-badge ${admissivel ? 'admissivel-sim' : 'admissivel-nao'}">${admissivel ? '✓ Decisão Recorrível' : '✗ Verificar Admissibilidade'}</span>
+    <div class="meta-recurso">
+      <div><div class="meta-recurso-label">Tribunal Competente</div><div class="meta-recurso-value">${result.tribunal_recurso || '—'}</div></div>
+      <div><div class="meta-recurso-label">Prazo de Recurso</div><div class="meta-recurso-value">${result.prazo_recurso || '—'}</div></div>
+    </div>`;
+  }
+  document.getElementById('critica-sumario').innerHTML = (result.sumario || 'Sem sumário disponível.').replace(/\n/g, '<br>');
+
+  // FIX CRÍTICO: usar fundamentos OU nulidades (compatibilidade)
+  const container = document.getElementById('nulidades-container'); container.innerHTML = '';
+  const fundamentos = result.fundamentos || result.nulidades || [];
+  const catLabels = { nulidade: 'Nulidade Processual', erro_direito: 'Erro de Direito', erro_facto: 'Erro de Facto', questao_constitucional: 'Questão Constitucional' };
+  const difLabels = { facil: 'Fácil de provar', media: 'Dificuldade média', dificil: 'Difícil de provar' };
+
+  if (fundamentos.length > 0) {
+    const totalLabel = document.createElement('div');
+    totalLabel.className = 'nulidades-section-label'; totalLabel.style.marginBottom = '12px';
+    totalLabel.textContent = `${fundamentos.length} Fundamento${fundamentos.length > 1 ? 's' : ''} Identificado${fundamentos.length > 1 ? 's' : ''}`;
     container.appendChild(totalLabel);
-
-    fundamentos.forEach(f=>{
-      const grav=(f.gravidade||'moderada').toLowerCase();
-      const cat=(f.categoria||'nulidade').replace(/_/g,'-');
-      const dif=(f.dificuldade||'media').toLowerCase();
-      const catKey=f.categoria||'nulidade';
-      const card=document.createElement('div');
-      card.className=`nulidade-card ${grav==='grave'?'':grav} ${cat!=='nulidade'?cat:''}`;
-      card.innerHTML=`
-        <div class="nulidade-header">
-          <div class="nulidade-header-left">
-            ${f.prioridade?`<span class="prioridade-badge">${f.prioridade}</span>`:''}
-            <span class="nulidade-tipo-badge">${f.tipo||'Fundamento'}</span>
-            ${catKey!=='nulidade'?`<span class="categoria-badge categoria-${catKey}">${catLabels[catKey]||catKey}</span>`:''}
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-            ${f.dificuldade?`<span class="dificuldade-badge dif-${dif}">${difLabels[dif]||dif}</span>`:''}
-            <span class="nulidade-artigo">${f.artigo||''}</span>
-          </div>
-        </div>
-        <p class="nulidade-desc">${f.descricao||''}</p>
-        ${f.argumento?`<div class="nulidade-argumento"><span class="nulidade-argumento-label">Argumento para a Peça Processual</span><span class="nulidade-argumento-text">${f.argumento}</span></div>`:''}`;
+    fundamentos.forEach(f => {
+      const grav = (f.gravidade || 'moderada').toLowerCase();
+      const cat = (f.categoria || 'nulidade').replace(/_/g, '-');
+      const dif = (f.dificuldade || 'media').toLowerCase();
+      const catKey = f.categoria || 'nulidade';
+      const card = document.createElement('div');
+      card.className = `nulidade-card ${grav === 'grave' ? '' : grav} ${cat !== 'nulidade' ? cat : ''}`;
+      card.innerHTML = `<div class="nulidade-header"><div class="nulidade-header-left">${f.prioridade ? `<span class="prioridade-badge">${f.prioridade}</span>` : ''}<span class="nulidade-tipo-badge">${f.tipo || 'Fundamento'}</span>${catKey !== 'nulidade' ? `<span class="categoria-badge categoria-${catKey}">${catLabels[catKey] || catKey}</span>` : ''}</div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${f.dificuldade ? `<span class="dificuldade-badge dif-${dif}">${difLabels[dif] || dif}</span>` : ''}<span class="nulidade-artigo">${f.artigo || ''}</span></div></div><p class="nulidade-desc">${f.descricao || ''}</p>${f.argumento ? `<div class="nulidade-argumento"><span class="nulidade-argumento-label">Argumento para a Peça Processual</span><span class="nulidade-argumento-text">${f.argumento}</span></div>` : ''}`;
       container.appendChild(card);
     });
-  }else{
-    container.innerHTML='<div class="analysis-card"><h3>Fundamentos de Recurso</h3><p style="color:#888;font-style:italic">Não foram identificados fundamentos significativos para recurso.</p></div>';
+  } else {
+    container.innerHTML = '<div class="analysis-card"><h3>Fundamentos de Recurso</h3><p style="color:#888;font-style:italic">Não foram identificados fundamentos significativos para recurso.</p></div>';
   }
-  document.getElementById('critica-conclusao').innerHTML=(result.conclusao||'').replace(/\n/g,'<br>');
-
-  // Botão gerar minuta
-  document.getElementById('minuta-btn-container').style.display='block';
-  document.getElementById('minuta-container').style.display='none';
-  document.getElementById('minuta-body').textContent='';
-
+  document.getElementById('critica-conclusao').innerHTML = (result.conclusao || '').replace(/\n/g, '<br>');
+  document.getElementById('minuta-btn-container').style.display = 'block';
+  document.getElementById('minuta-container').style.display = 'none';
+  document.getElementById('minuta-body').textContent = '';
   document.getElementById('results-area').classList.add('visible');
-  document.getElementById('results-area').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('results-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function copiarMinuta(){
-  const text=document.getElementById('minuta-body').textContent;
-  if(!text)return;
-  navigator.clipboard.writeText(text).then(()=>{
-    const btn=document.getElementById('btn-copiar-minuta');
-    const msg=document.getElementById('copiar-msg');
-    btn.classList.add('copiado');btn.textContent='✓ Copiado!';
-    msg.style.display='inline';
-    setTimeout(()=>{btn.classList.remove('copiado');btn.textContent='📋 Copiar Texto';msg.style.display='none';},3000);
-  }).catch(()=>{
-    const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
-    document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
-    const msg=document.getElementById('copiar-msg');msg.style.display='inline';
-    setTimeout(()=>msg.style.display='none',3000);
-  });
+// ── MINUTA ──
+// Converte Markdown simples para HTML legível
+function renderMinuta(text) {
+  if (!text) return '';
+  return text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    // Títulos ## → negrito grande
+    .replace(/^## (.+)$/gm, '<div style="font-weight:700;font-size:14px;margin:16px 0 6px;font-family:var(--sans);letter-spacing:.05em;text-transform:uppercase;color:#333">$1</div>')
+    .replace(/^# (.+)$/gm, '<div style="font-weight:700;font-size:15px;margin:16px 0 8px;font-family:var(--sans)">$1</div>')
+    // Negrito **texto**
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    // Itálico *texto*
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    // Linha horizontal ---
+    .replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid #ddd;margin:16px 0">')
+    // Parágrafos (linhas duplas)
+    .replace(/
+
+/g, '</p><p style="margin-bottom:10px">')
+    // Quebras simples
+    .replace(/
+/g, '<br>')
+    // Wrap inicial
+    .replace(/^/, '<p style="margin-bottom:10px">')
+    .replace(/$/, '</p>');
 }
 
-async function gerarMinuta(){
-  if(!lastResult||!lastResult.fundamentos||!lastResult.fundamentos.length){
-    alert('Faça primeiro uma análise crítica.');return;
-  }
-  const btn=document.getElementById('btn-gerar-minuta');
-  const loading=document.getElementById('minuta-loading');
-  btn.disabled=true;btn.textContent='⏳ A gerar...';loading.style.display='block';
-  try{
-    const{data:{session}}=await sb.auth.getSession();
-    if(!session?.access_token){alert('Sessão expirada. Faça login novamente.');logout();return;}
-    const payload={
-      modo:'minuta',
-      texto:'n/a',
-      fundamentos:lastResult.fundamentos,
-      veredicto_recurso:lastResult.veredicto_recurso,
-      tribunal_recurso:lastResult.tribunal_recurso||null,
-      tipoProcesso:lastResult._tipoProcesso||null,
-      parteRecorrente:lastResult._parteRecorrente||null,
-    };
-    const response=await fetch('/api/analisar',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':`Bearer ${session.access_token}`},
-      body:JSON.stringify(payload)
-    });
-    if(!response.ok){const err=await response.json().catch(()=>({}));throw new Error(err.erro||'Erro do servidor.');}
-    const result=await response.json();
-    if(result.minuta&&result.minuta.trim()){
-      document.getElementById('minuta-body').textContent=result.minuta;
-      document.getElementById('minuta-container').style.display='block';
-      document.getElementById('minuta-btn-container').style.display='none';
-      document.getElementById('minuta-container').scrollIntoView({behavior:'smooth',block:'start'});
-    }else{
-      alert('Não foi possível gerar a minuta. Tente novamente.');
-    }
-  }catch(err){
-    alert('Erro: '+(err.message||'Tente novamente.'));
-  }finally{
-    btn.disabled=false;btn.textContent='📄 Gerar Proposta de Texto para Recurso';
-    loading.style.display='none';
-  }
+function copiarMinuta() {
+  const text = document.getElementById('minuta-body').innerText || document.getElementById('minuta-body').textContent;
+  if (!text) return;
+  // Clipboard API moderna com fallback
+  const doFallback = () => {
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  };
+  const confirm = () => {
+    const btn = document.getElementById('btn-copiar-minuta'), msg = document.getElementById('copiar-msg');
+    btn.classList.add('copiado'); btn.textContent = '✓ Copiado!'; msg.style.display = 'inline';
+    setTimeout(() => { btn.classList.remove('copiado'); btn.textContent = '📋 Copiar Texto'; msg.style.display = 'none'; }, 3000);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(confirm).catch(() => { doFallback(); confirm(); });
+  } else { doFallback(); confirm(); }
 }
 
-// ============================
-// GERAR PDF
-// ============================
-function gerarPDF(){
-  if(!lastResult){alert('Faça primeiro uma análise.');return;}
-  if(lastResult._modo==='critica')gerarPDFCritica();else gerarPDFStandard();
+async function gerarMinuta() {
+  if (!lastResult || (!lastResult.fundamentos && !lastResult.nulidades)) { alert('Faça primeiro uma análise crítica.'); return; }
+  const btn = document.getElementById('btn-gerar-minuta'), loading = document.getElementById('minuta-loading');
+  btn.disabled = true; btn.textContent = '⏳ A gerar...'; loading.style.display = 'block';
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session?.access_token) { alert('Sessão expirada. Faça login novamente.'); logout(); return; }
+    const payload = { modo: 'minuta', texto: 'n/a', fundamentos: lastResult.fundamentos || lastResult.nulidades, veredicto_recurso: lastResult.veredicto_recurso, tribunal_recurso: lastResult.tribunal_recurso || null, tipoProcesso: lastResult._tipoProcesso || null, parteRecorrente: lastResult._parteRecorrente || null };
+    const response = await fetch('/api/analisar', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` }, body: JSON.stringify(payload) });
+    if (!response.ok) { const err = await response.json().catch(() => ({})); throw new Error(err.erro || 'Erro do servidor.'); }
+    const result = await response.json();
+    if (result.minuta && result.minuta.trim()) {
+      document.getElementById('minuta-body').innerHTML = renderMinuta(result.minuta);
+      document.getElementById('minuta-container').style.display = 'block';
+      document.getElementById('minuta-btn-container').style.display = 'none';
+      document.getElementById('minuta-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else { alert('Não foi possível gerar a minuta. Tente novamente.'); }
+  } catch (err) { alert('Erro: ' + (err.message || 'Tente novamente.')); }
+  finally { btn.disabled = false; btn.textContent = '📄 Gerar Proposta de Texto para Recurso'; loading.style.display = 'none'; }
 }
 
-function gerarPDFStandard(){
-  try{
-    const{jsPDF}=window.jspdf;
-    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-    const W=210,margin=20,contentW=W-margin*2;let y=0;
-    const cGold=[201,168,76],cInk=[13,13,13],cLight=[245,240,232],cGrey=[140,140,140],cRed=[139,26,26],cGreen=[26,92,58],cOrange=[180,100,40];
-    const labels={'IA_DETECTADA':'IA Detectada','PROVAVELMENTE_IA':'Provavelmente Gerado por IA','INCONCLUSIVO':'Analise Inconclusiva','PROVAVELMENTE_HUMANO':'Provavelmente Autoria Humana','HUMANO':'Autoria Humana Confirmada'};
-    const indLabels={perplexidade:'Perplexidade',burstiness:'Burstiness',coesao_artificial:'Coesao Artificial',uniformidade_sintatica:'Uniformidade Sintatica',riqueza_lexical:'Riqueza Lexical',marcadores_formulaicos:'Marcadores Formulaicos'};
-    const vCls=lastResult.veredicto;
-    const vColor=(vCls==='IA_DETECTADA'||vCls==='PROVAVELMENTE_IA')?cRed:(vCls==='INCONCLUSIVO')?cGrey:cGreen;
-    const now=new Date(),dateStr=now.toLocaleDateString('pt-PT',{day:'2-digit',month:'long',year:'numeric'}),timeStr=now.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
-    function sc(arr,type){if(type==='text')doc.setTextColor(arr[0],arr[1],arr[2]);if(type==='fill')doc.setFillColor(arr[0],arr[1],arr[2]);if(type==='draw')doc.setDrawColor(arr[0],arr[1],arr[2]);}
-    function addFooter(){sc(cGold,'draw');doc.setLineWidth(0.3);doc.line(margin,283,W-margin,283);doc.setFontSize(7);sc(cGrey,'text');doc.setFont('helvetica','normal');doc.text('LexVeritas - Analise Forense de IA - '+lastRef,margin,287);doc.text('Documento auxiliar. Nao constitui prova juridica definitiva.',W-margin,287,{align:'right'});}
-    function checkY(n){if(y+n>275){addFooter();doc.addPage();y=24;sc(cGold,'fill');doc.rect(0,0,W,10,'F');sc([255,255,255],'text');doc.setFontSize(7);doc.setFont('helvetica','bold');doc.text('LEXVERITAS - RELATORIO FORENSE',margin,7);doc.text(lastRef,W-margin,7,{align:'right'});}}
-    function sectionHeader(title){checkY(12);sc(cLight,'fill');doc.rect(margin,y,contentW,7,'F');sc(cGrey,'draw');doc.setLineWidth(0.1);doc.rect(margin,y,contentW,7,'S');sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','bold');doc.text(title,margin+3,y+5);y+=11;}
-    function bodyText(text,indent){const lines=doc.splitTextToSize(text,contentW-(indent||0));lines.forEach(l=>{checkY(6);sc(cInk,'text');doc.setFontSize(9);doc.setFont('helvetica','normal');doc.text(l,margin+(indent||0),y);y+=5.5;});}
-    sc(cGold,'fill');doc.rect(0,0,W,32,'F');sc([255,255,255],'text');doc.setFontSize(30);doc.setFont('helvetica','bold');doc.text('LexVeritas',margin,18);doc.setFontSize(8);doc.setFont('helvetica','normal');doc.text('RELATORIO FORENSE DE ANALISE DE INTELIGENCIA ARTIFICIAL',margin,26);doc.text(dateStr.toUpperCase()+' - '+timeStr,W-margin,18,{align:'right'});doc.text(lastRef,W-margin,26,{align:'right'});
-    y=42;
-    sc(cLight,'fill');doc.rect(margin,y,contentW,24,'F');sc(cGold,'draw');doc.setLineWidth(0.5);doc.rect(margin,y,contentW,24,'S');
-    const col1=margin+4,col2=margin+60,col3=margin+120;
-    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('TRIBUNAL',col1,y+6);doc.text('RELATOR',col2,y+6);doc.text('UTILIZADOR',col3,y+6);
-    sc(cInk,'text');doc.setFontSize(9);doc.setFont('helvetica','bold');
-    doc.text((lastResult._tribunal||'Nao indicado').substring(0,28),col1,y+15);
-    doc.text((lastResult._relator||'Nao indicado').substring(0,22),col2,y+15);
-    doc.text((userProfile?.nome||'Utilizador').substring(0,20),col3,y+15);
-    y+=32;
-    sc(vColor,'draw');doc.setLineWidth(1.2);doc.line(margin,y,margin,y+22);
-    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('VEREDICTO FORENSE',margin+5,y+5);
-    sc(vColor,'text');doc.setFontSize(20);doc.setFont('helvetica','bold');doc.text(labels[lastResult.veredicto]||lastResult.veredicto,margin+5,y+16);
-    const bx=W-margin-36,by=y+1,bw=34,bh=20;
-    sc(cLight,'fill');doc.rect(bx,by,bw,bh,'F');sc(vColor,'draw');doc.setLineWidth(0.8);doc.rect(bx,by,bw,bh,'S');
-    sc(vColor,'text');doc.setFontSize(18);doc.setFont('helvetica','bold');doc.text(lastResult.confianca+'%',bx+bw/2,by+12,{align:'center'});
-    sc(cGrey,'text');doc.setFontSize(6);doc.setFont('helvetica','normal');doc.text('CONFIANCA',bx+bw/2,by+18,{align:'center'});
-    y+=30;
+// ── GERAR PDF ──
+function gerarPDF() {
+  if (!lastResult) { alert('Faça primeiro uma análise.'); return; }
+  if (lastResult._modo === 'critica') gerarPDFCritica(); else gerarPDFStandard();
+}
+
+function gerarPDFStandard() {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const W = 210, margin = 20, contentW = W - margin * 2; let y = 0;
+    const cGold = [201,168,76], cInk = [13,13,13], cLight = [245,240,232], cGrey = [140,140,140], cRed = [139,26,26], cGreen = [26,92,58], cOrange = [180,100,40];
+    const labels = { 'IA_DETECTADA': 'IA Detectada', 'PROVAVELMENTE_IA': 'Provavelmente Gerado por IA', 'INCONCLUSIVO': 'Analise Inconclusiva', 'PROVAVELMENTE_HUMANO': 'Provavelmente Autoria Humana', 'HUMANO': 'Autoria Humana Confirmada' };
+    const indLabels = { perplexidade: 'Perplexidade', burstiness: 'Burstiness', coesao_artificial: 'Coesao Artificial', uniformidade_sintatica: 'Uniformidade Sintatica', riqueza_lexical: 'Riqueza Lexical', marcadores_formulaicos: 'Marcadores Formulaicos' };
+    const vCls = lastResult.veredicto;
+    const vColor = (vCls === 'IA_DETECTADA' || vCls === 'PROVAVELMENTE_IA') ? cRed : (vCls === 'INCONCLUSIVO') ? cGrey : cGreen;
+    const now = new Date(), dateStr = now.toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' }), timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+    function sc(arr, type) { if (type === 'text') doc.setTextColor(arr[0], arr[1], arr[2]); if (type === 'fill') doc.setFillColor(arr[0], arr[1], arr[2]); if (type === 'draw') doc.setDrawColor(arr[0], arr[1], arr[2]); }
+    function addFooter() { sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283); doc.setFontSize(7); sc(cGrey, 'text'); doc.setFont('helvetica', 'normal'); doc.text('LexVeritas - Analise Forense de IA - ' + lastRef, margin, 287); doc.text('Documento auxiliar. Nao constitui prova juridica definitiva.', W - margin, 287, { align: 'right' }); }
+    function checkY(n) { if (y + n > 275) { addFooter(); doc.addPage(); y = 24; sc(cGold, 'fill'); doc.rect(0, 0, W, 10, 'F'); sc([255,255,255], 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text('LEXVERITAS - RELATORIO FORENSE', margin, 7); doc.text(lastRef, W - margin, 7, { align: 'right' }); } }
+    function sectionHeader(title) { checkY(12); sc(cLight, 'fill'); doc.rect(margin, y, contentW, 7, 'F'); sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW, 7, 'S'); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text(title, margin + 3, y + 5); y += 11; }
+    function bodyText(text) { const lines = doc.splitTextToSize(text, contentW); lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.text(l, margin, y); y += 5.5; }); }
+    sc(cGold, 'fill'); doc.rect(0, 0, W, 32, 'F'); sc([255,255,255], 'text'); doc.setFontSize(30); doc.setFont('helvetica', 'bold'); doc.text('LexVeritas', margin, 18); doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.text('RELATORIO FORENSE DE ANALISE DE INTELIGENCIA ARTIFICIAL', margin, 26); doc.text(dateStr.toUpperCase() + ' - ' + timeStr, W - margin, 18, { align: 'right' }); doc.text(lastRef, W - margin, 26, { align: 'right' });
+    y = 42;
+    sc(cLight, 'fill'); doc.rect(margin, y, contentW, 24, 'F'); sc(cGold, 'draw'); doc.setLineWidth(0.5); doc.rect(margin, y, contentW, 24, 'S');
+    const col1 = margin + 4, col2 = margin + 60, col3 = margin + 120;
+    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text('TRIBUNAL', col1, y + 6); doc.text('RELATOR', col2, y + 6); doc.text('UTILIZADOR', col3, y + 6);
+    sc(cInk, 'text'); doc.setFontSize(9); doc.setFont('helvetica', 'bold');
+    doc.text((lastResult._tribunal || 'Nao indicado').substring(0, 28), col1, y + 15); doc.text((lastResult._relator || 'Nao indicado').substring(0, 22), col2, y + 15); doc.text((userProfile?.nome || 'Utilizador').substring(0, 20), col3, y + 15);
+    y += 32;
+    sc(vColor, 'draw'); doc.setLineWidth(1.2); doc.line(margin, y, margin, y + 22);
+    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text('VEREDICTO FORENSE', margin + 5, y + 5);
+    sc(vColor, 'text'); doc.setFontSize(20); doc.setFont('helvetica', 'bold'); doc.text(labels[lastResult.veredicto] || lastResult.veredicto, margin + 5, y + 16);
+    const bx = W - margin - 36, by = y + 1, bw = 34, bh = 20;
+    sc(cLight, 'fill'); doc.rect(bx, by, bw, bh, 'F'); sc(vColor, 'draw'); doc.setLineWidth(0.8); doc.rect(bx, by, bw, bh, 'S');
+    sc(vColor, 'text'); doc.setFontSize(18); doc.setFont('helvetica', 'bold'); doc.text(lastResult.confianca + '%', bx + bw / 2, by + 12, { align: 'center' });
+    sc(cGrey, 'text'); doc.setFontSize(6); doc.setFont('helvetica', 'normal'); doc.text('CONFIANCA', bx + bw / 2, by + 18, { align: 'center' });
+    y += 30;
     sectionHeader('INDICADORES FORENSES');
-    const inds=Object.entries(lastResult.indicadores||{});const halfW=contentW/2-3;
-    inds.forEach(([key,val],i)=>{
-      const isLeft=i%2===0,x0=isLeft?margin:margin+halfW+6;
-      checkY(16);sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text(indLabels[key]||key,x0,y);
-      sc(cInk,'text');doc.setFontSize(11);doc.setFont('helvetica','bold');doc.text(String(val),x0,y+7);
-      sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('/100',x0+9,y+7);
-      const barX=x0+22,barW2=halfW-26;
-      sc([220,215,205],'fill');doc.rect(barX,y+3,barW2,3,'F');
-      const fillC=val>70?cRed:val>40?cOrange:cGreen;
-      sc(fillC,'fill');doc.rect(barX,y+3,barW2*val/100,3,'F');
-      if(!isLeft)y+=16;
+    const inds = Object.entries(lastResult.indicadores || {}); const halfW = contentW / 2 - 3;
+    inds.forEach(([key, val], i) => {
+      const isLeft = i % 2 === 0, x0 = isLeft ? margin : margin + halfW + 6;
+      checkY(16); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text(indLabels[key] || key, x0, y);
+      sc(cInk, 'text'); doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.text(String(val), x0, y + 7);
+      sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text('/100', x0 + 9, y + 7);
+      const barX = x0 + 22, barW2 = halfW - 26;
+      sc([220,215,205], 'fill'); doc.rect(barX, y + 3, barW2, 3, 'F');
+      const fillC = val > 70 ? cRed : val > 40 ? cOrange : cGreen;
+      sc(fillC, 'fill'); doc.rect(barX, y + 3, barW2 * val / 100, 3, 'F');
+      if (!isLeft) y += 16;
     });
-    if(inds.length%2!==0)y+=16;y+=4;
-    sectionHeader('FUNDAMENTACAO DA ANALISE');bodyText(lastResult.narrativa||'Sem narrativa disponivel.');y+=4;
-    const relLabel=lastResult._modo==='academico'?'ANALISE DO ESTILO DO AUTOR':'ANALISE DO ESTILO DO RELATOR';
-    const rel=lastResult.relator_analise||'';
-    if(rel&&!rel.toLowerCase().includes('nao indicado')&&!rel.toLowerCase().includes('não indicado')){sectionHeader(relLabel);bodyText(rel);y+=4;}
+    if (inds.length % 2 !== 0) y += 16; y += 4;
+    sectionHeader('FUNDAMENTACAO DA ANALISE'); bodyText(lastResult.narrativa || 'Sem narrativa disponivel.'); y += 4;
+    const relLabel = lastResult._modo === 'academico' ? 'ANALISE DO ESTILO DO AUTOR' : 'ANALISE DO ESTILO DO RELATOR';
+    const rel = lastResult.relator_analise || '';
+    if (rel && !rel.toLowerCase().includes('nao indicado') && !rel.toLowerCase().includes('não indicado')) { sectionHeader(relLabel); bodyText(rel); y += 4; }
     sectionHeader('MARCADORES IDENTIFICADOS');
-    (lastResult.marcadores||[]).forEach(m=>{
-      checkY(12);const isAI=m.tipo==='ai';
-      const bgC=isAI?[255,242,230]:[230,245,235],txtC=isAI?cRed:cGreen;
-      sc(bgC,'fill');doc.rect(margin,y-3,contentW,9,'F');
-      sc(txtC,'text');doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text(isAI?'[!]':'[OK]',margin+2,y+3);
-      sc(cInk,'text');doc.setFontSize(8);doc.setFont('helvetica','normal');
-      const mLines=doc.splitTextToSize(m.texto||'',contentW-16);doc.text(mLines[0]||'',margin+14,y+3);y+=11;
-      if(mLines.length>1){mLines.slice(1).forEach(l=>{checkY(6);doc.text(l,margin+14,y);y+=5.5;});}
+    (lastResult.marcadores || []).forEach(m => {
+      checkY(12); const isAI = m.tipo === 'ai';
+      const bgC = isAI ? [255,242,230] : [230,245,235], txtC = isAI ? cRed : cGreen;
+      sc(bgC, 'fill'); doc.rect(margin, y - 3, contentW, 9, 'F');
+      sc(txtC, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold'); doc.text(isAI ? '[!]' : '[OK]', margin + 2, y + 3);
+      sc(cInk, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+      const mLines = doc.splitTextToSize(m.texto || '', contentW - 16); doc.text(mLines[0] || '', margin + 14, y + 3); y += 11;
+      if (mLines.length > 1) { mLines.slice(1).forEach(l => { checkY(6); doc.text(l, margin + 14, y); y += 5.5; }); }
     });
-    y+=8;checkY(24);sc(cGold,'draw');doc.setLineWidth(0.3);doc.line(margin,y,W-margin,y);y+=6;
-    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','italic');
-    const disc='Este relatorio foi gerado automaticamente pelo sistema LexVeritas. Os resultados tem caracter auxiliar e probabilistico. Ref: '+lastRef+'. Data: '+dateStr+' '+timeStr+'.';
-    doc.splitTextToSize(disc,contentW).forEach(l=>{doc.text(l,margin,y);y+=4;});
-    addFooter();doc.save('LexVeritas-'+lastRef+'.pdf');
-  }catch(err){console.error('Erro PDF:',err);alert('Erro ao gerar PDF: '+err.message);}
+    y += 8; checkY(24); sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, y, W - margin, y); y += 6;
+    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'italic');
+    const disc = 'Este relatorio foi gerado automaticamente pelo sistema LexVeritas. Os resultados tem caracter auxiliar e probabilistico. Ref: ' + lastRef + '. Data: ' + dateStr + ' ' + timeStr + '.';
+    doc.splitTextToSize(disc, contentW).forEach(l => { doc.text(l, margin, y); y += 4; });
+    addFooter(); doc.save('LexVeritas-' + lastRef + '.pdf');
+  } catch (err) { console.error('Erro PDF:', err); alert('Erro ao gerar PDF: ' + err.message); }
 }
 
-function gerarPDFCritica(){
-  try{
-    const{jsPDF}=window.jspdf;
-    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-    const W=210,margin=20,contentW=W-margin*2;let y=0;
-    const cGold=[201,168,76],cInk=[13,13,13],cLight=[245,240,232],cGrey=[140,140,140],cRed=[139,26,26],cGreen=[26,92,58],cOrange=[180,100,40];
-    const now=new Date(),dateStr=now.toLocaleDateString('pt-PT',{day:'2-digit',month:'long',year:'numeric'}),timeStr=now.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
-    const veredicto=lastResult.veredicto_recurso||'RECURSO_INVIAVEL';
-    const vColor=veredicto==='RECURSO_VIAVEL'?cGreen:veredicto==='RECURSO_PARCIAL'?cOrange:cGrey;
-    const vLabels={'RECURSO_VIAVEL':'Recurso Viavel - Fundamentos Identificados','RECURSO_PARCIAL':'Recurso Parcialmente Fundamentado','RECURSO_INVIAVEL':'Sem Fundamentos Solidos para Recurso'};
-    function sc(arr,type){if(type==='text')doc.setTextColor(arr[0],arr[1],arr[2]);if(type==='fill')doc.setFillColor(arr[0],arr[1],arr[2]);if(type==='draw')doc.setDrawColor(arr[0],arr[1],arr[2]);}
-    function addFooter(){sc(cGold,'draw');doc.setLineWidth(0.3);doc.line(margin,283,W-margin,283);doc.setFontSize(7);sc(cGrey,'text');doc.setFont('helvetica','normal');doc.text('LexVeritas - Analise Critica de Decisao Judicial - '+lastRef,margin,287);doc.text('Documento auxiliar. Nao substitui consulta juridica profissional.',W-margin,287,{align:'right'});}
-    function checkY(n){if(y+n>275){addFooter();doc.addPage();y=24;sc(cRed,'fill');doc.rect(0,0,W,10,'F');sc([255,255,255],'text');doc.setFontSize(7);doc.setFont('helvetica','bold');doc.text('LEXVERITAS - ANALISE CRITICA / RECURSO',margin,7);doc.text(lastRef,W-margin,7,{align:'right'});}}
-    function sectionHeader(title){checkY(12);sc(cLight,'fill');doc.rect(margin,y,contentW,7,'F');sc(cGrey,'draw');doc.setLineWidth(0.1);doc.rect(margin,y,contentW,7,'S');sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','bold');doc.text(title,margin+3,y+5);y+=11;}
-    function bodyText(text){const lines=doc.splitTextToSize(text,contentW);lines.forEach(l=>{checkY(6);sc(cInk,'text');doc.setFontSize(9);doc.setFont('helvetica','normal');doc.text(l,margin,y);y+=5.5;});}
-    // HEADER
-    sc(cRed,'fill');doc.rect(0,0,W,10,'F');sc(cGold,'fill');doc.rect(0,10,W,22,'F');
-    sc([255,255,255],'text');doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text('LEXVERITAS — CONSULTOR JURIDICO SENIOR — ANALISE CRITICA DE RECURSO',margin,7);
-    sc(cInk,'text');doc.setFontSize(30);doc.setFont('helvetica','bold');doc.text('LexVeritas',margin,26);
-    doc.setFontSize(8);doc.setFont('helvetica','normal');doc.text('RELATORIO DE ANALISE CRITICA — NULIDADES E ARGUMENTOS DE RECURSO',margin,32);
-    doc.text(dateStr.toUpperCase()+' - '+timeStr,W-margin,26,{align:'right'});doc.text(lastRef,W-margin,32,{align:'right'});
-    y=46;
-    // CONTEXTO
-    sc(cLight,'fill');doc.rect(margin,y,contentW,20,'F');sc(cGold,'draw');doc.setLineWidth(0.5);doc.rect(margin,y,contentW,20,'S');
-    const col1=margin+4,col2=margin+64,col3=margin+128;
-    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');
-    doc.text('TRIBUNAL',col1,y+5);doc.text('TIPO DE PROCESSO',col2,y+5);doc.text('PARTE RECORRENTE',col3,y+5);
-    sc(cInk,'text');doc.setFontSize(9);doc.setFont('helvetica','bold');
-    doc.text((lastResult._tribunal||'Nao indicado').substring(0,26),col1,y+13);
-    doc.text((lastResult._tipoProcesso||'Nao indicado').substring(0,22),col2,y+13);
-    doc.text((lastResult._parteRecorrente||'Nao indicado').substring(0,20),col3,y+13);
-    y+=28;
-    // VEREDICTO
-    sc(vColor,'draw');doc.setLineWidth(1.5);doc.line(margin,y,margin,y+22);
-    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text('AVALIACAO DO RECURSO',margin+5,y+5);
-    sc(vColor,'text');doc.setFontSize(17);doc.setFont('helvetica','bold');doc.text(vLabels[veredicto]||veredicto,margin+5,y+16);
-    const bx=W-margin-36,by=y+1,bw=34,bh=20;
-    sc(cLight,'fill');doc.rect(bx,by,bw,bh,'F');sc(vColor,'draw');doc.setLineWidth(0.8);doc.rect(bx,by,bw,bh,'S');
-    sc(vColor,'text');doc.setFontSize(18);doc.setFont('helvetica','bold');doc.text((lastResult.confianca||0)+'%',bx+bw/2,by+12,{align:'center'});
-    sc(cGrey,'text');doc.setFontSize(6);doc.setFont('helvetica','normal');doc.text('FUNDAMENTO',bx+bw/2,by+18,{align:'center'});
-    y+=30;
-    // SUMÁRIO
-    sectionHeader('SUMARIO EXECUTIVO');bodyText(lastResult.sumario||'');y+=4;
-    // NULIDADES
-    const nulidades=lastResult.nulidades||[];
-    sectionHeader('NULIDADES E VICIOS PROCESSUAIS IDENTIFICADOS ('+nulidades.length+')');
-    nulidades.forEach((n,i)=>{
+function gerarPDFCritica() {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const W = 210, margin = 20, contentW = W - margin * 2; let y = 0;
+    const cGold = [201,168,76], cInk = [13,13,13], cLight = [245,240,232], cGrey = [140,140,140], cRed = [139,26,26], cGreen = [26,92,58], cOrange = [180,100,40];
+    const now = new Date(), dateStr = now.toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' }), timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+    const veredicto = lastResult.veredicto_recurso || 'RECURSO_INVIAVEL';
+    const vColor = veredicto === 'RECURSO_VIAVEL' ? cGreen : veredicto === 'RECURSO_PARCIAL' ? cOrange : cGrey;
+    const vLabels = { 'RECURSO_VIAVEL': 'Recurso Viavel - Fundamentos Identificados', 'RECURSO_PARCIAL': 'Recurso Parcialmente Fundamentado', 'RECURSO_INVIAVEL': 'Sem Fundamentos Solidos para Recurso' };
+    function sc(arr, type) { if (type === 'text') doc.setTextColor(arr[0], arr[1], arr[2]); if (type === 'fill') doc.setFillColor(arr[0], arr[1], arr[2]); if (type === 'draw') doc.setDrawColor(arr[0], arr[1], arr[2]); }
+    function addFooter() { sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283); doc.setFontSize(7); sc(cGrey, 'text'); doc.setFont('helvetica', 'normal'); doc.text('LexVeritas - Analise Critica de Decisao Judicial - ' + lastRef, margin, 287); doc.text('Documento auxiliar. Nao substitui consulta juridica profissional.', W - margin, 287, { align: 'right' }); }
+    function checkY(n) { if (y + n > 275) { addFooter(); doc.addPage(); y = 24; sc(cRed, 'fill'); doc.rect(0, 0, W, 10, 'F'); sc([255,255,255], 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text('LEXVERITAS - ANALISE CRITICA / RECURSO', margin, 7); doc.text(lastRef, W - margin, 7, { align: 'right' }); } }
+    function sectionHeader(title) { checkY(12); sc(cLight, 'fill'); doc.rect(margin, y, contentW, 7, 'F'); sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW, 7, 'S'); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text(title, margin + 3, y + 5); y += 11; }
+    function bodyText(text) { const lines = doc.splitTextToSize(text, contentW); lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.text(l, margin, y); y += 5.5; }); }
+    sc(cRed, 'fill'); doc.rect(0, 0, W, 10, 'F'); sc(cGold, 'fill'); doc.rect(0, 10, W, 22, 'F');
+    sc([255,255,255], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold'); doc.text('LEXVERITAS — CONSULTOR JURIDICO SENIOR — ANALISE CRITICA DE RECURSO', margin, 7);
+    sc(cInk, 'text'); doc.setFontSize(30); doc.setFont('helvetica', 'bold'); doc.text('LexVeritas', margin, 26);
+    doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.text('RELATORIO DE ANALISE CRITICA — NULIDADES E ARGUMENTOS DE RECURSO', margin, 32);
+    doc.text(dateStr.toUpperCase() + ' - ' + timeStr, W - margin, 26, { align: 'right' }); doc.text(lastRef, W - margin, 32, { align: 'right' });
+    y = 46;
+    sc(cLight, 'fill'); doc.rect(margin, y, contentW, 20, 'F'); sc(cGold, 'draw'); doc.setLineWidth(0.5); doc.rect(margin, y, contentW, 20, 'S');
+    const col1 = margin + 4, col2 = margin + 64, col3 = margin + 128;
+    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text('TRIBUNAL', col1, y + 5); doc.text('TIPO DE PROCESSO', col2, y + 5); doc.text('PARTE RECORRENTE', col3, y + 5);
+    sc(cInk, 'text'); doc.setFontSize(9); doc.setFont('helvetica', 'bold');
+    doc.text((lastResult._tribunal || 'Nao indicado').substring(0, 26), col1, y + 13); doc.text((lastResult._tipoProcesso || 'Nao indicado').substring(0, 22), col2, y + 13); doc.text((lastResult._parteRecorrente || 'Nao indicado').substring(0, 20), col3, y + 13);
+    y += 28;
+    sc(vColor, 'draw'); doc.setLineWidth(1.5); doc.line(margin, y, margin, y + 22);
+    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text('AVALIACAO DO RECURSO', margin + 5, y + 5);
+    sc(vColor, 'text'); doc.setFontSize(17); doc.setFont('helvetica', 'bold'); doc.text(vLabels[veredicto] || veredicto, margin + 5, y + 16);
+    const bx = W - margin - 36, by2 = y + 1, bw = 34, bh = 20;
+    sc(cLight, 'fill'); doc.rect(bx, by2, bw, bh, 'F'); sc(vColor, 'draw'); doc.setLineWidth(0.8); doc.rect(bx, by2, bw, bh, 'S');
+    sc(vColor, 'text'); doc.setFontSize(18); doc.setFont('helvetica', 'bold'); doc.text((lastResult.confianca || 0) + '%', bx + bw / 2, by2 + 12, { align: 'center' });
+    sc(cGrey, 'text'); doc.setFontSize(6); doc.setFont('helvetica', 'normal'); doc.text('FUNDAMENTO', bx + bw / 2, by2 + 18, { align: 'center' });
+    y += 30;
+    sectionHeader('SUMARIO EXECUTIVO'); bodyText(lastResult.sumario || ''); y += 4;
+
+    // FIX CRÍTICO: usar fundamentos || nulidades
+    const fundamentos = lastResult.fundamentos || lastResult.nulidades || [];
+    sectionHeader('FUNDAMENTOS E VICIOS PROCESSUAIS IDENTIFICADOS (' + fundamentos.length + ')');
+    fundamentos.forEach((f, i) => {
       checkY(28);
-      const grav=(n.gravidade||'grave').toUpperCase();
-      const nColor=grav==='GRAVE'?cRed:grav==='MODERADA'?cOrange:cGrey;
-      sc(nColor,'draw');doc.setLineWidth(0.8);doc.line(margin,y,margin,y+4);
-      sc(nColor,'text');doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text((i+1)+'. '+n.tipo,margin+4,y+3);
-      sc(cGold,'text');doc.setFontSize(8);doc.setFont('helvetica','normal');
-      if(n.artigo)doc.text(n.artigo,W-margin,y+3,{align:'right'});
-      y+=7;
-      if(n.descricao){
-        const dlines=doc.splitTextToSize(n.descricao,contentW-4);
-        dlines.forEach(l=>{checkY(6);sc(cInk,'text');doc.setFontSize(8.5);doc.setFont('helvetica','normal');doc.text(l,margin+4,y);y+=5;});
+      const grav = (f.gravidade || 'grave').toUpperCase();
+      const nColor = grav === 'GRAVE' ? cRed : grav === 'MODERADA' ? cOrange : cGrey;
+      sc(nColor, 'draw'); doc.setLineWidth(0.8); doc.line(margin, y, margin, y + 4);
+      sc(nColor, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold'); doc.text((i + 1) + '. ' + (f.tipo || 'Fundamento'), margin + 4, y + 3);
+      sc(cGold, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+      if (f.artigo) doc.text(f.artigo, W - margin, y + 3, { align: 'right' });
+      y += 7;
+      if (f.descricao) { const dlines = doc.splitTextToSize(f.descricao, contentW - 4); dlines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.setFontSize(8.5); doc.setFont('helvetica', 'normal'); doc.text(l, margin + 4, y); y += 5; }); }
+      if (f.argumento) {
+        checkY(16); sc([255,251,240], 'fill'); doc.rect(margin, y, contentW, 5, 'F');
+        sc(cGold, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text('ARGUMENTO PARA RECURSO:', margin + 3, y + 3.5); y += 6;
+        const alines = doc.splitTextToSize(f.argumento, contentW - 6); alines.forEach(l => { checkY(6); sc([80,60,20], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'italic'); doc.text(l, margin + 3, y); y += 5; });
       }
-      if(n.argumento){
-        checkY(16);sc([255,251,240],'fill');doc.rect(margin,y,contentW,5,'F');
-        sc(cGold,'text');doc.setFontSize(7);doc.setFont('helvetica','bold');doc.text('ARGUMENTO PARA RECURSO:',margin+3,y+3.5);
-        y+=6;
-        const alines=doc.splitTextToSize(n.argumento,contentW-6);
-        alines.forEach(l=>{checkY(6);sc([80,60,20],'text');doc.setFontSize(8);doc.setFont('helvetica','italic');doc.text(l,margin+3,y);y+=5;});
-      }
-      y+=6;
+      y += 6;
     });
-    // CONCLUSÃO
-    sectionHeader('RECOMENDACAO DO CONSULTOR JURIDICO');bodyText(lastResult.conclusao||'');y+=8;
-    checkY(16);sc(cGold,'draw');doc.setLineWidth(0.3);doc.line(margin,y,W-margin,y);y+=6;
-    sc(cGrey,'text');doc.setFontSize(7);doc.setFont('helvetica','italic');
-    const disc='Este relatorio foi produzido pelo sistema LexVeritas no modo Consultor Juridico Senior. Os resultados tem caracter auxiliar e nao substituem consulta juridica profissional. Ref: '+lastRef+'. Data: '+dateStr+' '+timeStr+'.';
-    doc.splitTextToSize(disc,contentW).forEach(l=>{doc.text(l,margin,y);y+=4;});
-    addFooter();doc.save('LexVeritas-Critica-'+lastRef+'.pdf');
-  }catch(err){console.error('Erro PDF Critica:',err);alert('Erro ao gerar PDF: '+err.message);}
+    sectionHeader('RECOMENDACAO DO CONSULTOR JURIDICO'); bodyText(lastResult.conclusao || ''); y += 8;
+    checkY(16); sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, y, W - margin, y); y += 6;
+    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'italic');
+    const disc = 'Este relatorio foi produzido pelo sistema LexVeritas no modo Consultor Juridico Senior. Os resultados tem caracter auxiliar e nao substituem consulta juridica profissional. Ref: ' + lastRef + '. Data: ' + dateStr + ' ' + timeStr + '.';
+    doc.splitTextToSize(disc, contentW).forEach(l => { doc.text(l, margin, y); y += 4; });
+    addFooter(); doc.save('LexVeritas-Critica-' + lastRef + '.pdf');
+  } catch (err) { console.error('Erro PDF Critica:', err); alert('Erro ao gerar PDF: ' + err.message); }
 }
 
-// ============================
-// HISTÓRICO
-// ============================
-async function loadHistory(){
-  const listEl=document.getElementById('history-list');
-  listEl.innerHTML='<div class="empty-history">A carregar...</div>';
-  const{data,error}=await sb.from('analises').select('*').eq('user_id',currentUser.id).order('criado_em',{ascending:false}).limit(50);
-  if(error||!data||data.length===0){
-    listEl.innerHTML=`<div style="text-align:center;padding:48px 20px"><div style="font-size:48px;margin-bottom:16px">⚖️</div><div style="font-family:var(--serif);font-size:20px;font-style:italic;color:#888;margin-bottom:8px">Ainda não fez nenhuma análise</div><div style="font-family:var(--sans);font-size:13px;color:#bbb;margin-bottom:24px;line-height:1.6">Cole o texto de um acórdão, sentença ou despacho<br>e descubra se foi elaborado com IA.</div><button onclick="showTab('analise')" style="background:var(--ink);color:var(--cream);border:none;padding:12px 28px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer">Fazer primeira análise →</button></div>`;
+// ── HISTÓRICO ──
+async function loadHistory() {
+  const listEl = document.getElementById('history-list');
+  listEl.innerHTML = '<div class="empty-history">A carregar...</div>';
+  const { data, error } = await sb.from('analises').select('*').eq('user_id', currentUser.id).order('criado_em', { ascending: false }).limit(50);
+  if (error || !data || data.length === 0) {
+    listEl.innerHTML = `<div style="text-align:center;padding:48px 20px"><div style="font-size:48px;margin-bottom:16px">⚖️</div><div style="font-family:var(--serif);font-size:20px;font-style:italic;color:#888;margin-bottom:8px">Ainda não fez nenhuma análise</div><div style="font-family:var(--sans);font-size:13px;color:#bbb;margin-bottom:24px;line-height:1.6">Cole o texto de um acórdão, sentença ou despacho<br>e descubra se foi elaborado com IA.</div><button onclick="showTab('analise')" style="background:var(--ink);color:var(--cream);border:none;padding:12px 28px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer">Fazer primeira análise →</button></div>`;
     return;
   }
+  const colors = { 'IA_DETECTADA': '#8b4513', 'PROVAVELMENTE_IA': '#c97850', 'INCONCLUSIVO': '#888', 'PROVAVELMENTE_HUMANO': '#2a7a4a', 'HUMANO': '#1a5c2a', 'RECURSO_VIAVEL': '#1a5c2a', 'RECURSO_PARCIAL': '#c97850', 'RECURSO_INVIAVEL': '#888' };
+  const labels = { 'IA_DETECTADA': 'IA Detectada', 'PROVAVELMENTE_IA': 'Provavelmente IA', 'INCONCLUSIVO': 'Inconclusivo', 'PROVAVELMENTE_HUMANO': 'Provavelmente Humano', 'HUMANO': 'Humano', 'RECURSO_VIAVEL': 'Recurso Viável', 'RECURSO_PARCIAL': 'Recurso Parcial', 'RECURSO_INVIAVEL': 'Recurso Inviável' };
+  const bannerCls = { 'IA_DETECTADA': 'ai', 'PROVAVELMENTE_IA': 'ai', 'INCONCLUSIVO': 'uncertain', 'PROVAVELMENTE_HUMANO': 'human', 'HUMANO': 'human', 'RECURSO_VIAVEL': 'recurso-viavel', 'RECURSO_PARCIAL': 'recurso-parcial', 'RECURSO_INVIAVEL': 'recurso-inviavel' };
+  const bannerTitles = { 'IA_DETECTADA': 'Inteligência Artificial Detectada', 'PROVAVELMENTE_IA': 'Provavelmente Gerado por IA', 'INCONCLUSIVO': 'Análise Inconclusiva', 'PROVAVELMENTE_HUMANO': 'Provavelmente Autoria Humana', 'HUMANO': 'Autoria Humana Confirmada', 'RECURSO_VIAVEL': 'Recurso Viável — Fundamentos Identificados', 'RECURSO_PARCIAL': 'Recurso Parcialmente Fundamentado', 'RECURSO_INVIAVEL': 'Sem Fundamentos Sólidos para Recurso' };
+  const bannerSubs = { 'IA_DETECTADA': 'Os marcadores linguísticos indicam fortemente o uso de IA.', 'PROVAVELMENTE_IA': 'Vários indicadores sugerem uso significativo de IA.', 'INCONCLUSIVO': 'Os indicadores não permitem determinar com segurança.', 'PROVAVELMENTE_HUMANO': 'O texto apresenta características predominantemente humanas.', 'HUMANO': 'Os marcadores são consistentes com autoria humana.', 'RECURSO_VIAVEL': 'Foram identificadas nulidades e/ou erros de julgamento com fundamento jurídico.', 'RECURSO_PARCIAL': 'Existem alguns argumentos para recurso, mas com limitações.', 'RECURSO_INVIAVEL': 'A decisão encontra-se devidamente fundamentada.' };
+  const indLabels = { perplexidade: 'Perplexidade', burstiness: 'Var. Rítmica', coesao_artificial: 'Coesão Artif.', uniformidade_sintatica: 'Uniform. Sint.', riqueza_lexical: 'Riqueza Lex.', marcadores_formulaicos: 'Marc. Form.' };
 
-  // Dicionários standard
-  const colors={'IA_DETECTADA':'#8b4513','PROVAVELMENTE_IA':'#c97850','INCONCLUSIVO':'#888','PROVAVELMENTE_HUMANO':'#2a7a4a','HUMANO':'#1a5c2a','RECURSO_VIAVEL':'#1a5c2a','RECURSO_PARCIAL':'#c97850','RECURSO_INVIAVEL':'#888'};
-  const labels={'IA_DETECTADA':'IA Detectada','PROVAVELMENTE_IA':'Provavelmente IA','INCONCLUSIVO':'Inconclusivo','PROVAVELMENTE_HUMANO':'Provavelmente Humano','HUMANO':'Humano','RECURSO_VIAVEL':'Recurso Viável','RECURSO_PARCIAL':'Recurso Parcial','RECURSO_INVIAVEL':'Recurso Inviável'};
-  const bannerCls={'IA_DETECTADA':'ai','PROVAVELMENTE_IA':'ai','INCONCLUSIVO':'uncertain','PROVAVELMENTE_HUMANO':'human','HUMANO':'human','RECURSO_VIAVEL':'recurso-viavel','RECURSO_PARCIAL':'recurso-parcial','RECURSO_INVIAVEL':'recurso-inviavel'};
-  const bannerTitles={'IA_DETECTADA':'Inteligência Artificial Detectada','PROVAVELMENTE_IA':'Provavelmente Gerado por IA','INCONCLUSIVO':'Análise Inconclusiva','PROVAVELMENTE_HUMANO':'Provavelmente Autoria Humana','HUMANO':'Autoria Humana Confirmada','RECURSO_VIAVEL':'Recurso Viável — Fundamentos Identificados','RECURSO_PARCIAL':'Recurso Parcialmente Fundamentado','RECURSO_INVIAVEL':'Sem Fundamentos Sólidos para Recurso'};
-  const bannerSubs={'IA_DETECTADA':'Os marcadores linguísticos indicam fortemente o uso de IA.','PROVAVELMENTE_IA':'Vários indicadores sugerem uso significativo de IA.','INCONCLUSIVO':'Os indicadores não permitem determinar com segurança.','PROVAVELMENTE_HUMANO':'O texto apresenta características predominantemente humanas.','HUMANO':'Os marcadores são consistentes com autoria humana.','RECURSO_VIAVEL':'Foram identificadas nulidades e/ou erros de julgamento com fundamento jurídico.','RECURSO_PARCIAL':'Existem alguns argumentos para recurso, mas com limitações.','RECURSO_INVIAVEL':'A decisão encontra-se devidamente fundamentada.'};
-  const indLabels={perplexidade:'Perplexidade',burstiness:'Var. Rítmica',coesao_artificial:'Coesão Artif.',uniformidade_sintatica:'Uniform. Sint.',riqueza_lexical:'Riqueza Lex.',marcadores_formulaicos:'Marc. Form.'};
-
-  listEl.innerHTML=data.map((a,idx)=>{
-    const df=new Date(a.criado_em).toLocaleString('pt-PT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    const isCritica=a.modo==='critica';
-    const isAcademico=a.modo==='academico';
-    const cor=colors[a.veredicto]||'#888';
-    const label=labels[a.veredicto]||a.veredicto;
-    const contexto=[a.tribunal,a.relator].filter(Boolean).join(' · ');
-    const modoLabel=isCritica?'🏛 Crítica':isAcademico?'🎓 Académico':'⚖ Judicial';
-    const confiancaLabel=isCritica?'Fund.':'';
-
-    // BANNER
-    const bCls=bannerCls[a.veredicto]||'uncertain';
-    const bTitle=bannerTitles[a.veredicto]||a.veredicto;
-    const bSub=bannerSubs[a.veredicto]||'';
-    const bannerLabel=isCritica?'Avaliação de Recurso':'Veredicto Forense';
-    const bannerHtml=`<div class="verdict-banner ${bCls}" style="margin-bottom:16px">
-      <div class="verdict-label">${bannerLabel}</div>
-      <div class="verdict-title">${bTitle}</div>
-      <div class="verdict-subtitle">${bSub}</div>
-    </div>`;
-
-    // CONFIDENCE
-    const confidenceLabel=isCritica?'Grau de Fundamentação do Recurso':'Índice de Confiança na Detecção';
-    const confidenceHtml=`<div class="confidence-block" style="margin-bottom:16px">
-      <div class="confidence-label"><span>${confidenceLabel}</span><span class="confidence-value">${a.confianca}%</span></div>
-      <div class="meter-track"><div class="meter-fill" style="width:${a.confianca}%"></div></div>
-    </div>`;
-
-    // INDICADORES (só standard)
-    let indsHtml='';
-    if(!isCritica){
-      if(a.indicadores){
-        indsHtml=`<div class="indicators-grid" style="margin-bottom:16px">${Object.entries(a.indicadores).map(([k,v])=>{const bc=v>70?'bar-high':v>40?'bar-mid':'bar-low';return`<div class="indicator-card"><div class="indicator-name">${indLabels[k]||k}</div><div class="indicator-score">${v}<small style="font-size:10px;font-weight:400;color:#aaa">/100</small></div><div class="indicator-bar"><div class="indicator-bar-fill ${bc}" style="width:${v}%"></div></div></div>`;}).join('')}</div>`;
-      }else{
-        indsHtml=`<p style="font-family:var(--mono);font-size:10px;color:#bbb;margin-bottom:16px;font-style:italic">Indicadores não disponíveis — análise anterior ao histórico completo.</p>`;
-      }
+  listEl.innerHTML = data.map((a, idx) => {
+    const df = new Date(a.criado_em).toLocaleString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    const isCritica = a.modo === 'critica', isAcademico = a.modo === 'academico';
+    const cor = colors[a.veredicto] || '#888', label = labels[a.veredicto] || a.veredicto;
+    const contexto = [a.tribunal, a.relator].filter(Boolean).join(' · ');
+    const modoLabel = isCritica ? '🏛 Crítica' : isAcademico ? '🎓 Académico' : '⚖ Judicial';
+    const bCls = bannerCls[a.veredicto] || 'uncertain';
+    const bannerLabel = isCritica ? 'Avaliação de Recurso' : 'Veredicto Forense';
+    const confidenceLabel = isCritica ? 'Grau de Fundamentação do Recurso' : 'Índice de Confiança na Detecção';
+    const bannerHtml = `<div class="verdict-banner ${bCls}" style="margin-bottom:16px"><div class="verdict-label">${bannerLabel}</div><div class="verdict-title">${bannerTitles[a.veredicto] || a.veredicto}</div><div class="verdict-subtitle">${bannerSubs[a.veredicto] || ''}</div></div>`;
+    const confidenceHtml = `<div class="confidence-block" style="margin-bottom:16px"><div class="confidence-label"><span>${confidenceLabel}</span><span class="confidence-value">${a.confianca}%</span></div><div class="meter-track"><div class="meter-fill" style="width:${a.confianca}%"></div></div></div>`;
+    let indsHtml = '';
+    if (!isCritica) {
+      indsHtml = a.indicadores
+        ? `<div class="indicators-grid" style="margin-bottom:16px">${Object.entries(a.indicadores).map(([k, v]) => { const bc = v > 70 ? 'bar-high' : v > 40 ? 'bar-mid' : 'bar-low'; return `<div class="indicator-card"><div class="indicator-name">${indLabels[k] || k}</div><div class="indicator-score">${v}<small style="font-size:10px;font-weight:400;color:#aaa">/100</small></div><div class="indicator-bar"><div class="indicator-bar-fill ${bc}" style="width:${v}%"></div></div></div>`; }).join('')}</div>`
+        : `<p style="font-family:var(--mono);font-size:10px;color:#bbb;margin-bottom:16px;font-style:italic">Indicadores não disponíveis nesta análise.</p>`;
     }
-
-    // NARRATIVA / SUMÁRIO
-    const narrativaLabel=isCritica?'Sumário Executivo':'Fundamentação da Análise';
-    const narrativaHtml=a.narrativa?`<div class="analysis-card" style="margin-bottom:16px"><h3>${narrativaLabel}</h3><p>${(a.narrativa||'').replace(/\n/g,'<br>')}</p></div>`:'';
-
-    // NULIDADES (só crítica)
-    let nulidadesHtml='';
-    if(isCritica&&a.marcadores&&a.marcadores.length>0){
-      nulidadesHtml=`<div style="margin-bottom:16px">
-        <div class="nulidades-section-label" style="margin-bottom:12px">${a.marcadores.length} Nulidade${a.marcadores.length>1?'s':''} Identificada${a.marcadores.length>1?'s':''}</div>
-        ${a.marcadores.map(n=>{const grav=(n.gravidade||'grave').toLowerCase();return`<div class="nulidade-card ${grav==='grave'?'':''+grav}">
-          <div class="nulidade-header">
-            <span class="nulidade-tipo-badge">${n.tipo||'Vício Processual'}</span>
-            <span class="nulidade-artigo">${n.artigo||''}</span>
-          </div>
-          <p class="nulidade-desc">${n.descricao||''}</p>
-          ${n.argumento?`<div class="nulidade-argumento"><span class="nulidade-argumento-label">Argumento para Recurso</span><span class="nulidade-argumento-text">${n.argumento}</span></div>`:''}
-        </div>`;}).join('')}
-      </div>`;
+    const narrativaLabel = isCritica ? 'Sumário Executivo' : 'Fundamentação da Análise';
+    const narrativaHtml = a.narrativa ? `<div class="analysis-card" style="margin-bottom:16px"><h3>${narrativaLabel}</h3><p>${(a.narrativa || '').replace(/\n/g, '<br>')}</p></div>` : '';
+    // Nulidades/fundamentos no histórico
+    let nulidadesHtml = '';
+    if (isCritica && a.marcadores && a.marcadores.length > 0) {
+      nulidadesHtml = `<div style="margin-bottom:16px"><div class="nulidades-section-label" style="margin-bottom:12px">${a.marcadores.length} Fundamento${a.marcadores.length > 1 ? 's' : ''} Identificado${a.marcadores.length > 1 ? 's' : ''}</div>${a.marcadores.map(n => { const grav = (n.gravidade || 'grave').toLowerCase(); return `<div class="nulidade-card ${grav === 'grave' ? '' : grav}"><div class="nulidade-header"><span class="nulidade-tipo-badge">${n.tipo || 'Vício Processual'}</span><span class="nulidade-artigo">${n.artigo || ''}</span></div><p class="nulidade-desc">${n.descricao || ''}</p>${n.argumento ? `<div class="nulidade-argumento"><span class="nulidade-argumento-label">Argumento para Recurso</span><span class="nulidade-argumento-text">${n.argumento}</span></div>` : ''}</div>`; }).join('')}</div>`;
     }
-
-    // MARCADORES (só standard)
-    let marcadoresHtml='';
-    if(!isCritica&&a.marcadores&&a.marcadores.length>0){
-      marcadoresHtml=`<div class="analysis-card" style="margin-bottom:16px"><h3>Marcadores Identificados</h3><ul class="evidence-list">${a.marcadores.map(m=>`<li class="evidence-item"><div class="evidence-marker ${m.tipo==='ai'?'marker-ai':'marker-ok'}">${m.tipo==='ai'?'⚠':'✓'}</div><span class="evidence-text">${m.texto}</span></li>`).join('')}</ul></div>`;
+    let marcadoresHtml = '';
+    if (!isCritica && a.marcadores && a.marcadores.length > 0) {
+      marcadoresHtml = `<div class="analysis-card" style="margin-bottom:16px"><h3>Marcadores Identificados</h3><ul class="evidence-list">${a.marcadores.map(m => `<li class="evidence-item"><div class="evidence-marker ${m.tipo === 'ai' ? 'marker-ai' : 'marker-ok'}">${m.tipo === 'ai' ? '⚠' : '✓'}</div><span class="evidence-text">${m.texto}</span></li>`).join('')}</ul></div>`;
     }
-
-    // RELATOR / AUTOR / CONCLUSÃO CRÍTICA
-    const relatorLabel=isCritica?'Recomendação do Consultor':isAcademico?'Análise do Estilo do Autor':'Análise do Estilo do Relator';
-    const relatorValido=a.relator_analise&&!a.relator_analise.toLowerCase().includes('nao indicado')&&!a.relator_analise.toLowerCase().includes('não indicado');
-    const relatorHtml=relatorValido?`<div class="analysis-card" style="margin-bottom:16px;border-left:3px solid var(--gold)"><h3>${relatorLabel}</h3><p>${a.relator_analise}</p></div>`:'';
-
-    return`<div class="history-item" id="hist-${idx}">
-      <div class="history-item-header" onclick="toggleHistory(${idx})">
-        <div style="flex:1;min-width:0">
-          <div class="history-veredicto" style="color:${cor}">${label}</div>
-          <div class="history-meta">${df}${contexto?' · '+contexto:''} · ${modoLabel}</div>
-        </div>
-        <div class="history-confianca">${a.confianca}%${confiancaLabel?'<div style="font-size:7px;color:#aaa;font-weight:400">'+confiancaLabel+'</div>':''}</div>
-        <div class="history-chevron">▼</div>
-      </div>
-      <div class="history-details">
-        ${bannerHtml}${confidenceHtml}${indsHtml}${narrativaHtml}${nulidadesHtml}${relatorHtml}${marcadoresHtml}
-      </div>
-    </div>`;
+    const relatorLabel = isCritica ? 'Recomendação do Consultor' : isAcademico ? 'Análise do Estilo do Autor' : 'Análise do Estilo do Relator';
+    const relatorValido = a.relator_analise && !a.relator_analise.toLowerCase().includes('nao indicado') && !a.relator_analise.toLowerCase().includes('não indicado');
+    const relatorHtml = relatorValido ? `<div class="analysis-card" style="margin-bottom:16px;border-left:3px solid var(--gold)"><h3>${relatorLabel}</h3><p>${a.relator_analise}</p></div>` : '';
+    return `<div class="history-item" id="hist-${idx}"><div class="history-item-header" onclick="toggleHistory(${idx})"><div style="flex:1;min-width:0"><div class="history-veredicto" style="color:${cor}">${label}</div><div class="history-meta">${df}${contexto ? ' · ' + contexto : ''} · ${modoLabel}</div></div><div class="history-confianca">${a.confianca}%</div><div class="history-chevron">▼</div></div><div class="history-details">${bannerHtml}${confidenceHtml}${indsHtml}${narrativaHtml}${nulidadesHtml}${relatorHtml}${marcadoresHtml}</div></div>`;
   }).join('');
 }
 
-function toggleHistory(idx){document.getElementById('hist-'+idx).classList.toggle('open');}
+function toggleHistory(idx) { document.getElementById('hist-' + idx).classList.toggle('open'); }
 
-async function inscreverListaEspera(){
-  const email=document.getElementById('upgrade-email').value.trim();
-  const msg=document.getElementById('upgrade-msg');
-  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return;}
-  try{await sb.from('lista_espera').upsert({email,criado_em:new Date().toISOString()});}catch(e){}
-  msg.textContent='✓ Ficará a saber assim que os pagamentos abrirem!';msg.style.color='var(--green)';msg.style.display='block';
-  document.getElementById('upgrade-email').value='';
+// ── LISTA DE ESPERA — com validação ──
+async function inscreverListaEspera() {
+  const email = document.getElementById('upgrade-email').value.trim();
+  const msg = document.getElementById('upgrade-msg');
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    msg.textContent = 'Introduza um email válido.'; msg.style.color = '#ff9999'; msg.style.display = 'block'; return;
+  }
+  try { await sb.from('lista_espera').upsert({ email, criado_em: new Date().toISOString() }); } catch (e) {}
+  msg.textContent = '✓ Ficará a saber assim que os pagamentos abrirem!'; msg.style.color = '#99ffbb'; msg.style.display = 'block';
+  document.getElementById('upgrade-email').value = '';
 }
+
+// Fechar modais com Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.dark-modal-overlay.visible').forEach(m => m.classList.remove('visible'));
+  }
+});
 </script>
 </body>
 </html>

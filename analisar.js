@@ -37,17 +37,20 @@ module.exports = async function handler(req, res) {
   const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
   if (!ANTHROPIC_API_KEY) return res.status(500).json({ erro: 'Serviço indisponível.' });
 
-  const textoTruncado = (modo === 'critica' && texto.length > 8000) ? texto.substring(0, 8000) : texto.length > 12000 ? texto.substring(0, 12000) + '\n[texto truncado]' : texto;
+  // FIX: aumentado limite do modo crítica de 8000 para 12000 — evita truncamento assimétrico
+  const textoTruncado = texto
+    ? (texto.length > 12000 ? texto.substring(0, 12000) + '\n[texto truncado]' : texto)
+    : '';
 
   let systemPrompt, userPrompt;
 
   // ══════════════════════════════════════════════════
-  // MODO CRÍTICA — Análise Jurídica Avançada
+  // MODO CRÍTICA
   // ══════════════════════════════════════════════════
   if (modo === 'critica') {
     const ctx = [
-      tribunal        ? `Tribunal: ${tribunal}`               : null,
-      tipoProcesso    ? `Tipo de processo: ${tipoProcesso}`   : null,
+      tribunal        ? `Tribunal: ${tribunal}`                : null,
+      tipoProcesso    ? `Tipo de processo: ${tipoProcesso}`    : null,
       parteRecorrente ? `Parte recorrente: ${parteRecorrente}` : null,
     ].filter(Boolean).join('\n');
 
@@ -75,53 +78,52 @@ module.exports = async function handler(req, res) {
   "conclusao": "Recomendação estratégica em 2 frases."
 }
 
-Valores: veredicto_recurso deve ser RECURSO_VIAVEL, RECURSO_PARCIAL ou RECURSO_INVIAVEL. categoria deve ser nulidade, erro_direito, erro_facto ou questao_constitucional. gravidade deve ser grave, moderada ou leve. dificuldade deve ser facil, media ou dificil. Máximo 4 fundamentos por ordem de prioridade.
+Valores obrigatórios:
+- veredicto_recurso: RECURSO_VIAVEL, RECURSO_PARCIAL ou RECURSO_INVIAVEL
+- categoria: nulidade, erro_direito, erro_facto ou questao_constitucional
+- gravidade: grave, moderada ou leve
+- dificuldade: facil, media ou dificil
+- Máximo 4 fundamentos, por ordem de prioridade
 
-Pesquisa: omissão pronúncia (615.º/1/d CPC, 379.º/1/c CPP), contradição (615.º/1/c), falta fundamentação (615.º/1/b, 205.º CRP), falta exame crítico provas (607.º/4 CPC, 374.º/2 CPP), excesso pronúncia, errada interpretação legal, erro notório (410.º/2/c CPP), insuficiência matéria facto (410.º/2/a), violação Art. 20.º/32.º CRP.`
+Pesquisa: omissão pronúncia (615.º/1/d CPC, 379.º/1/c CPP), contradição (615.º/1/c), falta fundamentação (615.º/1/b, 205.º CRP), falta exame crítico provas (607.º/4 CPC, 374.º/2 CPP), excesso pronúncia, errada interpretação legal, erro notório (410.º/2/c CPP), insuficiência matéria facto (410.º/2/a), violação Art. 20.º/32.º CRP.
+
+IMPORTANTE: Se identificares fundamentos, lista-os SEMPRE no array fundamentos. Nunca devolvas fundamentos vazios se existirem vícios identificáveis.`;
 
     userPrompt = `${ctx ? `CONTEXTO DO PROCESSO:\n${ctx}\n\n` : ''}DECISÃO JUDICIAL A ANALISAR:\n\n${textoTruncado}\n\nResponde em JSON puro.`;
 
   // ══════════════════════════════════════════════════
-  // MODO ACADÉMICO
-  // ══════════════════════════════════════════════════
-  // ══════════════════════════════════════════════════
-  // MODO MINUTA — Gera proposta de texto separadamente
+  // MODO MINUTA
   // ══════════════════════════════════════════════════
   } else if (modo === 'minuta') {
-    const { fundamentos = [], veredicto_recurso, tribunal_recurso, tipoProcesso, parteRecorrente } = body;
+    const { fundamentos = [], veredicto_recurso, tribunal_recurso, tipoProcesso: tp, parteRecorrente: pr } = body;
     if (!fundamentos.length) {
       return res.status(400).json({ erro: 'Fundamentos em falta para gerar minuta.' });
     }
     const ctx = [
       tribunal_recurso ? `Tribunal de recurso: ${tribunal_recurso}` : null,
-      tipoProcesso     ? `Tipo de processo: ${tipoProcesso}`        : null,
-      parteRecorrente  ? `Parte recorrente: ${parteRecorrente}`      : null,
+      tp               ? `Tipo de processo: ${tp}`                  : null,
+      pr               ? `Parte recorrente: ${pr}`                  : null,
     ].filter(Boolean).join('\n');
 
     const fundamentosTexto = fundamentos.map((f, i) =>
-      `${i+1}. ${f.tipo} (${f.artigo||''}) — ${f.descricao}\nArgumento: ${f.argumento}`
+      `${i + 1}. ${f.tipo} (${f.artigo || ''}) — ${f.descricao}\nArgumento: ${f.argumento}`
     ).join('\n\n');
 
-    systemPrompt = `Actua como Consultor Jurídico Sénior. Redige uma proposta de texto para recurso em português jurídico formal.
+    systemPrompt = `Actua como Consultor Jurídico Sénior. Redige uma proposta de texto para recurso em português jurídico formal PT-PT.
 
-GERA EXACTAMENTE NESTA ORDEM — nunca saltes nenhuma secção:
+Estrutura obrigatória (usa texto simples, SEM markdown, SEM #, SEM **):
+1. Parágrafo de introdução com [NOME DO RECORRENTE], [NÚMERO DO PROCESSO], [TRIBUNAL A QUO], [DATA DA DECISÃO]
+2. Secção FUNDAMENTOS com cada argumento desenvolvido (um parágrafo por fundamento, com título em maiúsculas)
+3. CONCLUSÕES numeradas (1.ª, 2.ª, ...) — uma por fundamento, linguagem precisa
+4. Pedido final: "Termos em que deve o presente recurso ser julgado procedente..."
 
-SECÇÃO 1 — CABEÇALHO E INTRODUÇÃO
-Identificação das partes com [PLACEHOLDERS] e parágrafo de interposição do recurso.
+Usa [PLACEHOLDER] para dados desconhecidos. Texto directo, sem comentários, sem markdown.`;
 
-SECÇÃO 2 — CONCLUSÕES (gera IMEDIATAMENTE a seguir à introdução — nunca deixes para o fim)
-Numeradas: 1.ª, 2.ª, 3.ª... uma por fundamento. Linguagem precisa e técnica.
-Última conclusão: "N.ª Termos em que deve o presente recurso ser julgado procedente, revogando-se a decisão recorrida e substituindo-a por outra que [PEDIDO]."
+    userPrompt = `${ctx ? ctx + '\n\n' : ''}FUNDAMENTOS IDENTIFICADOS:\n\n${fundamentosTexto}\n\nRedige a proposta de texto para recurso em texto simples, sem markdown.`;
 
-SECÇÃO 3 — PEDIDO
-"Termos em que deve Vossa Excelência admitir o presente recurso e, julgando-o procedente, [PEDIDO CONCRETO]."
-
-SECÇÃO 4 — DESENVOLVIMENTO DOS FUNDAMENTOS
-Para cada fundamento: máximo 2 parágrafos. Cita o artigo violado. Explica o vício.
-
-Usa [PLACEHOLDER] para dados desconhecidos. Sem comentários, sem explicações.`;
-    userPrompt = `${ctx ? ctx + '\n\n' : ''}FUNDAMENTOS IDENTIFICADOS:\n\n${fundamentosTexto}\n\nRedige a proposta de texto para recurso.`;
-
+  // ══════════════════════════════════════════════════
+  // MODO ACADÉMICO
+  // ══════════════════════════════════════════════════
   } else if (modo === 'academico') {
     const ctx = [
       instituicao ? `Instituição: ${instituicao}` : null,
@@ -132,8 +134,6 @@ Usa [PLACEHOLDER] para dados desconhecidos. Sem comentários, sem explicações.
     systemPrompt = `És um perito forense em análise linguística para detectar autoria de IA em textos académicos jurídicos portugueses.
 
 RESPONDE APENAS COM JSON PURO. Sem texto antes, sem texto depois, sem markdown, sem backticks.
-
-Estrutura obrigatória:
 
 {
   "veredicto": "IA_DETECTADA",
@@ -153,9 +153,9 @@ Estrutura obrigatória:
   ]
 }
 
-VALORES VÁLIDOS para veredicto: IA_DETECTADA, PROVAVELMENTE_IA, INCONCLUSIVO, PROVAVELMENTE_HUMANO, ou HUMANO
-VALORES VÁLIDOS para tipo de marcador: ai ou humano
-Todos os indicadores: números entre 0 e 100 (0=humano, 100=IA)`;
+VALORES VÁLIDOS veredicto: IA_DETECTADA, PROVAVELMENTE_IA, INCONCLUSIVO, PROVAVELMENTE_HUMANO, HUMANO
+VALORES VÁLIDOS tipo marcador: ai ou humano
+Indicadores: 0=humano, 100=IA`;
 
     userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}TEXTO ACADÉMICO:\n\n${textoTruncado}\n\nResponde em JSON puro.`;
 
@@ -171,8 +171,6 @@ Todos os indicadores: números entre 0 e 100 (0=humano, 100=IA)`;
     systemPrompt = `És um perito forense em análise linguística para detectar autoria de IA em decisões judiciais portuguesas.
 
 RESPONDE APENAS COM JSON PURO. Sem texto antes, sem texto depois, sem markdown, sem backticks.
-
-Estrutura obrigatória:
 
 {
   "veredicto": "IA_DETECTADA",
@@ -192,9 +190,9 @@ Estrutura obrigatória:
   ]
 }
 
-VALORES VÁLIDOS para veredicto: IA_DETECTADA, PROVAVELMENTE_IA, INCONCLUSIVO, PROVAVELMENTE_HUMANO, ou HUMANO
-VALORES VÁLIDOS para tipo de marcador: ai ou humano
-Todos os indicadores: números entre 0 e 100 (0=humano, 100=IA)
+VALORES VÁLIDOS veredicto: IA_DETECTADA, PROVAVELMENTE_IA, INCONCLUSIVO, PROVAVELMENTE_HUMANO, HUMANO
+VALORES VÁLIDOS tipo marcador: ai ou humano
+Indicadores: 0=humano, 100=IA
 
 NOTAS:
 - Analisa principalmente o corpo de fundamentação, não as fórmulas jurídicas fixas
@@ -205,6 +203,7 @@ NOTAS:
   }
 
   // ── CHAMADA ANTHROPIC ──
+  // FIX: temperature: 0 para resultados determinísticos e consistentes entre dispositivos
   try {
     const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -214,8 +213,9 @@ NOTAS:
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: modo === 'critica' ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001',
-        max_tokens: modo === 'minuta' ? 6000 : 2000,
+        model: 'claude-sonnet-4-6',
+        max_tokens: modo === 'minuta' ? 3000 : 2000,
+        temperature: 0,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],
       }),
@@ -234,25 +234,22 @@ NOTAS:
       return res.status(500).json({ erro: 'Resposta vazia. Tente novamente.' });
     }
 
-    // Modo minuta: resposta em texto simples — retorna sem parse JSON
+    // Modo minuta: texto simples, sem parse JSON
     if (modo === 'minuta') {
       return res.status(200).json({ minuta: fullText });
     }
 
-    const rawText = fullText;
-    const minutaRaw = '';
-
     // ── PARSE JSON ──
     let parsed;
     try {
-      const cleaned = rawText
+      const cleaned = fullText
         .replace(/^```json\s*/i, '')
         .replace(/^```\s*/i, '')
         .replace(/\s*```$/i, '')
         .trim();
       parsed = JSON.parse(cleaned);
     } catch {
-      const match = rawText.match(/\{[\s\S]*\}/);
+      const match = fullText.match(/\{[\s\S]*\}/);
       if (match) {
         try {
           parsed = JSON.parse(match[0]);
@@ -265,7 +262,7 @@ NOTAS:
           try {
             parsed = JSON.parse(jsonStr);
           } catch {
-            console.error('Parse failed. Raw[0-500]:', rawText.substring(0, 500));
+            console.error('Parse failed. Raw[0-500]:', fullText.substring(0, 500));
             if (modo === 'critica') {
               parsed = {
                 veredicto_recurso: 'RECURSO_INVIAVEL',
@@ -276,7 +273,6 @@ NOTAS:
                 sumario: 'Análise incompleta. Por favor tente novamente.',
                 fundamentos: [],
                 conclusao: 'Não foi possível concluir a análise.',
-                minuta: '',
               };
             } else {
               return res.status(500).json({ erro: 'Erro ao processar resposta. Tente novamente.' });
@@ -284,34 +280,27 @@ NOTAS:
           }
         }
       } else {
-        console.error('No JSON found. Raw[0-500]:', rawText.substring(0, 500));
+        console.error('No JSON found. Raw[0-500]:', fullText.substring(0, 500));
         return res.status(500).json({ erro: 'Resposta inválida. Tente novamente.' });
       }
     }
 
     // ── NORMALIZAÇÃO ──
-    // Modo minuta: retorna texto simples
-    if (modo === 'minuta') {
-      const minutaText = (anthropicData.content?.[0]?.text || '').trim();
-      return res.status(200).json({ minuta: minutaText });
-    }
-
     if (modo === 'critica') {
       const okV = ['RECURSO_VIAVEL', 'RECURSO_PARCIAL', 'RECURSO_INVIAVEL'];
       if (!okV.includes(parsed.veredicto_recurso)) parsed.veredicto_recurso = 'RECURSO_INVIAVEL';
-      parsed.confianca       = clamp(parsed.confianca);
-      parsed.admissivel      = parsed.admissivel !== false;
+      parsed.confianca        = clamp(parsed.confianca);
+      parsed.admissivel       = parsed.admissivel !== false;
       parsed.tribunal_recurso = String(parsed.tribunal_recurso || 'Não determinado');
       parsed.prazo_recurso    = String(parsed.prazo_recurso    || 'Consulte um advogado');
       parsed.sumario          = String(parsed.sumario          || 'Análise concluída.');
       parsed.conclusao        = String(parsed.conclusao        || 'Consulte um advogado.');
-      parsed.minuta           = minutaRaw || String(parsed.minuta || '');
 
       const okCat  = ['nulidade','erro_direito','erro_facto','questao_constitucional'];
       const okGrav = ['grave','moderada','leve'];
       const okDif  = ['facil','media','dificil'];
 
-      // Suporte para resposta com "nulidades" (formato antigo) ou "fundamentos" (formato novo)
+      // Suporte para "fundamentos" (novo) ou "nulidades" (antigo)
       const items = Array.isArray(parsed.fundamentos)
         ? parsed.fundamentos
         : Array.isArray(parsed.nulidades)
@@ -319,20 +308,17 @@ NOTAS:
           : [];
 
       parsed.fundamentos = items.map((f, i) => ({
-        categoria:  okCat.includes(f.categoria)  ? f.categoria  : 'nulidade',
-        tipo:       String(f.tipo       || 'Vício Processual'),
-        artigo:     String(f.artigo     || ''),
-        gravidade:  okGrav.includes((f.gravidade||'').toLowerCase()) ? f.gravidade.toLowerCase() : 'moderada',
-        prioridade: Number(f.prioridade) || (i + 1),
-        dificuldade:okDif.includes((f.dificuldade||'').toLowerCase()) ? f.dificuldade.toLowerCase() : 'media',
-        descricao:  String(f.descricao  || ''),
-        argumento:  String(f.argumento  || ''),
+        categoria:   okCat.includes(f.categoria)                          ? f.categoria              : 'nulidade',
+        tipo:        String(f.tipo       || 'Vício Processual'),
+        artigo:      String(f.artigo     || ''),
+        gravidade:   okGrav.includes((f.gravidade  ||'').toLowerCase())   ? f.gravidade.toLowerCase() : 'moderada',
+        prioridade:  Number(f.prioridade) || (i + 1),
+        dificuldade: okDif.includes((f.dificuldade ||'').toLowerCase())   ? f.dificuldade.toLowerCase(): 'media',
+        descricao:   String(f.descricao  || ''),
+        argumento:   String(f.argumento  || ''),
       }));
 
-      // Ordenar por prioridade
       parsed.fundamentos.sort((a, b) => a.prioridade - b.prioridade);
-
-      // Remover campo antigo se existir
       delete parsed.nulidades;
 
     } else {
