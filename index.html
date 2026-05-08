@@ -60,38 +60,41 @@
   .nav-logo { font-family: var(--serif); font-size: 26px; color: var(--white); text-decoration: none; font-style: italic; flex-shrink: 0; }
   .nav-logo span { color: var(--gold); }
 
-  /* Desktop links */
+
+  /* ─── NAV LINKS (desktop only, 1280px+) ─── */
   .nav-links { display: none; gap: 32px; list-style: none; align-items: center; }
   .nav-links a { font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color .2s; }
   .nav-links a:hover { color: var(--white); }
   .nav-cta { background: var(--gold) !important; color: var(--black) !important; padding: 11px 24px !important; font-weight: 700 !important; font-size: 13px !important; }
 
-  /* Hamburger button */
-  .nav-hamburger { display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; background: none; border: 1px solid var(--border); padding: 10px; cursor: pointer; flex-shrink: 0; transition: border-color .2s; }
+  /* ─── HAMBURGUER (sempre visível abaixo de 1280px) ─── */
+  .nav-hamburger { display: flex; flex-direction: column; justify-content: center; gap: 6px; width: 48px; height: 48px; background: none; border: 1px solid var(--border); padding: 12px; cursor: pointer; flex-shrink: 0; transition: border-color .2s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
   .nav-hamburger:hover { border-color: var(--gold); }
-  .nav-hamburger span { display: block; width: 100%; height: 1.5px; background: var(--white); transition: all .35s cubic-bezier(.16,1,.3,1); transform-origin: center; }
-  .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-hamburger span { display: block; width: 100%; height: 1.5px; background: var(--white); transition: all .35s cubic-bezier(.16,1,.3,1); transform-origin: center; pointer-events: none; }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
   .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-  .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
-  /* Mobile drawer */
-  .nav-drawer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(6,6,8,.98); backdrop-filter: blur(24px); z-index: 90; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; opacity: 0; visibility: hidden; transition: opacity .4s ease, visibility .4s ease; }
+  /* ─── DRAWER MOBILE ─── */
+  .nav-drawer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(6,6,8,.98); backdrop-filter: blur(24px); z-index: 90; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity .4s ease, visibility .4s ease; }
   .nav-drawer.open { opacity: 1; visibility: visible; }
-  .nav-drawer ul { list-style: none; text-align: center; display: flex; flex-direction: column; gap: 0; width: 100%; }
+  .nav-drawer ul { list-style: none; text-align: center; display: flex; flex-direction: column; width: 100%; }
   .nav-drawer ul li { border-bottom: 1px solid var(--border); }
   .nav-drawer ul li:first-child { border-top: 1px solid var(--border); }
-  .nav-drawer ul li a { display: block; padding: 22px 40px; font-family: var(--serif); font-size: 28px; font-style: italic; color: var(--white); text-decoration: none; transition: color .2s; }
-  .nav-drawer ul li a:hover { color: var(--gold); }
-  .nav-drawer-cta { margin-top: 36px; background: var(--gold); color: var(--black); padding: 18px 48px; font-family: var(--sans); font-weight: 800; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
+  .nav-drawer ul li a { display: block; padding: 22px 40px; font-family: var(--serif); font-size: 28px; font-style: italic; color: var(--white); text-decoration: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  .nav-drawer ul li a:hover, .nav-drawer ul li a:active { color: var(--gold); }
+  .nav-drawer-cta { margin-top: 36px; background: var(--gold); color: var(--black); padding: 18px 48px; font-family: var(--sans); font-weight: 800; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
-  /* Show desktop nav on large screens, hide hamburger */
-  @media (min-width: 1024px) {
-    .nav-links { display: flex !important; }
-    .nav-hamburger { display: none !important; }
+  /* 1280px+: mostrar links desktop, esconder hamburger e drawer */
+  @media (min-width: 1280px) {
+    .nav-links { display: flex; }
+    .nav-hamburger { display: none; }
     .nav-drawer { display: none !important; }
     body { cursor: none; }
   }
-  @media (max-width: 1023px) {
+  /* Abaixo de 1280px: forcar links desktop escondidos, cursor normal */
+  @media (max-width: 1279px) {
+    .nav-links { display: none !important; }
     .cursor, .cursor-ring { display: none; }
     body { cursor: auto; }
   }
@@ -311,7 +314,7 @@
     <li><a href="/app" class="nav-cta">Aceder ao App</a></li>
   </ul>
   <!-- Hamburger (mobile/tablet) -->
-  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" onclick="toggleDrawer()">
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" type="button">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -319,14 +322,14 @@
 <!-- Mobile drawer menu -->
 <div class="nav-drawer" id="navDrawer">
   <ul>
-    <li><a href="#metodologia" onclick="closeDrawer()">Metodologia</a></li>
-    <li><a href="#analise-critica" onclick="closeDrawer()">Análise Crítica</a></li>
-    <li><a href="#funcionalidades" onclick="closeDrawer()">Funcionalidades</a></li>
-    <li><a href="#precos" onclick="closeDrawer()">Preços</a></li>
-    <li><a href="/sobre" onclick="closeDrawer()">Sobre</a></li>
-    <li><a href="/blog" onclick="closeDrawer()">Blog</a></li>
+    <li><a href="#metodologia" >Metodologia</a></li>
+    <li><a href="#analise-critica" >Análise Crítica</a></li>
+    <li><a href="#funcionalidades" >Funcionalidades</a></li>
+    <li><a href="#precos" >Preços</a></li>
+    <li><a href="/sobre" >Sobre</a></li>
+    <li><a href="/blog" >Blog</a></li>
   </ul>
-  <a href="/app" class="nav-drawer-cta" onclick="closeDrawer()">Aceder ao App →</a>
+  <a href="/app" class="nav-drawer-cta" >Aceder ao App →</a>
 </div>
 
 <!-- ═══ HERO ═══ -->
@@ -774,6 +777,14 @@
   });
 
   // ── HAMBURGER / DRAWER ──
+  // ── HAMBURGUER — bind via JS para garantir funcionamento em Android ──
+  var _hamburger = document.getElementById('hamburger');
+  var _drawer = document.getElementById('navDrawer');
+  if (_hamburger) {
+    _hamburger.addEventListener('click', function(e) { e.stopPropagation(); toggleDrawer(); });
+    _hamburger.addEventListener('touchend', function(e) { e.preventDefault(); e.stopPropagation(); toggleDrawer(); });
+  }
+
   function toggleDrawer() {
     const drawer = document.getElementById('navDrawer');
     const burger = document.getElementById('hamburger');
@@ -781,6 +792,12 @@
     burger.classList.toggle('open', open);
     document.body.style.overflow = open ? 'hidden' : '';
   }
+  // Bind drawer links
+  document.querySelectorAll('.nav-drawer a').forEach(function(link) {
+    link.addEventListener('click', closeDrawer);
+    link.addEventListener('touchend', function(e) { closeDrawer(); });
+  });
+
   function closeDrawer() {
     document.getElementById('navDrawer').classList.remove('open');
     document.getElementById('hamburger').classList.remove('open');
