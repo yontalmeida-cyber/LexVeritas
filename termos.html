@@ -21,70 +21,121 @@
 }
 html { scroll-behavior: smooth; }
 body { background: var(--black); color: var(--white); font-family: var(--sans); }
+
+/* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(6,6,8,0.95); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
-.nav-logo { font-family: var(--serif); font-size: 22px; color: var(--white); text-decoration: none; font-style: italic; }
+.nav-logo { font-family: var(--serif); font-size: 24px; color: var(--white); text-decoration: none; font-style: italic; }
 .nav-logo span { color: var(--gold); }
-.nav-back { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color 0.2s; }
+.nav-back { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 8px; }
 .nav-back:hover { color: var(--gold); }
+
+/* PAGE HERO */
 .page-hero { padding: 140px 48px 80px; border-bottom: 1px solid var(--border); }
 .page-hero-inner { max-width: 800px; margin: 0 auto; }
-.page-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
 .page-eyebrow::after { content: ''; height: 1px; width: 48px; background: var(--gold); opacity: 0.4; }
 .page-title { font-family: var(--serif); font-size: clamp(36px, 5vw, 64px); font-style: italic; line-height: 1.05; margin-bottom: 20px; }
 .page-title span { color: var(--gold); }
-.page-meta { font-family: var(--mono); font-size: 10px; color: var(--grey); letter-spacing: 0.1em; }
+.page-meta { font-family: var(--mono); font-size: 11px; color: var(--grey); letter-spacing: 0.1em; }
+
+/* CONTENT */
 .content-wrap { max-width: 800px; margin: 0 auto; padding: 64px 48px 120px; }
 .policy-section { margin-bottom: 56px; padding-bottom: 56px; border-bottom: 1px solid var(--border); }
 .policy-section:last-child { border-bottom: none; }
-.policy-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 12px; display: block; }
-.policy-title { font-family: var(--serif); font-size: 26px; font-style: italic; margin-bottom: 20px; }
+.policy-num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 12px; display: block; }
+.policy-title { font-family: var(--serif); font-size: 28px; font-style: italic; margin-bottom: 20px; }
 .policy-title span { color: var(--gold); }
-.policy-body { font-size: 14px; line-height: 1.9; color: rgba(248,246,241,0.7); }
+.policy-body { font-size: 15px; line-height: 1.9; color: rgba(248,246,241,0.75); }
 .policy-body p { margin-bottom: 16px; }
 .policy-body p:last-child { margin-bottom: 0; }
 .policy-body strong { color: var(--white); font-weight: 600; }
 .policy-body a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.3); cursor: pointer; transition: border-color 0.2s; }
 .policy-body a:hover { border-color: var(--gold); }
+
 .policy-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
-.policy-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 1.7; color: rgba(248,246,241,0.7); }
+.policy-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.7; color: rgba(248,246,241,0.75); }
 .policy-list li::before { content: '→'; color: var(--gold); flex-shrink: 0; font-size: 11px; margin-top: 3px; font-family: var(--mono); }
+
 .highlight-box { background: rgba(201,168,76,0.05); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 20px 24px; margin: 24px 0; }
-.highlight-box p { font-size: 13px; line-height: 1.7; color: rgba(248,246,241,0.6); margin: 0; }
+.highlight-box p { font-size: 14px; line-height: 1.7; color: rgba(248,246,241,0.65); margin: 0; }
 .highlight-box strong { color: var(--gold); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-family: var(--mono); display: block; margin-bottom: 8px; }
-footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; }
-.footer-brand { font-family: var(--serif); font-size: 18px; font-style: italic; text-decoration: none; color: var(--white); }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.footer-brand { font-family: var(--serif); font-size: 20px; font-style: italic; text-decoration: none; color: var(--white); }
 .footer-brand span { color: var(--gold); }
-.footer-copy { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; }
+.footer-copy { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.25); letter-spacing: 0.1em; text-align: right; line-height: 1.6; }
+
 /* MODAL */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9500; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
 .modal-overlay.visible { display: flex; }
 .modal-box { background: #13131a; border: 1px solid rgba(201,168,76,0.25); padding: 36px; max-width: 440px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
 .modal-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
-.modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: #9a9a9a; font-size: 22px; cursor: pointer; }
+.modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: #9a9a9a; font-size: 26px; cursor: pointer; }
 .modal-close:hover { color: var(--white); }
 .form-group { margin-bottom: 12px; }
-.form-group label { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 5px; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 13px; border: 1px solid rgba(201,168,76,0.2); background: rgba(255,255,255,0.04); font-family: var(--sans); font-size: 13px; color: var(--white); outline: none; }
+.form-group label { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 5px; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 14px; border: 1px solid rgba(201,168,76,0.2); background: rgba(255,255,255,0.04); font-family: var(--sans); font-size: 14px; color: var(--white); outline: none; }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); }
 .form-group select option { background: var(--dark); }
 .form-group textarea { resize: vertical; min-height: 80px; }
-.btn-submit { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 13px; font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+.btn-submit { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 14px; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
 .btn-submit:hover { background: var(--gold-light); }
+
+/* COOKIE BANNER */
+.cookie-banner {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 3000;
+  background: rgba(13,13,18,.97); border-top: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  padding: 20px 40px;
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  transform: translateY(100%);
+  transition: transform .5s cubic-bezier(.16,1,.3,1);
+}
+.cookie-banner.visible { transform: translateY(0); }
+.cookie-banner-text { flex: 1; min-width: 260px; }
+.cookie-banner-text p { font-family: var(--sans); font-size: 13px; color: var(--grey); line-height: 1.6; }
+.cookie-banner-text p strong { color: var(--white); font-weight: 700; }
+.cookie-banner-text a { color: var(--gold); text-decoration: none; }
+.cookie-banner-text a:hover { text-decoration: underline; }
+.cookie-banner-actions { display: flex; gap: 12px; flex-shrink: 0; flex-wrap: wrap; align-items: center; }
+.cookie-btn-reject { background: none; border: 1px solid var(--border); color: var(--grey); padding: 11px 20px; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: all .2s; }
+.cookie-btn-reject:hover { border-color: var(--grey); color: var(--white); }
+.cookie-btn-accept { background: var(--gold); border: none; color: var(--black); padding: 11px 28px; font-family: var(--sans); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: background .2s; }
+.cookie-btn-accept:hover { background: var(--gold-light); }
+
 @media (max-width: 768px) {
-  nav { padding: 16px 24px; }
-  .page-hero { padding: 100px 24px 48px; }
-  .content-wrap { padding: 40px 24px 80px; }
-  footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
+  nav { padding: 16px 20px; }
+  .page-hero { padding: 100px 20px 48px; }
+  .content-wrap { padding: 40px 20px 80px; }
+  footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px 20px; }
+  .footer-copy { text-align: center; }
+  .cookie-banner { padding: 16px 20px; }
+  .cookie-banner-actions { width: 100%; }
+  .cookie-btn-accept, .cookie-btn-reject { flex: 1; text-align: center; }
 }
 </style>
 </head>
 <body>
 
+<!-- ═══ COOKIE BANNER ═══ -->
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Aviso de cookies">
+  <div class="cookie-banner-text">
+    <p><strong>Usamos cookies essenciais</strong> para o funcionamento da plataforma (autenticação e sessão). Consulte a nossa <a href="/privacidade">Política de Privacidade</a>.</p>
+  </div>
+  <div class="cookie-banner-actions">
+    <button class="cookie-btn-reject" onclick="rejectCookies()">Só Essenciais</button>
+    <button class="cookie-btn-accept" onclick="acceptCookies()">Aceitar</button>
+  </div>
+</div>
+
+<!-- ═══ NAV ═══ -->
 <nav>
   <a href="/" class="nav-logo">Lex<span>Veritas</span></a>
   <a href="/" class="nav-back">← Voltar ao site</a>
 </nav>
 
+<!-- ═══ PAGE HERO ═══ -->
 <div class="page-hero">
   <div class="page-hero-inner">
     <div class="page-eyebrow">Documentação Legal</div>
@@ -93,6 +144,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
   </div>
 </div>
 
+<!-- ═══ CONTENT ═══ -->
 <div class="content-wrap">
 
   <div class="highlight-box">
@@ -145,7 +197,6 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     <div class="policy-body">
       <p><strong>Plano Gratuito</strong> — 5 análises por mês, sem custos, sem cartão de crédito. Disponível para sempre.</p>
       <p><strong>Plano Profissional</strong> — 19€/mês. Inclui 100 análises por mês, análise avançada por relator, relatório PDF profissional, histórico ilimitado e suporte prioritário.</p>
-      <!-- CORRIGIDO: removido mailto, substituído por formulário -->
       <p>Os pagamentos do plano Profissional são processados mediante <a onclick="abrirModal('Plano Profissional — pagamento')">contacto através do nosso formulário</a>. Reservamo-nos o direito de alterar os preços com aviso prévio de 30 dias.</p>
       <p>Não são efectuados reembolsos de períodos já iniciados, salvo em casos de falha técnica grave da nossa parte.</p>
     </div>
@@ -206,7 +257,6 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     <span class="policy-num">09</span>
     <h2 class="policy-title">Rescisão e <span>Encerramento</span></h2>
     <div class="policy-body">
-      <!-- CORRIGIDO: removido mailto -->
       <p>O utilizador pode encerrar a sua conta a qualquer momento <a onclick="abrirModal('Encerramento de conta')">através do nosso formulário de contacto</a>. Após o encerramento, todos os dados são eliminados no prazo de 30 dias.</p>
       <p>O LexVeritas pode suspender ou encerrar contas que violem estes termos, com ou sem aviso prévio consoante a gravidade da infracção.</p>
     </div>
@@ -217,26 +267,25 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     <h2 class="policy-title">Lei Aplicável e <span>Jurisdição</span></h2>
     <div class="policy-body">
       <p>Estes Termos de Serviço são regidos pela lei portuguesa. Qualquer litígio será submetido à jurisdição exclusiva dos tribunais portugueses competentes.</p>
-      <!-- CORRIGIDO: removido mailto -->
       <p>Para questões relacionadas com estes termos, <a onclick="abrirModal('Questão sobre Termos de Serviço')">contacte-nos através do formulário</a>.</p>
     </div>
   </div>
 
 </div>
 
+<!-- ═══ FOOTER ═══ -->
 <footer>
   <a href="/" class="footer-brand">Lex<span>Veritas</span></a>
-  <span class="footer-copy">© 2026 LexVeritas. Todos os direitos reservados.
-Marca e conteúdos protegidos nos termos do CDADC & CPI.</span>
+  <span class="footer-copy">© 2026 LexVeritas. Todos os direitos reservados.<br>Marca e conteúdos protegidos nos termos do CDADC &amp; CPI.</span>
 </footer>
 
-<!-- MODAL CONTACTO — Formspree -->
+<!-- ═══ MODAL CONTACTO ═══ -->
 <div class="modal-overlay" id="termos-modal" onclick="if(event.target===this)this.classList.remove('visible')">
   <div class="modal-box">
     <button class="modal-close" onclick="document.getElementById('termos-modal').classList.remove('visible')">×</button>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#c9a84c;margin-bottom:12px">Contacto</div>
-    <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:20px;font-style:italic;color:#f8f6f1;margin-bottom:6px">Fale connosco</h2>
-    <p style="font-size:13px;color:#9a9a9a;margin-bottom:18px;line-height:1.6">Respondemos em 24h.</p>
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Contacto</div>
+    <h2 style="font-family:var(--serif);font-size:22px;font-style:italic;color:var(--white);margin-bottom:6px">Fale connosco</h2>
+    <p style="font-size:14px;color:var(--grey);margin-bottom:18px;line-height:1.6">Respondemos em 24h úteis.</p>
     <div class="form-group"><label>Nome</label><input type="text" id="t-nome" placeholder="O seu nome"></div>
     <div class="form-group"><label>Email</label><input type="email" id="t-email" placeholder="o-seu@email.pt"></div>
     <div class="form-group">
@@ -251,30 +300,82 @@ Marca e conteúdos protegidos nos termos do CDADC & CPI.</span>
     </div>
     <div class="form-group"><label>Mensagem</label><textarea id="t-mensagem" placeholder="A sua mensagem..."></textarea></div>
     <button class="btn-submit" onclick="enviarTermos()">Enviar →</button>
-    <div id="t-msg" style="font-size:12px;margin-top:10px;display:none;padding:8px 12px"></div>
+    <div id="t-msg" style="font-size:13px;margin-top:10px;display:none;padding:8px 12px"></div>
   </div>
 </div>
 
 <script>
-function abrirModal(assunto){
-  const sel=document.getElementById('t-assunto');
-  if(assunto&&sel){Array.from(sel.options).forEach(o=>{if(o.value===assunto)o.selected=true;});}
+// ── COOKIE BANNER ──
+(function() {
+  function showCookieBanner() {
+    if (!localStorage.getItem('lv_cookie_consent')) {
+      setTimeout(function() {
+        var b = document.getElementById('cookieBanner');
+        if (b) b.classList.add('visible');
+      }, 800);
+    }
+  }
+  window.acceptCookies = function() {
+    localStorage.setItem('lv_cookie_consent', 'all');
+    hideCookieBanner();
+  };
+  window.rejectCookies = function() {
+    localStorage.setItem('lv_cookie_consent', 'essential');
+    hideCookieBanner();
+  };
+  function hideCookieBanner() {
+    var b = document.getElementById('cookieBanner');
+    if (b) { b.style.transform = 'translateY(100%)'; setTimeout(function(){ b.remove(); }, 500); }
+  }
+  window.addEventListener('load', showCookieBanner);
+})();
+
+// ── MODAL ──
+function abrirModal(assunto) {
+  const sel = document.getElementById('t-assunto');
+  if (assunto && sel) {
+    Array.from(sel.options).forEach(function(o) { if (o.value === assunto) o.selected = true; });
+  }
   document.getElementById('termos-modal').classList.add('visible');
 }
 
-async function enviarTermos(){
-  const nome=document.getElementById('t-nome').value.trim();
-  const email=document.getElementById('t-email').value.trim();
-  const assunto=document.getElementById('t-assunto').value;
-  const mensagem=document.getElementById('t-mensagem').value.trim();
-  const msg=document.getElementById('t-msg');
-  if(!nome||!email){msg.textContent='Preencha nome e email.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';msg.style.display='block';return;}
-  try{
-    const r=await fetch('https://formspree.io/f/mzdornkq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({nome,email,assunto:assunto||'Termos de Serviço',mensagem:mensagem||'—',pagina:'termos'})});
-    if(r.ok){msg.textContent='✓ Mensagem enviada! Respondemos em 24h.';msg.style.color='#1a5c3a';msg.style.background='rgba(26,92,58,0.15)';}
-    else throw new Error();
-  }catch(e){msg.textContent='Erro ao enviar. Tente novamente.';msg.style.color='#c97850';msg.style.background='rgba(139,26,26,0.15)';}
-  msg.style.display='block';
+// Fechar com Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.getElementById('termos-modal').classList.remove('visible');
+});
+
+// ── FORMULÁRIO ──
+async function enviarTermos() {
+  const nome = document.getElementById('t-nome').value.trim();
+  const email = document.getElementById('t-email').value.trim();
+  const assunto = document.getElementById('t-assunto').value;
+  const mensagem = document.getElementById('t-mensagem').value.trim();
+  const msg = document.getElementById('t-msg');
+  if (!nome || !email) {
+    msg.textContent = 'Preencha nome e email.';
+    msg.style.color = '#c97850';
+    msg.style.background = 'rgba(139,26,26,0.15)';
+    msg.style.display = 'block';
+    return;
+  }
+  try {
+    const r = await fetch('https://formspree.io/f/mzdornkq', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ nome, email, assunto: assunto || 'Termos de Serviço', mensagem: mensagem || '—', pagina: 'termos' })
+    });
+    if (r.ok) {
+      msg.textContent = '✓ Mensagem enviada! Respondemos em 24h.';
+      msg.style.color = '#99ffbb';
+      msg.style.background = 'rgba(26,92,58,0.15)';
+      ['t-nome','t-email','t-assunto','t-mensagem'].forEach(function(id) { document.getElementById(id).value = ''; });
+    } else throw new Error();
+  } catch(e) {
+    msg.textContent = 'Erro ao enviar. Tente novamente.';
+    msg.style.color = '#c97850';
+    msg.style.background = 'rgba(139,26,26,0.15)';
+  }
+  msg.style.display = 'block';
 }
 </script>
 </body>
