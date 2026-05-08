@@ -55,23 +55,24 @@
   @keyframes introLoad { to { width: 100%; } }
 
   /* ─── NAV ─── */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; background: rgba(6,6,8,0); border-bottom: 1px solid transparent; transition: background .4s ease, border-color .4s ease; }
+  /* FIX: overflow:hidden + flex-wrap:nowrap evita que a ul vaze para fora */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; background: rgba(6,6,8,0); border-bottom: 1px solid transparent; transition: background .4s ease, border-color .4s ease; overflow: hidden; flex-wrap: nowrap; }
   nav.scrolled { background: rgba(6,6,8,.97); backdrop-filter: blur(24px); border-bottom-color: var(--border); }
   .nav-logo { font-family: var(--serif); font-size: 26px; color: var(--white); text-decoration: none; font-style: italic; flex-shrink: 0; position: relative; z-index: 210; }
   .nav-logo span { color: var(--gold); }
 
-  /* Links desktop ocultos por defeito */
-  .nav-links { display: none; }
+  /* FIX: !important garante que os links nunca aparecem em mobile */
+  .nav-links { display: none !important; }
 
-  /* Hamburguer sempre visivel */
-  .nav-hamburger { position: relative; z-index: 210; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; width: 44px; height: 44px; padding: 0; background: none; border: 1px solid rgba(201,168,76,.3); cursor: pointer; flex-shrink: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: border-color .2s; }
+  /* FIX: hambúrguer sempre visível com !important, flex-shrink:0 para não ser esmagado */
+  .nav-hamburger { position: relative; z-index: 210; display: flex !important; flex-direction: column; justify-content: center; align-items: center; gap: 5px; width: 44px; height: 44px; min-width: 44px; padding: 0; background: none; border: 1px solid rgba(201,168,76,.3); cursor: pointer; flex-shrink: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: border-color .2s; }
   .nav-hamburger:hover { border-color: var(--gold); }
   .nav-hamburger span { display: block; width: 22px; height: 1.5px; background: var(--white); transition: transform .3s ease, opacity .3s ease; transform-origin: center; pointer-events: none; }
   .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
   .nav-hamburger.open span:nth-child(2) { opacity: 0; }
   .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-  /* Drawer cobre o ecra inteiro acima de tudo */
+  /* Drawer cobre o ecrã inteiro acima de tudo */
   .nav-drawer { position: fixed; inset: 0; z-index: 205; background: rgba(6,6,8,.98); backdrop-filter: blur(20px); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .35s ease, visibility .35s ease; }
   .nav-drawer.open { opacity: 1; visibility: visible; pointer-events: auto; }
   .nav-drawer ul { list-style: none; width: 100%; text-align: center; }
@@ -82,14 +83,15 @@
   .nav-drawer-cta { display: inline-block; margin-top: 32px; background: var(--gold); color: var(--black); padding: 16px 44px; font-family: var(--sans); font-weight: 800; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: background .2s; }
   .nav-drawer-cta:hover { background: var(--gold-light); }
 
-  /* 1280px+: links inline, hamburguer oculto */
+  /* 1280px+: links inline visíveis, hambúrguer oculto */
   @media (min-width: 1280px) {
-    .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+    .nav-links { display: flex !important; gap: 28px; list-style: none; align-items: center; }
     .nav-links a { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color .2s; }
     .nav-links a:hover { color: var(--white); }
     .nav-cta { background: var(--gold) !important; color: var(--black) !important; padding: 10px 22px !important; font-weight: 700 !important; }
     .nav-hamburger { display: none !important; }
     body { cursor: none; }
+    nav { overflow: visible; }
   }
   @media (max-width: 1279px) {
     nav { padding: 16px 20px; }
@@ -301,7 +303,7 @@
 <!-- ═══ NAV ═══ -->
 <nav id="nav">
   <a href="#" class="nav-logo">Lex<span>Veritas</span></a>
-  <!-- Desktop links -->
+  <!-- Desktop links — ocultos em mobile via CSS -->
   <ul class="nav-links">
     <li><a href="#metodologia">Metodologia</a></li>
     <li><a href="#analise-critica">Análise Crítica</a></li>
@@ -311,7 +313,7 @@
     <li><a href="/blog">Blog</a></li>
     <li><a href="/app" class="nav-cta">Aceder ao App</a></li>
   </ul>
-  <!-- Hamburger (mobile/tablet) -->
+  <!-- Hambúrguer — visível em mobile/tablet -->
   <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" type="button">
     <span></span><span></span><span></span>
   </button>
@@ -320,14 +322,14 @@
 <!-- Mobile drawer menu -->
 <div class="nav-drawer" id="navDrawer">
   <ul>
-    <li><a href="#metodologia" >Metodologia</a></li>
-    <li><a href="#analise-critica" >Análise Crítica</a></li>
-    <li><a href="#funcionalidades" >Funcionalidades</a></li>
-    <li><a href="#precos" >Preços</a></li>
-    <li><a href="/sobre" >Sobre</a></li>
-    <li><a href="/blog" >Blog</a></li>
+    <li><a href="#metodologia">Metodologia</a></li>
+    <li><a href="#analise-critica">Análise Crítica</a></li>
+    <li><a href="#funcionalidades">Funcionalidades</a></li>
+    <li><a href="#precos">Preços</a></li>
+    <li><a href="/sobre">Sobre</a></li>
+    <li><a href="/blog">Blog</a></li>
   </ul>
-  <a href="/app" class="nav-drawer-cta" >Aceder ao App →</a>
+  <a href="/app" class="nav-drawer-cta">Aceder ao App →</a>
 </div>
 
 <!-- ═══ HERO ═══ -->
@@ -774,7 +776,6 @@
     document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
   });
 
-  // ── HAMBURGER / DRAWER ──
   // ── HAMBURGUER ──
   (function() {
     var burger = document.getElementById('hamburger');
@@ -795,20 +796,16 @@
       if (drawer.classList.contains('open')) closeDrawer(); else openDrawer();
     }
 
-    // Suporte click e touch
     burger.addEventListener('click', function(e) { e.stopPropagation(); toggleDrawer(); });
 
-    // Links dentro do drawer fecham o menu
     drawer.querySelectorAll('a').forEach(function(a) {
       a.addEventListener('click', closeDrawer);
     });
 
-    // Fechar com Escape
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') { closeDrawer(); closeAllModals(); }
     });
 
-    // Expor para uso noutros sitios
     window.closeDrawer = closeDrawer;
   })();
 
@@ -825,7 +822,7 @@
 
   // ── MODALS ──
   function openModal(id) {
-    closeDrawer();
+    if (window.closeDrawer) closeDrawer();
     document.getElementById('modal-' + id).classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -836,11 +833,6 @@
   function closeAllModals() {
     document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
     document.body.style.overflow = '';
-  }
-
-  // ── LEGAL MODALS (privacidade / termos) ──
-  function openLegal(id) {
-    openModal(id);
   }
 
   // ── COOKIE BANNER ──
