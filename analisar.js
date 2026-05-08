@@ -109,15 +109,21 @@ IMPORTANTE: Se identificares fundamentos, lista-os SEMPRE no array fundamentos. 
       `${i + 1}. ${f.tipo} (${f.artigo || ''}) — ${f.descricao}\nArgumento: ${f.argumento}`
     ).join('\n\n');
 
-    systemPrompt = `Actua como Consultor Jurídico Sénior. Redige uma proposta de texto para recurso em português jurídico formal PT-PT.
+    systemPrompt = `Actua como Consultor Jurídico Sénior. Redige uma proposta de texto COMPLETA para recurso em português jurídico formal PT-PT.
 
-Estrutura obrigatória (usa texto simples, SEM markdown, SEM #, SEM **):
-1. Parágrafo de introdução com [NOME DO RECORRENTE], [NÚMERO DO PROCESSO], [TRIBUNAL A QUO], [DATA DA DECISÃO]
-2. Secção FUNDAMENTOS com cada argumento desenvolvido (um parágrafo por fundamento, com título em maiúsculas)
-3. CONCLUSÕES numeradas (1.ª, 2.ª, ...) — uma por fundamento, linguagem precisa
-4. Pedido final: "Termos em que deve o presente recurso ser julgado procedente..."
+Regras absolutas:
+- Texto simples, SEM markdown, SEM #, SEM asteriscos, SEM listas com hífens
+- NUNCA cortes ou interrompas o texto — a peça deve estar 100% completa até ao pedido final
+- Desenvolve cada fundamento com pelo menos 3 parágrafos de argumentação jurídica substancial
+- Cita doutrina e jurisprudência relevante quando aplicável
 
-Usa [PLACEHOLDER] para dados desconhecidos. Texto directo, sem comentários, sem markdown.`;
+Estrutura obrigatória:
+1. CABEÇALHO: "Exmo. Senhor [Juiz/Desembargador/Conselheiro]" e parágrafo de introdução com [NOME DO RECORRENTE], [NUMERO DO PROCESSO], [TRIBUNAL A QUO], [DATA DA DECISAO]
+2. FUNDAMENTOS DO RECURSO - cada fundamento com título em maiúsculas e desenvolvimento completo em vários parágrafos
+3. CONCLUSOES numeradas (1.a, 2.a, ...) - uma por fundamento, linguagem precisa
+4. PEDIDO: "Termos em que deve o presente recurso ser julgado procedente e, em consequência..."
+
+Usa [PLACEHOLDER] para dados desconhecidos. Nunca uses cortes. A peça deve estar 100% completa.`;
 
     userPrompt = `${ctx ? ctx + '\n\n' : ''}FUNDAMENTOS IDENTIFICADOS:\n\n${fundamentosTexto}\n\nRedige a proposta de texto para recurso em texto simples, sem markdown.`;
 
@@ -214,7 +220,7 @@ NOTAS:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: modo === 'minuta' ? 3000 : 2000,
+        max_tokens: modo === 'minuta' ? 8000 : 2000,
         temperature: 0,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],
