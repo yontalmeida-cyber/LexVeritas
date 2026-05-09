@@ -394,7 +394,7 @@ async function enviarPedido() {
       body: JSON.stringify({ nome, email, assunto: 'Pedido RGPD: ' + tipo, mensagem: msg || 'Sem descrição adicional.', pagina: 'privacidade' })
     });
     if (r.ok) {
-      resp.textContent = '✓ Pedido recebido. Respondemos em até 30 dias úteis.';
+      resp.textContent = '✓ Pedido recebido. Respondemos em até 30 dias.';
       resp.style.color = '#99ffbb';
       resp.style.background = 'rgba(26,92,58,0.15)';
       ['p-nome','p-email','p-tipo','p-msg'].forEach(id => { document.getElementById(id).value = ''; });
