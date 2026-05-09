@@ -1349,7 +1349,7 @@ function gerarPDFStandard() {
   try {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const W = 210, margin = 20, contentW = W - margin * 2; let y = 0;
+    const W = 210, margin = 20, contentW = W - margin * 2 - 4; let y = 0;
     const cGold = [201,168,76], cInk = [13,13,13], cLight = [245,240,232], cGrey = [140,140,140], cRed = [139,26,26], cGreen = [26,92,58], cOrange = [180,100,40];
     const labels = { 'IA_DETECTADA': 'IA Detectada', 'PROVAVELMENTE_IA': 'Provavelmente Gerado por IA', 'INCONCLUSIVO': 'Analise Inconclusiva', 'PROVAVELMENTE_HUMANO': 'Provavelmente Autoria Humana', 'HUMANO': 'Autoria Humana Confirmada' };
     const indLabels = { perplexidade: 'Perplexidade', burstiness: 'Burstiness', coesao_artificial: 'Coesao Artificial', uniformidade_sintatica: 'Uniformidade Sintatica', riqueza_lexical: 'Riqueza Lexical', marcadores_formulaicos: 'Marcadores Formulaicos' };
@@ -1359,8 +1359,8 @@ function gerarPDFStandard() {
     function sc(arr, type) { if (type === 'text') doc.setTextColor(arr[0], arr[1], arr[2]); if (type === 'fill') doc.setFillColor(arr[0], arr[1], arr[2]); if (type === 'draw') doc.setDrawColor(arr[0], arr[1], arr[2]); }
     function addFooter() { sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283); doc.setFontSize(7); sc(cGrey, 'text'); doc.setFont('helvetica', 'normal'); doc.text('LexVeritas - Analise Forense de IA - ' + lastRef, margin, 287); doc.text('Documento auxiliar. Nao constitui prova juridica definitiva.', W - margin, 287, { align: 'right' }); }
     function checkY(n) { if (y + n > 275) { addFooter(); doc.addPage(); y = 24; sc(cGold, 'fill'); doc.rect(0, 0, W, 10, 'F'); sc([255,255,255], 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text('LEXVERITAS - RELATORIO FORENSE', margin, 7); doc.text(lastRef, W - margin, 7, { align: 'right' }); } }
-    function sectionHeader(title) { checkY(12); sc(cLight, 'fill'); doc.rect(margin, y, contentW, 7, 'F'); sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW, 7, 'S'); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text(title, margin + 3, y + 5); y += 11; }
-    function bodyText(text) { const paras = (text || '').split('\n'); paras.forEach((para, pi) => { if (!para.trim()) { if (pi < paras.length - 1) { checkY(4); y += 3; } return; } const lines = doc.splitTextToSize(para, contentW); lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.text(l, margin, y); y += 5.5; }); if (pi < paras.length - 1) y += 2; }); }
+    function sectionHeader(title) { checkY(12); sc(cLight, 'fill'); doc.rect(margin, y, contentW + 4, 7, 'F'); sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW + 4, 7, 'S'); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text(title, margin + 3, y + 5); y += 11; }
+    function bodyText(text) { const safeW = contentW; const paras = (text || '').split('\n'); paras.forEach((para, pi) => { if (!para.trim()) { if (pi < paras.length - 1) { checkY(4); y += 3; } return; } doc.setFontSize(9); doc.setFont('helvetica', 'normal'); const lines = doc.splitTextToSize(para, safeW); lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.text(l, margin, y); y += 5.5; }); if (pi < paras.length - 1) y += 2; }); }
     sc(cGold, 'fill'); doc.rect(0, 0, W, 32, 'F'); sc([255,255,255], 'text'); doc.setFontSize(30); doc.setFont('helvetica', 'bold'); doc.text('LexVeritas', margin, 18); doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.text('RELATORIO FORENSE DE ANALISE DE INTELIGENCIA ARTIFICIAL', margin, 26); doc.text(dateStr.toUpperCase() + ' - ' + timeStr, W - margin, 18, { align: 'right' }); doc.text(lastRef, W - margin, 26, { align: 'right' });
     y = 42;
     sc(cLight, 'fill'); doc.rect(margin, y, contentW, 24, 'F'); sc(cGold, 'draw'); doc.setLineWidth(0.5); doc.rect(margin, y, contentW, 24, 'S');
@@ -1397,15 +1397,13 @@ function gerarPDFStandard() {
     if (rel && !rel.toLowerCase().includes('nao indicado') && !rel.toLowerCase().includes('não indicado')) { sectionHeader(relLabel); bodyText(rel); y += 4; }
     sectionHeader('MARCADORES IDENTIFICADOS');
     (lastResult.marcadores || []).forEach(m => {
-      checkY(12); const isAI = m.tipo === 'ai';
+      const isAI = m.tipo === 'ai';
       const bgC = isAI ? [255,242,230] : [230,245,235], txtC = isAI ? cRed : cGreen;
-      sc(bgC, 'fill'); doc.rect(margin, y - 3, contentW, 9, 'F');
-      sc(txtC, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold'); doc.text(isAI ? '[!]' : '[OK]', margin + 2, y + 3);
-      sc(cInk, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8); doc.setFont('helvetica', 'normal');
       const mLines = doc.splitTextToSize(m.texto || '', contentW - 16);
       const blockH = Math.max(9, mLines.length * 5.5 + 3);
       checkY(blockH);
-      sc(bgC, 'fill'); doc.rect(margin, y - 3, contentW, blockH, 'F');
+      sc(bgC, 'fill'); doc.rect(margin, y - 3, contentW + 4, blockH, 'F');
       sc(txtC, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold'); doc.text(isAI ? '[!]' : '[OK]', margin + 2, y + 3);
       sc(cInk, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'normal');
       mLines.forEach((l, li) => { doc.text(l, margin + 14, y + 3 + li * 5.5); });
@@ -1423,7 +1421,7 @@ function gerarPDFCritica() {
   try {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const W = 210, margin = 20, contentW = W - margin * 2; let y = 0;
+    const W = 210, margin = 20, contentW = W - margin * 2 - 4; let y = 0;
     const cGold = [201,168,76], cInk = [13,13,13], cLight = [245,240,232], cGrey = [140,140,140], cRed = [139,26,26], cGreen = [26,92,58], cOrange = [180,100,40];
     const now = new Date(), dateStr = now.toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' }), timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
     const veredicto = lastResult.veredicto_recurso || 'RECURSO_INVIAVEL';
@@ -1432,8 +1430,8 @@ function gerarPDFCritica() {
     function sc(arr, type) { if (type === 'text') doc.setTextColor(arr[0], arr[1], arr[2]); if (type === 'fill') doc.setFillColor(arr[0], arr[1], arr[2]); if (type === 'draw') doc.setDrawColor(arr[0], arr[1], arr[2]); }
     function addFooter() { sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283); doc.setFontSize(7); sc(cGrey, 'text'); doc.setFont('helvetica', 'normal'); doc.text('LexVeritas - Analise Critica de Decisao Judicial - ' + lastRef, margin, 287); doc.text('Documento auxiliar. Nao substitui consulta juridica profissional.', W - margin, 287, { align: 'right' }); }
     function checkY(n) { if (y + n > 275) { addFooter(); doc.addPage(); y = 24; sc(cRed, 'fill'); doc.rect(0, 0, W, 10, 'F'); sc([255,255,255], 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text('LEXVERITAS - ANALISE CRITICA / RECURSO', margin, 7); doc.text(lastRef, W - margin, 7, { align: 'right' }); } }
-    function sectionHeader(title) { checkY(12); sc(cLight, 'fill'); doc.rect(margin, y, contentW, 7, 'F'); sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW, 7, 'S'); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text(title, margin + 3, y + 5); y += 11; }
-    function bodyText(text) { const paras = (text || '').split('\n'); paras.forEach((para, pi) => { if (!para.trim()) { if (pi < paras.length - 1) { checkY(4); y += 3; } return; } const lines = doc.splitTextToSize(para, contentW); lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.text(l, margin, y); y += 5.5; }); if (pi < paras.length - 1) y += 2; }); }
+    function sectionHeader(title) { checkY(12); sc(cLight, 'fill'); doc.rect(margin, y, contentW + 4, 7, 'F'); sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW + 4, 7, 'S'); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text(title, margin + 3, y + 5); y += 11; }
+    function bodyText(text) { const safeW = contentW; const paras = (text || '').split('\n'); paras.forEach((para, pi) => { if (!para.trim()) { if (pi < paras.length - 1) { checkY(4); y += 3; } return; } doc.setFontSize(9); doc.setFont('helvetica', 'normal'); const lines = doc.splitTextToSize(para, safeW); lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.text(l, margin, y); y += 5.5; }); if (pi < paras.length - 1) y += 2; }); }
     sc(cRed, 'fill'); doc.rect(0, 0, W, 10, 'F'); sc(cGold, 'fill'); doc.rect(0, 10, W, 22, 'F');
     sc([255,255,255], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold'); doc.text('LEXVERITAS — CONSULTOR JURIDICO SENIOR — ANALISE CRITICA DE RECURSO', margin, 7);
     sc(cInk, 'text'); doc.setFontSize(30); doc.setFont('helvetica', 'bold'); doc.text('LexVeritas', margin, 26);
@@ -1468,11 +1466,11 @@ function gerarPDFCritica() {
       sc(cGold, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'normal');
       if (f.artigo) doc.text(f.artigo, W - margin, y + 3, { align: 'right' });
       y += 7;
-      if (f.descricao) { const dlines = doc.splitTextToSize(f.descricao, contentW - 4); dlines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.setFontSize(8.5); doc.setFont('helvetica', 'normal'); doc.text(l, margin + 4, y); y += 5; }); }
+      if (f.descricao) { doc.setFontSize(8.5); doc.setFont('helvetica', 'normal'); const dlines = doc.splitTextToSize(f.descricao, contentW - 4); dlines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.setFontSize(8.5); doc.setFont('helvetica', 'normal'); doc.text(l, margin + 4, y); y += 5; }); }
       if (f.argumento) {
-        checkY(16); sc([255,251,240], 'fill'); doc.rect(margin, y, contentW, 5, 'F');
+        checkY(16); sc([255,251,240], 'fill'); doc.rect(margin, y, contentW + 4, 5, 'F');
         sc(cGold, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text('ARGUMENTO PARA RECURSO:', margin + 3, y + 3.5); y += 6;
-        const alines = doc.splitTextToSize(f.argumento, contentW - 6); alines.forEach(l => { checkY(6); sc([80,60,20], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'italic'); doc.text(l, margin + 3, y); y += 5; });
+        doc.setFontSize(8); doc.setFont('helvetica', 'italic'); const alines = doc.splitTextToSize(f.argumento, contentW - 6); alines.forEach(l => { checkY(6); sc([80,60,20], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'italic'); doc.text(l, margin + 3, y); y += 5; });
       }
       y += 6;
     });
