@@ -274,7 +274,7 @@
   .footer-contact { font-family: var(--mono); font-size: 9px; color: var(--gold); cursor: pointer; letter-spacing: 0.1em; text-decoration: none; transition: opacity 0.2s; }
   .footer-contact:hover { opacity: 0.7; }
 
-  /* MODALS — unified dark style */
+  /* MODALS */
   .dark-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; backdrop-filter: blur(6px); }
   .dark-modal-overlay.visible { display: flex; }
   .dark-modal-box { background: var(--card); border: 1px solid var(--rule-dark); padding: 36px; max-width: 480px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
@@ -725,7 +725,7 @@
   </div>
 </div>
 
-<!-- MODAL UPGRADE (dark, unified) -->
+<!-- MODAL UPGRADE -->
 <div class="dark-modal-overlay" id="modal-upgrade" onclick="if(event.target===this)this.classList.remove('visible')">
   <div class="dark-modal-box">
     <button class="dark-modal-close" onclick="document.getElementById('modal-upgrade').classList.remove('visible')">×</button>
@@ -748,7 +748,7 @@
   </div>
 </div>
 
-<!-- MODAL CONTACTO (dark, unified) -->
+<!-- MODAL CONTACTO -->
 <div class="dark-modal-overlay" id="contacto-modal" onclick="if(event.target===this)this.classList.remove('visible')">
   <div class="dark-modal-box">
     <button class="dark-modal-close" onclick="document.getElementById('contacto-modal').classList.remove('visible')">×</button>
@@ -783,14 +783,12 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null, userProfile = null, lastRef = null;
 let pdfText = null, modoActual = 'judicial', loginInProgress = false;
 
-// lastResult persiste em sessionStorage para sobreviver à navegação entre tabs
 function getLastResult() {
   try { const s = sessionStorage.getItem('lv_last_result'); return s ? JSON.parse(s) : null; } catch { return null; }
 }
 function setLastResult(r) {
   try { sessionStorage.setItem('lv_last_result', JSON.stringify(r)); } catch {}
 }
-// Alias para compatibilidade com código existente
 Object.defineProperty(window, 'lastResult', {
   get() { return getLastResult(); },
   set(v) { setLastResult(v); },
@@ -904,7 +902,6 @@ async function recuperarPassword() {
 
 async function logout() { await sb.auth.signOut(); currentUser = null; userProfile = null; showPage('login'); }
 
-// ── AUTH STATE ──
 sb.auth.onAuthStateChange((event, session) => {
   if (loginInProgress) return;
   if (event === 'SIGNED_OUT') { hideLvLoad(); showPage('login'); }
@@ -915,7 +912,6 @@ function hideLvLoad() {
   if (lvLoad) { lvLoad.classList.add('done'); setTimeout(() => lvLoad.style.display = 'none', 600); }
 }
 
-// ── INIT: verificar sessão antes de esconder loading ──
 const _hashParams = new URLSearchParams(window.location.hash.substring(1));
 const _urlParams = new URLSearchParams(window.location.search);
 
@@ -935,7 +931,7 @@ if (_hashParams.get('type') === 'recovery') {
     } else {
       showPage('login');
     }
-    hideLvLoad(); // esconde DEPOIS de verificar sessão
+    hideLvLoad();
   });
 }
 
@@ -1153,7 +1149,6 @@ async function analyzeDecision() {
     if (modoActual === 'critica') renderResultsCritica(result); else renderResults(result);
     if (window.innerWidth <= 760) setTimeout(() => { const el = document.getElementById('results-area'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 900);
 
-    // Guardar no Supabase
     let dbRecord = { user_id: currentUser.id, modo: modoActual, tribunal: payload.tribunal || payload.instituicao || null, relator: payload.relator || payload.tipoDoc || null };
     if (modoActual === 'critica') {
       dbRecord.veredicto = result.veredicto_recurso || 'INCONCLUSIVO';
@@ -1244,7 +1239,6 @@ function renderResultsCritica(result) {
   }
   document.getElementById('critica-sumario').innerHTML = (result.sumario || 'Sem sumário disponível.').replace(/\n/g, '<br>');
 
-  // FIX CRÍTICO: usar fundamentos OU nulidades (compatibilidade)
   const container = document.getElementById('nulidades-container'); container.innerHTML = '';
   const fundamentos = result.fundamentos || result.nulidades || [];
   const catLabels = { nulidade: 'Nulidade Processual', erro_direito: 'Erro de Direito', erro_facto: 'Erro de Facto', questao_constitucional: 'Questão Constitucional' };
@@ -1277,25 +1271,17 @@ function renderResultsCritica(result) {
 }
 
 // ── MINUTA ──
-// Converte Markdown simples para HTML legível
 function renderMinuta(text) {
   if (!text) return '';
   return text
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    // Títulos ## → negrito grande
     .replace(/^## (.+)$/gm, '<div style="font-weight:700;font-size:14px;margin:16px 0 6px;font-family:var(--sans);letter-spacing:.05em;text-transform:uppercase;color:#333">$1</div>')
     .replace(/^# (.+)$/gm, '<div style="font-weight:700;font-size:15px;margin:16px 0 8px;font-family:var(--sans)">$1</div>')
-    // Negrito **texto**
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    // Itálico *texto*
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    // Linha horizontal ---
     .replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid #ddd;margin:16px 0">')
-    // Parágrafos (linhas duplas)
     .replace(/\n\n/g, '</p><p style="margin-bottom:10px">')
-    // Quebras simples
     .replace(/\n/g, '<br>')
-    // Wrap inicial
     .replace(/^/, '<p style="margin-bottom:10px">')
     .replace(/$/, '</p>');
 }
@@ -1303,7 +1289,6 @@ function renderMinuta(text) {
 function copiarMinuta() {
   const text = document.getElementById('minuta-body').innerText || document.getElementById('minuta-body').textContent;
   if (!text) return;
-  // Clipboard API moderna com fallback
   const doFallback = () => {
     const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
     document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
@@ -1417,70 +1402,204 @@ function gerarPDFStandard() {
   } catch (err) { console.error('Erro PDF:', err); alert('Erro ao gerar PDF: ' + err.message); }
 }
 
+// ── GERAR PDF CRÍTICA — CORRIGIDO ──
 function gerarPDFCritica() {
   try {
     const { jsPDF } = window.jspdf;
+
+    // Função auxiliar: garante que qualquer valor passado ao jsPDF é sempre uma string válida
+    const safeStr = (v) => {
+      if (v === null || v === undefined) return '';
+      return String(v);
+    };
+
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const W = 210, margin = 20, contentW = W - margin * 2 - 4; let y = 0;
     const cGold = [201,168,76], cInk = [13,13,13], cLight = [245,240,232], cGrey = [140,140,140], cRed = [139,26,26], cGreen = [26,92,58], cOrange = [180,100,40];
-    const now = new Date(), dateStr = now.toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' }), timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-    const veredicto = lastResult.veredicto_recurso || 'RECURSO_INVIAVEL';
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+    const veredicto = safeStr(lastResult.veredicto_recurso || 'RECURSO_INVIAVEL');
     const vColor = veredicto === 'RECURSO_VIAVEL' ? cGreen : veredicto === 'RECURSO_PARCIAL' ? cOrange : cGrey;
-    const vLabels = { 'RECURSO_VIAVEL': 'Recurso Viavel - Fundamentos Identificados', 'RECURSO_PARCIAL': 'Recurso Parcialmente Fundamentado', 'RECURSO_INVIAVEL': 'Sem Fundamentos Solidos para Recurso' };
-    function sc(arr, type) { if (type === 'text') doc.setTextColor(arr[0], arr[1], arr[2]); if (type === 'fill') doc.setFillColor(arr[0], arr[1], arr[2]); if (type === 'draw') doc.setDrawColor(arr[0], arr[1], arr[2]); }
-    function addFooter() { sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283); doc.setFontSize(7); sc(cGrey, 'text'); doc.setFont('helvetica', 'normal'); doc.text('LexVeritas - Analise Critica de Decisao Judicial - ' + lastRef, margin, 287); doc.text('Documento auxiliar. Nao substitui consulta juridica profissional.', W - margin, 287, { align: 'right' }); }
-    function checkY(n) { if (y + n > 275) { addFooter(); doc.addPage(); y = 24; sc(cRed, 'fill'); doc.rect(0, 0, W, 10, 'F'); sc([255,255,255], 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text('LEXVERITAS - ANALISE CRITICA / RECURSO', margin, 7); doc.text(lastRef, W - margin, 7, { align: 'right' }); } }
-    function sectionHeader(title) { checkY(12); sc(cLight, 'fill'); doc.rect(margin, y, contentW + 4, 7, 'F'); sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW + 4, 7, 'S'); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text(title, margin + 3, y + 5); y += 11; }
-    function bodyText(text) { const safeW = contentW; const paras = (text || '').split('\n'); paras.forEach((para, pi) => { if (!para.trim()) { if (pi < paras.length - 1) { checkY(4); y += 3; } return; } doc.setFontSize(9); doc.setFont('helvetica', 'normal'); const lines = doc.splitTextToSize(para, safeW); lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.text(l, margin, y); y += 5.5; }); if (pi < paras.length - 1) y += 2; }); }
-    sc(cRed, 'fill'); doc.rect(0, 0, W, 10, 'F'); sc(cGold, 'fill'); doc.rect(0, 10, W, 22, 'F');
-    sc([255,255,255], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold'); doc.text('LEXVERITAS — CONSULTOR JURIDICO SENIOR — ANALISE CRITICA DE RECURSO', margin, 7);
-    sc(cInk, 'text'); doc.setFontSize(30); doc.setFont('helvetica', 'bold'); doc.text('LexVeritas', margin, 26);
-    doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.text('RELATORIO DE ANALISE CRITICA — NULIDADES E ARGUMENTOS DE RECURSO', margin, 32);
-    doc.text(dateStr.toUpperCase() + ' - ' + timeStr, W - margin, 26, { align: 'right' }); doc.text(lastRef, W - margin, 32, { align: 'right' });
-    y = 46;
-    sc(cLight, 'fill'); doc.rect(margin, y, contentW, 20, 'F'); sc(cGold, 'draw'); doc.setLineWidth(0.5); doc.rect(margin, y, contentW, 20, 'S');
-    const col1 = margin + 4, col2 = margin + 64, col3 = margin + 128;
-    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text('TRIBUNAL', col1, y + 5); doc.text('TIPO DE PROCESSO', col2, y + 5); doc.text('PARTE RECORRENTE', col3, y + 5);
-    sc(cInk, 'text'); doc.setFontSize(9); doc.setFont('helvetica', 'bold');
-    doc.text((lastResult._tribunal || 'Nao indicado').substring(0, 26), col1, y + 13); doc.text((lastResult._tipoProcesso || 'Nao indicado').substring(0, 22), col2, y + 13); doc.text((lastResult._parteRecorrente || 'Nao indicado').substring(0, 20), col3, y + 13);
-    y += 28;
-    sc(vColor, 'draw'); doc.setLineWidth(1.5); doc.line(margin, y, margin, y + 22);
-    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text('AVALIACAO DO RECURSO', margin + 5, y + 5);
-    sc(vColor, 'text'); doc.setFontSize(17); doc.setFont('helvetica', 'bold'); doc.text(vLabels[veredicto] || veredicto, margin + 5, y + 16);
-    const bx = W - margin - 36, by2 = y + 1, bw = 34, bh = 20;
-    sc(cLight, 'fill'); doc.rect(bx, by2, bw, bh, 'F'); sc(vColor, 'draw'); doc.setLineWidth(0.8); doc.rect(bx, by2, bw, bh, 'S');
-    sc(vColor, 'text'); doc.setFontSize(18); doc.setFont('helvetica', 'bold'); doc.text((lastResult.confianca || 0) + '%', bx + bw / 2, by2 + 12, { align: 'center' });
-    sc(cGrey, 'text'); doc.setFontSize(6); doc.setFont('helvetica', 'normal'); doc.text('FUNDAMENTO', bx + bw / 2, by2 + 18, { align: 'center' });
-    y += 30;
-    sectionHeader('SUMARIO EXECUTIVO'); bodyText(lastResult.sumario || ''); y += 4;
+    const vLabels = {
+      'RECURSO_VIAVEL': 'Recurso Viavel - Fundamentos Identificados',
+      'RECURSO_PARCIAL': 'Recurso Parcialmente Fundamentado',
+      'RECURSO_INVIAVEL': 'Sem Fundamentos Solidos para Recurso'
+    };
 
-    // FIX CRÍTICO: usar fundamentos || nulidades
+    function sc(arr, type) {
+      if (type === 'text') doc.setTextColor(arr[0], arr[1], arr[2]);
+      if (type === 'fill') doc.setFillColor(arr[0], arr[1], arr[2]);
+      if (type === 'draw') doc.setDrawColor(arr[0], arr[1], arr[2]);
+    }
+
+    function addFooter() {
+      sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283);
+      doc.setFontSize(7); sc(cGrey, 'text'); doc.setFont('helvetica', 'normal');
+      doc.text('LexVeritas - Analise Critica de Decisao Judicial - ' + safeStr(lastRef), margin, 287);
+      doc.text('Documento auxiliar. Nao substitui consulta juridica profissional.', W - margin, 287, { align: 'right' });
+    }
+
+    function checkY(n) {
+      if (y + n > 275) {
+        addFooter(); doc.addPage(); y = 24;
+        sc(cRed, 'fill'); doc.rect(0, 0, W, 10, 'F');
+        sc([255,255,255], 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
+        doc.text('LEXVERITAS - ANALISE CRITICA / RECURSO', margin, 7);
+        doc.text(safeStr(lastRef), W - margin, 7, { align: 'right' });
+      }
+    }
+
+    function sectionHeader(title) {
+      checkY(12);
+      sc(cLight, 'fill'); doc.rect(margin, y, contentW + 4, 7, 'F');
+      sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW + 4, 7, 'S');
+      sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
+      doc.text(safeStr(title), margin + 3, y + 5);
+      y += 11;
+    }
+
+    function bodyText(text) {
+      const safeW = contentW;
+      const paras = safeStr(text).split('\n');
+      paras.forEach((para, pi) => {
+        if (!para.trim()) { if (pi < paras.length - 1) { checkY(4); y += 3; } return; }
+        doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+        const lines = doc.splitTextToSize(para, safeW);
+        lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.text(safeStr(l), margin, y); y += 5.5; });
+        if (pi < paras.length - 1) y += 2;
+      });
+    }
+
+    // ── CABEÇALHO ──
+    sc(cRed, 'fill'); doc.rect(0, 0, W, 10, 'F');
+    sc(cGold, 'fill'); doc.rect(0, 10, W, 22, 'F');
+    sc([255,255,255], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+    doc.text('LEXVERITAS - CONSULTOR JURIDICO SENIOR - ANALISE CRITICA DE RECURSO', margin, 7);
+    sc(cInk, 'text'); doc.setFontSize(30); doc.setFont('helvetica', 'bold');
+    doc.text('LexVeritas', margin, 26);
+    doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+    doc.text('RELATORIO DE ANALISE CRITICA - NULIDADES E ARGUMENTOS DE RECURSO', margin, 32);
+    doc.text(dateStr.toUpperCase() + ' - ' + timeStr, W - margin, 26, { align: 'right' });
+    doc.text(safeStr(lastRef), W - margin, 32, { align: 'right' });
+    y = 46;
+
+    // ── CONTEXTO ──
+    sc(cLight, 'fill'); doc.rect(margin, y, contentW, 20, 'F');
+    sc(cGold, 'draw'); doc.setLineWidth(0.5); doc.rect(margin, y, contentW, 20, 'S');
+    const col1 = margin + 4, col2 = margin + 64, col3 = margin + 128;
+    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
+    doc.text('TRIBUNAL', col1, y + 5);
+    doc.text('TIPO DE PROCESSO', col2, y + 5);
+    doc.text('PARTE RECORRENTE', col3, y + 5);
+    sc(cInk, 'text'); doc.setFontSize(9); doc.setFont('helvetica', 'bold');
+    doc.text(safeStr(lastResult._tribunal || 'Nao indicado').substring(0, 26), col1, y + 13);
+    doc.text(safeStr(lastResult._tipoProcesso || 'Nao indicado').substring(0, 22), col2, y + 13);
+    doc.text(safeStr(lastResult._parteRecorrente || 'Nao indicado').substring(0, 20), col3, y + 13);
+    y += 28;
+
+    // ── VEREDICTO ──
+    sc(vColor, 'draw'); doc.setLineWidth(1.5); doc.line(margin, y, margin, y + 22);
+    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
+    doc.text('AVALIACAO DO RECURSO', margin + 5, y + 5);
+    sc(vColor, 'text'); doc.setFontSize(17); doc.setFont('helvetica', 'bold');
+    doc.text(safeStr(vLabels[veredicto] || veredicto), margin + 5, y + 16);
+    const bx = W - margin - 36, by2 = y + 1, bw = 34, bh = 20;
+    sc(cLight, 'fill'); doc.rect(bx, by2, bw, bh, 'F');
+    sc(vColor, 'draw'); doc.setLineWidth(0.8); doc.rect(bx, by2, bw, bh, 'S');
+    sc(vColor, 'text'); doc.setFontSize(18); doc.setFont('helvetica', 'bold');
+    doc.text(safeStr(lastResult.confianca || 0) + '%', bx + bw / 2, by2 + 12, { align: 'center' });
+    sc(cGrey, 'text'); doc.setFontSize(6); doc.setFont('helvetica', 'normal');
+    doc.text('FUNDAMENTO', bx + bw / 2, by2 + 18, { align: 'center' });
+    y += 30;
+
+    // ── SUMÁRIO ──
+    sectionHeader('SUMARIO EXECUTIVO');
+    bodyText(lastResult.sumario || 'Sem sumario disponivel.');
+    y += 4;
+
+    // ── FUNDAMENTOS ──
     const fundamentos = lastResult.fundamentos || lastResult.nulidades || [];
     sectionHeader('FUNDAMENTOS E VICIOS PROCESSUAIS IDENTIFICADOS (' + fundamentos.length + ')');
+
     fundamentos.forEach((f, i) => {
       checkY(28);
-      const grav = (f.gravidade || 'grave').toUpperCase();
+      const grav = safeStr(f.gravidade || 'grave').toUpperCase();
       const nColor = grav === 'GRAVE' ? cRed : grav === 'MODERADA' ? cOrange : cGrey;
+
+      // Linha colorida lateral
       sc(nColor, 'draw'); doc.setLineWidth(0.8); doc.line(margin, y, margin, y + 4);
-      sc(nColor, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold'); doc.text((i + 1) + '. ' + (f.tipo || 'Fundamento'), margin + 4, y + 3);
-      sc(cGold, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'normal');
-      if (f.artigo) doc.text(f.artigo, W - margin, y + 3, { align: 'right' });
-      y += 7;
-      if (f.descricao) { doc.setFontSize(8.5); doc.setFont('helvetica', 'normal'); const dlines = doc.splitTextToSize(f.descricao, contentW - 4); dlines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.setFontSize(8.5); doc.setFont('helvetica', 'normal'); doc.text(l, margin + 4, y); y += 5; }); }
-      if (f.argumento) {
-        checkY(16); sc([255,251,240], 'fill'); doc.rect(margin, y, contentW + 4, 5, 'F');
-        sc(cGold, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text('ARGUMENTO PARA RECURSO:', margin + 3, y + 3.5); y += 6;
-        doc.setFontSize(8); doc.setFont('helvetica', 'italic'); const alines = doc.splitTextToSize(f.argumento, contentW - 6); alines.forEach(l => { checkY(6); sc([80,60,20], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'italic'); doc.text(l, margin + 3, y); y += 5; });
+
+      // Título do fundamento
+      sc(nColor, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+      doc.text(safeStr((i + 1) + '. ' + (f.tipo || 'Fundamento')), margin + 4, y + 3);
+
+      // Artigo (à direita)
+      if (f.artigo) {
+        sc(cGold, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+        doc.text(safeStr(f.artigo), W - margin, y + 3, { align: 'right' });
       }
+      y += 7;
+
+      // Descrição
+      if (f.descricao) {
+        const dlines = doc.splitTextToSize(safeStr(f.descricao), contentW - 4);
+        dlines.forEach(l => {
+          checkY(6); sc(cInk, 'text'); doc.setFontSize(8.5); doc.setFont('helvetica', 'normal');
+          doc.text(safeStr(l), margin + 4, y); y += 5;
+        });
+      }
+
+      // Argumento
+      if (f.argumento) {
+        checkY(16);
+        sc([255,251,240], 'fill'); doc.rect(margin, y, contentW + 4, 5, 'F');
+        sc(cGold, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
+        doc.text('ARGUMENTO PARA RECURSO:', margin + 3, y + 3.5);
+        y += 6;
+        const alines = doc.splitTextToSize(safeStr(f.argumento), contentW - 6);
+        alines.forEach(l => {
+          checkY(6); sc([80,60,20], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'italic');
+          doc.text(safeStr(l), margin + 3, y); y += 5;
+        });
+      }
+
+      // Dificuldade e categoria (se existir)
+      if (f.dificuldade || f.categoria) {
+        checkY(6);
+        const difTexts = { facil: 'Facilidade: facil', media: 'Facilidade: media', dificil: 'Facilidade: dificil' };
+        const catTexts = { nulidade: 'Nulidade Processual', erro_direito: 'Erro de Direito', erro_facto: 'Erro de Facto', questao_constitucional: 'Questao Constitucional' };
+        const extras = [];
+        if (f.dificuldade) extras.push(safeStr(difTexts[f.dificuldade] || f.dificuldade));
+        if (f.categoria && f.categoria !== 'nulidade') extras.push(safeStr(catTexts[f.categoria] || f.categoria));
+        if (extras.length > 0) {
+          sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
+          doc.text(extras.join(' · '), margin + 4, y); y += 5;
+        }
+      }
+
       y += 6;
     });
-    sectionHeader('RECOMENDACAO DO CONSULTOR JURIDICO'); bodyText(lastResult.conclusao || ''); y += 8;
-    checkY(16); sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, y, W - margin, y); y += 6;
+
+    // ── RECOMENDAÇÃO ──
+    sectionHeader('RECOMENDACAO DO CONSULTOR JURIDICO');
+    bodyText(lastResult.conclusao || 'Sem recomendacao disponivel.');
+    y += 8;
+
+    // ── DISCLAIMER ──
+    checkY(16);
+    sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, y, W - margin, y); y += 6;
     sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'italic');
-    const disc = 'Este relatorio foi produzido pelo sistema LexVeritas no modo Consultor Juridico Senior. Os resultados tem caracter auxiliar e nao substituem consulta juridica profissional. Ref: ' + lastRef + '. Data: ' + dateStr + ' ' + timeStr + '.';
-    doc.splitTextToSize(disc, contentW).forEach(l => { doc.text(l, margin, y); y += 4; });
-    addFooter(); doc.save('LexVeritas-Critica-' + lastRef + '.pdf');
-  } catch (err) { console.error('Erro PDF Critica:', err); alert('Erro ao gerar PDF: ' + err.message); }
+    const disc = 'Este relatorio foi produzido pelo sistema LexVeritas no modo Consultor Juridico Senior. Os resultados tem caracter auxiliar e nao substituem consulta juridica profissional. Ref: ' + safeStr(lastRef) + '. Data: ' + dateStr + ' ' + timeStr + '.';
+    doc.splitTextToSize(disc, contentW).forEach(l => { doc.text(safeStr(l), margin, y); y += 4; });
+
+    addFooter();
+    doc.save('LexVeritas-Critica-' + safeStr(lastRef) + '.pdf');
+
+  } catch (err) {
+    console.error('Erro PDF Critica:', err);
+    alert('Erro ao gerar PDF: ' + err.message);
+  }
 }
 
 // ── HISTÓRICO ──
@@ -1518,7 +1637,6 @@ async function loadHistory() {
     }
     const narrativaLabel = isCritica ? 'Sumário Executivo' : 'Fundamentação da Análise';
     const narrativaHtml = a.narrativa ? `<div class="analysis-card" style="margin-bottom:16px"><h3>${narrativaLabel}</h3><p>${(a.narrativa || '').replace(/\n/g, '<br>')}</p></div>` : '';
-    // Nulidades/fundamentos no histórico
     let nulidadesHtml = '';
     if (isCritica && a.marcadores && a.marcadores.length > 0) {
       nulidadesHtml = `<div style="margin-bottom:16px"><div class="nulidades-section-label" style="margin-bottom:12px">${a.marcadores.length} Fundamento${a.marcadores.length > 1 ? 's' : ''} Identificado${a.marcadores.length > 1 ? 's' : ''}</div>${a.marcadores.map(n => { const grav = (n.gravidade || 'grave').toLowerCase(); return `<div class="nulidade-card ${grav === 'grave' ? '' : grav}"><div class="nulidade-header"><span class="nulidade-tipo-badge">${n.tipo || 'Vício Processual'}</span><span class="nulidade-artigo">${n.artigo || ''}</span></div><p class="nulidade-desc">${n.descricao || ''}</p>${n.argumento ? `<div class="nulidade-argumento"><span class="nulidade-argumento-label">Argumento para Recurso</span><span class="nulidade-argumento-text">${n.argumento}</span></div>` : ''}</div>`; }).join('')}</div>`;
@@ -1536,7 +1654,6 @@ async function loadHistory() {
 
 function toggleHistory(idx) { document.getElementById('hist-' + idx).classList.toggle('open'); }
 
-// ── LISTA DE ESPERA — com validação ──
 async function inscreverListaEspera() {
   const email = document.getElementById('upgrade-email').value.trim();
   const msg = document.getElementById('upgrade-msg');
@@ -1548,7 +1665,6 @@ async function inscreverListaEspera() {
   document.getElementById('upgrade-email').value = '';
 }
 
-// Fechar modais com Escape
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     document.querySelectorAll('.dark-modal-overlay.visible').forEach(m => m.classList.remove('visible'));
