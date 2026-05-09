@@ -55,16 +55,16 @@
   @keyframes introLoad { to { width: 100%; } }
 
   /* ─── NAV ─── */
-  /* FIX: overflow:hidden + flex-wrap:nowrap evita que a ul vaze para fora */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; background: rgba(6,6,8,0); border-bottom: 1px solid transparent; transition: background .4s ease, border-color .4s ease; overflow: hidden; flex-wrap: nowrap; }
+  /* FIX: overflow:visible (era hidden — cortava o hambúrguer em mobile) */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; background: rgba(6,6,8,0); border-bottom: 1px solid transparent; transition: background .4s ease, border-color .4s ease; overflow: visible; flex-wrap: nowrap; }
   nav.scrolled { background: rgba(6,6,8,.97); backdrop-filter: blur(24px); border-bottom-color: var(--border); }
   .nav-logo { font-family: var(--serif); font-size: 26px; color: var(--white); text-decoration: none; font-style: italic; flex-shrink: 0; position: relative; z-index: 210; }
   .nav-logo span { color: var(--gold); }
 
-  /* FIX: !important garante que os links nunca aparecem em mobile */
+  /* FIX: links do desktop sempre ocultos em mobile */
   .nav-links { display: none !important; }
 
-  /* FIX: hambúrguer sempre visível com !important, flex-shrink:0 para não ser esmagado */
+  /* FIX: hambúrguer sempre visível, nunca esmagado */
   .nav-hamburger { position: relative; z-index: 210; display: flex !important; flex-direction: column; justify-content: center; align-items: center; gap: 5px; width: 44px; height: 44px; min-width: 44px; padding: 0; background: none; border: 1px solid rgba(201,168,76,.3); cursor: pointer; flex-shrink: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: border-color .2s; }
   .nav-hamburger:hover { border-color: var(--gold); }
   .nav-hamburger span { display: block; width: 22px; height: 1.5px; background: var(--white); transition: transform .3s ease, opacity .3s ease; transform-origin: center; pointer-events: none; }
