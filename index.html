@@ -476,17 +476,17 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
       <!-- INPUT -->
       <div class="demo-input-panel">
         <span class="demo-input-label">Excerto da decisão judicial</span>
-        <textarea id="demoTextarea" class="demo-textarea" maxlength="1500"
-          placeholder="Cole aqui um excerto de acórdão, sentença ou despacho português...&#10;&#10;Mínimo 80 caracteres · Máximo 1500 caracteres (~250 palavras)"></textarea>
+        <textarea id="demoTextarea" class="demo-textarea" maxlength="3000"
+          placeholder="Cole aqui um excerto de acórdão, sentença ou despacho português...&#10;&#10;Mínimo 80 caracteres · Máximo 3000 caracteres (~500 palavras)"></textarea>
         <div class="demo-counter">
           <span>1 análise gratuita por hora · sem registo</span>
-          <span id="demoCounter">0 / 1500</span>
+          <span id="demoCounter">0 / 3000</span>
         </div>
         <button class="demo-btn" id="demoBtn" onclick="runDemo()">
           <div class="demo-btn-spinner" id="demoSpinner"></div>
           <span id="demoBtnText">⚖ Analisar Excerto</span>
         </button>
-        <div class="demo-disclaimer">Texto limitado a 1500 caracteres · Para análise completa com PDF e histórico crie conta gratuita</div>
+        <div class="demo-disclaimer">Texto limitado a 3000 caracteres · Para análise completa com PDF e histórico crie conta gratuita</div>
         <div class="demo-limit-note" id="demoLimitNote">
           Já usou a demo nesta hora.<br>
           <a href="/app">Crie conta gratuita</a> para 5 análises mensais completas.
@@ -762,21 +762,18 @@ window.addEventListener('scroll', () => {
     toggle();
   });
 
-  // Fechar ao clicar num link do drawer
   drawer.querySelectorAll('a').forEach(function(a) {
     a.addEventListener('click', function() {
       closeDrawer();
     });
   });
 
-  // Fechar ao clicar fora
   document.addEventListener('click', function(e) {
     if (drawer.classList.contains('open') && !drawer.contains(e.target) && !burger.contains(e.target)) {
       closeDrawer();
     }
   });
 
-  // Fechar com Escape
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeDrawer();
   });
@@ -848,8 +845,8 @@ const demoLoadingMsgs = [
 document.getElementById('demoTextarea').addEventListener('input', function() {
   const len = this.value.length;
   const counter = document.getElementById('demoCounter');
-  counter.textContent = len + ' / 1500';
-  counter.classList.toggle('over', len > 1400);
+  counter.textContent = len + ' / 3000';
+  counter.classList.toggle('over', len > 2800);
 });
 
 async function runDemo() {
