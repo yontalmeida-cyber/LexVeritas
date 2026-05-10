@@ -651,7 +651,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
       </div>
       <div class="faq-item reveal">
         <button class="faq-question"><h3>Como funciona o processo de proposta?</h3><span class="faq-icon">+</span></button>
-        <div class="faq-answer">Após receber o pedido através do formulário, respondemos em 24 horas úteis com uma proposta adaptada ao perfil — número de utilizadores, volume de análises e funcionalidades necessárias. Não há compromissos nem custos nesta fase.</div>
+        <div class="faq-answer">Após receber o pedido através do formulário, respondemos em 48 horas com uma proposta adaptada ao perfil — número de utilizadores, volume de análises e funcionalidades necessárias. Não há compromissos nem custos nesta fase.</div>
       </div>
     </div>
   </div>
@@ -991,7 +991,7 @@ async function enviarProposta() {
       body: JSON.stringify({ nome, email, organizacao: organizacao||'—', perfil: perfil||'—', mensagem: mensagem||'(sem mensagem)', assunto: 'Pedido de Proposta — '+(perfil||'?') })
     });
     if (r.ok) {
-      msg.textContent = '✓ Pedido enviado! Receberá uma proposta em até 24 horas úteis.';
+      msg.textContent = '✓ Pedido enviado! Receberá uma proposta em até 48 horas.';
       msg.style.color = '#99ffbb'; msg.style.background = 'rgba(26,92,58,.1)'; msg.style.display = 'block';
       ['pf-nome','pf-email','pf-organizacao','pf-mensagem'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
       document.getElementById('pf-perfil').selectedIndex = 0;
