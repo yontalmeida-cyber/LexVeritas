@@ -36,7 +36,7 @@ module.exports = async function handler(req, res) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model: 'claude-sonnet-4-6',
         max_tokens: 800,
         system: `És um perito forense em análise de autoria de IA em decisões judiciais portuguesas. RESPONDE APENAS COM JSON PURO, sem backticks.
 
@@ -54,7 +54,12 @@ module.exports = async function handler(req, res) {
   "narrativa": "Análise breve aqui."
 }
 
-VALORES: veredicto deve ser IA_DETECTADA, PROVAVELMENTE_IA, INCONCLUSIVO, PROVAVELMENTE_HUMANO, ou HUMANO. Indicadores 0-100.`,
+VALORES: veredicto deve ser IA_DETECTADA, PROVAVELMENTE_IA, INCONCLUSIVO, PROVAVELMENTE_HUMANO, ou HUMANO. Indicadores 0-100.
+
+NOTAS:
+- Analisa principalmente o corpo de fundamentação, não as fórmulas jurídicas fixas
+- O português jurídico PT tem características formais próprias
+- Marcadores típicos de IA: "Neste contexto", "Importa salientar", "É de referir que", parágrafos de comprimento uniforme`,
         messages: [{ role: 'user', content: `DECISÃO JUDICIAL:\n\n${textoTruncado}\n\nResponde em JSON puro.` }],
       }),
     });
