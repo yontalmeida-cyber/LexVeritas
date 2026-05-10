@@ -23,7 +23,7 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ erro: 'Mínimo 80 caracteres.' });
   }
 
-  const textoTruncado = texto.substring(0, 1500);
+  const textoTruncado = texto.substring(0, 3000);
 
   if (!ANTHROPIC_API_KEY) return res.status(500).json({ erro: 'Serviço indisponível.' });
 
