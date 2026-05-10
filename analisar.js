@@ -1,5 +1,6 @@
 // /api/analisar.js — LexVeritas API Endpoint
 // Vercel Serverless Function — Node.js 18+ — CommonJS
+// v2.1 — humanizadores + verificação de citações + minuta 16k tokens
 
 const SUPABASE_URL      = 'https://bsbgizaftamufmmxeyer.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
@@ -37,7 +38,6 @@ module.exports = async function handler(req, res) {
   const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
   if (!ANTHROPIC_API_KEY) return res.status(500).json({ erro: 'Serviço indisponível.' });
 
-  // FIX: aumentado limite do modo crítica de 8000 para 12000 — evita truncamento assimétrico
   const textoTruncado = texto
     ? (texto.length > 12000 ? texto.substring(0, 12000) + '\n[texto truncado]' : texto)
     : '';
@@ -92,7 +92,8 @@ IMPORTANTE: Se identificares fundamentos, lista-os SEMPRE no array fundamentos. 
     userPrompt = `${ctx ? `CONTEXTO DO PROCESSO:\n${ctx}\n\n` : ''}DECISÃO JUDICIAL A ANALISAR:\n\n${textoTruncado}\n\nResponde em JSON puro.`;
 
   // ══════════════════════════════════════════════════
-  // MODO MINUTA
+  // MODO MINUTA — max_tokens aumentado para 16000
+  // Custo estimado: ~$0.048 por minuta (Sonnet 4.6)
   // ══════════════════════════════════════════════════
   } else if (modo === 'minuta') {
     const { fundamentos = [], veredicto_recurso, tribunal_recurso, tipoProcesso: tp, parteRecorrente: pr } = body;
@@ -109,23 +110,26 @@ IMPORTANTE: Se identificares fundamentos, lista-os SEMPRE no array fundamentos. 
       `${i + 1}. ${f.tipo} (${f.artigo || ''}) — ${f.descricao}\nArgumento: ${f.argumento}`
     ).join('\n\n');
 
-    systemPrompt = `Actua como Consultor Jurídico Sénior. Redige uma proposta de texto COMPLETA para recurso em português jurídico formal PT-PT.
+    systemPrompt = `Actua como Consultor Jurídico Sénior. Redige uma proposta de texto COMPLETA E INTEGRAL para recurso em português jurídico formal PT-PT.
 
-Regras absolutas:
+REGRAS ABSOLUTAS — NUNCA VIOLAR:
 - Texto simples, SEM markdown, SEM #, SEM asteriscos, SEM listas com hífens
-- NUNCA cortes ou interrompas o texto — a peça deve estar 100% completa até ao pedido final
-- Desenvolve cada fundamento com pelo menos 3 parágrafos de argumentação jurídica substancial
-- Cita doutrina e jurisprudência relevante quando aplicável
+- NUNCA cortes, resumas ou interrompas o texto — a peça deve estar 100% completa até ao PEDIDO FINAL inclusive
+- Cada fundamento deve ter PELO MENOS 4 parágrafos de argumentação jurídica substancial e desenvolvida
+- Cita doutrina portuguesa relevante (Lebre de Freitas, Abrantes Geraldes, etc.) e jurisprudência quando aplicável
+- Não uses frases como "etc.", "entre outros", "e outros fundamentos" — desenvolve TUDO completamente
+- O texto NUNCA pode terminar antes do PEDIDO FINAL
 
-Estrutura obrigatória:
-1. CABEÇALHO: "Exmo. Senhor [Juiz/Desembargador/Conselheiro]" e parágrafo de introdução com [NOME DO RECORRENTE], [NUMERO DO PROCESSO], [TRIBUNAL A QUO], [DATA DA DECISAO]
-2. FUNDAMENTOS DO RECURSO - cada fundamento com título em maiúsculas e desenvolvimento completo em vários parágrafos
-3. CONCLUSOES numeradas (1.a, 2.a, ...) - uma por fundamento, linguagem precisa
-4. PEDIDO: "Termos em que deve o presente recurso ser julgado procedente e, em consequência..."
+ESTRUTURA OBRIGATÓRIA COMPLETA:
+1. CABEÇALHO: "Exmo. Senhor [Juiz/Desembargador/Conselheiro]" + parágrafo de introdução com [NOME DO RECORRENTE], [NUMERO DO PROCESSO], [TRIBUNAL A QUO], [DATA DA DECISAO]
+2. I. ADMISSIBILIDADE DO RECURSO — verificar legitimidade, prazo e interesse em agir (2 parágrafos)
+3. II. FUNDAMENTOS DO RECURSO — cada fundamento com título em maiúsculas e MÍNIMO 4 parágrafos de desenvolvimento completo por fundamento
+4. III. CONCLUSÕES — numeradas (1.ª, 2.ª, ...) uma por cada argumento relevante, linguagem precisa e assertiva
+5. IV. PEDIDO — "Termos em que deve o presente recurso ser julgado procedente e, em consequência, ser a decisão recorrida revogada/alterada..." + fecho formal completo
 
-Usa [PLACEHOLDER] para dados desconhecidos. Nunca uses cortes. A peça deve estar 100% completa.`;
+Usa [PLACEHOLDER] para dados desconhecidos. O texto deve estar 100% completo e pronto a adaptar.`;
 
-    userPrompt = `${ctx ? ctx + '\n\n' : ''}FUNDAMENTOS IDENTIFICADOS:\n\n${fundamentosTexto}\n\nRedige a proposta de texto para recurso em texto simples, sem markdown.`;
+    userPrompt = `${ctx ? ctx + '\n\n' : ''}FUNDAMENTOS IDENTIFICADOS:\n\n${fundamentosTexto}\n\nRedige a proposta de texto COMPLETA E INTEGRAL para recurso em texto simples, sem markdown. Não cortes nem abrevies em ponto algum.`;
 
   // ══════════════════════════════════════════════════
   // MODO ACADÉMICO
@@ -152,6 +156,7 @@ RESPONDE APENAS COM JSON PURO. Sem texto antes, sem texto depois, sem markdown, 
     "riqueza_lexical": 55,
     "marcadores_formulaicos": 80
   },
+  "humanizador_detectado": false,
   "narrativa": "Análise detalhada aqui.",
   "relator_analise": "Análise do estilo do autor.",
   "marcadores": [
@@ -161,12 +166,15 @@ RESPONDE APENAS COM JSON PURO. Sem texto antes, sem texto depois, sem markdown, 
 
 VALORES VÁLIDOS veredicto: IA_DETECTADA, PROVAVELMENTE_IA, INCONCLUSIVO, PROVAVELMENTE_HUMANO, HUMANO
 VALORES VÁLIDOS tipo marcador: ai ou humano
-Indicadores: 0=humano, 100=IA`;
+Indicadores: 0=humano, 100=IA
+humanizador_detectado: true se detectares padrões de ferramentas de humanização (Quillbot, Undetectable.ai, etc.) — texto com estrutura IA mas vocabulário forçadamente variado, sinónimos incomuns, ritmo artificial`;
 
     userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}TEXTO ACADÉMICO:\n\n${textoTruncado}\n\nResponde em JSON puro.`;
 
   // ══════════════════════════════════════════════════
   // MODO JUDICIAL
+  // Inclui: detecção de humanizadores + verificação de citações
+  // Custo estimado: ~$0.009 por análise (Sonnet 4.6)
   // ══════════════════════════════════════════════════
   } else {
     const ctx = [
@@ -189,6 +197,8 @@ RESPONDE APENAS COM JSON PURO. Sem texto antes, sem texto depois, sem markdown, 
     "riqueza_lexical": 55,
     "marcadores_formulaicos": 80
   },
+  "humanizador_detectado": false,
+  "citacoes_suspeitas": [],
   "narrativa": "Análise detalhada aqui.",
   "relator_analise": "Análise do estilo do relator.",
   "marcadores": [
@@ -200,7 +210,20 @@ VALORES VÁLIDOS veredicto: IA_DETECTADA, PROVAVELMENTE_IA, INCONCLUSIVO, PROVAV
 VALORES VÁLIDOS tipo marcador: ai ou humano
 Indicadores: 0=humano, 100=IA
 
-NOTAS:
+ANÁLISE DE HUMANIZADORES:
+humanizador_detectado: true se o texto apresentar sinais de ter passado por uma ferramenta de "humanização" de IA (Quillbot, Undetectable.ai, WordAI, etc.). Sinais típicos: vocabulário artificialmente variado com sinónimos incomuns no registo jurídico português, estrutura IA mas léxico forçado, fluência inconsistente, alternância súbita de registo.
+
+VERIFICAÇÃO DE CITAÇÕES E JURISPRUDÊNCIA:
+citacoes_suspeitas: array com citações que apresentem sinais de fabricação ou inconsistência. Para cada citação suspeita:
+{
+  "citacao": "texto exacto da citação ou referência no documento",
+  "tipo": "acordao" | "diploma_legal" | "doutrina" | "jurisprudencia",
+  "problema": "descrição do problema detectado",
+  "gravidade": "alta" | "media" | "baixa"
+}
+Verifica: números de processo com formato inválido para o tribunal indicado, datas impossíveis ou inconsistentes, referências a diplomas revogados como se estivessem em vigor, citações de jurisprudência com elementos internamente contraditórios (ex: data + tribunal + número de processo incompatíveis), doutrina atribuída incorrectamente. Se não detectares citações suspeitas, devolve array vazio [].
+
+NOTAS GERAIS:
 - Analisa principalmente o corpo de fundamentação, não as fórmulas jurídicas fixas
 - O português jurídico PT tem características formais próprias
 - Marcadores típicos de IA: "Neste contexto", "Importa salientar", "É de referir que", parágrafos de comprimento uniforme`;
@@ -209,8 +232,15 @@ NOTAS:
   }
 
   // ── CHAMADA ANTHROPIC ──
-  // FIX: temperature: 0 para resultados determinísticos e consistentes entre dispositivos
+  // Custo médio por modo (Sonnet 4.6, Maio 2026):
+  //   judicial/académico: ~$0.009  (~0.8 cêntimos)
+  //   crítica:            ~$0.012  (~1.1 cêntimos)
+  //   minuta:             ~$0.048  (~4.4 cêntimos) — 16k output
+  //   demo (Haiku):       ~$0.0004 (<0.04 cêntimos)
   try {
+    // max_tokens da minuta aumentado de 8000 → 16000 para evitar texto incompleto
+    const maxTokens = modo === 'minuta' ? 16000 : 2000;
+
     const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -220,7 +250,7 @@ NOTAS:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: modo === 'minuta' ? 8000 : 2000,
+        max_tokens: maxTokens,
         temperature: 0,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],
@@ -306,7 +336,6 @@ NOTAS:
       const okGrav = ['grave','moderada','leve'];
       const okDif  = ['facil','media','dificil'];
 
-      // Suporte para "fundamentos" (novo) ou "nulidades" (antigo)
       const items = Array.isArray(parsed.fundamentos)
         ? parsed.fundamentos
         : Array.isArray(parsed.nulidades)
@@ -328,6 +357,7 @@ NOTAS:
       delete parsed.nulidades;
 
     } else {
+      // Modo judicial ou académico
       const okV = ['IA_DETECTADA','PROVAVELMENTE_IA','INCONCLUSIVO','PROVAVELMENTE_HUMANO','HUMANO'];
       if (!okV.includes(parsed.veredicto)) parsed.veredicto = 'INCONCLUSIVO';
       parsed.confianca = clamp(parsed.confianca);
@@ -336,6 +366,24 @@ NOTAS:
         .forEach(k => { parsed.indicadores[k] = clamp(parsed.indicadores[k]); });
       parsed.narrativa       = String(parsed.narrativa       || 'Análise concluída.');
       parsed.relator_analise = String(parsed.relator_analise || 'Não indicado.');
+
+      // Humanizador
+      parsed.humanizador_detectado = parsed.humanizador_detectado === true;
+
+      // Citações suspeitas (apenas modo judicial)
+      if (modo === 'judicial') {
+        const okGravCit = ['alta','media','baixa'];
+        const okTipoCit = ['acordao','diploma_legal','doutrina','jurisprudencia'];
+        parsed.citacoes_suspeitas = Array.isArray(parsed.citacoes_suspeitas)
+          ? parsed.citacoes_suspeitas.slice(0, 6).map(c => ({
+              citacao:   String(c.citacao  || ''),
+              tipo:      okTipoCit.includes(c.tipo) ? c.tipo : 'jurisprudencia',
+              problema:  String(c.problema || ''),
+              gravidade: okGravCit.includes(c.gravidade) ? c.gravidade : 'media',
+            }))
+          : [];
+      }
+
       parsed.marcadores = Array.isArray(parsed.marcadores)
         ? parsed.marcadores.slice(0, 8).map(m => ({
             tipo:  m.tipo === 'ai' ? 'ai' : 'humano',

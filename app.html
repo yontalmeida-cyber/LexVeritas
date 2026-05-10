@@ -21,7 +21,6 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--black); color: var(--ink); font-family: var(--sans); min-height: 100vh; }
 
-  /* AUTH */
   .auth-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; background: var(--black); position: relative; overflow: hidden; }
   .auth-page::before { content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 600px; height: 500px; background: radial-gradient(ellipse, rgba(201,168,76,0.12) 0%, transparent 60%); pointer-events: none; }
   .auth-page::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
@@ -52,7 +51,6 @@
   .plan-gratuito { background: rgba(255,255,255,0.08); color: var(--grey); }
   .plan-profissional { background: rgba(201,168,76,0.15); color: var(--gold); }
 
-  /* HEADER */
   header { border-bottom: 1px solid var(--rule-dark); padding: 0 clamp(20px, 5vw, 60px); background: var(--black); position: sticky; top: 0; z-index: 50; }
   .header-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--rule-dark); }
   .header-date { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; color: var(--grey); text-transform: uppercase; }
@@ -74,7 +72,6 @@
   nav a:hover { color: #f8f6f1; }
   nav a.active { color: var(--gold); border-bottom: 1px solid var(--gold); }
 
-  /* USAGE & MODE BARS */
   .usage-bar-container { background: var(--dark); border-bottom: 1px solid var(--rule-dark); padding: 8px clamp(20px, 5vw, 60px); display: flex; align-items: center; gap: 16px; }
   .usage-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--grey); white-space: nowrap; }
   .usage-track { flex: 1; height: 2px; background: rgba(255,255,255,0.08); max-width: 200px; }
@@ -88,7 +85,6 @@
   .mode-btn.active { background: rgba(201,168,76,0.12); border-color: var(--gold); color: var(--gold); }
   .mode-btn.critica.active { background: rgba(139,26,26,0.1); border-color: #c97850; color: #c97850; }
 
-  /* MAIN LAYOUT */
   main { max-width: 1060px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: start; }
   .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
   .section-label::after { content: ''; height: 1px; flex: 1; background: var(--gold); opacity: 0.4; }
@@ -117,7 +113,6 @@
   .drop-zone-text { font-family: var(--sans); font-size: 12px; color: #bbb; line-height: 1.7; }
   .drop-zone.has-file .drop-zone-text { color: #666; }
 
-  /* RESULTS AREA */
   .results-area { margin-top: 28px; display: none; }
   .results-area.visible { display: block; animation: fadeUp 0.5s ease; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -158,6 +153,25 @@
   .marker-ai { background: #ffe0c0; color: #8b4513; }
   .marker-ok { background: #d0e8d0; color: #1a5c2a; }
   .evidence-text { font-family: var(--sans); font-size: 12px; line-height: 1.6; color: #555; }
+
+  /* HUMANIZADOR BANNER */
+  .humanizador-banner { background: rgba(107,46,168,0.06); border: 1px solid rgba(107,46,168,0.2); border-left: 3px solid #6b2ea8; padding: 14px 16px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 12px; }
+  .humanizador-banner-icon { font-size: 20px; flex-shrink: 0; }
+  .humanizador-banner-text { font-family: var(--sans); font-size: 12px; line-height: 1.6; color: #444; }
+  .humanizador-banner-text strong { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: #6b2ea8; margin-bottom: 4px; }
+
+  /* CITAÇÕES SUSPEITAS */
+  .citacao-card { background: white; border: 1px solid var(--rule); border-left: 3px solid #c97850; padding: 14px 16px; margin-bottom: 10px; }
+  .citacao-card.alta { border-left-color: var(--red); }
+  .citacao-card.baixa { border-left-color: #aaa; }
+  .citacao-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; flex-wrap: wrap; gap: 6px; }
+  .citacao-tipo { font-family: var(--mono); font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; background: rgba(201,168,76,0.1); color: #8b5e1a; padding: 2px 7px; }
+  .citacao-gravidade { font-family: var(--mono); font-size: 8px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; }
+  .grav-alta { background: rgba(139,26,26,0.08); color: var(--red); }
+  .grav-media { background: rgba(201,100,40,0.08); color: #c97850; }
+  .grav-baixa { background: rgba(0,0,0,0.05); color: #888; }
+  .citacao-texto { font-family: var(--mono); font-size: 10px; color: #555; margin-bottom: 6px; font-style: italic; line-height: 1.5; }
+  .citacao-problema { font-family: var(--sans); font-size: 12px; color: #444; line-height: 1.5; }
 
   /* NULIDADES */
   .nulidades-section-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #888; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
@@ -201,14 +215,13 @@
   .minuta-header { padding: 14px 20px; background: var(--parchment); border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .minuta-title { font-family: var(--serif); font-size: 14px; font-weight: 700; }
   .minuta-disclaimer { font-family: var(--mono); font-size: 9px; color: #888; letter-spacing: 0.05em; }
-  .minuta-body { padding: 20px; font-family: var(--serif); font-size: 13px; line-height: 1.9; color: #333; white-space: pre-wrap; max-height: 400px; overflow-y: auto; }
+  .minuta-body { padding: 20px; font-family: var(--serif); font-size: 13px; line-height: 1.9; color: #333; white-space: pre-wrap; max-height: 600px; overflow-y: auto; }
   .minuta-footer { padding: 12px 20px; border-top: 1px solid var(--rule); background: var(--parchment); display: flex; gap: 10px; flex-wrap: wrap; }
   .btn-copiar { background: var(--ink); color: white; border: none; padding: 8px 18px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
   .btn-copiar:hover { background: var(--gold); }
   .btn-copiar.copiado { background: var(--green); }
   @media(max-width:760px){ .meta-recurso { grid-template-columns: 1fr; } }
 
-  /* SIDEBAR */
   .sidebar-widget { background: white; border: 1px solid var(--rule); margin-bottom: 20px; overflow: hidden; }
   .widget-header { padding: 12px 16px; background: var(--parchment); border-bottom: 1px solid var(--rule); }
   .widget-title { font-family: var(--serif); font-size: 13px; font-weight: 700; }
@@ -227,7 +240,6 @@
   .critica-banner strong { display: block; font-family: var(--mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: #c97850; margin-bottom: 4px; }
   .critica-banner p { font-family: var(--sans); font-size: 11px; color: #666; line-height: 1.6; }
 
-  /* HISTORY */
   .history-page { max-width: 800px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); }
   .history-item { background: white; border: 1px solid var(--rule); margin-bottom: 16px; overflow: hidden; }
   .history-item-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; transition: background 0.2s; }
@@ -241,7 +253,6 @@
   .history-item.open .history-details { display: block; animation: fadeUp 0.3s ease; }
   .empty-history { text-align: center; padding: 60px 20px; color: #aaa; font-family: var(--serif); font-size: 18px; font-style: italic; }
 
-  /* OVERLAY */
   .analysis-overlay { position: fixed; inset: 0; background: rgba(13,13,13,0.93); z-index: 500; display: none; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(8px); }
   .analysis-overlay.visible { display: flex; animation: overlayIn 0.4s ease; }
   @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
@@ -266,7 +277,6 @@
   .overlay-ind-fill { height: 100%; background: var(--gold); width: 0%; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
   .overlay-ind-val { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.3); width: 24px; text-align: right; }
 
-  /* FOOTER */
   footer { border-top: 1px solid var(--rule); padding: 20px clamp(20px, 5vw, 60px); display: flex; justify-content: space-between; align-items: center; margin-top: 32px; flex-wrap: wrap; gap: 12px; }
   .footer-brand { font-family: var(--serif); font-size: 16px; font-weight: 700; }
   .footer-brand em { font-style: italic; color: var(--gold); }
@@ -274,7 +284,6 @@
   .footer-contact { font-family: var(--mono); font-size: 9px; color: var(--gold); cursor: pointer; letter-spacing: 0.1em; text-decoration: none; transition: opacity 0.2s; }
   .footer-contact:hover { opacity: 0.7; }
 
-  /* MODALS */
   .dark-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; backdrop-filter: blur(6px); }
   .dark-modal-overlay.visible { display: flex; }
   .dark-modal-box { background: var(--card); border: 1px solid var(--rule-dark); padding: 36px; max-width: 480px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
@@ -298,7 +307,6 @@
   .btn-pdf:hover { background: var(--parchment); border-color: var(--gold); color: var(--gold); }
   .ref-number { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 6px; text-align: center; }
 
-  /* LOADING SCREEN */
   #lv-loading { position: fixed; inset: 0; background: #060608; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: opacity .6s ease; }
   #lv-loading.done { opacity: 0; pointer-events: none; }
   .lv-load-logo { font-family: var(--serif); font-size: 48px; font-style: italic; color: #f8f6f1; }
@@ -307,7 +315,6 @@
   .lv-load-track { width: 200px; height: 2px; background: rgba(255,255,255,0.08); }
   .lv-load-fill { height: 100%; background: linear-gradient(90deg, #c9a84c, #e8c96a); width: 0; animation: lvload 2s ease forwards; }
   @keyframes lvload { 0% { width: 0; } 70% { width: 85%; } 100% { width: 95%; } }
-
   .hidden { display: none !important; }
 
   @media(max-width:760px){
@@ -344,14 +351,13 @@
 </head>
 <body>
 
-<!-- ═══ LOADING SCREEN ═══ -->
 <div id="lv-loading">
   <div class="lv-load-logo">Lex<span>Veritas</span></div>
   <div class="lv-load-label">Sistema de Análise Forense</div>
   <div class="lv-load-track"><div class="lv-load-fill"></div></div>
 </div>
 
-<!-- ═══ LOGIN ═══ -->
+<!-- LOGIN -->
 <div id="page-login" class="auth-page hidden">
   <div class="auth-logo">Lex<em>Veritas</em></div>
   <div class="auth-tagline">Detector de IA em Jurisprudência Portuguesa</div>
@@ -372,7 +378,7 @@
   </div>
 </div>
 
-<!-- ═══ REDEFINIR PASSWORD ═══ -->
+<!-- REDEFINIR PASSWORD -->
 <div id="page-reset" class="auth-page hidden">
   <div class="auth-logo">Lex<em>Veritas</em></div>
   <div class="auth-tagline">Redefinir Password</div>
@@ -387,7 +393,7 @@
   </div>
 </div>
 
-<!-- ═══ REGISTO ═══ -->
+<!-- REGISTO -->
 <div id="page-register" class="auth-page hidden">
   <div class="auth-logo">Lex<em>Veritas</em></div>
   <div class="auth-tagline">Detector de IA em Jurisprudência Portuguesa</div>
@@ -423,7 +429,7 @@
   </div>
 </div>
 
-<!-- ═══ APP PRINCIPAL ═══ -->
+<!-- APP PRINCIPAL -->
 <div id="page-app" class="hidden">
 
 <header>
@@ -506,10 +512,23 @@
           <div class="confidence-label"><span>Índice de Confiança na Detecção</span><span class="confidence-value" id="confidence-value">—%</span></div>
           <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
         </div>
+        <!-- Banner de humanizador (oculto por defeito) -->
+        <div class="humanizador-banner" id="humanizador-banner" style="display:none">
+          <div class="humanizador-banner-icon">🔀</div>
+          <div class="humanizador-banner-text">
+            <strong>Ferramenta de Humanização Detectada</strong>
+            O texto apresenta indícios de ter sido processado por uma ferramenta de humanização de IA (tipo Quillbot, Undetectable.ai ou similar). Vocabulário artificialmente variado com sinónimos incomuns no registo jurídico português.
+          </div>
+        </div>
         <div class="indicators-grid" id="indicators-grid"></div>
         <div class="analysis-card"><h3>Fundamentação da Análise</h3><p id="analysis-narrative">—</p></div>
         <div class="analysis-card" id="relator-card" style="display:none;border-left:3px solid var(--gold)">
           <h3 id="relator-card-title">Análise do Estilo do Relator</h3><p id="relator-analise-text">—</p>
+        </div>
+        <!-- Citações suspeitas (oculto por defeito) -->
+        <div class="analysis-card" id="citacoes-card" style="display:none;border-left:3px solid #c97850">
+          <h3>⚠ Citações com Indícios de Fabricação</h3>
+          <div id="citacoes-list"></div>
         </div>
         <div class="analysis-card"><h3>Marcadores Identificados</h3><ul class="evidence-list" id="evidence-list"></ul></div>
       </div>
@@ -535,7 +554,7 @@
           <button class="btn-pdf" id="btn-gerar-minuta" onclick="gerarMinuta()" style="background:#f8f5ff;border-color:rgba(107,46,168,0.3);color:#6b2ea8">
             📄 Gerar Proposta de Texto para Recurso
           </button>
-          <div id="minuta-loading" style="display:none;font-family:var(--mono);font-size:10px;color:#888;text-align:center;margin-top:10px;letter-spacing:0.1em">A redigir proposta de recurso...</div>
+          <div id="minuta-loading" style="display:none;font-family:var(--mono);font-size:10px;color:#888;text-align:center;margin-top:10px;letter-spacing:0.1em">A redigir proposta de recurso completa...</div>
         </div>
         <div id="minuta-container" style="display:none">
           <div class="minuta-card">
@@ -574,7 +593,7 @@
             <optgroup label="Outros"><option>Tribunal de 1.ª Instância (Cível)</option><option>Tribunal de 1.ª Instância (Criminal)</option><option>Tribunal de Trabalho</option><option>Tribunal Administrativo e Fiscal</option></optgroup>
           </select>
           <input id="relator-input" type="text" placeholder="Nome do relator (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
-          <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>Cada tribunal e relator têm um estilo próprio. Indicar melhora a precisão.</div>
+          <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>Cada tribunal e relator têm um estilo próprio. Indicar melhora a precisão e aparece no relatório PDF.</div>
         </div>
         <!-- ACADÉMICO -->
         <div id="ctx-academico" style="display:none">
@@ -731,19 +750,15 @@
     <button class="dark-modal-close" onclick="document.getElementById('modal-upgrade').classList.remove('visible')">×</button>
     <div class="dark-modal-label">Plano Profissional</div>
     <h2 class="dark-modal-title">Actualizar Plano</h2>
-    <p class="dark-modal-sub">100 análises/mês · Análise Crítica de Nulidades · Histórico ilimitado · 19€/mês</p>
+    <p class="dark-modal-sub">Mais análises · Análise Crítica de Nulidades · Histórico ilimitado</p>
     <div style="background:rgba(201,168,76,0.06);border:1px solid var(--rule-dark);padding:20px;margin-bottom:20px">
-      <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--gold);margin-bottom:12px">LISTA DE ESPERA</div>
-      <p style="font-size:13px;color:var(--grey);margin-bottom:16px;line-height:1.6">Os pagamentos abrem em breve. Deixe o seu email e será o primeiro a saber.</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <input type="email" id="upgrade-email" placeholder="o-seu@email.pt" style="flex:1;min-width:180px;padding:10px 12px;border:1px solid var(--rule-dark);background:rgba(255,255,255,0.05);font-family:var(--sans);font-size:13px;color:#f8f6f1;outline:none">
-        <button onclick="inscreverListaEspera()" style="background:var(--gold);color:var(--black);border:none;padding:10px 20px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap">Avisar-me</button>
-      </div>
-      <div id="upgrade-msg" style="font-size:12px;margin-top:10px;display:none;color:#99ffbb"></div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--gold);margin-bottom:12px">PROPOSTA PERSONALIZADA</div>
+      <p style="font-size:13px;color:var(--grey);margin-bottom:16px;line-height:1.6">Contacte-nos para uma proposta adaptada ao seu perfil profissional ou institucional.</p>
+      <a href="https://lexveritas.pt/#planos" style="display:inline-block;background:var(--gold);color:var(--black);border:none;padding:10px 20px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none">Pedir Proposta →</a>
     </div>
     <div style="background:rgba(255,255,255,0.03);border:1px solid var(--rule-dark);padding:12px 14px;font-family:var(--sans);font-size:11px;color:var(--grey);line-height:1.6">
       <strong style="display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:4px">Plano Gratuito actual</strong>
-      5 análises/mês · Relatório PDF · Histórico 30 dias
+      5 análises/mês · Relatório PDF · Histórico
     </div>
   </div>
 </div>
@@ -797,7 +812,6 @@ Object.defineProperty(window, 'lastResult', {
 
 const lvLoad = document.getElementById('lv-loading');
 
-// ── MODO ──
 function setModo(modo) {
   modoActual = modo;
   ['judicial','academico','critica'].forEach(m => {
@@ -823,7 +837,6 @@ function setModo(modo) {
   limparPDF();
 }
 
-// ── NAVEGAÇÃO ──
 function showPage(page) {
   ['login','register','reset','app'].forEach(p => document.getElementById('page-' + p).classList.add('hidden'));
   document.getElementById('page-' + page).classList.remove('hidden');
@@ -841,7 +854,6 @@ function showTab(tab) {
 }
 function showModal(id) { document.getElementById('modal-' + id).classList.add('visible'); }
 
-// ── AUTH ──
 async function fazerLogin() {
   const email = document.getElementById('login-email').value.trim();
   const pass = document.getElementById('login-password').value;
@@ -1077,8 +1089,8 @@ function setDropText(t) { document.getElementById('drop-zone-text').innerHTML = 
 
 // ── OVERLAY ──
 const overlayMsgs = {
-  judicial: [{text:'A extrair padrões linguísticos...',pct:15},{text:'A calcular perplexidade textual...',pct:30},{text:'A analisar variabilidade rítmica...',pct:45},{text:'A detectar coesão artificial...',pct:60},{text:'A verificar marcadores formulaicos...',pct:75},{text:'A comparar com estilo do tribunal...',pct:88},{text:'A gerar veredicto forense...',pct:96}],
-  academico: [{text:'A extrair padrões de escrita...',pct:15},{text:'A analisar estrutura argumentativa...',pct:30},{text:'A verificar citações jurídicas...',pct:45},{text:'A detectar homogeneidade sintáctica...',pct:60},{text:'A comparar com estilo académico...',pct:75},{text:'A analisar perfil do autor...',pct:88},{text:'A gerar veredicto de autoria...',pct:96}],
+  judicial: [{text:'A extrair padrões linguísticos...',pct:12},{text:'A calcular perplexidade textual...',pct:25},{text:'A analisar variabilidade rítmica...',pct:38},{text:'A detectar coesão artificial...',pct:52},{text:'A verificar marcadores formulaicos...',pct:65},{text:'A verificar citações e jurisprudência...',pct:78},{text:'A detectar ferramentas de humanização...',pct:88},{text:'A gerar veredicto forense...',pct:96}],
+  academico: [{text:'A extrair padrões de escrita...',pct:15},{text:'A analisar estrutura argumentativa...',pct:30},{text:'A verificar citações jurídicas...',pct:45},{text:'A detectar homogeneidade sintáctica...',pct:60},{text:'A detectar ferramentas de humanização...',pct:78},{text:'A analisar perfil do autor...',pct:88},{text:'A gerar veredicto de autoria...',pct:96}],
   critica: [{text:'A identificar vícios processuais...',pct:15},{text:'A verificar fundamentação da decisão...',pct:30},{text:'A analisar exame crítico das provas...',pct:45},{text:'A pesquisar nulidades processuais...',pct:60},{text:'A verificar artigos violados...',pct:75},{text:'A gerar argumentos de recurso...',pct:88},{text:'A formular recomendação jurídica...',pct:96}]
 };
 const overlayIndNames = {
@@ -1201,6 +1213,11 @@ function renderResults(result) {
     grid.innerHTML += `<div class="indicator-card"><div class="indicator-name">${indLabels[key] || key}</div><div class="indicator-score">${val}<small style="font-size:10px;font-weight:400;color:#aaa">/100</small></div><div class="indicator-bar"><div class="indicator-bar-fill ${bc}" style="width:0" data-width="${val}%"></div></div></div>`;
   }
   setTimeout(() => { grid.querySelectorAll('.indicator-bar-fill').forEach(el => { el.style.width = el.dataset.width; }); }, 200);
+
+  // Humanizador
+  const humanBanner = document.getElementById('humanizador-banner');
+  humanBanner.style.display = result.humanizador_detectado ? 'flex' : 'none';
+
   document.getElementById('analysis-narrative').innerHTML = (result.narrativa || '').replace(/\n/g, '<br>');
   const rc = document.getElementById('relator-card');
   if (result.relator_analise && !result.relator_analise.toLowerCase().includes('nao indicado') && !result.relator_analise.toLowerCase().includes('não indicado')) {
@@ -1208,6 +1225,27 @@ function renderResults(result) {
     document.getElementById('relator-card-title').textContent = modoActual === 'academico' ? 'Análise do Estilo do Autor' : 'Análise do Estilo do Relator';
     document.getElementById('relator-analise-text').textContent = result.relator_analise;
   } else rc.style.display = 'none';
+
+  // Citações suspeitas
+  const citacoesCard = document.getElementById('citacoes-card');
+  const citacoesList = document.getElementById('citacoes-list');
+  const citacoes = result.citacoes_suspeitas || [];
+  if (citacoes.length > 0 && modoActual === 'judicial') {
+    citacoesCard.style.display = 'block';
+    const tipoLabels = { acordao: 'Acórdão', diploma_legal: 'Diploma Legal', doutrina: 'Doutrina', jurisprudencia: 'Jurisprudência' };
+    citacoesList.innerHTML = citacoes.map(c => `
+      <div class="citacao-card ${c.gravidade}">
+        <div class="citacao-header">
+          <span class="citacao-tipo">${tipoLabels[c.tipo] || c.tipo}</span>
+          <span class="citacao-gravidade grav-${c.gravidade}">${c.gravidade === 'alta' ? '⚠ Alta' : c.gravidade === 'media' ? '! Média' : '· Baixa'}</span>
+        </div>
+        <div class="citacao-texto">"${c.citacao}"</div>
+        <div class="citacao-problema">${c.problema}</div>
+      </div>`).join('');
+  } else {
+    citacoesCard.style.display = 'none';
+  }
+
   document.getElementById('evidence-list').innerHTML = (result.marcadores || []).map(m => `<li class="evidence-item"><div class="evidence-marker ${m.tipo === 'ai' ? 'marker-ai' : 'marker-ok'}">${m.tipo === 'ai' ? '⚠' : '✓'}</div><span class="evidence-text">${m.texto}</span></li>`).join('');
   document.getElementById('results-area').classList.add('visible');
   document.getElementById('results-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1306,7 +1344,7 @@ function copiarMinuta() {
 async function gerarMinuta() {
   if (!lastResult || (!lastResult.fundamentos && !lastResult.nulidades)) { alert('Faça primeiro uma análise crítica.'); return; }
   const btn = document.getElementById('btn-gerar-minuta'), loading = document.getElementById('minuta-loading');
-  btn.disabled = true; btn.textContent = '⏳ A gerar...'; loading.style.display = 'block';
+  btn.disabled = true; btn.textContent = '⏳ A gerar proposta completa...'; loading.style.display = 'block';
   try {
     const { data: { session } } = await sb.auth.getSession();
     if (!session?.access_token) { alert('Sessão expirada. Faça login novamente.'); logout(); return; }
@@ -1330,9 +1368,11 @@ function gerarPDF() {
   if (lastResult._modo === 'critica') gerarPDFCritica(); else gerarPDFStandard();
 }
 
+// ── PDF STANDARD — CORRIGIDO: tribunal e relator sempre presentes ──
 function gerarPDFStandard() {
   try {
     const { jsPDF } = window.jspdf;
+    const safeStr = (v) => { if (v === null || v === undefined) return ''; return String(v); };
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const W = 210, margin = 20, contentW = W - margin * 2 - 4; let y = 0;
     const cGold = [201,168,76], cInk = [13,13,13], cLight = [245,240,232], cGrey = [140,140,140], cRed = [139,26,26], cGreen = [26,92,58], cOrange = [180,100,40];
@@ -1341,33 +1381,70 @@ function gerarPDFStandard() {
     const vCls = lastResult.veredicto;
     const vColor = (vCls === 'IA_DETECTADA' || vCls === 'PROVAVELMENTE_IA') ? cRed : (vCls === 'INCONCLUSIVO') ? cGrey : cGreen;
     const now = new Date(), dateStr = now.toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' }), timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+
+    // Capturar tribunal e relator dos campos do sidebar (estado actual)
+    const tribunalPDF = safeStr(lastResult._tribunal || '');
+    const relatorPDF  = safeStr(lastResult._relator  || '');
+
     function sc(arr, type) { if (type === 'text') doc.setTextColor(arr[0], arr[1], arr[2]); if (type === 'fill') doc.setFillColor(arr[0], arr[1], arr[2]); if (type === 'draw') doc.setDrawColor(arr[0], arr[1], arr[2]); }
-    function addFooter() { sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283); doc.setFontSize(7); sc(cGrey, 'text'); doc.setFont('helvetica', 'normal'); doc.text('LexVeritas - Analise Forense de IA - ' + lastRef, margin, 287); doc.text('Documento auxiliar. Nao constitui prova juridica definitiva.', W - margin, 287, { align: 'right' }); }
-    function checkY(n) { if (y + n > 275) { addFooter(); doc.addPage(); y = 24; sc(cGold, 'fill'); doc.rect(0, 0, W, 10, 'F'); sc([255,255,255], 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text('LEXVERITAS - RELATORIO FORENSE', margin, 7); doc.text(lastRef, W - margin, 7, { align: 'right' }); } }
-    function sectionHeader(title) { checkY(12); sc(cLight, 'fill'); doc.rect(margin, y, contentW + 4, 7, 'F'); sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW + 4, 7, 'S'); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text(title, margin + 3, y + 5); y += 11; }
-    function bodyText(text) { const safeW = contentW; const paras = (text || '').split('\n'); paras.forEach((para, pi) => { if (!para.trim()) { if (pi < paras.length - 1) { checkY(4); y += 3; } return; } doc.setFontSize(9); doc.setFont('helvetica', 'normal'); const lines = doc.splitTextToSize(para, safeW); lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.text(l, margin, y); y += 5.5; }); if (pi < paras.length - 1) y += 2; }); }
-    sc(cGold, 'fill'); doc.rect(0, 0, W, 32, 'F'); sc([255,255,255], 'text'); doc.setFontSize(30); doc.setFont('helvetica', 'bold'); doc.text('LexVeritas', margin, 18); doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.text('RELATORIO FORENSE DE ANALISE DE INTELIGENCIA ARTIFICIAL', margin, 26); doc.text(dateStr.toUpperCase() + ' - ' + timeStr, W - margin, 18, { align: 'right' }); doc.text(lastRef, W - margin, 26, { align: 'right' });
+    function addFooter() { sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283); doc.setFontSize(7); sc(cGrey, 'text'); doc.setFont('helvetica', 'normal'); doc.text('LexVeritas - Analise Forense de IA - ' + safeStr(lastRef), margin, 287); doc.text('Documento auxiliar. Nao constitui prova juridica definitiva.', W - margin, 287, { align: 'right' }); }
+    function checkY(n) { if (y + n > 275) { addFooter(); doc.addPage(); y = 24; sc(cGold, 'fill'); doc.rect(0, 0, W, 10, 'F'); sc([255,255,255], 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text('LEXVERITAS - RELATORIO FORENSE', margin, 7); doc.text(safeStr(lastRef), W - margin, 7, { align: 'right' }); } }
+    function sectionHeader(title) { checkY(12); sc(cLight, 'fill'); doc.rect(margin, y, contentW + 4, 7, 'F'); sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW + 4, 7, 'S'); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text(safeStr(title), margin + 3, y + 5); y += 11; }
+    function bodyText(text) { const safeW = contentW; const paras = safeStr(text).split('\n'); paras.forEach((para, pi) => { if (!para.trim()) { if (pi < paras.length - 1) { checkY(4); y += 3; } return; } doc.setFontSize(9); doc.setFont('helvetica', 'normal'); const lines = doc.splitTextToSize(para, safeW); lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.text(safeStr(l), margin, y); y += 5.5; }); if (pi < paras.length - 1) y += 2; }); }
+
+    // CABEÇALHO
+    sc(cGold, 'fill'); doc.rect(0, 0, W, 32, 'F');
+    sc([255,255,255], 'text'); doc.setFontSize(30); doc.setFont('helvetica', 'bold'); doc.text('LexVeritas', margin, 18);
+    doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+    doc.text('RELATORIO FORENSE DE ANALISE DE INTELIGENCIA ARTIFICIAL', margin, 26);
+    doc.text(dateStr.toUpperCase() + ' - ' + timeStr, W - margin, 18, { align: 'right' });
+    doc.text(safeStr(lastRef), W - margin, 26, { align: 'right' });
     y = 42;
-    sc(cLight, 'fill'); doc.rect(margin, y, contentW, 24, 'F'); sc(cGold, 'draw'); doc.setLineWidth(0.5); doc.rect(margin, y, contentW, 24, 'S');
+
+    // CONTEXTO — 3 colunas: Tribunal | Relator | Utilizador
+    sc(cLight, 'fill'); doc.rect(margin, y, contentW, 24, 'F');
+    sc(cGold, 'draw'); doc.setLineWidth(0.5); doc.rect(margin, y, contentW, 24, 'S');
     const col1 = margin + 4, col2 = margin + 60, col3 = margin + 120;
-    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text('TRIBUNAL', col1, y + 6); doc.text('RELATOR', col2, y + 6); doc.text('UTILIZADOR', col3, y + 6);
+    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
+    doc.text('TRIBUNAL', col1, y + 6);
+    doc.text('RELATOR', col2, y + 6);
+    doc.text('UTILIZADOR', col3, y + 6);
     sc(cInk, 'text'); doc.setFontSize(9); doc.setFont('helvetica', 'bold');
-    doc.text((lastResult._tribunal || 'Nao indicado').substring(0, 28), col1, y + 15); doc.text((lastResult._relator || 'Nao indicado').substring(0, 22), col2, y + 15); doc.text((userProfile?.nome || 'Utilizador').substring(0, 20), col3, y + 15);
+    // FIX: usar tribunalPDF e relatorPDF capturados de lastResult
+    doc.text((tribunalPDF || 'Nao indicado').substring(0, 28), col1, y + 15);
+    doc.text((relatorPDF  || 'Nao indicado').substring(0, 22), col2, y + 15);
+    doc.text(safeStr(userProfile?.nome || 'Utilizador').substring(0, 20), col3, y + 15);
     y += 32;
+
+    // VEREDICTO
     sc(vColor, 'draw'); doc.setLineWidth(1.2); doc.line(margin, y, margin, y + 22);
     sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text('VEREDICTO FORENSE', margin + 5, y + 5);
-    sc(vColor, 'text'); doc.setFontSize(20); doc.setFont('helvetica', 'bold'); doc.text(labels[lastResult.veredicto] || lastResult.veredicto, margin + 5, y + 16);
+    sc(vColor, 'text'); doc.setFontSize(20); doc.setFont('helvetica', 'bold');
+    doc.text(safeStr(labels[lastResult.veredicto] || lastResult.veredicto), margin + 5, y + 16);
     const bx = W - margin - 36, by = y + 1, bw = 34, bh = 20;
     sc(cLight, 'fill'); doc.rect(bx, by, bw, bh, 'F'); sc(vColor, 'draw'); doc.setLineWidth(0.8); doc.rect(bx, by, bw, bh, 'S');
-    sc(vColor, 'text'); doc.setFontSize(18); doc.setFont('helvetica', 'bold'); doc.text(lastResult.confianca + '%', bx + bw / 2, by + 12, { align: 'center' });
+    sc(vColor, 'text'); doc.setFontSize(18); doc.setFont('helvetica', 'bold');
+    doc.text(safeStr(lastResult.confianca) + '%', bx + bw / 2, by + 12, { align: 'center' });
     sc(cGrey, 'text'); doc.setFontSize(6); doc.setFont('helvetica', 'normal'); doc.text('CONFIANCA', bx + bw / 2, by + 18, { align: 'center' });
     y += 30;
+
+    // HUMANIZADOR (se detectado)
+    if (lastResult.humanizador_detectado) {
+      checkY(12);
+      sc([107,46,168], 'fill'); doc.rect(margin, y, contentW + 4, 1.5, 'F');
+      sc([245,240,252], 'fill'); doc.rect(margin, y + 1.5, contentW + 4, 10, 'F');
+      sc([107,46,168], 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
+      doc.text('FERRAMENTA DE HUMANIZACAO DE IA DETECTADA', margin + 3, y + 8);
+      y += 16;
+    }
+
+    // INDICADORES
     sectionHeader('INDICADORES FORENSES');
     const inds = Object.entries(lastResult.indicadores || {}); const halfW = contentW / 2 - 3;
     inds.forEach(([key, val], i) => {
       const isLeft = i % 2 === 0, x0 = isLeft ? margin : margin + halfW + 6;
-      checkY(16); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text(indLabels[key] || key, x0, y);
-      sc(cInk, 'text'); doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.text(String(val), x0, y + 7);
+      checkY(16); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text(safeStr(indLabels[key] || key), x0, y);
+      sc(cInk, 'text'); doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.text(safeStr(val), x0, y + 7);
       sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text('/100', x0 + 9, y + 7);
       const barX = x0 + 22, barW2 = halfW - 26;
       sc([220,215,205], 'fill'); doc.rect(barX, y + 3, barW2, 3, 'F');
@@ -1376,43 +1453,65 @@ function gerarPDFStandard() {
       if (!isLeft) y += 16;
     });
     if (inds.length % 2 !== 0) y += 16; y += 4;
+
     sectionHeader('FUNDAMENTACAO DA ANALISE'); bodyText(lastResult.narrativa || 'Sem narrativa disponivel.'); y += 4;
+
     const relLabel = lastResult._modo === 'academico' ? 'ANALISE DO ESTILO DO AUTOR' : 'ANALISE DO ESTILO DO RELATOR';
-    const rel = lastResult.relator_analise || '';
+    const rel = safeStr(lastResult.relator_analise || '');
     if (rel && !rel.toLowerCase().includes('nao indicado') && !rel.toLowerCase().includes('não indicado')) { sectionHeader(relLabel); bodyText(rel); y += 4; }
+
+    // CITAÇÕES SUSPEITAS (se existirem)
+    const citacoes = lastResult.citacoes_suspeitas || [];
+    if (citacoes.length > 0) {
+      sectionHeader('CITACOES COM INDICIOS DE FABRICACAO (' + citacoes.length + ')');
+      const tipoL = { acordao: 'Acordao', diploma_legal: 'Diploma Legal', doutrina: 'Doutrina', jurisprudencia: 'Jurisprudencia' };
+      citacoes.forEach(c => {
+        checkY(18);
+        const nColor = c.gravidade === 'alta' ? cRed : c.gravidade === 'media' ? cOrange : cGrey;
+        sc(nColor, 'draw'); doc.setLineWidth(0.6); doc.line(margin, y, margin, y + 3);
+        sc(nColor, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
+        doc.text(safeStr(tipoL[c.tipo] || c.tipo) + ' — ' + safeStr(c.gravidade).toUpperCase(), margin + 4, y + 3);
+        y += 6;
+        if (c.citacao) {
+          const cl = doc.splitTextToSize('"' + safeStr(c.citacao) + '"', contentW - 6);
+          cl.forEach(l => { checkY(5); sc([80,60,20], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'italic'); doc.text(safeStr(l), margin + 4, y); y += 4.5; });
+        }
+        if (c.problema) {
+          const pl = doc.splitTextToSize(safeStr(c.problema), contentW - 6);
+          pl.forEach(l => { checkY(5); sc(cInk, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.text(safeStr(l), margin + 4, y); y += 4.5; });
+        }
+        y += 4;
+      });
+    }
+
     sectionHeader('MARCADORES IDENTIFICADOS');
     (lastResult.marcadores || []).forEach(m => {
       const isAI = m.tipo === 'ai';
       const bgC = isAI ? [255,242,230] : [230,245,235], txtC = isAI ? cRed : cGreen;
       doc.setFontSize(8); doc.setFont('helvetica', 'normal');
-      const mLines = doc.splitTextToSize(m.texto || '', contentW - 16);
+      const mLines = doc.splitTextToSize(safeStr(m.texto || ''), contentW - 16);
       const blockH = Math.max(9, mLines.length * 5.5 + 3);
       checkY(blockH);
       sc(bgC, 'fill'); doc.rect(margin, y - 3, contentW + 4, blockH, 'F');
       sc(txtC, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold'); doc.text(isAI ? '[!]' : '[OK]', margin + 2, y + 3);
       sc(cInk, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'normal');
-      mLines.forEach((l, li) => { doc.text(l, margin + 14, y + 3 + li * 5.5); });
+      mLines.forEach((l, li) => { doc.text(safeStr(l), margin + 14, y + 3 + li * 5.5); });
       y += blockH + 2;
     });
+
     y += 8; checkY(24); sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, y, W - margin, y); y += 6;
     sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'italic');
-    const disc = 'Este relatorio foi gerado automaticamente pelo sistema LexVeritas. Os resultados tem caracter auxiliar e probabilistico. Ref: ' + lastRef + '. Data: ' + dateStr + ' ' + timeStr + '.';
-    doc.splitTextToSize(disc, contentW).forEach(l => { doc.text(l, margin, y); y += 4; });
-    addFooter(); doc.save('LexVeritas-' + lastRef + '.pdf');
+    const disc = 'Este relatorio foi gerado automaticamente pelo sistema LexVeritas. Os resultados tem caracter auxiliar e probabilistico. Ref: ' + safeStr(lastRef) + '. Data: ' + dateStr + ' ' + timeStr + '.';
+    doc.splitTextToSize(disc, contentW).forEach(l => { doc.text(safeStr(l), margin, y); y += 4; });
+    addFooter(); doc.save('LexVeritas-' + safeStr(lastRef) + '.pdf');
   } catch (err) { console.error('Erro PDF:', err); alert('Erro ao gerar PDF: ' + err.message); }
 }
 
-// ── GERAR PDF CRÍTICA — CORRIGIDO ──
+// ── PDF CRÍTICA — CORRIGIDO: safeStr em todo o lado ──
 function gerarPDFCritica() {
   try {
     const { jsPDF } = window.jspdf;
-
-    // Função auxiliar: garante que qualquer valor passado ao jsPDF é sempre uma string válida
-    const safeStr = (v) => {
-      if (v === null || v === undefined) return '';
-      return String(v);
-    };
-
+    const safeStr = (v) => { if (v === null || v === undefined) return ''; return String(v); };
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const W = 210, margin = 20, contentW = W - margin * 2 - 4; let y = 0;
     const cGold = [201,168,76], cInk = [13,13,13], cLight = [245,240,232], cGrey = [140,140,140], cRed = [139,26,26], cGreen = [26,92,58], cOrange = [180,100,40];
@@ -1421,70 +1520,27 @@ function gerarPDFCritica() {
     const timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
     const veredicto = safeStr(lastResult.veredicto_recurso || 'RECURSO_INVIAVEL');
     const vColor = veredicto === 'RECURSO_VIAVEL' ? cGreen : veredicto === 'RECURSO_PARCIAL' ? cOrange : cGrey;
-    const vLabels = {
-      'RECURSO_VIAVEL': 'Recurso Viavel - Fundamentos Identificados',
-      'RECURSO_PARCIAL': 'Recurso Parcialmente Fundamentado',
-      'RECURSO_INVIAVEL': 'Sem Fundamentos Solidos para Recurso'
-    };
+    const vLabels = { 'RECURSO_VIAVEL': 'Recurso Viavel - Fundamentos Identificados', 'RECURSO_PARCIAL': 'Recurso Parcialmente Fundamentado', 'RECURSO_INVIAVEL': 'Sem Fundamentos Solidos para Recurso' };
 
-    function sc(arr, type) {
-      if (type === 'text') doc.setTextColor(arr[0], arr[1], arr[2]);
-      if (type === 'fill') doc.setFillColor(arr[0], arr[1], arr[2]);
-      if (type === 'draw') doc.setDrawColor(arr[0], arr[1], arr[2]);
-    }
+    function sc(arr, type) { if (type === 'text') doc.setTextColor(arr[0], arr[1], arr[2]); if (type === 'fill') doc.setFillColor(arr[0], arr[1], arr[2]); if (type === 'draw') doc.setDrawColor(arr[0], arr[1], arr[2]); }
+    function addFooter() { sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283); doc.setFontSize(7); sc(cGrey, 'text'); doc.setFont('helvetica', 'normal'); doc.text('LexVeritas - Analise Critica - ' + safeStr(lastRef), margin, 287); doc.text('Documento auxiliar. Nao substitui consulta juridica profissional.', W - margin, 287, { align: 'right' }); }
+    function checkY(n) { if (y + n > 275) { addFooter(); doc.addPage(); y = 24; sc(cRed, 'fill'); doc.rect(0, 0, W, 10, 'F'); sc([255,255,255], 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text('LEXVERITAS - ANALISE CRITICA / RECURSO', margin, 7); doc.text(safeStr(lastRef), W - margin, 7, { align: 'right' }); } }
+    function sectionHeader(title) { checkY(12); sc(cLight, 'fill'); doc.rect(margin, y, contentW + 4, 7, 'F'); sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW + 4, 7, 'S'); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text(safeStr(title), margin + 3, y + 5); y += 11; }
+    function bodyText(text) { const safeW = contentW; const paras = safeStr(text).split('\n'); paras.forEach((para, pi) => { if (!para.trim()) { if (pi < paras.length - 1) { checkY(4); y += 3; } return; } doc.setFontSize(9); doc.setFont('helvetica', 'normal'); const lines = doc.splitTextToSize(para, safeW); lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.text(safeStr(l), margin, y); y += 5.5; }); if (pi < paras.length - 1) y += 2; }); }
 
-    function addFooter() {
-      sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, 283, W - margin, 283);
-      doc.setFontSize(7); sc(cGrey, 'text'); doc.setFont('helvetica', 'normal');
-      doc.text('LexVeritas - Analise Critica de Decisao Judicial - ' + safeStr(lastRef), margin, 287);
-      doc.text('Documento auxiliar. Nao substitui consulta juridica profissional.', W - margin, 287, { align: 'right' });
-    }
-
-    function checkY(n) {
-      if (y + n > 275) {
-        addFooter(); doc.addPage(); y = 24;
-        sc(cRed, 'fill'); doc.rect(0, 0, W, 10, 'F');
-        sc([255,255,255], 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
-        doc.text('LEXVERITAS - ANALISE CRITICA / RECURSO', margin, 7);
-        doc.text(safeStr(lastRef), W - margin, 7, { align: 'right' });
-      }
-    }
-
-    function sectionHeader(title) {
-      checkY(12);
-      sc(cLight, 'fill'); doc.rect(margin, y, contentW + 4, 7, 'F');
-      sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW + 4, 7, 'S');
-      sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
-      doc.text(safeStr(title), margin + 3, y + 5);
-      y += 11;
-    }
-
-    function bodyText(text) {
-      const safeW = contentW;
-      const paras = safeStr(text).split('\n');
-      paras.forEach((para, pi) => {
-        if (!para.trim()) { if (pi < paras.length - 1) { checkY(4); y += 3; } return; }
-        doc.setFontSize(9); doc.setFont('helvetica', 'normal');
-        const lines = doc.splitTextToSize(para, safeW);
-        lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.text(safeStr(l), margin, y); y += 5.5; });
-        if (pi < paras.length - 1) y += 2;
-      });
-    }
-
-    // ── CABEÇALHO ──
+    // CABEÇALHO
     sc(cRed, 'fill'); doc.rect(0, 0, W, 10, 'F');
     sc(cGold, 'fill'); doc.rect(0, 10, W, 22, 'F');
     sc([255,255,255], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
     doc.text('LEXVERITAS - CONSULTOR JURIDICO SENIOR - ANALISE CRITICA DE RECURSO', margin, 7);
-    sc(cInk, 'text'); doc.setFontSize(30); doc.setFont('helvetica', 'bold');
-    doc.text('LexVeritas', margin, 26);
+    sc(cInk, 'text'); doc.setFontSize(30); doc.setFont('helvetica', 'bold'); doc.text('LexVeritas', margin, 26);
     doc.setFontSize(8); doc.setFont('helvetica', 'normal');
     doc.text('RELATORIO DE ANALISE CRITICA - NULIDADES E ARGUMENTOS DE RECURSO', margin, 32);
     doc.text(dateStr.toUpperCase() + ' - ' + timeStr, W - margin, 26, { align: 'right' });
     doc.text(safeStr(lastRef), W - margin, 32, { align: 'right' });
     y = 46;
 
-    // ── CONTEXTO ──
+    // CONTEXTO — 3 colunas: Tribunal | Tipo Processo | Parte Recorrente
     sc(cLight, 'fill'); doc.rect(margin, y, contentW, 20, 'F');
     sc(cGold, 'draw'); doc.setLineWidth(0.5); doc.rect(margin, y, contentW, 20, 'S');
     const col1 = margin + 4, col2 = margin + 64, col3 = margin + 128;
@@ -1498,10 +1554,9 @@ function gerarPDFCritica() {
     doc.text(safeStr(lastResult._parteRecorrente || 'Nao indicado').substring(0, 20), col3, y + 13);
     y += 28;
 
-    // ── VEREDICTO ──
+    // VEREDICTO
     sc(vColor, 'draw'); doc.setLineWidth(1.5); doc.line(margin, y, margin, y + 22);
-    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
-    doc.text('AVALIACAO DO RECURSO', margin + 5, y + 5);
+    sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text('AVALIACAO DO RECURSO', margin + 5, y + 5);
     sc(vColor, 'text'); doc.setFontSize(17); doc.setFont('helvetica', 'bold');
     doc.text(safeStr(vLabels[veredicto] || veredicto), margin + 5, y + 16);
     const bx = W - margin - 36, by2 = y + 1, bw = 34, bh = 20;
@@ -1513,58 +1568,28 @@ function gerarPDFCritica() {
     doc.text('FUNDAMENTO', bx + bw / 2, by2 + 18, { align: 'center' });
     y += 30;
 
-    // ── SUMÁRIO ──
     sectionHeader('SUMARIO EXECUTIVO');
     bodyText(lastResult.sumario || 'Sem sumario disponivel.');
     y += 4;
 
-    // ── FUNDAMENTOS ──
     const fundamentos = lastResult.fundamentos || lastResult.nulidades || [];
     sectionHeader('FUNDAMENTOS E VICIOS PROCESSUAIS IDENTIFICADOS (' + fundamentos.length + ')');
-
     fundamentos.forEach((f, i) => {
       checkY(28);
       const grav = safeStr(f.gravidade || 'grave').toUpperCase();
       const nColor = grav === 'GRAVE' ? cRed : grav === 'MODERADA' ? cOrange : cGrey;
-
-      // Linha colorida lateral
       sc(nColor, 'draw'); doc.setLineWidth(0.8); doc.line(margin, y, margin, y + 4);
-
-      // Título do fundamento
       sc(nColor, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
       doc.text(safeStr((i + 1) + '. ' + (f.tipo || 'Fundamento')), margin + 4, y + 3);
-
-      // Artigo (à direita)
-      if (f.artigo) {
-        sc(cGold, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'normal');
-        doc.text(safeStr(f.artigo), W - margin, y + 3, { align: 'right' });
-      }
+      if (f.artigo) { sc(cGold, 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.text(safeStr(f.artigo), W - margin, y + 3, { align: 'right' }); }
       y += 7;
-
-      // Descrição
-      if (f.descricao) {
-        const dlines = doc.splitTextToSize(safeStr(f.descricao), contentW - 4);
-        dlines.forEach(l => {
-          checkY(6); sc(cInk, 'text'); doc.setFontSize(8.5); doc.setFont('helvetica', 'normal');
-          doc.text(safeStr(l), margin + 4, y); y += 5;
-        });
-      }
-
-      // Argumento
+      if (f.descricao) { const dlines = doc.splitTextToSize(safeStr(f.descricao), contentW - 4); dlines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.setFontSize(8.5); doc.setFont('helvetica', 'normal'); doc.text(safeStr(l), margin + 4, y); y += 5; }); }
       if (f.argumento) {
-        checkY(16);
-        sc([255,251,240], 'fill'); doc.rect(margin, y, contentW + 4, 5, 'F');
-        sc(cGold, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold');
-        doc.text('ARGUMENTO PARA RECURSO:', margin + 3, y + 3.5);
-        y += 6;
+        checkY(16); sc([255,251,240], 'fill'); doc.rect(margin, y, contentW + 4, 5, 'F');
+        sc(cGold, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text('ARGUMENTO PARA RECURSO:', margin + 3, y + 3.5); y += 6;
         const alines = doc.splitTextToSize(safeStr(f.argumento), contentW - 6);
-        alines.forEach(l => {
-          checkY(6); sc([80,60,20], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'italic');
-          doc.text(safeStr(l), margin + 3, y); y += 5;
-        });
+        alines.forEach(l => { checkY(6); sc([80,60,20], 'text'); doc.setFontSize(8); doc.setFont('helvetica', 'italic'); doc.text(safeStr(l), margin + 3, y); y += 5; });
       }
-
-      // Dificuldade e categoria (se existir)
       if (f.dificuldade || f.categoria) {
         checkY(6);
         const difTexts = { facil: 'Facilidade: facil', media: 'Facilidade: media', dificil: 'Facilidade: dificil' };
@@ -1572,34 +1597,22 @@ function gerarPDFCritica() {
         const extras = [];
         if (f.dificuldade) extras.push(safeStr(difTexts[f.dificuldade] || f.dificuldade));
         if (f.categoria && f.categoria !== 'nulidade') extras.push(safeStr(catTexts[f.categoria] || f.categoria));
-        if (extras.length > 0) {
-          sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
-          doc.text(extras.join(' · '), margin + 4, y); y += 5;
-        }
+        if (extras.length > 0) { sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text(extras.join(' . '), margin + 4, y); y += 5; }
       }
-
       y += 6;
     });
 
-    // ── RECOMENDAÇÃO ──
     sectionHeader('RECOMENDACAO DO CONSULTOR JURIDICO');
     bodyText(lastResult.conclusao || 'Sem recomendacao disponivel.');
     y += 8;
 
-    // ── DISCLAIMER ──
-    checkY(16);
-    sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, y, W - margin, y); y += 6;
+    checkY(16); sc(cGold, 'draw'); doc.setLineWidth(0.3); doc.line(margin, y, W - margin, y); y += 6;
     sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'italic');
     const disc = 'Este relatorio foi produzido pelo sistema LexVeritas no modo Consultor Juridico Senior. Os resultados tem caracter auxiliar e nao substituem consulta juridica profissional. Ref: ' + safeStr(lastRef) + '. Data: ' + dateStr + ' ' + timeStr + '.';
     doc.splitTextToSize(disc, contentW).forEach(l => { doc.text(safeStr(l), margin, y); y += 4; });
-
     addFooter();
     doc.save('LexVeritas-Critica-' + safeStr(lastRef) + '.pdf');
-
-  } catch (err) {
-    console.error('Erro PDF Critica:', err);
-    alert('Erro ao gerar PDF: ' + err.message);
-  }
+  } catch (err) { console.error('Erro PDF Critica:', err); alert('Erro ao gerar PDF: ' + err.message); }
 }
 
 // ── HISTÓRICO ──
@@ -1655,14 +1668,9 @@ async function loadHistory() {
 function toggleHistory(idx) { document.getElementById('hist-' + idx).classList.toggle('open'); }
 
 async function inscreverListaEspera() {
-  const email = document.getElementById('upgrade-email').value.trim();
-  const msg = document.getElementById('upgrade-msg');
-  if (!email || !email.includes('@') || !email.includes('.')) {
-    msg.textContent = 'Introduza um email válido.'; msg.style.color = '#ff9999'; msg.style.display = 'block'; return;
-  }
+  const email = document.getElementById('upgrade-email') ? document.getElementById('upgrade-email').value.trim() : '';
+  if (!email || !email.includes('@') || !email.includes('.')) return;
   try { await sb.from('lista_espera').upsert({ email, criado_em: new Date().toISOString() }); } catch (e) {}
-  msg.textContent = '✓ Ficará a saber assim que os pagamentos abrirem!'; msg.style.color = '#99ffbb'; msg.style.display = 'block';
-  document.getElementById('upgrade-email').value = '';
 }
 
 document.addEventListener('keydown', e => {
