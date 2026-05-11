@@ -211,6 +211,8 @@
   .admissibilidade-badge { display: inline-flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; margin-bottom: 12px; }
   .admissivel-sim { background: rgba(26,92,58,0.08); color: #1a5c2a; }
   .admissivel-nao { background: rgba(139,26,26,0.08); color: #8b1a1a; }
+
+  /* MINUTA */
   .minuta-card { background: white; border: 1px solid var(--rule); border-top: 3px solid var(--gold); margin-bottom: 16px; }
   .minuta-header { padding: 14px 20px; background: var(--parchment); border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .minuta-title { font-family: var(--serif); font-size: 14px; font-weight: 700; }
@@ -221,6 +223,52 @@
   .btn-copiar:hover { background: var(--gold); }
   .btn-copiar.copiado { background: var(--green); }
   @media(max-width:760px){ .meta-recurso { grid-template-columns: 1fr; } }
+
+  /* BOTÃO GERAR MINUTA */
+  .minuta-cta-card {
+    background: #f8f5ff;
+    border: 1px solid rgba(107,46,168,0.2);
+    border-left: 3px solid #6b2ea8;
+    padding: 24px 26px;
+    margin-bottom: 2px;
+  }
+  .minuta-cta-label {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: #6b2ea8; margin-bottom: 8px;
+  }
+  .minuta-cta-title {
+    font-family: var(--serif); font-size: 17px; color: #1a1a2e;
+    margin-bottom: 12px; line-height: 1.3;
+  }
+  .minuta-cta-desc {
+    font-family: var(--sans); font-size: 12px; color: #555;
+    line-height: 1.85; margin-bottom: 20px;
+  }
+  .minuta-cta-list {
+    list-style: none; display: flex; flex-direction: column; gap: 5px;
+    margin: 10px 0 16px;
+  }
+  .minuta-cta-list li {
+    font-family: var(--mono); font-size: 10px; color: #6b2ea8;
+    display: flex; align-items: flex-start; gap: 8px; line-height: 1.5;
+  }
+  .minuta-cta-list li span { color: #9b6dc9; flex-shrink: 0; }
+  .minuta-cta-warning {
+    font-family: var(--sans); font-size: 11px; color: #888;
+    font-style: italic; line-height: 1.6; margin-top: 14px;
+    padding: 10px 14px; background: rgba(107,46,168,0.04);
+    border: 1px dashed rgba(107,46,168,0.2);
+  }
+  .minuta-cta-warning strong { color: #6b2ea8; font-style: normal; }
+  .btn-gerar-minuta-main {
+    width: 100%; background: #6b2ea8; color: white; border: none;
+    padding: 14px 20px; font-family: var(--sans); font-size: 12px;
+    font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer; transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .btn-gerar-minuta-main:hover { background: #5a2590; }
+  .btn-gerar-minuta-main:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .sidebar-widget { background: white; border: 1px solid var(--rule); margin-bottom: 20px; overflow: hidden; }
   .widget-header { padding: 12px 16px; background: var(--parchment); border-bottom: 1px solid var(--rule); }
@@ -345,6 +393,7 @@
     .mode-toggle-bar { gap: 4px; padding: 8px 12px; }
     .mode-btn { flex: 1; justify-content: center; font-size: 9px; padding: 8px 4px; letter-spacing: 0; }
     .dark-modal-box { padding: 28px 20px; }
+    .minuta-cta-card { padding: 18px 16px; }
   }
   @media(max-width:400px) { .indicators-grid { grid-template-columns: 1fr; } .masthead h1 { font-size: 26px; } }
 </style>
@@ -512,7 +561,7 @@
           <div class="confidence-label"><span>Índice de Confiança na Detecção</span><span class="confidence-value" id="confidence-value">—%</span></div>
           <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
         </div>
-        <!-- Banner de humanizador (oculto por defeito) -->
+        <!-- Banner humanizador -->
         <div class="humanizador-banner" id="humanizador-banner" style="display:none">
           <div class="humanizador-banner-icon">🔀</div>
           <div class="humanizador-banner-text">
@@ -525,7 +574,7 @@
         <div class="analysis-card" id="relator-card" style="display:none;border-left:3px solid var(--gold)">
           <h3 id="relator-card-title">Análise do Estilo do Relator</h3><p id="relator-analise-text">—</p>
         </div>
-        <!-- Citações suspeitas (oculto por defeito) -->
+        <!-- Citações suspeitas -->
         <div class="analysis-card" id="citacoes-card" style="display:none;border-left:3px solid #c97850">
           <h3>⚠ Citações com Indícios de Fabricação</h3>
           <div id="citacoes-list"></div>
@@ -550,12 +599,30 @@
         <div class="analysis-card" style="border-left:3px solid var(--gold)">
           <h3>Recomendação Estratégica</h3><p id="critica-conclusao">—</p>
         </div>
-        <div id="minuta-btn-container" style="display:none;margin-bottom:16px">
-          <button class="btn-pdf" id="btn-gerar-minuta" onclick="gerarMinuta()" style="background:#f8f5ff;border-color:rgba(107,46,168,0.3);color:#6b2ea8">
-            📄 Gerar Proposta de Texto para Recurso
-          </button>
-          <div id="minuta-loading" style="display:none;font-family:var(--mono);font-size:10px;color:#888;text-align:center;margin-top:10px;letter-spacing:0.1em">A redigir proposta de recurso completa...</div>
+
+        <!-- BLOCO GERAR MINUTA — redesenhado -->
+      <div id="minuta-btn-container" style="display:none;margin-bottom:16px">
+          <div style="background:#f8f5ff;border:1px solid rgba(107,46,168,0.2);border-left:3px solid #6b2ea8;padding:20px 22px;margin-bottom:2px">
+            <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#6b2ea8;margin-bottom:8px">📄 Proposta de Peça de Recurso</div>
+            <div style="font-family:var(--serif);font-size:16px;color:#1a1a2e;margin-bottom:10px;line-height:1.3">Gerar rascunho completo da peça processual</div>
+            <div style="font-family:var(--sans);font-size:12px;color:#555;line-height:1.75;margin-bottom:16px">
+              Com base nos fundamentos identificados acima, o sistema irá redigir uma <strong>proposta completa de peça de recurso</strong>, incluindo:<br>
+              <span style="display:inline-block;margin-top:6px">→ Cabeçalho com identificação do processo e das partes</span><br>
+              → Secção de admissibilidade (legitimidade, prazo, valor de alçada)<br>
+              → Desenvolvimento jurídico de cada fundamento, com citação dos artigos violados<br>
+              → Pedido final estruturado em conclusões numeradas<br>
+              <span style="display:inline-block;margin-top:8px;font-style:italic;color:#888">O texto é um rascunho orientador — reveja, complete os <strong>[PLACEHOLDERS]</strong> e adapte à estratégia processual antes de submeter.</span>
+            </div>
+            <button class="btn-pdf" id="btn-gerar-minuta" onclick="gerarMinuta()" style="background:#6b2ea8;border-color:#6b2ea8;color:white;width:100%;justify-content:center;font-size:12px;padding:13px">
+              ✍ Gerar Proposta de Peça de Recurso →
+            </button>
+          </div>
+          <div id="minuta-loading" style="display:none;font-family:var(--mono);font-size:10px;color:#6b2ea8;text-align:center;margin-top:12px;letter-spacing:0.1em;padding:8px;background:#f8f5ff;border:1px solid rgba(107,46,168,0.15)">⏳ A redigir peça de recurso completa — pode demorar alguns segundos...</div>
         </div>
+            ⏳ A redigir peça de recurso completa — pode demorar alguns segundos...
+          </div>
+        </div>
+
         <div id="minuta-container" style="display:none">
           <div class="minuta-card">
             <div class="minuta-header">
@@ -573,8 +640,11 @@
         </div>
       </div>
 
-      <button class="btn-pdf" onclick="gerarPDF()">📄 Descarregar Relatório PDF Profissional</button>
-      <div class="ref-number" id="ref-number"></div>
+      <!-- Botão PDF — só visível nos modos judicial e académico -->
+      <div id="btn-pdf-wrapper">
+        <button class="btn-pdf" onclick="gerarPDF()">📄 Descarregar Relatório PDF Profissional</button>
+        <div class="ref-number" id="ref-number"></div>
+      </div>
     </div>
   </div>
 
@@ -607,7 +677,7 @@
         </div>
         <!-- CRÍTICA -->
         <div id="ctx-critica" style="display:none">
-          <div class="critica-banner" style="margin-bottom:10px"><strong>Consultor Jurídico Sénior</strong><p>Análise de nulidades, vícios processuais e erros de julgamento. Geração de argumentos para recurso.</p></div>
+          <div class="critica-banner" style="margin-bottom:10px"><strong>Consultor Jurídico Sénior</strong><p>Análise de nulidades, vícios processuais e erros de julgamento. Geração de argumentos para recurso e proposta de peça processual.</p></div>
           <select id="tribunal-critica-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tribunal (opcional) —</option>
             <optgroup label="Supremos Tribunais"><option>STJ — Supremo Tribunal de Justiça</option><option>STA — Supremo Tribunal Administrativo</option><option>TC — Tribunal Constitucional</option></optgroup>
@@ -1197,6 +1267,9 @@ async function analyzeDecision() {
 function renderResults(result) {
   document.getElementById('results-standard').style.display = 'block';
   document.getElementById('results-critica').style.display = 'none';
+  // Mostrar botão PDF nestes modos
+  document.getElementById('btn-pdf-wrapper').style.display = 'block';
+
   const titles = { 'IA_DETECTADA': 'Inteligência Artificial Detectada', 'PROVAVELMENTE_IA': 'Provavelmente Gerado por IA', 'INCONCLUSIVO': 'Análise Inconclusiva', 'PROVAVELMENTE_HUMANO': 'Provavelmente Autoria Humana', 'HUMANO': 'Autoria Humana Confirmada' };
   const subs = { 'IA_DETECTADA': 'Os marcadores linguísticos indicam fortemente o uso de inteligência artificial.', 'PROVAVELMENTE_IA': 'Vários indicadores sugerem uso significativo de IA.', 'INCONCLUSIVO': 'Os indicadores não permitem determinar com segurança o uso de IA.', 'PROVAVELMENTE_HUMANO': 'O texto apresenta características predominantemente humanas.', 'HUMANO': 'Os marcadores são consistentes com autoria humana.' };
   const cls = { 'IA_DETECTADA': 'ai', 'PROVAVELMENTE_IA': 'ai', 'INCONCLUSIVO': 'uncertain', 'PROVAVELMENTE_HUMANO': 'human', 'HUMANO': 'human' };
@@ -1214,7 +1287,6 @@ function renderResults(result) {
   }
   setTimeout(() => { grid.querySelectorAll('.indicator-bar-fill').forEach(el => { el.style.width = el.dataset.width; }); }, 200);
 
-  // Humanizador
   const humanBanner = document.getElementById('humanizador-banner');
   humanBanner.style.display = result.humanizador_detectado ? 'flex' : 'none';
 
@@ -1226,7 +1298,6 @@ function renderResults(result) {
     document.getElementById('relator-analise-text').textContent = result.relator_analise;
   } else rc.style.display = 'none';
 
-  // Citações suspeitas
   const citacoesCard = document.getElementById('citacoes-card');
   const citacoesList = document.getElementById('citacoes-list');
   const citacoes = result.citacoes_suspeitas || [];
@@ -1255,7 +1326,10 @@ function renderResults(result) {
 function renderResultsCritica(result) {
   document.getElementById('results-standard').style.display = 'none';
   document.getElementById('results-critica').style.display = 'block';
-  const vertitulos = { 'RECURSO_VIAVEL': 'Recurso Viável — Fundamentos Identificados', 'RECURSO_PARCIAL': 'Recurso Parcialmente Fundamentado', 'RECURSO_INVIAVEL': 'Sem Fundamentos Sólidos para Recurso' };
+  // Ocultar botão PDF na análise crítica
+  document.getElementById('btn-pdf-wrapper').style.display = 'none';
+
+  const vertitulos = { 'RECURSO_VIAVEL': 'Recurso Viável — Fundamentos Identificados', 'RECURSO_PARCIAL':   'Recurso Parcialmente Fundamentado', 'RECURSO_INVIAVEL': 'Sem Fundamentos Sólidos para Recurso' };
   const versubs = { 'RECURSO_VIAVEL': 'Foram identificados fundamentos jurídicos sólidos para interposição de recurso.', 'RECURSO_PARCIAL': 'Existem argumentos para recurso, mas com limitações. Avaliação cuidadosa recomendada.', 'RECURSO_INVIAVEL': 'A decisão encontra-se devidamente fundamentada. Fundamentos para recurso fracos ou inexistentes.' };
   const vercls = { 'RECURSO_VIAVEL': 'recurso-viavel', 'RECURSO_PARCIAL': 'recurso-parcial', 'RECURSO_INVIAVEL': 'recurso-inviavel' };
   const veredicto = result.veredicto_recurso || 'RECURSO_INVIAVEL';
