@@ -47,8 +47,7 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 @keyframes introLoad { to { width: 100%; } }
 
 /* ══════════════════════════════════════
-   NAV — hamburger sempre visível
-   links desktop só ≥1280px
+   NAV
 ══════════════════════════════════════ */
 .site-nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 200;
@@ -61,18 +60,11 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 .site-nav.scrolled { background: rgba(6,6,8,.97); backdrop-filter: blur(24px); border-bottom-color: var(--border); }
 .nav-logo { font-family: var(--serif); font-size: 24px; color: var(--white); text-decoration: none; font-style: italic; flex-shrink: 0; position: relative; z-index: 210; }
 .nav-logo span { color: var(--gold); }
-
-/* Links — ocultos em mobile, visíveis em desktop */
-.nav-links {
-  display: none;
-  gap: 28px; list-style: none; align-items: center;
-}
+.nav-links { display: none; gap: 28px; list-style: none; align-items: center; }
 .nav-links a { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color .2s; white-space: nowrap; }
 .nav-links a:hover { color: var(--white); }
 .nav-cta-link { background: var(--gold) !important; color: var(--black) !important; padding: 9px 20px !important; font-weight: 700 !important; transition: background .2s !important; }
 .nav-cta-link:hover { background: var(--gold-light) !important; color: var(--black) !important; }
-
-/* Hamburger — sempre visível */
 .nav-hamburger {
   position: relative; z-index: 210;
   display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
@@ -88,8 +80,6 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
 .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-/* Drawer — cobre ecrã inteiro */
 .nav-drawer {
   position: fixed; inset: 0; z-index: 205;
   background: rgba(6,6,8,.99); backdrop-filter: blur(20px);
@@ -118,8 +108,6 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
   transition: background .2s;
 }
 .nav-drawer-cta:hover { background: var(--gold-light); }
-
-/* Em desktop ≥1280px: mostra links, esconde hamburger */
 @media (min-width: 1280px) {
   .site-nav { padding: 18px 48px; }
   .nav-links { display: flex !important; }
@@ -169,6 +157,47 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 .section-intro { color: var(--grey); max-width: 560px; line-height: 1.8; font-size: 15px; }
 .sp { padding: clamp(72px,8vw,100px) clamp(24px,5vw,48px); }
 .container { max-width: 1180px; margin: 0 auto; }
+
+/* ── MODOS DE ANÁLISE ── */
+.modos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.modo-card {
+  background: var(--dark);
+  padding: 36px 30px;
+  position: relative;
+  overflow: hidden;
+  transition: background .3s;
+}
+.modo-card:hover { background: #161620; }
+.modo-card-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.modo-card-bar.judicial { background: linear-gradient(90deg, var(--gold), transparent); }
+.modo-card-bar.critica  { background: linear-gradient(90deg, #c97850, transparent); }
+.modo-card-bar.academico{ background: linear-gradient(90deg, #4c9ee8, transparent); }
+.modo-label { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 10px; }
+.modo-label.judicial  { color: var(--gold); }
+.modo-label.critica   { color: #c97850; }
+.modo-label.academico { color: #4c9ee8; }
+.modo-card h3 { font-family: var(--serif); font-size: 19px; font-style: italic; margin-bottom: 14px; color: var(--white); line-height: 1.25; }
+.modo-card p  { font-size: 12px; line-height: 1.85; color: var(--grey); margin-bottom: 18px; }
+.modo-features { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.modo-feature { font-family: var(--mono); font-size: 10px; display: flex; align-items: flex-start; gap: 8px; }
+.modo-feature .arrow { flex-shrink: 0; }
+.modo-feature.judicial  { color: rgba(201,168,76,.75); }
+.modo-feature.judicial  .arrow { color: var(--gold); }
+.modo-feature.critica   { color: rgba(201,120,80,.8); }
+.modo-feature.critica   .arrow { color: #c97850; }
+.modo-feature.academico { color: rgba(76,158,232,.8); }
+.modo-feature.academico .arrow { color: #4c9ee8; }
+.modo-para { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.modo-para-label { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--grey); flex-shrink: 0; }
+.modo-para-val { font-family: var(--sans); font-size: 11px; color: var(--white); }
 
 /* ── PROBLEMA ── */
 .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 56px; }
@@ -345,7 +374,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
 
 /* ── RESPONSIVE ── */
 @media (max-width: 1023px) {
-  .problem-grid, .steps-grid, .features-grid { grid-template-columns: 1fr; }
+  .problem-grid, .steps-grid, .features-grid, .modos-grid { grid-template-columns: 1fr; }
   .pricing-wrapper { grid-template-columns: 1fr; }
   .demo-grid { grid-template-columns: 1fr; }
   .demo-result-panel { min-height: auto; }
@@ -390,9 +419,8 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
 <!-- NAV -->
 <nav class="site-nav" id="siteNav">
   <a href="#" class="nav-logo">Lex<span>Veritas</span></a>
-
-  <!-- Links — só visíveis em desktop ≥1280px -->
   <ul class="nav-links" id="navLinks">
+    <li><a href="#modos">Análises</a></li>
     <li><a href="#problema">O Problema</a></li>
     <li><a href="#demo">Demo</a></li>
     <li><a href="#como-funciona">Como Funciona</a></li>
@@ -402,16 +430,15 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     <li><a href="/blog">Blog</a></li>
     <li><a href="/app" class="nav-cta-link">Aceder ao App</a></li>
   </ul>
-
-  <!-- Hamburger — sempre visível (oculto só em desktop ≥1280px via CSS) -->
   <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false" type="button">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<!-- Drawer menu (mobile + tablet) -->
+<!-- Drawer menu -->
 <div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Menu de navegação">
   <ul>
+    <li><a href="#modos">As Nossas Análises</a></li>
     <li><a href="#problema">O Problema</a></li>
     <li><a href="#demo">Demo Gratuita</a></li>
     <li><a href="#como-funciona">Como Funciona</a></li>
@@ -439,7 +466,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     <p class="hero-sub">O primeiro sistema de análise forense de inteligência artificial em decisões judiciais dos tribunais portugueses.</p>
     <div class="hero-actions">
       <a href="#demo" class="btn-primary"><span>Testar Agora — Grátis →</span></a>
-      <a href="#problema" class="btn-secondary">Saber Mais</a>
+      <a href="#modos" class="btn-secondary">Conhecer as Análises</a>
     </div>
     <div class="stats-bar">
       <div class="stat-item"><span class="stat-number">14+</span><span class="stat-label">Tribunais Cobertos</span></div>
@@ -447,6 +474,89 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
       <div class="stat-item"><span class="stat-number">3</span><span class="stat-label">Modos de Análise</span></div>
       <div class="stat-item"><span class="stat-number">EU</span><span class="stat-label">Dados em Portugal</span></div>
     </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     MODOS DE ANÁLISE — secção de destaque logo após o hero
+════════════════════════════════════════════════════ -->
+<section id="modos" style="background:var(--black);border-bottom:1px solid var(--border)">
+  <div class="container sp" style="padding-top:clamp(56px,7vw,80px);padding-bottom:clamp(56px,7vw,80px)">
+
+    <div class="section-label reveal" style="justify-content:center">O Que Analisamos</div>
+    <h2 class="section-title reveal" style="text-align:center;margin-bottom:12px">
+      Três modos de análise.<br><span>Uma plataforma forense.</span>
+    </h2>
+    <p class="section-intro reveal" style="margin:0 auto 48px;text-align:center;max-width:600px">
+      O LexVeritas oferece três análises distintas, calibradas para as necessidades específicas de advogados, magistrados, académicos e investigadores jurídicos portugueses.
+    </p>
+
+    <div class="modos-grid reveal">
+
+      <!-- ANÁLISE JUDICIAL -->
+      <div class="modo-card">
+        <div class="modo-card-bar judicial"></div>
+        <div style="font-size:28px;margin-bottom:16px">⚖️</div>
+        <div class="modo-label judicial">Análise Judicial</div>
+        <h3>Detecção de IA em decisões dos tribunais portugueses</h3>
+        <p>Analisa acórdãos, sentenças e despachos com 6 indicadores forenses calibrados especificamente para a jurisprudência portuguesa — perplexidade textual, variabilidade rítmica, coesão artificial, uniformidade sintáctica, riqueza lexical e marcadores formulaicos. Identifica citações e acórdãos potencialmente fabricados por IA, e detecta textos processados por ferramentas de humanização como Quillbot ou Undetectable.ai.</p>
+        <div class="modo-features">
+          <div class="modo-feature judicial"><span class="arrow">→</span><span>STJ, TRL, TRP, TRC, TRG, TRE, STA, TC e mais</span></div>
+          <div class="modo-feature judicial"><span class="arrow">→</span><span>Verificação de citações e acórdãos suspeitos</span></div>
+          <div class="modo-feature judicial"><span class="arrow">→</span><span>Detecção de ferramentas de humanização de IA</span></div>
+          <div class="modo-feature judicial"><span class="arrow">→</span><span>Relatório PDF profissional com referência única</span></div>
+        </div>
+        <div class="modo-para">
+          <span class="modo-para-label">Para</span>
+          <span class="modo-para-val">Advogados · Magistrados · Solicitadores · Notários</span>
+        </div>
+      </div>
+
+      <!-- ANÁLISE CRÍTICA -->
+      <div class="modo-card">
+        <div class="modo-card-bar critica"></div>
+        <div style="font-size:28px;margin-bottom:16px">🏛️</div>
+        <div class="modo-label critica">Análise Crítica</div>
+        <h3>Consultor jurídico sénior para preparação de recurso</h3>
+        <p>Actua como consultor jurídico sénior: lê a decisão judicial na íntegra, identifica nulidades processuais, erros de julgamento, erros de direito, erros de facto e questões constitucionais. Gera argumentos técnicos fundamentados ao abrigo do Art.&nbsp;615.º CPC e 379.º CPP, avalia a admissibilidade do recurso e produz uma proposta completa de peça processual pronta a adaptar e subscrever.</p>
+        <div class="modo-features">
+          <div class="modo-feature critica"><span class="arrow">→</span><span>Identificação de nulidades e vícios processuais</span></div>
+          <div class="modo-feature critica"><span class="arrow">→</span><span>Erros de direito, de facto e questões constitucionais</span></div>
+          <div class="modo-feature critica"><span class="arrow">→</span><span>Avaliação de admissibilidade e prazo de recurso</span></div>
+          <div class="modo-feature critica"><span class="arrow">→</span><span>Proposta completa de peça de recurso gerada</span></div>
+        </div>
+        <div class="modo-para">
+          <span class="modo-para-label">Para</span>
+          <span class="modo-para-val">Advogados · Sociedades de Advogados · Mandatários</span>
+        </div>
+      </div>
+
+      <!-- ANÁLISE ACADÉMICA -->
+      <div class="modo-card">
+        <div class="modo-card-bar academico"></div>
+        <div style="font-size:28px;margin-bottom:16px">🎓</div>
+        <div class="modo-label academico">Análise Académica</div>
+        <h3>Verificação de autoria em trabalhos jurídicos académicos</h3>
+        <p>Detecta o uso de inteligência artificial em teses de mestrado, dissertações de doutoramento, artigos académicos, monografias e trabalhos de licenciatura na área jurídica. Calibrado para o estilo académico-jurídico português, analisa a coerência argumentativa, o perfil de autoria, a consistência das citações e a uniformidade de registo ao longo do documento.</p>
+        <div class="modo-features">
+          <div class="modo-feature academico"><span class="arrow">→</span><span>Teses, dissertações, artigos e monografias</span></div>
+          <div class="modo-feature academico"><span class="arrow">→</span><span>Análise de coerência argumentativa e de registo</span></div>
+          <div class="modo-feature academico"><span class="arrow">→</span><span>Perfil de autoria e consistência de citações</span></div>
+          <div class="modo-feature academico"><span class="arrow">→</span><span>Relatório PDF com referência única</span></div>
+        </div>
+        <div class="modo-para">
+          <span class="modo-para-label">Para</span>
+          <span class="modo-para-val">Docentes · Investigadores · Estudantes de Direito · Universidades</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CTA inline -->
+    <div class="reveal" style="text-align:center;margin-top:36px">
+      <a href="/app" class="btn-primary" style="display:inline-flex"><span>Experimentar gratuitamente →</span></a>
+    </div>
+
   </div>
 </section>
 
@@ -581,9 +691,9 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
       <div class="pricing-profiles">
         <div class="pricing-profiles-title">Que tipo de utilizador é?</div>
         <div class="pricing-profiles-sub">Trabalhamos com profissionais e instituições de todas as dimensões.</div>
-        <div class="profile-row"><div class="profile-icon">⚖️</div><div><div class="profile-name">Advogado Individual</div><div class="profile-desc">Acesso profissional completo com análise crítica e relatórios ilimitados.</div></div></div>
+        <div class="profile-row"><div class="profile-icon">⚖️</div><div><div class="profile-name">Advogado Individual</div><div class="profile-desc">Acesso profissional completo com análise judicial, crítica e relatórios ilimitados.</div></div></div>
         <div class="profile-row"><div class="profile-icon">🏢</div><div><div class="profile-name">Sociedade de Advogados</div><div class="profile-desc">Licenças multi-utilizador com volume de análises ajustado à dimensão.</div></div></div>
-        <div class="profile-row"><div class="profile-icon">🎓</div><div><div class="profile-name">Faculdade / Universidade</div><div class="profile-desc">Planos institucionais para verificação de autoria em teses e trabalhos.</div></div></div>
+        <div class="profile-row"><div class="profile-icon">🎓</div><div><div class="profile-name">Faculdade / Universidade</div><div class="profile-desc">Planos institucionais para verificação de autoria em teses e trabalhos, com análise académica.</div></div></div>
         <div class="profile-row"><div class="profile-icon">📚</div><div><div class="profile-name">Docente ou Investigador</div><div class="profile-desc">Conta individual com modo académico e histórico completo.</div></div></div>
         <div class="profile-row"><div class="profile-icon">🎒</div><div><div class="profile-name">Estudante de Direito</div><div class="profile-desc">Conta gratuita disponível. 5 análises mensais sem cartão de crédito.</div></div></div>
       </div>
@@ -677,6 +787,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     <div class="footer-tagline">Tecnologia Forense Jurídica · Portugal</div>
     <nav class="footer-nav">
       <a href="/app">Plataforma</a>
+      <a href="#modos">Análises</a>
       <a href="#demo">Demo</a>
       <a href="#como-funciona">Como Funciona</a>
       <a href="#funcionalidades">Funcionalidades</a>
@@ -740,44 +851,13 @@ window.addEventListener('scroll', () => {
   const burger = document.getElementById('hamburger');
   const drawer = document.getElementById('navDrawer');
   if (!burger || !drawer) return;
-
-  function openDrawer() {
-    drawer.classList.add('open');
-    burger.classList.add('open');
-    burger.setAttribute('aria-expanded', 'true');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeDrawer() {
-    drawer.classList.remove('open');
-    burger.classList.remove('open');
-    burger.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
-  }
-  function toggle() {
-    drawer.classList.contains('open') ? closeDrawer() : openDrawer();
-  }
-
-  burger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    toggle();
-  });
-
-  drawer.querySelectorAll('a').forEach(function(a) {
-    a.addEventListener('click', function() {
-      closeDrawer();
-    });
-  });
-
-  document.addEventListener('click', function(e) {
-    if (drawer.classList.contains('open') && !drawer.contains(e.target) && !burger.contains(e.target)) {
-      closeDrawer();
-    }
-  });
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeDrawer();
-  });
-
+  function openDrawer() { drawer.classList.add('open'); burger.classList.add('open'); burger.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; }
+  function closeDrawer() { drawer.classList.remove('open'); burger.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; }
+  function toggle() { drawer.classList.contains('open') ? closeDrawer() : openDrawer(); }
+  burger.addEventListener('click', function(e) { e.stopPropagation(); toggle(); });
+  drawer.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', function() { closeDrawer(); }); });
+  document.addEventListener('click', function(e) { if (drawer.classList.contains('open') && !drawer.contains(e.target) && !burger.contains(e.target)) closeDrawer(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeDrawer(); });
   window._closeDrawer = closeDrawer;
 })();
 
@@ -841,7 +921,6 @@ const demoLoadingMsgs = [
   'A gerar veredicto...'
 ];
 
-// Contador de caracteres
 document.getElementById('demoTextarea').addEventListener('input', function() {
   const len = this.value.length;
   const counter = document.getElementById('demoCounter');
