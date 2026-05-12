@@ -1205,7 +1205,7 @@ async function analyzeDecision() {
   showOverlay(); document.getElementById('results-area').classList.remove('visible');
   try {
     let payload = { texto: text, modo: modoActual };
-    if (modoActual === 'judicial') { payload.tribunal = document.getElementById('tribunal-select').value || null; payload.relator = document.getElementById('relator-input').value || null; payload.tipoPeca = document.getElementById('tipo-peca-select').value || null; }
+    if (modoActual === 'judicial') { payload.tribunal = document.getElementById('tribunal-select').value || null; payload.relator = document.getElementById('relator-input').value || null; payload.tipoPeca = (document.getElementById('tipo-peca-select') || {}).value || null; }
     else if (modoActual === 'academico') { payload.instituicao = document.getElementById('instituicao-input').value || null; payload.tipoDoc = document.getElementById('tipo-doc-select').value || null; payload.orientador = document.getElementById('orientador-input').value || null; }
     else if (modoActual === 'critica') { payload.tribunal = document.getElementById('tribunal-critica-select').value || null; payload.tipoProcesso = document.getElementById('tipo-processo-select').value || null; payload.parteRecorrente = document.getElementById('parte-recorrente-select').value || null; }
     const { data: { session } } = await sb.auth.getSession();
