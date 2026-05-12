@@ -171,6 +171,24 @@
   .citacao-texto { font-family: var(--mono); font-size: 10px; color: #555; margin-bottom: 6px; font-style: italic; line-height: 1.5; }
   .citacao-problema { font-family: var(--sans); font-size: 12px; color: #444; line-height: 1.5; }
 
+  /* ── VERIFICAÇÃO DE CITAÇÕES ── */
+  .verificar-btn { width: 100%; background: #1a1a2e; color: white; border: 1px solid rgba(201,168,76,0.3); padding: 11px 20px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+  .verificar-btn:hover { border-color: var(--gold); background: #0d0d20; }
+  .verificar-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .verificar-loading { display: none; margin-top: 12px; font-family: var(--mono); font-size: 10px; color: var(--gold); text-align: center; padding: 10px; background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.15); }
+  .verificar-stats { display: flex; gap: 16px; flex-wrap: wrap; padding: 10px 14px; background: #f8f8f0; border: 1px solid var(--rule); margin-bottom: 12px; font-family: var(--mono); font-size: 10px; }
+  .verificar-card { padding: 12px 14px; margin-bottom: 8px; border-left: 3px solid; }
+  .verificar-card.encontrado { background: rgba(26,92,58,0.06); border-color: #1a5c2a; }
+  .verificar-card.nao-encontrado { background: rgba(139,26,26,0.06); border-color: #8b1a1a; }
+  .verificar-card.inconclusivo { background: rgba(201,168,76,0.06); border-color: #c9a84c; }
+  .verificar-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+  .verificar-card-label { font-family: var(--mono); font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .verificar-card-fonte { font-family: var(--mono); font-size: 8px; color: #aaa; margin-left: 4px; }
+  .verificar-card-citacao { font-family: var(--mono); font-size: 10px; color: #555; font-style: italic; margin-bottom: 4px; }
+  .verificar-card-detalhe { font-family: var(--sans); font-size: 11px; color: #555; margin-top: 5px; line-height: 1.6; }
+  .verificar-card-link { font-family: var(--mono); font-size: 9px; color: var(--gold); text-decoration: none; display: inline-block; margin-top: 4px; }
+  .verificar-card-link:hover { text-decoration: underline; }
+
   .nulidades-section-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #888; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
   .nulidades-section-label::after { content: ''; height: 1px; flex: 1; background: rgba(0,0,0,0.1); }
   .nulidade-card { background: white; border: 1px solid var(--rule); border-left: 3px solid var(--red); padding: 18px 20px; margin-bottom: 12px; }
@@ -209,7 +227,6 @@
   .admissivel-sim { background: rgba(26,92,58,0.08); color: #1a5c2a; }
   .admissivel-nao { background: rgba(139,26,26,0.08); color: #8b1a1a; }
 
-  /* MINUTA */
   .minuta-card { background: white; border: 1px solid var(--rule); border-top: 3px solid var(--gold); margin-bottom: 16px; }
   .minuta-header { padding: 14px 20px; background: var(--parchment); border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .minuta-title { font-family: var(--serif); font-size: 14px; font-weight: 700; }
@@ -523,10 +540,24 @@
         <div class="analysis-card" id="relator-card" style="display:none;border-left:3px solid var(--gold)">
           <h3 id="relator-card-title">Análise do Estilo do Relator</h3><p id="relator-analise-text">—</p>
         </div>
+
+        <!-- ── PATCH 1: citações + botão verificar ── -->
         <div class="analysis-card" id="citacoes-card" style="display:none;border-left:3px solid #c97850">
           <h3>⚠ Citações com Indícios de Fabricação</h3>
           <div id="citacoes-list"></div>
+          <!-- BOTÃO VERIFICAR CITAÇÕES -->
+          <div id="verificar-btn-container" style="display:none;margin-top:14px">
+            <button class="verificar-btn" id="btn-verificar-citacoes" onclick="verificarCitacoes()">
+              🔍 Verificar Citações nas Fontes Oficiais
+            </button>
+            <div style="font-family:var(--mono);font-size:9px;color:#aaa;text-align:center;margin-top:6px;letter-spacing:0.05em">
+              juris.stj.pt (todos os tribunais) · RCAAP · DRE · Pode demorar até 20 segundos
+            </div>
+          </div>
+          <div class="verificar-loading" id="verificacao-loading">⏳ A verificar citações nas fontes oficiais...</div>
+          <div id="verificacao-resultados" style="display:none;margin-top:14px"></div>
         </div>
+
         <div class="analysis-card"><h3>Marcadores Identificados</h3><ul class="evidence-list" id="evidence-list"></ul></div>
       </div>
 
@@ -588,7 +619,7 @@
         </div>
       </div>
 
-      <!-- Botão PDF — apenas nos modos judicial e académico, NUNCA na crítica -->
+      <!-- Botão PDF — apenas judicial e académico -->
       <div id="btn-pdf-wrapper" style="display:none">
         <button class="btn-pdf" onclick="gerarPDF()">📄 Descarregar Relatório PDF Profissional</button>
         <div class="ref-number" id="ref-number"></div>
@@ -1230,7 +1261,6 @@ async function analyzeDecision() {
 function renderResults(result) {
   document.getElementById('results-standard').style.display = 'block';
   document.getElementById('results-critica').style.display = 'none';
-  // Mostrar botão PDF apenas nestes modos
   document.getElementById('btn-pdf-wrapper').style.display = 'block';
 
   const titles = { 'IA_DETECTADA': 'Inteligência Artificial Detectada', 'PROVAVELMENTE_IA': 'Provavelmente Gerado por IA', 'INCONCLUSIVO': 'Análise Inconclusiva', 'PROVAVELMENTE_HUMANO': 'Provavelmente Autoria Humana', 'HUMANO': 'Autoria Humana Confirmada' };
@@ -1264,8 +1294,17 @@ function renderResults(result) {
   const citacoesCard = document.getElementById('citacoes-card');
   const citacoesList = document.getElementById('citacoes-list');
   const citacoes = result.citacoes_suspeitas || [];
+
+  // ── PATCH 2: mostrar/esconder botão verificar ──
   if (citacoes.length > 0 && modoActual === 'judicial') {
     citacoesCard.style.display = 'block';
+    // Mostrar botão e limpar resultados anteriores
+    document.getElementById('verificar-btn-container').style.display = 'block';
+    document.getElementById('verificacao-resultados').style.display = 'none';
+    document.getElementById('verificacao-resultados').innerHTML = '';
+    document.getElementById('verificacao-loading').style.display = 'none';
+    const btn = document.getElementById('btn-verificar-citacoes');
+    btn.disabled = false; btn.textContent = '🔍 Verificar Citações nas Fontes Oficiais';
     const tipoLabels = { acordao: 'Acórdão', diploma_legal: 'Diploma Legal', doutrina: 'Doutrina', jurisprudencia: 'Jurisprudência' };
     citacoesList.innerHTML = citacoes.map(c => `
       <div class="citacao-card ${c.gravidade}">
@@ -1278,6 +1317,7 @@ function renderResults(result) {
       </div>`).join('');
   } else {
     citacoesCard.style.display = 'none';
+    document.getElementById('verificar-btn-container').style.display = 'none';
   }
 
   document.getElementById('evidence-list').innerHTML = (result.marcadores || []).map(m => `<li class="evidence-item"><div class="evidence-marker ${m.tipo === 'ai' ? 'marker-ai' : 'marker-ok'}">${m.tipo === 'ai' ? '⚠' : '✓'}</div><span class="evidence-text">${m.texto}</span></li>`).join('');
@@ -1289,7 +1329,6 @@ function renderResults(result) {
 function renderResultsCritica(result) {
   document.getElementById('results-standard').style.display = 'none';
   document.getElementById('results-critica').style.display = 'block';
-  // PDF NUNCA visível na análise crítica
   document.getElementById('btn-pdf-wrapper').style.display = 'none';
 
   const vertitulos = { 'RECURSO_VIAVEL': 'Recurso Viável — Fundamentos Identificados', 'RECURSO_PARCIAL': 'Recurso Parcialmente Fundamentado', 'RECURSO_INVIAVEL': 'Sem Fundamentos Sólidos para Recurso' };
@@ -1407,10 +1446,9 @@ async function gerarMinuta() {
   finally { btn.disabled = false; btn.textContent = '✍ Gerar Proposta de Peça de Recurso →'; loading.style.display = 'none'; }
 }
 
-// ── GERAR PDF — apenas judicial e académico ──
+// ── GERAR PDF ──
 function gerarPDF() {
   if (!lastResult) { alert('Faça primeiro uma análise.'); return; }
-  // Guardar para não gerar PDF em modo crítica (redundante mas seguro)
   if (lastResult._modo === 'critica') return;
   gerarPDFStandard();
 }
@@ -1427,7 +1465,6 @@ function gerarPDFStandard() {
     const vCls = lastResult.veredicto;
     const vColor = (vCls === 'IA_DETECTADA' || vCls === 'PROVAVELMENTE_IA') ? cRed : (vCls === 'INCONCLUSIVO') ? cGrey : cGreen;
     const now = new Date(), dateStr = now.toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' }), timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-
     const tribunalPDF = safeStr(lastResult._tribunal || '');
     const relatorPDF  = safeStr(lastResult._relator  || '');
 
@@ -1437,7 +1474,6 @@ function gerarPDFStandard() {
     function sectionHeader(title) { checkY(12); sc(cLight, 'fill'); doc.rect(margin, y, contentW + 4, 7, 'F'); sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW + 4, 7, 'S'); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text(safeStr(title), margin + 3, y + 5); y += 11; }
     function bodyText(text) { const safeW = contentW; const paras = safeStr(text).split('\n'); paras.forEach((para, pi) => { if (!para.trim()) { if (pi < paras.length - 1) { checkY(4); y += 3; } return; } doc.setFontSize(9); doc.setFont('helvetica', 'normal'); const lines = doc.splitTextToSize(para, safeW); lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.text(safeStr(l), margin, y); y += 5.5; }); if (pi < paras.length - 1) y += 2; }); }
 
-    // CABEÇALHO
     sc(cGold, 'fill'); doc.rect(0, 0, W, 32, 'F');
     sc([255,255,255], 'text'); doc.setFontSize(30); doc.setFont('helvetica', 'bold'); doc.text('LexVeritas', margin, 18);
     doc.setFontSize(8); doc.setFont('helvetica', 'normal');
@@ -1446,7 +1482,6 @@ function gerarPDFStandard() {
     doc.text(safeStr(lastRef), W - margin, 26, { align: 'right' });
     y = 42;
 
-    // CONTEXTO
     sc(cLight, 'fill'); doc.rect(margin, y, contentW, 24, 'F');
     sc(cGold, 'draw'); doc.setLineWidth(0.5); doc.rect(margin, y, contentW, 24, 'S');
     const col1 = margin + 4, col2 = margin + 60, col3 = margin + 120;
@@ -1458,7 +1493,6 @@ function gerarPDFStandard() {
     doc.text(safeStr(userProfile?.nome || 'Utilizador').substring(0, 20), col3, y + 15);
     y += 32;
 
-    // VEREDICTO
     sc(vColor, 'draw'); doc.setLineWidth(1.2); doc.line(margin, y, margin, y + 22);
     sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.text('VEREDICTO FORENSE', margin + 5, y + 5);
     sc(vColor, 'text'); doc.setFontSize(20); doc.setFont('helvetica', 'bold');
@@ -1538,6 +1572,97 @@ function gerarPDFStandard() {
     doc.splitTextToSize(disc, contentW).forEach(l => { doc.text(safeStr(l), margin, y); y += 4; });
     addFooter(); doc.save('LexVeritas-' + safeStr(lastRef) + '.pdf');
   } catch (err) { console.error('Erro PDF:', err); alert('Erro ao gerar PDF: ' + err.message); }
+}
+
+// ── PATCH 3: VERIFICAR CITAÇÕES NAS FONTES OFICIAIS ──
+async function verificarCitacoes() {
+  const citacoes = lastResult && lastResult.citacoes_suspeitas;
+  if (!citacoes || citacoes.length === 0) { alert('Sem citações para verificar.'); return; }
+
+  const btn = document.getElementById('btn-verificar-citacoes');
+  const loading = document.getElementById('verificacao-loading');
+  const resultados = document.getElementById('verificacao-resultados');
+  const btnContainer = document.getElementById('verificar-btn-container');
+
+  btn.disabled = true; btn.textContent = '⏳ A verificar...';
+  loading.style.display = 'block';
+  resultados.style.display = 'none'; resultados.innerHTML = '';
+
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session || !session.access_token) { alert('Sessão expirada. Faça login novamente.'); logout(); return; }
+
+    const response = await fetch('/api/verificar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: JSON.stringify({ citacoes: citacoes })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(function() { return {}; });
+      throw new Error(err.erro || 'Erro ao verificar citações.');
+    }
+
+    const data = await response.json();
+    const res = data.resultados || [];
+
+    if (res.length === 0) {
+      resultados.innerHTML = '<div style="font-family:var(--sans);font-size:12px;color:#888;padding:10px;font-style:italic">Nenhuma citação verificada.</div>';
+      resultados.style.display = 'block'; return;
+    }
+
+    const iconMap = { 'true': '✅', 'false': '❌', 'null': '⚠️' };
+    const labelMap = { 'true': 'ENCONTRADO', 'false': 'NÃO ENCONTRADO', 'null': 'INCONCLUSIVO' };
+    const colorMap = { 'true': '#1a5c2a', 'false': '#8b1a1a', 'null': '#8b5e1a' };
+    const bgMap    = { 'true': 'rgba(26,92,58,0.06)', 'false': 'rgba(139,26,26,0.06)', 'null': 'rgba(201,168,76,0.06)' };
+    const borderMap = { 'true': '#1a5c2a', 'false': '#8b1a1a', 'null': '#c9a84c' };
+    const tipoLabels = { acordao: 'Acórdão', diploma_legal: 'Diploma Legal', doutrina: 'Doutrina', jurisprudencia: 'Jurisprudência' };
+
+    const stats = data.stats || {};
+    const statsHtml = '<div class="verificar-stats">'
+      + '<span>Total: <strong>' + (stats.total || res.length) + '</strong></span>'
+      + '<span style="color:#1a5c2a">✅ Encontrados: <strong>' + (stats.encontrados || 0) + '</strong></span>'
+      + '<span style="color:#8b1a1a">❌ Não encontrados: <strong>' + (stats.nao_encontrados || 0) + '</strong></span>'
+      + '<span style="color:#8b5e1a">⚠️ Inconclusivos: <strong>' + (stats.inconclusivos || 0) + '</strong></span>'
+      + '</div>';
+
+    const cardsHtml = res.map(function(r) {
+      const v = r.verificacao || {};
+      const enc = v.encontrado;
+      const k = enc === true ? 'true' : enc === false ? 'false' : 'null';
+      const cls = enc === true ? 'encontrado' : enc === false ? 'nao-encontrado' : 'inconclusivo';
+      const urlHtml = v.url
+        ? '<a href="' + v.url + '" target="_blank" rel="noopener" class="verificar-card-link">→ Verificar manualmente</a>'
+        : '';
+      const fonteHtml = v.fonte ? '<span class="verificar-card-fonte">via ' + v.fonte + '</span>' : '';
+      const detalheHtml = v.detalhe ? '<div class="verificar-card-detalhe">' + v.detalhe + '</div>' : '';
+      const erroHtml = v.erro ? '<div style="font-family:var(--mono);font-size:9px;color:#aaa;margin-top:4px">Erro: ' + v.erro + '</div>' : '';
+      return '<div class="verificar-card ' + cls + '">'
+        + '<div class="verificar-card-header">'
+        + '<span style="font-size:14px">' + iconMap[k] + '</span>'
+        + '<span class="verificar-card-label" style="color:' + colorMap[k] + '">' + labelMap[k] + '</span>'
+        + fonteHtml
+        + '<span style="font-family:var(--mono);font-size:8px;color:#bbb;text-transform:uppercase">' + (tipoLabels[r.tipo] || r.tipo || '') + '</span>'
+        + '</div>'
+        + '<div class="verificar-card-citacao">"' + (r.citacao || '').substring(0, 120) + '"</div>'
+        + detalheHtml + erroHtml + urlHtml
+        + '</div>';
+    }).join('');
+
+    resultados.innerHTML = '<div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#888;margin-bottom:10px;display:flex;align-items:center;gap:8px">Resultado da Verificação<span style="height:1px;flex:1;background:rgba(0,0,0,0.1);display:block"></span></div>'
+      + statsHtml + cardsHtml
+      + '<div style="font-family:var(--mono);font-size:9px;color:#bbb;text-align:center;margin-top:8px;letter-spacing:0.05em">Verificação automática — confirme sempre nas fontes originais</div>';
+
+    resultados.style.display = 'block';
+    btnContainer.style.display = 'none';
+
+  } catch(err) {
+    resultados.innerHTML = '<div style="background:rgba(139,26,26,0.08);border:1px solid rgba(139,26,26,0.2);padding:12px 14px;font-family:var(--sans);font-size:12px;color:#8b1a1a">Erro: ' + (err.message || 'Tente novamente.') + '</div>';
+    resultados.style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.textContent = '🔍 Verificar Citações nas Fontes Oficiais';
+    loading.style.display = 'none';
+  }
 }
 
 // ── HISTÓRICO ──
