@@ -453,7 +453,7 @@ module.exports = async function handler(req, res) {
 
   // ── CORPO ──
   const body = req.body || {};
-  const { texto, modo = 'judicial', tribunal, relator, instituicao, tipoDoc, orientador, tipoProcesso, parteRecorrente } = body;
+  const { texto, modo = 'judicial', tribunal, relator, tipoPeca, instituicao, tipoDoc, orientador, tipoProcesso, parteRecorrente } = body;
 
   if (modo !== 'minuta' && (!texto || typeof texto !== 'string' || texto.trim().length < 50)) {
     return res.status(400).json({ erro: 'Texto insuficiente. Mínimo 50 caracteres.' });
@@ -582,8 +582,9 @@ veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMAN
 
   } else {
     const ctx = [
-      tribunal ? `Tribunal: ${tribunal}` : null,
-      relator  ? `Relator: ${relator}`   : null,
+      tribunal  ? `Tribunal: ${tribunal}`          : null,
+      relator   ? `Relator/Autor: ${relator}`       : null,
+      tipoPeca  ? `Tipo de documento: ${tipoPeca}`  : null,
     ].filter(Boolean).join('\n');
 
     const alertasLocais = validacoesLocais.length > 0
@@ -592,7 +593,7 @@ veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMAN
         `\nTrata como citações suspeitas alta gravidade.\n`
       : '';
 
-    systemPrompt = `Perito forense em análise linguística de IA em decisões judiciais portuguesas. JSON PURO apenas.
+    systemPrompt = `Perito forense em análise linguística de IA em documentos jurídicos portugueses. Podes analisar decisões judiciais (acórdãos, sentenças, despachos) E peças processuais (petições iniciais, contestações, alegações, recursos, requerimentos, articulados). Adapta a análise ao tipo de documento indicado no contexto. JSON PURO apenas.
 
 {"veredicto":"IA_DETECTADA","confianca":80,"indicadores":{"perplexidade":75,"burstiness":60,"coesao_artificial":70,"uniformidade_sintatica":65,"riqueza_lexical":55,"marcadores_formulaicos":80},"humanizador_detectado":false,"citacoes_suspeitas":[],"narrativa":"...","relator_analise":"...","marcadores":[{"tipo":"ai","texto":"..."}]}
 
@@ -610,9 +611,11 @@ DOUTRINA: só assinala se o autor claramente não existe, a obra tem título imp
 
 PRINCÍPIO GERAL: em caso de dúvida, NÃO incluas no array. É muito pior criar um falso positivo (assinalar algo correcto) do que omitir uma suspeita. Array vazio [] é uma resposta válida e preferível a falsos positivos.
 
-Analisa corpo de fundamentação. Marcadores IA: "Neste contexto","Importa salientar","É de referir que", parágrafos uniformes.`;
+Analisa o corpo do texto. Para DECISÕES JUDICIAIS: analisa a fundamentação. Para PEÇAS PROCESSUAIS (petições, recursos, alegações): analisa o corpo argumentativo — o campo relator_analise deve referir-se ao "perfil de autoria" em vez de "estilo do relator".
+Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É de referir que","Cumpre referir", parágrafos de comprimento uniforme, transições mecânicas.`;
 
-    userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}${alertasLocais}DECISÃO:\n\n${textoTruncado}\n\nJSON puro.`;
+    const labelDocumento = tipoPeca ? tipoPeca.toUpperCase() : 'DECISÃO JUDICIAL';
+    userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}${alertasLocais}${labelDocumento}:\n\n${textoTruncado}\n\nJSON puro.`;
   }
 
   // ── CHAMADA ANTHROPIC com retry ──

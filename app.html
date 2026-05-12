@@ -493,11 +493,11 @@
     <div class="section-label" id="section-label-input">Entrada do Documento</div>
     <div class="input-card">
       <div class="input-card-header">
-        <span class="input-card-title" id="input-card-title">Texto do Acórdão / Sentença / Despacho</span>
+        <span class="input-card-title" id="input-card-title">Texto do Acórdão / Sentença / Peça Processual</span>
         <span class="char-count" id="char-count">0 caracteres</span>
       </div>
       <div class="loading-bar" id="loading-bar"><div class="loading-bar-fill"></div></div>
-      <textarea id="decision-text" placeholder="Cole aqui o texto completo do acórdão, sentença ou despacho para análise forense...&#10;&#10;Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo."></textarea>
+      <textarea id="decision-text" placeholder="Cole aqui o texto completo do documento jurídico...&#10;&#10;Decisões judiciais: acórdãos, sentenças, despachos&#10;Peças processuais: petições, contestações, recursos, alegações&#10;&#10;Suporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo."></textarea>
       <div class="input-card-footer">
         <span class="file-hint">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -884,9 +884,9 @@ function setModo(modo) {
   });
   document.getElementById('ref-legais-widget').classList.toggle('hidden', modo === 'critica');
   document.getElementById('ref-critica-widget').classList.toggle('hidden', modo !== 'critica');
-  const titles = { judicial: 'Texto do Acórdão / Sentença / Despacho', academico: 'Tese / Dissertação / Trabalho Académico', critica: 'Texto da Decisão Judicial a Atacar' };
+  const titles = { judicial: 'Texto do Acórdão / Sentença / Peça Processual', academico: 'Tese / Dissertação / Trabalho Académico', critica: 'Texto da Decisão Judicial a Atacar' };
   const placeholders = {
-    judicial: 'Cole aqui o texto completo do acórdão, sentença ou despacho para análise forense...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.',
+    judicial: 'Cole aqui o texto completo do documento jurídico para análise forense...\n\nDecisões judiciais: acórdãos, sentenças, despachos\nPeças processuais: petições, contestações, recursos, alegações\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.',
     academico: 'Cole aqui o texto da tese, dissertação ou trabalho académico para verificação de autoria...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.',
     critica: 'Cole aqui o texto completo da decisão judicial que pretende analisar criticamente.\n\nO consultor jurídico sénior identificará nulidades, erros de julgamento e gerará argumentos para recurso.'
   };
@@ -1205,7 +1205,7 @@ async function analyzeDecision() {
   showOverlay(); document.getElementById('results-area').classList.remove('visible');
   try {
     let payload = { texto: text, modo: modoActual };
-    if (modoActual === 'judicial') { payload.tribunal = document.getElementById('tribunal-select').value || null; payload.relator = document.getElementById('relator-input').value || null; }
+    if (modoActual === 'judicial') { payload.tribunal = document.getElementById('tribunal-select').value || null; payload.relator = document.getElementById('relator-input').value || null; payload.tipoPeca = document.getElementById('tipo-peca-select').value || null; }
     else if (modoActual === 'academico') { payload.instituicao = document.getElementById('instituicao-input').value || null; payload.tipoDoc = document.getElementById('tipo-doc-select').value || null; payload.orientador = document.getElementById('orientador-input').value || null; }
     else if (modoActual === 'critica') { payload.tribunal = document.getElementById('tribunal-critica-select').value || null; payload.tipoProcesso = document.getElementById('tipo-processo-select').value || null; payload.parteRecorrente = document.getElementById('parte-recorrente-select').value || null; }
     const { data: { session } } = await sb.auth.getSession();
@@ -1287,7 +1287,9 @@ function renderResults(result) {
   const rc = document.getElementById('relator-card');
   if (result.relator_analise && !result.relator_analise.toLowerCase().includes('nao indicado') && !result.relator_analise.toLowerCase().includes('não indicado')) {
     rc.style.display = 'block';
-    document.getElementById('relator-card-title').textContent = modoActual === 'academico' ? 'Análise do Estilo do Autor' : 'Análise do Estilo do Relator';
+    const tipoPecaVal = document.getElementById('tipo-peca-select') ? document.getElementById('tipo-peca-select').value : '';
+    const isPeca = tipoPecaVal && ['Petição Inicial','Contestação','Recurso / Alegações','Requerimento','Articulado','Parecer Jurídico'].includes(tipoPecaVal);
+    document.getElementById('relator-card-title').textContent = modoActual === 'academico' ? 'Análise do Estilo do Autor' : isPeca ? 'Análise do Perfil de Autoria' : 'Análise do Estilo do Relator';
     document.getElementById('relator-analise-text').textContent = result.relator_analise;
   } else rc.style.display = 'none';
 
