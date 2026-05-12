@@ -598,6 +598,17 @@ veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMAN
 veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMANO | tipo: ai/humano
 humanizador_detectado: true se Quillbot/Undetectable.ai/WordAI
 citacoes_suspeitas: [{"citacao":"...","tipo":"acordao|diploma_legal|doutrina|jurisprudencia","problema":"...","gravidade":"alta|media|baixa","validacao_formato":"ok|formato_invalido|nao_aplicavel"}]
+
+REGRAS CRÍTICAS PARA citacoes_suspeitas — lê com atenção antes de assinalar:
+
+ACÓRDÃOS: assinala se o número de processo tiver formato inválido, ano impossível (futuro ou anterior a 1990), ou elementos internamente contraditórios (ex: código de comarca incompatível com a letra da Relação indicada). NÃO assinales apenas por dúvida.
+
+DIPLOMAS LEGAIS (leis, decretos-lei, portarias, regulamentos): NUNCA assinales um diploma legal apenas porque não tens certeza se existe. Só assinala se houver evidência POSITIVA e CLARA de erro — por exemplo: número/ano com formato manifestamente errado (ex: "Lei n.º 0/0000"), referência explícita a diploma como "em vigor" quando o próprio texto revela ter sido revogado, ou data de entrada em vigor impossível. Uma lei como "Lei n.º 62/2013" ou "Decreto-Lei n.º 49/2014" é válida até prova em contrário — NÃO a assinales.
+
+DOUTRINA: só assinala se o autor claramente não existe, a obra tem título impossível, ou a atribuição é internamente contraditória. Não assinales por não reconheceres a obra.
+
+PRINCÍPIO GERAL: em caso de dúvida, NÃO incluas no array. É muito pior criar um falso positivo (assinalar algo correcto) do que omitir uma suspeita. Array vazio [] é uma resposta válida e preferível a falsos positivos.
+
 Analisa corpo de fundamentação. Marcadores IA: "Neste contexto","Importa salientar","É de referir que", parágrafos uniformes.`;
 
     userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}${alertasLocais}DECISÃO:\n\n${textoTruncado}\n\nJSON puro.`;
