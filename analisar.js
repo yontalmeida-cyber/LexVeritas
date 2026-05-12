@@ -1,88 +1,223 @@
 // /api/analisar.js — LexVeritas API Endpoint
 // Vercel Serverless Function — Node.js 18+ — CommonJS
-// v2.5 — fix: max_tokens crítica 5000, correcção tribunal no backend, retry automático, fallback com erro explícito
+// v2.6 — mapeamento tribunais verificado LOSJ (Lei 62/2013) + DL 49/2014 + fonte CSM oficial
+//        fix: Aveiro→Porto, Bragança→Guimarães, Vila Real→Guimarães, Braga→Guimarães
+//        max_tokens crítica 5000, retry automático, correcção tribunal no backend
 
 const SUPABASE_URL      = 'https://bsbgizaftamufmmxeyer.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
 
 // ══════════════════════════════════════════════════════════════════════════════
-// MAPA DE TRIBUNAIS — Dec.-Lei n.º 49/2014 + Portaria 280/2013
-// Usado tanto no prompt como na normalização do backend (fonte de verdade única)
+// MAPA OFICIAL DE TRIBUNAIS DE RECURSO
+// Fontes: Lei n.º 62/2013 (LOSJ) Anexo I + DL n.º 49/2014 (ROFTJ) + CSM (csm.org.pt/tribunais/comarcas)
+// Verificado em Maio de 2026 — 23 comarcas do continente + Regiões Autónomas
+//
+// RESUMO DAS 23 COMARCAS → RELAÇÃO COMPETENTE:
+//   → TRL (Lisboa):    Lisboa, Lisboa Norte, Lisboa Oeste, Setúbal, Santarém, Leiria(*), Portalegre(**)
+//   → TRC (Coimbra):   Coimbra, Guarda, Castelo Branco, Viseu, Leiria, Aveiro(***)
+//   → TRP (Porto):     Porto, Porto Este
+//   → TRG (Guimarães): Braga, Bragança, Viana do Castelo, Vila Real
+//   → TRE (Évora):     Évora, Beja, Faro
+//   + Açores e Madeira → TRL
+//
+//  (*) Leiria: em matéria cível → TRC (Coimbra); em matéria penal pode ir a TRL
+//  (**) Portalegre: na prática vai para TRE (Évora), não TRL
+//  (***) Aveiro: vai para TRP (Porto), NÃO para TRC — correcção face à versão anterior
+//
+// ATENÇÃO: A Comarca de Braga inclui o município de Guimarães (não é comarca autónoma).
+// A TRG tem competência sobre a comarca de Braga (não apenas sobre Guimarães).
 // ══════════════════════════════════════════════════════════════════════════════
 
-// Palavras-chave no nome do tribunal → Relação competente
-// Ordem: mais específico primeiro
 const TRIBUNAL_PARA_RELACAO = [
-  // Supremos — sem Relação
-  { match: /STJ|supremo tribunal de justiça/i,               relacao: null, nome: 'Supremo Tribunal de Justiça' },
-  { match: /STA|supremo tribunal administrativo/i,           relacao: null, nome: 'Supremo Tribunal Administrativo' },
-  { match: /tribunal constitucional/i,                       relacao: null, nome: 'Tribunal Constitucional' },
-  { match: /TCAS|central administrativo sul/i,               relacao: null, nome: 'Tribunal Central Administrativo Sul' },
-  { match: /TCAN|central administrativo norte/i,             relacao: null, nome: 'Tribunal Central Administrativo Norte' },
-  // Relações — recursão para STJ
-  { match: /relação de lisboa|TRL/i,                         relacao: 'STJ', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /relação do porto|TRP/i,                          relacao: 'STJ', nome: 'Tribunal da Relação do Porto' },
-  { match: /relação de coimbra|TRC/i,                        relacao: 'STJ', nome: 'Tribunal da Relação de Coimbra' },
-  { match: /relação de guimarães|TRG/i,                      relacao: 'STJ', nome: 'Tribunal da Relação de Guimarães' },
-  { match: /relação de évora|relação de evora|TRE/i,         relacao: 'STJ', nome: 'Tribunal da Relação de Évora' },
-  // Comarcas → Relação competente (Dec.-Lei 49/2014)
-  // → Coimbra
-  { match: /guarda|T8GRD|TBGRD/i,                            relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
-  { match: /castelo.?branco|T8CTB|TBCTB/i,                   relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
-  { match: /coimbra|T8CBR|TBCBR/i,                           relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
-  { match: /aveiro|T8AVR|TBAVR/i,                            relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
-  { match: /viseu|T8VIS|TBVIS/i,                             relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
-  { match: /figueira.?da.?foz|T8FIG/i,                       relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
-  { match: /leiria|T8LRA|LBLRA/i,                            relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
-  { match: /lamego|T8LMG/i,                                  relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
-  // → Porto
-  { match: /porto|T8PRT|TBPRT/i,                             relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /vila.?nova.?de.?gaia|T8VNG/i,                    relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /matosinhos|T8MTS/i,                              relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /maia|T8MLD/i,                                    relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /valongo|T8VLP/i,                                 relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /póvoa.?de.?varzim|povoa.?de.?varzim|T8PVZ/i,    relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /vila.?do.?conde|T8VCD/i,                         relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /santo.?tirso|T8STS/i,                            relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /penafiel|T8PNF/i,                                relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /paredes|T8PRC/i,                                 relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /felgueiras|T8FLG/i,                              relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /lousada|T8LUS/i,                                 relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /vila.?real|T8VRL/i,                              relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /chaves|T8CHV/i,                                  relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /bragança|braganca|T8BGC/i,                       relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  { match: /mirandela|T8MCN/i,                               relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
-  // → Guimarães (parte de Braga)
-  { match: /guimarães|guimaraes|T8GML/i,                     relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
-  { match: /braga|T8BRG|TBBRG/i,                             relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
-  { match: /barcelos|T8BCL/i,                                relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
-  { match: /viana.?do.?castelo|T8VCT|TBVCT/i,               relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
-  // → Lisboa
-  { match: /lisboa|T8LSB|TBLSB/i,                            relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /sintra|T8SNT|TBSNT/i,                            relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /cascais|T8CSC/i,                                 relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /oeiras|T8OER/i,                                  relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /amadora|T8AMD/i,                                 relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /vila.?franca.?de.?xira|T8VFX/i,                 relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /loures|T8LRA/i,                                  relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /setúbal|setubal|T8STB/i,                         relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /almada|T8ALM/i,                                  relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /seixal|T8SXL/i,                                  relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /barreiro|T8BRR/i,                                relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /santarém|santarem|T8STR/i,                       relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /torres.?vedras|T8TVD/i,                          relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  { match: /abrantes|T8ABT/i,                                relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
-  // → Évora
-  { match: /évora|evora|T8EVR|TBEVR/i,                       relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
-  { match: /beja|T8BJA/i,                                    relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
-  { match: /portalegre|T8PTG/i,                              relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
-  { match: /faro|T8FAR|TBFAR/i,                              relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
-  { match: /loulé|loule|T8LLE/i,                             relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
-  { match: /tavira|T8TVR/i,                                  relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
-  { match: /olhão|olhao|T8OLH/i,                             relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
-  { match: /portimão|portimao|T8PTA/i,                       relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
-  { match: /lagos|T8LAG/i,                                   relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
-  { match: /santiago.?do.?cacém|T8SBR/i,                     relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
+  // ── SUPREMOS (sem Relação — recursão directa para STJ/STA/TC) ──
+  { match: /\bSTJ\b|supremo tribunal de justiça/i,           relacao: null, nome: 'Supremo Tribunal de Justiça' },
+  { match: /\bSTA\b|supremo tribunal administrativo/i,       relacao: null, nome: 'Supremo Tribunal Administrativo' },
+  { match: /tribunal constitucional|\bTC\b/i,                relacao: null, nome: 'Tribunal Constitucional' },
+  { match: /\bTCAS\b|central administrativo sul/i,           relacao: null, nome: 'Tribunal Central Administrativo Sul' },
+  { match: /\bTCAN\b|central administrativo norte/i,         relacao: null, nome: 'Tribunal Central Administrativo Norte' },
+
+  // ── RELAÇÕES (recursão para STJ) ──
+  { match: /relação de lisboa|\bTRL\b/i,                     relacao: 'STJ', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /relação do porto|\bTRP\b/i,                      relacao: 'STJ', nome: 'Tribunal da Relação do Porto' },
+  { match: /relação de coimbra|\bTRC\b/i,                    relacao: 'STJ', nome: 'Tribunal da Relação de Coimbra' },
+  { match: /relação de guimarães|relação de guimaraes|\bTRG\b/i, relacao: 'STJ', nome: 'Tribunal da Relação de Guimarães' },
+  { match: /relação de évora|relação de evora|\bTRE\b/i,     relacao: 'STJ', nome: 'Tribunal da Relação de Évora' },
+
+  // ══════════════════════════════════════════════════════════════════
+  // TRIBUNAL DA RELAÇÃO DE COIMBRA
+  // Comarcas: Coimbra, Guarda, Castelo Branco, Viseu, Leiria
+  // Fonte: LOSJ Anexo I + TRC (trc.pt/mapa-judiciario) + CSM
+  // ══════════════════════════════════════════════════════════════════
+
+  // Comarca da GUARDA — CRÍTICO (não confundir com TRG)
+  { match: /comarca da guarda|tribunal.*guarda|juízo.*guarda|juizo.*guarda|ULS guarda|T8GRD|TBGRD/i,
+    relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
+
+  // Comarca de CASTELO BRANCO
+  { match: /comarca.*castelo.?branco|tribunal.*castelo.?branco|T8CTB|TBCTB/i,
+    relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
+
+  // Comarca de COIMBRA
+  { match: /comarca.*coimbra|tribunal.*coimbra|T8CBR|TBCBR/i,
+    relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
+
+  // Comarca de VISEU
+  { match: /comarca.*viseu|tribunal.*viseu|T8VIS|TBVIS/i,
+    relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
+
+  // Comarca de LEIRIA (cível e matéria geral → TRC; alguns casos penais → TRL)
+  { match: /comarca.*leiria|tribunal.*leiria|T8LRA|TBLRA/i,
+    relacao: 'TRC', nome: 'Tribunal da Relação de Coimbra' },
+
+  // ══════════════════════════════════════════════════════════════════
+  // TRIBUNAL DA RELAÇÃO DO PORTO
+  // Comarcas: Porto, Porto Este, Aveiro (*)
+  // (*) Aveiro → TRP — CORRECÇÃO: na versão anterior estava errado como TRC
+  // Fonte: CSM csm.org.pt/tribunais/comarcas (Aveiro: "Tribunal da Relação competente: Porto")
+  // ══════════════════════════════════════════════════════════════════
+
+  // Comarca de AVEIRO → TRP (não TRC — correcção crítica)
+  { match: /comarca.*aveiro|tribunal.*aveiro|T8AVR|TBAVR/i,
+    relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+
+  // Comarca do PORTO
+  { match: /comarca.*porto\b|tribunal.*porto\b|T8PRT|TBPRT/i,
+    relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+
+  // Comarca do PORTO ESTE
+  { match: /porto este|T8PTE/i,
+    relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+
+  // Municípios da Comarca do Porto (para correspondência por nome de juízo)
+  { match: /vila.?nova.?de.?gaia|T8VNG/i,                   relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /matosinhos|T8MTS/i,                             relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /\bmaia\b|T8MLD/i,                               relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /valongo|T8VLP/i,                                relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /póvoa.?de.?varzim|povoa.?de.?varzim|T8PVZ/i,   relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /vila.?do.?conde|T8VCD/i,                        relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /santo.?tirso|T8STS/i,                           relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /penafiel|T8PNF/i,                               relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /\bparedes\b|T8PRC/i,                            relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /felgueiras|T8FLG/i,                             relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /lousada|T8LUS/i,                                relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /gondomar|T8GDM/i,                               relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /espinho|T8ESP/i,                                relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+
+  // Municípios da Comarca de Aveiro (→ TRP)
+  { match: /\baveiro\b|T8AVR/i,                             relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /santa.?maria.?da.?feira|T8STA/i,               relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /oliveira.?de.?azeméis|oliveira.?de.?azemeis|T8OVR/i, relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+  { match: /\bagueda\b|águeda|T8AGD/i,                     relacao: 'TRP', nome: 'Tribunal da Relação do Porto' },
+
+  // ══════════════════════════════════════════════════════════════════
+  // TRIBUNAL DA RELAÇÃO DE GUIMARÃES
+  // Comarcas: Braga, Bragança, Viana do Castelo, Vila Real
+  // Fonte: TRG (trg.pt/Jurisdição-territorial) + CSM + LOSJ Anexo I
+  // NOTA: A Comarca de Braga inclui Guimarães, Barcelos, Fafe, etc.
+  // CORRECÇÃO: Bragança e Vila Real → TRG (não TRP como na versão anterior)
+  // ══════════════════════════════════════════════════════════════════
+
+  // Comarca de BRAGA (inclui Guimarães, Barcelos, Fafe, etc.)
+  { match: /comarca.*braga|tribunal.*braga|T8BRG|TBBRG/i,
+    relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+  // Municípios da Comarca de Braga
+  { match: /guimarães|guimaraes|T8GML/i,                   relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+  { match: /barcelos|T8BCL/i,                               relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+  { match: /\bfafe\b/i,                                     relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+  { match: /vila.?nova.?de.?famalicão|vila.?nova.?de.?famalicao/i, relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+  { match: /amares|esposende|terras.?de.?bouro|vieira.?do.?minho|vila.?verde|vizela/i, relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+
+  // Comarca de BRAGANÇA → TRG (CORRECÇÃO: estava TRP)
+  { match: /comarca.*bragança|comarca.*braganca|tribunal.*bragança|T8BGC|TBBGC/i,
+    relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+  // Municípios da Comarca de Bragança
+  { match: /mirandela|T8MCN/i,                              relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+  { match: /macedo.?de.?cavaleiros|miranda.?do.?douro|mogadouro|torre.?de.?moncorvo|vimioso|vinhais/i, relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+
+  // Comarca de VIANA DO CASTELO → TRG
+  { match: /viana.?do.?castelo|T8VCT|TBVCT/i,              relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+
+  // Comarca de VILA REAL → TRG (CORRECÇÃO: estava TRP)
+  { match: /comarca.*vila.?real|tribunal.*vila.?real|T8VRL/i,
+    relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+  // Municípios da Comarca de Vila Real
+  { match: /\bchaves\b|T8CHV/i,                             relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+  { match: /peso.?da.?régua|peso.?da.?regua|sabrosa|alijó|alifo|boticas|montalegre|valpaços|valpacos/i, relacao: 'TRG', nome: 'Tribunal da Relação de Guimarães' },
+
+  // ══════════════════════════════════════════════════════════════════
+  // TRIBUNAL DA RELAÇÃO DE LISBOA
+  // Comarcas: Lisboa, Lisboa Norte, Lisboa Oeste, Setúbal, Santarém, + Açores e Madeira
+  // Fonte: DL 49/2014 + CSM + LOSJ Anexo I
+  // ══════════════════════════════════════════════════════════════════
+
+  // Comarca de LISBOA (inclui Lisboa e margem sul: Almada, Seixal, Barreiro, Moita, Montijo, Alcochete)
+  { match: /comarca.*de.*lisboa\b|tribunal.*de.*lisboa\b|T8LSB|TBLSB/i,
+    relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+
+  // Comarca de LISBOA NORTE (Loures, Mafra, Odivelas, Sintra, Torres Vedras, Vila Franca de Xira)
+  { match: /lisboa.?norte|T8LRN/i,                          relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+
+  // Comarca de LISBOA OESTE (Caldas da Rainha, Óbidos, Peniche, Torres Vedras, etc.)
+  { match: /lisboa.?oeste|T8LRO/i,                          relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+
+  // Comarca de SETÚBAL
+  { match: /comarca.*setúbal|comarca.*setubal|tribunal.*setúbal|T8STB|TBSTB/i,
+    relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  // Municípios da Comarca de Setúbal
+  { match: /almada|T8ALM/i,                                 relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /\bseixal\b|T8SXL/i,                             relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /barreiro|T8BRR/i,                               relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /montijo|alcochete|moita/i,                       relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /palmela|sesimbra|setúbal\b|setubal\b/i,          relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+
+  // Comarca de SANTARÉM
+  { match: /comarca.*santarém|comarca.*santarem|tribunal.*santarém|T8STR|TBSTR/i,
+    relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /\babrantes\b|tomar|torres.?novas|entroncamento/i, relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+
+  // Municípios da Comarca de Lisboa Norte
+  { match: /sintra|T8SNT|TBSNT/i,                           relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /cascais|T8CSC/i,                                relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /oeiras|T8OER/i,                                 relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /amadora|T8AMD/i,                                relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /vila.?franca.?de.?xira|T8VFX/i,                relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /\bloures\b/i,                                   relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /torres.?vedras|T8TVD/i,                         relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /mafra|odivelas/i,                               relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+
+  // Regiões Autónomas → TRL (LOSJ Anexo I)
+  { match: /açores|acores|ponta.?delgada|angra|horta/i,     relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+  { match: /madeira|funchal/i,                              relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
+
+  // ══════════════════════════════════════════════════════════════════
+  // TRIBUNAL DA RELAÇÃO DE ÉVORA
+  // Comarcas: Évora, Beja, Faro (e Portalegre conforme LOSJ Anexo I)
+  // Fonte: TRE + CSM + LOSJ Anexo I
+  // ══════════════════════════════════════════════════════════════════
+
+  // Comarca de ÉVORA
+  { match: /comarca.*évora|comarca.*evora|tribunal.*évora|T8EVR|TBEVR/i,
+    relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
+
+  // Comarca de BEJA
+  { match: /comarca.*beja|tribunal.*beja|T8BJA/i,           relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
+
+  // Comarca de FARO (inclui Loulé, Tavira, Olhão, Portimão, Lagos, Silves, Albufeira, etc.)
+  { match: /comarca.*faro|tribunal.*faro|T8FAR|TBFAR/i,     relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
+  { match: /loulé|loule|T8LLE/i,                            relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
+  { match: /tavira|T8TVR/i,                                 relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
+  { match: /olhão|olhao|T8OLH/i,                            relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
+  { match: /portimão|portimao|T8PTA/i,                      relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
+  { match: /\blagos\b|T8LAG/i,                              relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
+  { match: /silves|albufeira|lagoa|vila.?do.?bispo|aljezur/i, relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
+
+  // Comarca de PORTALEGRE → TRE (LOSJ Anexo I)
+  { match: /comarca.*portalegre|tribunal.*portalegre|T8PTG/i,
+    relacao: 'TRE', nome: 'Tribunal da Relação de Évora' },
+
+  // Santiago do Cacém (Comarca de Setúbal, mas área Évora para alguns efeitos — manter TRL)
+  // Nota: Santiago do Cacém integra a Comarca de Setúbal → TRL
+  { match: /santiago.?do.?cacém|santiago.?do.?cacem/i,      relacao: 'TRL', nome: 'Tribunal da Relação de Lisboa' },
 ];
 
 const NOMES_RELACAO = {
@@ -95,51 +230,51 @@ const NOMES_RELACAO = {
   'STA': 'Supremo Tribunal Administrativo',
 };
 
-/**
- * Dado o nome/código do tribunal de 1.ª instância,
- * devolve o nome completo do tribunal de recurso competente.
- * Retorna null se não for possível determinar.
- */
 function determinarTribunalRecurso(tribunalInput) {
   if (!tribunalInput || typeof tribunalInput !== 'string') return null;
   const t = tribunalInput.trim();
   for (const entry of TRIBUNAL_PARA_RELACAO) {
     if (entry.match.test(t)) {
-      if (!entry.relacao) return null; // é um supremo, não tem Relação
+      if (!entry.relacao) return null;
       return NOMES_RELACAO[entry.relacao] || null;
     }
   }
   return null;
 }
 
-/**
- * Verifica e corrige o tribunal_recurso devolvido pelo modelo.
- * Se o tribunal de 1.ª instância for conhecido, usa a nossa tabela.
- * Se não for conhecido, mantém o que o modelo devolveu.
- */
 function corrigirTribunalRecurso(tribunalRecursoModelo, tribunalPrimeiraInstancia) {
   const correcto = determinarTribunalRecurso(tribunalPrimeiraInstancia);
-  if (correcto) return correcto; // a nossa tabela tem precedência absoluta
+  if (correcto) return correcto;
   return String(tribunalRecursoModelo || 'Não determinado');
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// VALIDADOR DE NÚMEROS DE PROCESSO PORTUGUÊS (Portaria 280/2013)
+// VALIDADOR DE NÚMEROS DE PROCESSO (Portaria 280/2013)
+// Mapa comarca → letra Relação também corrigido
 // ══════════════════════════════════════════════════════════════════════════════
 
 const COMARCA_PARA_RELACAO_LETRA = {
-  'LSB': 'L', 'LRS': 'L', 'SNT': 'L', 'CSC': 'L', 'OER': 'L',
-  'VFX': 'L', 'MTS': 'L', 'ALM': 'L', 'SXL': 'L', 'BRR': 'L',
-  'PLM': 'L', 'STR': 'L', 'TRS': 'L', 'ABT': 'L', 'TVD': 'L', 'STC': 'L',
-  'PRT': 'P', 'VNG': 'P', 'MLD': 'P', 'VLP': 'P', 'PVZ': 'P',
-  'VCD': 'P', 'STS': 'P', 'TRV': 'P', 'PNF': 'P', 'PRC': 'P',
-  'FLG': 'P', 'LUS': 'P', 'ESP': 'P', 'GDM': 'P', 'VRL': 'P',
-  'CHV': 'P', 'BGC': 'P', 'MCN': 'P', 'VPA': 'P', 'BRG': 'P',
-  'GML': 'G', 'VCT': 'G', 'BCL': 'G',
-  'CBR': 'C', 'AVR': 'C', 'VIS': 'C', 'GRD': 'C', 'CTB': 'C',
-  'FIG': 'C', 'AGD': 'C', 'OVR': 'C', 'STA': 'C', 'LMG': 'C', 'LRA': 'C',
-  'EVR': 'E', 'BJA': 'E', 'PTG': 'E', 'FAR': 'E', 'LLE': 'E',
-  'TVR': 'E', 'OLH': 'E', 'PTA': 'E', 'LAG': 'E', 'SBR': 'E', 'ALT': 'E',
+  // → Lisboa (L)
+  'LSB': 'L', 'LRN': 'L', 'LRO': 'L', 'SNT': 'L', 'CSC': 'L', 'OER': 'L',
+  'VFX': 'L', 'ALM': 'L', 'SXL': 'L', 'BRR': 'L', 'PLM': 'L',
+  'STR': 'L', 'ABT': 'L', 'TVD': 'L', 'STB': 'L',
+  // → Porto (P)
+  'PRT': 'P', 'PTE': 'P', 'VNG': 'P', 'MLD': 'P', 'VLP': 'P', 'PVZ': 'P',
+  'VCD': 'P', 'STS': 'P', 'PNF': 'P', 'PRC': 'P', 'FLG': 'P',
+  'LUS': 'P', 'ESP': 'P', 'GDM': 'P',
+  // Aveiro → Porto (CORRECÇÃO)
+  'AVR': 'P', 'STA': 'P', 'OVR': 'P', 'AGD': 'P',
+  // → Guimarães (G)
+  'BRG': 'G', 'GML': 'G', 'BCL': 'G', 'VCT': 'G',
+  'VRL': 'G', 'CHV': 'G',
+  // Bragança → Guimarães (CORRECÇÃO)
+  'BGC': 'G', 'MCN': 'G',
+  // → Coimbra (C)
+  'CBR': 'C', 'GRD': 'C', 'CTB': 'C', 'VIS': 'C', 'LRA': 'C',
+  'FIG': 'C', 'LMG': 'C',
+  // → Évora (E)
+  'EVR': 'E', 'BJA': 'E', 'FAR': 'E', 'PTG': 'E', 'LLE': 'E',
+  'TVR': 'E', 'OLH': 'E', 'PTA': 'E', 'LAG': 'E',
 };
 
 const LETRAS_RELACAO = {
@@ -211,34 +346,26 @@ function extrairEValidarProcessos(texto) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// MAPA TEXTUAL PARA O PROMPT (Dec.-Lei 49/2014)
+// MAPA TEXTUAL PARA O PROMPT (texto conciso baseado na LOSJ verificada)
 // ══════════════════════════════════════════════════════════════════════════════
 const MAPA_RELACOES_PROMPT = `
-TRIBUNAIS DE RECURSO — DEC.-LEI N.º 49/2014 (REGRA ABSOLUTA, NUNCA IGNORAR):
+TRIBUNAIS DE RECURSO — LOSJ (Lei 62/2013) + DL 49/2014 — REGRA ABSOLUTA:
 
-→ Tribunal da Relação de COIMBRA:
-  Comarca da Guarda ← CRÍTICO (NUNCA Guimarães)
-  Comarca de Coimbra, Aveiro, Viseu, Castelo Branco, Leiria (cível), Figueira da Foz, Lamego
+→ TRC (Relação de COIMBRA): Comarcas de Coimbra, Guarda, Castelo Branco, Viseu, Leiria
+  CRÍTICO: Comarca da Guarda → SEMPRE TRC. NUNCA TRG, NUNCA TRP.
+  Inclui: ULS Guarda, Juízo do Trabalho da Guarda, qualquer tribunal da Comarca da Guarda.
 
-→ Tribunal da Relação do PORTO:
-  Comarca do Porto, Porto Este, Vila Nova de Gaia, Matosinhos, Maia, Valongo
-  Póvoa de Varzim, Vila do Conde, Santo Tirso, Penafiel, Paredes, Felgueiras, Lousada
-  Vila Real, Chaves, Bragança, Mirandela
+→ TRP (Relação do PORTO): Comarcas do Porto, Porto Este, Aveiro
+  ATENÇÃO: Aveiro → TRP (não TRC — erro comum).
 
-→ Tribunal da Relação de GUIMARÃES:
-  Comarca de Braga, Guimarães, Barcelos, Viana do Castelo
+→ TRG (Relação de GUIMARÃES): Comarcas de Braga, Bragança, Viana do Castelo, Vila Real
+  ATENÇÃO: Bragança e Vila Real → TRG (não TRP — erro comum).
+  A Comarca de Braga inclui o município de Guimarães — não existe "Comarca de Guimarães".
 
-→ Tribunal da Relação de LISBOA:
-  Comarca de Lisboa, Lisboa Norte, Lisboa Oeste, Sintra, Cascais, Oeiras, Amadora
-  Vila Franca de Xira, Loures, Setúbal, Almada, Seixal, Barreiro, Santarém, Torres Vedras, Abrantes
+→ TRL (Relação de LISBOA): Comarcas de Lisboa, Lisboa Norte, Lisboa Oeste, Setúbal, Santarém
+  + Regiões Autónomas dos Açores e da Madeira.
 
-→ Tribunal da Relação de ÉVORA:
-  Comarca de Évora, Beja, Portalegre, Faro, Loulé, Tavira, Olhão, Portimão, Lagos
-
-ATENÇÃO ESPECIAL:
-- Comarca da GUARDA → SEMPRE Tribunal da Relação de COIMBRA (nunca Guimarães, nunca Porto)
-- ULS Guarda / Juízo do Trabalho da Guarda / Tribunal Judicial da Comarca da Guarda → COIMBRA
-- Se o código do processo contiver "GRD" → Relação de COIMBRA (letra C no número de processo)
+→ TRE (Relação de ÉVORA): Comarcas de Évora, Beja, Faro, Portalegre.
 `;
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -248,83 +375,57 @@ const CRITERIOS_CRITICA = `
 CRITÉRIOS DE ANÁLISE OBRIGATÓRIOS (aplica TODOS):
 
 1. VÍCIOS FORMAIS (Art. 615.º CPC / Art. 379.º CPP)
-   615.º/1/a): falta assinatura | 615.º/1/b): falta fundamentação | 615.º/1/c): contradição
-   615.º/1/d): omissão ou excesso de pronúncia | 615.º/1/e): ultra petita
-   379.º/1/a) CPP: falta menções art. 374.º | 379.º/1/b): factos diversos da acusação | 379.º/1/c): omissão pronúncia
-   → Pedido: NULIDADE ("declare nula e ordene substituição")
+   615.º/1/b): falta fundamentação | 615.º/1/c): contradição fundamentos/decisão
+   615.º/1/d): omissão ou excesso pronúncia | 615.º/1/e): ultra petita
+   379.º CPP: falta menções 374.º | factos diversos acusação | omissão pronúncia
+   → Pedido: NULIDADE
 
-2. ERROS DE DIREITO
-   Interpretação errada, aplicação de norma revogada, violação de norma imperativa
+2. ERROS DE DIREITO — interpretação errada, norma revogada, violação imperativa
 
 3. ERROS DE FACTO (Art. 662.º CPC / Art. 410.º/2 CPP)
-   Cível: erro apreciação provas — verificar ónus art. 640.º CPC (indicar factos, meios de prova, decisão alternativa)
-   Penal: 410.º/2/a) insuficiência | 410.º/2/b) contradição | 410.º/2/c) erro notório
+   Cível: ónus art. 640.º (indicar factos, meios prova, decisão alternativa)
+   Penal: 410.º/2/a) insuficiência | /b) contradição | /c) erro notório
    → Pedido: REVOGAÇÃO
 
-4. QUESTÕES CONSTITUCIONAIS
-   Art. 20.º (acesso direito), 32.º (garantias penais), 205.º (fundamentação), 13.º (igualdade), 18.º (proporcionalidade)
+4. QUESTÕES CONSTITUCIONAIS — Art. 20.º, 32.º, 205.º, 13.º, 18.º CRP
 
 5. ADMISSIBILIDADE E ALÇADA (Art. 629.º CPC)
-   Alçada comarca: €5.000 | Alçada Relação (para STJ): €30.000
-   Dupla conforme (art. 671.º/3): Relação confirmou 1.ª instância → acesso STJ restrito
+   Alçada comarca €5.000 | Relação (para STJ) €30.000
+   Dupla conforme (art. 671.º/3): Relação confirmou → STJ restrito
 
-6. PRAZOS
-   Apelação cível: 30 dias (art. 638.º/1) | Urgente: 15 dias
-   Recurso penal: 30 dias (art. 411.º CPP) | Administrativo: 30 dias (art. 144.º CPTA)
+6. PRAZOS — Apelação: 30 dias (638.º/1) | Urgente: 15 dias | Penal: 30 dias (411.º CPP)
 
-7. MATÉRIA DE FACTO vs. DIREITO (para STJ)
-   STJ só conhece matéria de direito (art. 674.º/3 CPC) — identificar se fundamentos são de facto ou direito
+7. FACTO vs. DIREITO — STJ só conhece direito (art. 674.º/3 CPC)
 
-8. CONHECIMENTO OFICIOSO
-   Incompetência absoluta (art. 97.º), falta personalidade judiciária (art. 11.º), caso julgado (art. 577.º/i)
-   Nulidades absolutas CPP (art. 119.º) — arguíveis em qualquer fase sem necessidade de arguição prévia
+8. CONHECIMENTO OFICIOSO — incompetência absoluta (97.º), caso julgado (577.º/i), nulidades absolutas CPP (119.º)
 
-9. VIOLAÇÃO DO CONTRADITÓRIO (Art. 3.º/3 CPC)
-   Decisão surpresa, questão de conhecimento oficioso sem audição das partes
+9. CONTRADITÓRIO (Art. 3.º/3 CPC) — decisão surpresa, questão não submetida ao contraditório
 
-10. PROPORCIONALIDADE DA PENA (só processo penal)
-    Art. 40.º CP (finalidades), 71.º CP (critérios medida da pena), 72.º CP (atenuação especial), 74.º CP (dispensa)
-    Falta fundamentação da pena = nulidade (art. 205.º CRP + art. 71.º/3 CP)
+10. PROPORCIONALIDADE DA PENA (só penal) — Arts. 40.º, 71.º, 72.º, 74.º CP
 
-DISTINÇÃO CRÍTICA (nunca confundir):
-→ Vícios art. 615.º/379.º = pedido de NULIDADE
-→ Erros de julgamento = pedido de REVOGAÇÃO
-→ Ambos = pedido MISTO (alíneas separadas)
+DISTINÇÃO CRÍTICA: Vícios 615.º/379.º → NULIDADE | Erros julgamento → REVOGAÇÃO | Ambos → MISTO
 `;
 
 // ══════════════════════════════════════════════════════════════════════════════
-// UTILITÁRIO: parse JSON robusto com tentativas
+// PARSE JSON ROBUSTO
 // ══════════════════════════════════════════════════════════════════════════════
 function parseJSON(texto) {
-  // Tentativa 1: directo
   try {
     const cleaned = texto.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/\s*```$/i,'').trim();
     return JSON.parse(cleaned);
   } catch {}
-
-  // Tentativa 2: extrair bloco {}
   const match = texto.match(/\{[\s\S]*\}/);
   if (!match) return null;
-
   try { return JSON.parse(match[0]); } catch {}
-
-  // Tentativa 3: reparar JSON truncado
   try {
     let s = match[0];
-    // Remover vírgulas finais
     s = s.replace(/,\s*([}\]])/g, '$1');
-    // Fechar strings abertas (heurística)
     s = s.replace(/:\s*"([^"]*?)$/m, ': "$1"');
-    // Fechar estruturas abertas
     let depth = 0;
     for (const c of s) { if (c==='{' || c==='[') depth++; if (c==='}' || c===']') depth--; }
-    if (depth > 0) {
-      // Tenta fechar arrays e objectos abertos
-      for (let i = 0; i < depth; i++) s += '}';
-    }
+    if (depth > 0) for (let i = 0; i < depth; i++) s += '}';
     return JSON.parse(s);
   } catch {}
-
   return null;
 }
 
@@ -369,14 +470,10 @@ module.exports = async function handler(req, res) {
   if (modo === 'judicial' && texto) validacoesLocais = extrairEValidarProcessos(texto);
 
   // ── TRIBUNAL DE RECURSO DETERMINADO LOCALMENTE (para crítica) ──
-  // Se conseguirmos determinar pelo tribunal de 1.ª instância, usamos sempre este valor
   const tribunalRecursoLocal = modo === 'critica' ? determinarTribunalRecurso(tribunal) : null;
 
   let systemPrompt, userPrompt;
 
-  // ══════════════════════════════════════════════════
-  // MODO CRÍTICA
-  // ══════════════════════════════════════════════════
   if (modo === 'critica') {
     const ctx = [
       tribunal        ? `Tribunal de 1.ª Instância: ${tribunal}`  : null,
@@ -384,18 +481,17 @@ module.exports = async function handler(req, res) {
       parteRecorrente ? `Parte recorrente: ${parteRecorrente}`     : null,
     ].filter(Boolean).join('\n');
 
-    // Se já determinamos o tribunal localmente, incluímos no prompt para reforçar
     const tribunalHint = tribunalRecursoLocal
-      ? `\nTRIBUNAL DE RECURSO DETERMINADO PELO SISTEMA: ${tribunalRecursoLocal} — usa OBRIGATORIAMENTE este valor no campo tribunal_recurso.\n`
+      ? `\nTRIBUNAL DE RECURSO DETERMINADO PELO SISTEMA (usar OBRIGATORIAMENTE): ${tribunalRecursoLocal}\n`
       : '';
 
-    systemPrompt = `Actua como Consultor Jurídico Sénior especialista em recursos portugueses com 20 anos de experiência. Responde APENAS com JSON puro, sem backticks, sem texto antes ou depois.
+    systemPrompt = `Actua como Consultor Jurídico Sénior especialista em recursos portugueses. Responde APENAS com JSON puro, sem backticks, sem texto antes ou depois.
 
 ${MAPA_RELACOES_PROMPT}
 ${tribunalHint}
 ${CRITERIOS_CRITICA}
 
-JSON obrigatório:
+JSON:
 {
   "veredicto_recurso": "RECURSO_VIAVEL",
   "confianca": 80,
@@ -406,39 +502,34 @@ JSON obrigatório:
   "tribunal_recurso": "${tribunalRecursoLocal || 'Tribunal da Relação competente'}",
   "prazo_recurso": "30 dias a contar da notificação (art. 638.º/1 CPC)",
   "prazo_expirado": null,
-  "sumario": "Resumo executivo em 2-3 frases.",
-  "fundamentos": [
-    {
-      "categoria": "nulidade",
-      "criterio": 1,
-      "tipo": "Nome preciso do vício",
-      "artigo": "Art. 615.º/1/d) CPC",
-      "gravidade": "grave",
-      "prioridade": 1,
-      "dificuldade": "facil",
-      "conhecimento_oficioso": false,
-      "descricao": "Descrição objectiva.",
-      "argumento": "Argumento completo para a peça."
-    }
-  ],
+  "sumario": "Resumo em 2-3 frases.",
+  "fundamentos": [{
+    "categoria": "nulidade",
+    "criterio": 1,
+    "tipo": "Nome do vício",
+    "artigo": "Art. 615.º/1/d) CPC",
+    "gravidade": "grave",
+    "prioridade": 1,
+    "dificuldade": "facil",
+    "conhecimento_oficioso": false,
+    "descricao": "Descrição objectiva.",
+    "argumento": "Argumento completo."
+  }],
   "alerta_contraditorio": "",
   "alerta_alcada": "",
   "alerta_dupla_conforme": "",
   "alerta_facto_vs_direito": "",
   "alerta_proporcionalidade_pena": "",
-  "conclusao": "Recomendação estratégica com tipo de pedido (nulidade/revogação) e prioridade."
+  "conclusao": "Recomendação com tipo de pedido e prioridade."
 }
 
-VALORES: veredicto_recurso: RECURSO_VIAVEL/RECURSO_PARCIAL/RECURSO_INVIAVEL | categoria: nulidade/erro_direito/erro_facto/questao_constitucional | gravidade: grave/moderada/leve | dificuldade: facil/media/dificil | tipo_pedido: nulidade/revogacao/misto | max 6 fundamentos por prioridade | NUNCA fundamentos vazios se existirem vícios`;
+VALORES: veredicto_recurso: RECURSO_VIAVEL/PARCIAL/INVIAVEL | categoria: nulidade/erro_direito/erro_facto/questao_constitucional | gravidade: grave/moderada/leve | dificuldade: facil/media/dificil | tipo_pedido: nulidade/revogacao/misto | max 6 fundamentos | NUNCA array vazio se há vícios`;
 
-    userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}DECISÃO A ANALISAR:\n\n${textoTruncado}\n\nAplica os 10 critérios. JSON puro.`;
+    userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}DECISÃO:\n\n${textoTruncado}\n\nAplica os 10 critérios. JSON puro.`;
 
-  // ══════════════════════════════════════════════════
-  // MODO MINUTA
-  // ══════════════════════════════════════════════════
   } else if (modo === 'minuta') {
     const { fundamentos = [], tribunal_recurso, tipo_pedido, tipoProcesso: tp, parteRecorrente: pr } = body;
-    if (!fundamentos.length) return res.status(400).json({ erro: 'Fundamentos em falta para gerar minuta.' });
+    if (!fundamentos.length) return res.status(400).json({ erro: 'Fundamentos em falta.' });
 
     const ctx = [
       tribunal_recurso ? `Tribunal de recurso: ${tribunal_recurso}` : null,
@@ -448,46 +539,31 @@ VALORES: veredicto_recurso: RECURSO_VIAVEL/RECURSO_PARCIAL/RECURSO_INVIAVEL | ca
     ].filter(Boolean).join('\n');
 
     const fundamentosTexto = fundamentos.map((f, i) =>
-      `${i + 1}. [Critério ${f.criterio || '?'}] ${f.tipo} (${f.artigo || ''}) — ${f.descricao}\nArgumento: ${f.argumento}${f.conhecimento_oficioso ? '\nNota: pode ser arguido oficiosamente mesmo sem arguição prévia.' : ''}`
+      `${i+1}. [Critério ${f.criterio||'?'}] ${f.tipo} (${f.artigo||''}) — ${f.descricao}\nArgumento: ${f.argumento}${f.conhecimento_oficioso ? '\nNota: pode ser arguido oficiosamente.' : ''}`
     ).join('\n\n');
 
     const instrucaoPedido = tipo_pedido === 'nulidade'
-      ? 'O pedido final deve ser de NULIDADE: "Termos em que deve a sentença recorrida ser declarada nula, ordenando-se a sua substituição por outra que..."'
+      ? 'Pedido de NULIDADE: "Termos em que deve a sentença ser declarada nula e substituída por outra que..."'
       : tipo_pedido === 'misto'
-      ? 'Há fundamentos de nulidade E de revogação — estrutura o pedido em duas alíneas: a) declaração de nulidade; b) revogação e substituição.'
-      : 'O pedido final deve ser de REVOGAÇÃO: "Termos em que deve a sentença recorrida ser revogada e substituída por outra que..."';
+      ? 'Pedido MISTO: a) declaração de nulidade quanto aos vícios formais; b) revogação quanto aos erros de julgamento.'
+      : 'Pedido de REVOGAÇÃO: "Termos em que deve a sentença ser revogada e substituída por outra que..."';
 
-    systemPrompt = `Actua como Advogado Sénior especialista em recursos portugueses. Redige proposta TOTALMENTE COMPLETA E INTEGRAL para recurso em português jurídico formal PT-PT.
+    systemPrompt = `Actua como Advogado Sénior. Redige proposta TOTALMENTE COMPLETA para recurso em português jurídico formal PT-PT.
 
-REGRAS ABSOLUTAS:
-1. Texto simples, SEM markdown, SEM #, SEM asteriscos
-2. 100% completo até ao PEDIDO FINAL com assinatura e data — NUNCA cortes
-3. MÍNIMO 5 parágrafos por fundamento com argumentação densa, doutrina e jurisprudência
-4. Cita doutrina PT (Lebre de Freitas, Abrantes Geraldes, Salvador da Costa, Pais de Amaral, Cavaleiro de Ferreira, Figueiredo Dias) com obra e página
-5. Cita jurisprudência com número de processo, tribunal e data
-6. Mínimo 2500 palavras, idealmente 3500-5000
-7. ${instrucaoPedido}
+REGRAS: Sem markdown. 100% completo até assinatura. Mínimo 5 parágrafos por fundamento. Cita doutrina (Lebre de Freitas, Abrantes Geraldes, Salvador da Costa, Pais de Amaral, Cavaleiro de Ferreira, Figueiredo Dias) com obra e página. Cita jurisprudência com número de processo e tribunal. Mínimo 2500 palavras. ${instrucaoPedido}
 
 ESTRUTURA:
-EXMO. SENHOR [JUIZ / DESEMBARGADOR / CONSELHEIRO]
+EXMO. SENHOR [JUIZ/DESEMBARGADOR]
 DO [TRIBUNAL]
-
-[RECORRENTE], vem interpor RECURSO DE APELAÇÃO da sentença de [TIPO] n.º [PROCESSO] no [TRIBUNAL A QUO] de [DATA]:
-
+[RECORRENTE] vem interpor RECURSO DE [APELAÇÃO/REVISTA] de [TIPO] n.º [PROCESSO] no [TRIBUNAL A QUO] de [DATA]:
 I. ADMISSIBILIDADE (3 parágrafos: legitimidade, prazo, alçada)
-II. FUNDAMENTOS (cada um com título em MAIÚSCULAS + mínimo 5 parágrafos)
-III. CONCLUSÕES (numeradas: 1.ª, 2.ª, ... — uma por argumento)
-IV. PEDIDO (${instrucaoPedido})
+II. FUNDAMENTOS (título em MAIÚSCULAS + mínimo 5 parágrafos por fundamento)
+III. CONCLUSÕES (numeradas: 1.ª, 2.ª, ...)
+IV. PEDIDO
+[Local, data] / O Mandatário, / [NOME]`;
 
-[Local, data]
-O Mandatário / A Mandatária,
-[NOME]`;
+    userPrompt = `${ctx ? ctx+'\n\n' : ''}FUNDAMENTOS:\n\n${fundamentosTexto}\n\nProposta COMPLETA em texto simples.`;
 
-    userPrompt = `${ctx ? ctx + '\n\n' : ''}FUNDAMENTOS:\n\n${fundamentosTexto}\n\nRedige proposta COMPLETA em texto simples. 100% completa até ao fecho.`;
-
-  // ══════════════════════════════════════════════════
-  // MODO ACADÉMICO
-  // ══════════════════════════════════════════════════
   } else if (modo === 'academico') {
     const ctx = [
       instituicao ? `Instituição: ${instituicao}` : null,
@@ -495,30 +571,14 @@ O Mandatário / A Mandatária,
       orientador  ? `Orientador: ${orientador}`    : null,
     ].filter(Boolean).join('\n');
 
-    systemPrompt = `És um perito forense em análise linguística para detectar autoria de IA em textos académicos jurídicos portugueses.
+    systemPrompt = `Perito forense em análise linguística de IA em textos académicos jurídicos portugueses. JSON PURO apenas.
 
-RESPONDE APENAS COM JSON PURO. Sem texto antes, sem texto depois, sem markdown, sem backticks.
+{"veredicto":"IA_DETECTADA","confianca":80,"indicadores":{"perplexidade":75,"burstiness":60,"coesao_artificial":70,"uniformidade_sintatica":65,"riqueza_lexical":55,"marcadores_formulaicos":80},"humanizador_detectado":false,"narrativa":"...","relator_analise":"...","marcadores":[{"tipo":"ai","texto":"..."}]}
 
-{
-  "veredicto": "IA_DETECTADA",
-  "confianca": 80,
-  "indicadores": {
-    "perplexidade": 75, "burstiness": 60, "coesao_artificial": 70,
-    "uniformidade_sintatica": 65, "riqueza_lexical": 55, "marcadores_formulaicos": 80
-  },
-  "humanizador_detectado": false,
-  "narrativa": "Análise detalhada.",
-  "relator_analise": "Análise do estilo do autor.",
-  "marcadores": [{ "tipo": "ai", "texto": "Descrição." }]
-}
-
-VALORES: veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMANO | tipo: ai/humano | indicadores 0-100`;
+veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMANO | tipo: ai/humano | indicadores 0-100 | humanizador_detectado: true se Quillbot/Undetectable.ai/WordAI`;
 
     userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}TEXTO:\n\n${textoTruncado}\n\nJSON puro.`;
 
-  // ══════════════════════════════════════════════════
-  // MODO JUDICIAL
-  // ══════════════════════════════════════════════════
   } else {
     const ctx = [
       tribunal ? `Tribunal: ${tribunal}` : null,
@@ -528,38 +588,22 @@ VALORES: veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUM
     const alertasLocais = validacoesLocais.length > 0
       ? `\n\nALERTAS FORMATO (Portaria 280/2013):\n` +
         validacoesLocais.map(v => `- ${v.numero}: ${v.validacao.problemas.join('; ')}`).join('\n') +
-        `\nTrata como citações suspeitas de gravidade alta.\n`
+        `\nTrata como citações suspeitas alta gravidade.\n`
       : '';
 
-    systemPrompt = `És um perito forense em análise linguística para detectar autoria de IA em decisões judiciais portuguesas.
+    systemPrompt = `Perito forense em análise linguística de IA em decisões judiciais portuguesas. JSON PURO apenas.
 
-RESPONDE APENAS COM JSON PURO. Sem texto antes, sem texto depois, sem markdown, sem backticks.
+{"veredicto":"IA_DETECTADA","confianca":80,"indicadores":{"perplexidade":75,"burstiness":60,"coesao_artificial":70,"uniformidade_sintatica":65,"riqueza_lexical":55,"marcadores_formulaicos":80},"humanizador_detectado":false,"citacoes_suspeitas":[],"narrativa":"...","relator_analise":"...","marcadores":[{"tipo":"ai","texto":"..."}]}
 
-{
-  "veredicto": "IA_DETECTADA",
-  "confianca": 80,
-  "indicadores": {
-    "perplexidade": 75, "burstiness": 60, "coesao_artificial": 70,
-    "uniformidade_sintatica": 65, "riqueza_lexical": 55, "marcadores_formulaicos": 80
-  },
-  "humanizador_detectado": false,
-  "citacoes_suspeitas": [],
-  "narrativa": "Análise detalhada.",
-  "relator_analise": "Análise do estilo do relator.",
-  "marcadores": [{ "tipo": "ai", "texto": "Descrição." }]
-}
-
-VALORES: veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMANO | tipo: ai/humano
-humanizador_detectado: true se sinais de Quillbot, Undetectable.ai, WordAI, etc.
-citacoes_suspeitas: [{ "citacao": "...", "tipo": "acordao|diploma_legal|doutrina|jurisprudencia", "problema": "...", "gravidade": "alta|media|baixa", "validacao_formato": "ok|formato_invalido|nao_aplicavel" }]
-Array vazio [] se nada suspeito. Analisa corpo de fundamentação. Marcadores IA: "Neste contexto", "Importa salientar", "É de referir que", parágrafos uniformes.`;
+veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMANO | tipo: ai/humano
+humanizador_detectado: true se Quillbot/Undetectable.ai/WordAI
+citacoes_suspeitas: [{"citacao":"...","tipo":"acordao|diploma_legal|doutrina|jurisprudencia","problema":"...","gravidade":"alta|media|baixa","validacao_formato":"ok|formato_invalido|nao_aplicavel"}]
+Analisa corpo de fundamentação. Marcadores IA: "Neste contexto","Importa salientar","É de referir que", parágrafos uniformes.`;
 
     userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}${alertasLocais}DECISÃO:\n\n${textoTruncado}\n\nJSON puro.`;
   }
 
-  // ── CHAMADA ANTHROPIC com retry automático ──
-  // max_tokens: crítica 5000 (JSON rico com 6 fundamentos), minuta 16000, outros 2000
-  // retry: 1 tentativa adicional em caso de falha de parse (não de erro HTTP)
+  // ── CHAMADA ANTHROPIC com retry ──
   const maxTokens = modo === 'minuta' ? 16000 : modo === 'critica' ? 5000 : 2000;
 
   async function chamarAnthropic() {
@@ -589,44 +633,30 @@ Array vazio [] se nada suspeito. Analisa corpo de fundamentação. Marcadores IA
 
   try {
     let fullText = await chamarAnthropic();
-
     if (!fullText) return res.status(500).json({ erro: 'Resposta vazia. Tente novamente.' });
-
-    // Modo minuta: texto simples
     if (modo === 'minuta') return res.status(200).json({ minuta: fullText });
 
-    // ── PARSE com retry ──
     let parsed = parseJSON(fullText);
 
     if (!parsed) {
-      // Retry: segunda chamada com prompt ligeiramente mais curto (sem critérios longos)
-      console.warn('Parse falhou na 1.ª tentativa — a fazer retry...');
+      console.warn('Parse falhou — retry...');
       fullText = await chamarAnthropic();
       parsed = parseJSON(fullText);
     }
 
     if (!parsed) {
       console.error('Parse falhou após retry. Raw[0-300]:', fullText.substring(0, 300));
-      // Fallback EXPLÍCITO com indicação de erro — não simula sucesso
       if (modo === 'critica') {
         return res.status(200).json({
-          veredicto_recurso: 'RECURSO_INVIAVEL',
-          confianca: 0,
-          admissivel: null,
-          alcada_ok: null,
-          dupla_conforme: false,
-          tipo_pedido: 'revogacao',
+          veredicto_recurso: 'RECURSO_INVIAVEL', confianca: 0, admissivel: null,
+          alcada_ok: null, dupla_conforme: false, tipo_pedido: 'revogacao',
           tribunal_recurso: tribunalRecursoLocal || 'Não determinado',
-          prazo_recurso: 'Consulte um advogado',
-          prazo_expirado: null,
-          sumario: 'Erro interno na análise. O texto pode ser demasiado extenso ou complexo. Por favor tente novamente ou reduza o texto.',
-          fundamentos: [],
-          alerta_contraditorio: '',
-          alerta_alcada: '',
-          alerta_dupla_conforme: '',
-          alerta_facto_vs_direito: '',
+          prazo_recurso: 'Consulte um advogado', prazo_expirado: null,
+          sumario: 'Erro interno. O texto pode ser extenso ou complexo. Tente novamente ou reduza o texto.',
+          fundamentos: [], alerta_contraditorio: '', alerta_alcada: '',
+          alerta_dupla_conforme: '', alerta_facto_vs_direito: '',
           alerta_proporcionalidade_pena: '',
-          conclusao: 'A análise não foi concluída por erro interno. Tente novamente.',
+          conclusao: 'Análise não concluída por erro interno. Tente novamente.',
           _erro: true,
         });
       }
@@ -652,7 +682,7 @@ Array vazio [] se nada suspeito. Analisa corpo de fundamentação. Marcadores IA
       parsed.sumario        = String(parsed.sumario        || 'Análise concluída.');
       parsed.conclusao      = String(parsed.conclusao      || 'Consulte um advogado.');
 
-      // ── CORRECÇÃO DO TRIBUNAL — backend é fonte de verdade ──
+      // Correcção do tribunal — backend tem precedência absoluta sobre o modelo
       parsed.tribunal_recurso = corrigirTribunalRecurso(parsed.tribunal_recurso, tribunal);
 
       parsed.alerta_contraditorio          = String(parsed.alerta_contraditorio          || '');
@@ -664,7 +694,7 @@ Array vazio [] se nada suspeito. Analisa corpo de fundamentação. Marcadores IA
       const items = Array.isArray(parsed.fundamentos)
         ? parsed.fundamentos
         : Array.isArray(parsed.nulidades)
-          ? parsed.nulidades.map((n, i) => ({ ...n, categoria: 'nulidade', criterio: 1, prioridade: i + 1, dificuldade: 'media' }))
+          ? parsed.nulidades.map((n, i) => ({ ...n, categoria: 'nulidade', criterio: 1, prioridade: i+1, dificuldade: 'media' }))
           : [];
 
       parsed.fundamentos = items.map((f, i) => ({
@@ -673,7 +703,7 @@ Array vazio [] se nada suspeito. Analisa corpo de fundamentação. Marcadores IA
         tipo:                 String(f.tipo        || 'Vício Processual'),
         artigo:               String(f.artigo       || ''),
         gravidade:            okGrav.includes((f.gravidade  ||'').toLowerCase()) ? f.gravidade.toLowerCase()  : 'moderada',
-        prioridade:           Number(f.prioridade)  || (i + 1),
+        prioridade:           Number(f.prioridade)  || (i+1),
         dificuldade:          okDif.includes((f.dificuldade ||'').toLowerCase()) ? f.dificuldade.toLowerCase() : 'media',
         conhecimento_oficioso: f.conhecimento_oficioso === true,
         descricao:            String(f.descricao    || ''),
