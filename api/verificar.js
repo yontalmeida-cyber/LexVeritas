@@ -316,7 +316,7 @@ async function verificarDiplomaLegalDre(citacaoTexto) {
 
   // Extrair padrão de diploma legal português
   // Exemplos: "Lei n.º 62/2013", "Decreto-Lei n.º 49/2014", "Portaria n.º 280/2013"
-  const RE_DIPLOMA = /(?:Lei|Decreto[-\s]Lei|Portaria|Despacho|Resolução|Regulamento)\s+n\.?[oºª]?\s*(\d+)\/(\d{4})/gi;
+  const RE_DIPLOMA = /(?:Lei|Decreto[-\s]Lei|Portaria|Despacho|Resolução|Regulamento)\s+n\.?[oºª]?\s*([\d][\d\-A-Z]*)\/(\d{2,4})/gi;
   const match = RE_DIPLOMA.exec(citacaoTexto);
 
   if (!match) {
@@ -328,10 +328,12 @@ async function verificarDiplomaLegalDre(citacaoTexto) {
   }
 
   const numero = match[1];
-  const ano    = match[2];
+  const anoRaw = match[2];
+  const ano    = anoRaw.length === 2 ? (parseInt(anoRaw) >= 90 ? '19' + anoRaw : '20' + anoRaw) : anoRaw;
 
   try {
-    const url = `https://dre.pt/dre/api/legislation?number=${numero}&year=${ano}`;
+    const numeroBase = numero.replace(/[^0-9]/g, ''); // remove sufixos como -A para a API
+    const url = `https://dre.pt/dre/api/legislation?number=${numeroBase}&year=${ano}`;
 
     const response = await comTimeout(
       fetch(url, {
@@ -352,7 +354,7 @@ async function verificarDiplomaLegalDre(citacaoTexto) {
         fonte: 'DRE',
         url: urlHtml,
         confianca: 'baixa',
-        detalhe: `Não foi possível verificar automaticamente. Verifique ${ano > 2014 ? 'em dre.pt' : 'no Diário da República'}.`,
+        detalhe: `Não foi possível verificar automaticamente a Lei n.º ${numero}/${ano}. Verifique em dre.pt.`,
       };
     }
 

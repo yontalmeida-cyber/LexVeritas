@@ -305,7 +305,8 @@ function validarNumeroProcesso(numero) {
   const anoReal = anoNum < 100 ? (anoNum >= 90 ? 1900 + anoNum : 2000 + anoNum) : anoNum;
   const anoAtual = new Date().getFullYear();
   if (anoReal < 1990) resultado.problemas.push(`Ano ${anoReal} anterior à informatização (1990). Provavelmente fabricado.`);
-  if (anoReal > anoAtual) resultado.problemas.push(`Ano ${anoReal} é futuro (actual: ${anoAtual}). Impossível.`);
+  // Permitir até 1 ano no futuro — acórdãos recentes têm datas correntes válidas
+  if (anoReal > anoAtual + 1) resultado.problemas.push(`Ano ${anoReal} improvável (actual: ${anoAtual}). Verifique.`);
   if (!LETRAS_RELACAO[letraRelacao]) {
     resultado.problemas.push(`Letra tribunal desconhecida: "${letraRelacao}". Válidas: L, P, C, G, E, S, A, T.`);
   } else {
@@ -452,7 +453,7 @@ module.exports = async function handler(req, res) {
 
   // ── CORPO ──
   const body = req.body || {};
-  const { texto, modo = 'judicial', tribunal, relator, instituicao, tipoDoc, orientador, tipoProcesso, parteRecorrente } = body;
+  const { texto, modo = 'judicial', tribunal, relator, tipoPeca, instituicao, tipoDoc, orientador, tipoProcesso, parteRecorrente } = body;
 
   if (modo !== 'minuta' && (!texto || typeof texto !== 'string' || texto.trim().length < 50)) {
     return res.status(400).json({ erro: 'Texto insuficiente. Mínimo 50 caracteres.' });
@@ -581,8 +582,9 @@ veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMAN
 
   } else {
     const ctx = [
-      tribunal ? `Tribunal: ${tribunal}` : null,
-      relator  ? `Relator: ${relator}`   : null,
+      tribunal  ? `Tribunal: ${tribunal}`          : null,
+      relator   ? `Relator/Autor: ${relator}`       : null,
+      tipoPeca  ? `Tipo de documento: ${tipoPeca}`  : null,
     ].filter(Boolean).join('\n');
 
     const alertasLocais = validacoesLocais.length > 0
@@ -591,7 +593,7 @@ veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMAN
         `\nTrata como citações suspeitas alta gravidade.\n`
       : '';
 
-    systemPrompt = `Perito forense em análise linguística de IA em decisões judiciais portuguesas. JSON PURO apenas.
+    systemPrompt = `Perito forense em análise linguística de IA em documentos jurídicos portugueses. Podes analisar decisões judiciais (acórdãos, sentenças, despachos) E peças processuais (petições iniciais, contestações, alegações, recursos, requerimentos, articulados). Adapta a análise ao tipo de documento indicado no contexto. JSON PURO apenas.
 
 {"veredicto":"IA_DETECTADA","confianca":80,"indicadores":{"perplexidade":75,"burstiness":60,"coesao_artificial":70,"uniformidade_sintatica":65,"riqueza_lexical":55,"marcadores_formulaicos":80},"humanizador_detectado":false,"citacoes_suspeitas":[],"narrativa":"...","relator_analise":"...","marcadores":[{"tipo":"ai","texto":"..."}]}
 
@@ -601,7 +603,7 @@ citacoes_suspeitas: [{"citacao":"...","tipo":"acordao|diploma_legal|doutrina|jur
 
 REGRAS CRÍTICAS PARA citacoes_suspeitas — lê com atenção antes de assinalar:
 
-ACÓRDÃOS: assinala se o número de processo tiver formato inválido, ano impossível (futuro ou anterior a 1990), ou elementos internamente contraditórios (ex: código de comarca incompatível com a letra da Relação indicada). NÃO assinales apenas por dúvida.
+ACÓRDÃOS: assinala se o número de processo tiver formato manifestamente inválido, ano claramente impossível (anterior a 1990 ou muito futuro, como 2030+), ou incoerência comarca/Relação. A data do acórdão no cabeçalho (ex: 22-04-2026) é legítima — NÃO a uses como sinal suspeito. Um relator identificável no tribunal indicado também não é suspeito. NÃO assinales por dúvida.
 
 DIPLOMAS LEGAIS (leis, decretos-lei, portarias, regulamentos): NUNCA assinales um diploma legal apenas porque não tens certeza se existe. Só assinala se houver evidência POSITIVA e CLARA de erro — por exemplo: número/ano com formato manifestamente errado (ex: "Lei n.º 0/0000"), referência explícita a diploma como "em vigor" quando o próprio texto revela ter sido revogado, ou data de entrada em vigor impossível. Uma lei como "Lei n.º 62/2013" ou "Decreto-Lei n.º 49/2014" é válida até prova em contrário — NÃO a assinales.
 
@@ -609,9 +611,11 @@ DOUTRINA: só assinala se o autor claramente não existe, a obra tem título imp
 
 PRINCÍPIO GERAL: em caso de dúvida, NÃO incluas no array. É muito pior criar um falso positivo (assinalar algo correcto) do que omitir uma suspeita. Array vazio [] é uma resposta válida e preferível a falsos positivos.
 
-Analisa corpo de fundamentação. Marcadores IA: "Neste contexto","Importa salientar","É de referir que", parágrafos uniformes.`;
+Analisa o corpo do texto. Para DECISÕES JUDICIAIS: analisa a fundamentação. Para PEÇAS PROCESSUAIS (petições, recursos, alegações): analisa o corpo argumentativo — o campo relator_analise deve referir-se ao "perfil de autoria" em vez de "estilo do relator".
+Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É de referir que","Cumpre referir", parágrafos de comprimento uniforme, transições mecânicas.`;
 
-    userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}${alertasLocais}DECISÃO:\n\n${textoTruncado}\n\nJSON puro.`;
+    const labelDocumento = tipoPeca ? tipoPeca.toUpperCase() : 'DECISÃO JUDICIAL';
+    userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}${alertasLocais}${labelDocumento}:\n\n${textoTruncado}\n\nJSON puro.`;
   }
 
   // ── CHAMADA ANTHROPIC com retry ──
