@@ -3,15 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LexVeritas — Inteligência Forense para a Justiça Portuguesa</title>
-<meta name="description" content="O primeiro sistema de análise forense de IA em decisões judiciais portuguesas. Detecte autoria de IA, identifique nulidades e gere argumentos de recurso.">
+
+<!-- ── SEO & META TAGS ── -->
+<title>LexVeritas — Detector de IA, Nulidades e Recursos | Portugal</title>
+<meta name="description" content="Detecta IA em acórdãos e sentenças, identifica nulidades e vícios processuais, gera minutas de recurso e verifica autoria em teses jurídicas. Calibrado para os tribunais portugueses.">
+<meta name="keywords" content="detector IA acórdãos, detector IA sentenças, nulidades processuais, recurso judicial Portugal, análise crítica sentença, verificar autoria tese direito, plágio IA direito, LexVeritas, advogados Portugal, magistrados Portugal, análise forense jurídica">
+<meta name="author" content="LexVeritas">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://lexveritas.pt/">
+
+<!-- ── OPEN GRAPH (LinkedIn, WhatsApp, Facebook) ── -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="LexVeritas — Inteligência Forense para a Justiça Portuguesa">
-<meta property="og:description" content="O primeiro sistema de análise forense de IA em decisões judiciais portuguesas.">
 <meta property="og:url" content="https://lexveritas.pt/">
+<meta property="og:title" content="LexVeritas — A plataforma forense para a justiça portuguesa">
+<meta property="og:description" content="Detecte IA em decisões judiciais, identifique fundamentos de recurso e gere peças processuais automaticamente. Para advogados, magistrados e académicos portugueses.">
+<meta property="og:image" content="https://lexveritas.pt/og-image.png">
+<meta property="og:locale" content="pt_PT">
 <meta property="og:site_name" content="LexVeritas">
+
+<!-- ── TWITTER/X CARD ── -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LexVeritas — Detector de IA, Nulidades e Recursos">
+<meta name="twitter:description" content="Detecta IA em acórdãos, identifica nulidades processuais e gera minutas de recurso. Para advogados e magistrados portugueses.">
+<meta name="twitter:image" content="https://lexveritas.pt/og-image.png">
+
+<!-- ── SCHEMA.ORG STRUCTURED DATA ── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "LexVeritas",
+  "url": "https://lexveritas.pt",
+  "description": "Plataforma forense para advogados e magistrados portugueses. Detecta autoria de IA em decisões judiciais, identifica nulidades processuais, gera minutas de recurso e verifica autoria em trabalhos académicos jurídicos.",
+  "applicationCategory": "LegalApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "pt-PT",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "EUR",
+    "description": "5 análises mensais gratuitas sem cartão de crédito"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "LexVeritas",
+    "url": "https://lexveritas.pt"
+  }
+}
+</script>
+
+<meta name="theme-color" content="#060608">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -159,24 +200,10 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 .container { max-width: 1180px; margin: 0 auto; }
 
 /* ── MODOS DE ANÁLISE ── */
-.modos-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-}
-.modo-card {
-  background: var(--dark);
-  padding: 36px 30px;
-  position: relative;
-  overflow: hidden;
-  transition: background .3s;
-}
+.modos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.modo-card { background: var(--dark); padding: 36px 30px; position: relative; overflow: hidden; transition: background .3s; }
 .modo-card:hover { background: #161620; }
-.modo-card-bar {
-  position: absolute; top: 0; left: 0; right: 0; height: 2px;
-}
+.modo-card-bar { position: absolute; top: 0; left: 0; right: 0; height: 2px; }
 .modo-card-bar.judicial { background: linear-gradient(90deg, var(--gold), transparent); }
 .modo-card-bar.critica  { background: linear-gradient(90deg, #c97850, transparent); }
 .modo-card-bar.academico{ background: linear-gradient(90deg, #4c9ee8, transparent); }
@@ -477,12 +504,9 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════
-     MODOS DE ANÁLISE — secção de destaque logo após o hero
-════════════════════════════════════════════════════ -->
+<!-- MODOS DE ANÁLISE -->
 <section id="modos" style="background:var(--black);border-bottom:1px solid var(--border)">
   <div class="container sp" style="padding-top:clamp(56px,7vw,80px);padding-bottom:clamp(56px,7vw,80px)">
-
     <div class="section-label reveal" style="justify-content:center">O Que Analisamos</div>
     <h2 class="section-title reveal" style="text-align:center;margin-bottom:12px">
       Três modos de análise.<br><span>Uma plataforma forense.</span>
@@ -490,9 +514,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     <p class="section-intro reveal" style="margin:0 auto 48px;text-align:center;max-width:600px">
       O LexVeritas oferece três análises distintas, calibradas para as necessidades específicas de advogados, magistrados, académicos e investigadores jurídicos portugueses.
     </p>
-
     <div class="modos-grid reveal">
-
       <!-- ANÁLISE JUDICIAL -->
       <div class="modo-card">
         <div class="modo-card-bar judicial"></div>
@@ -511,18 +533,17 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
           <span class="modo-para-val">Advogados · Magistrados · Solicitadores · Notários</span>
         </div>
       </div>
-
       <!-- ANÁLISE CRÍTICA -->
       <div class="modo-card">
         <div class="modo-card-bar critica"></div>
         <div style="font-size:28px;margin-bottom:16px">🏛️</div>
         <div class="modo-label critica">Análise Crítica</div>
         <h3>Consultor jurídico sénior para preparação de recurso</h3>
-        <p>Actua como consultor jurídico sénior: lê a decisão judicial na íntegra, identifica nulidades processuais, erros de julgamento, erros de direito, erros de facto e questões constitucionais. Gera argumentos técnicos fundamentados ao abrigo do Art.&nbsp;615.º CPC e 379.º CPP, avalia a admissibilidade do recurso e produz uma proposta completa de peça processual pronta a adaptar e subscrever.</p>
+        <p>Actua como consultor jurídico sénior: lê a decisão judicial na íntegra e aplica 10 critérios de análise — nulidades processuais, erros de direito e de facto, questões constitucionais, admissibilidade, alçada, prazos, dupla conforme, contraditório e proporcionalidade da pena. Distingue entre pedidos de nulidade e de revogação e gera uma proposta completa de peça processual.</p>
         <div class="modo-features">
-          <div class="modo-feature critica"><span class="arrow">→</span><span>Identificação de nulidades e vícios processuais</span></div>
-          <div class="modo-feature critica"><span class="arrow">→</span><span>Erros de direito, de facto e questões constitucionais</span></div>
-          <div class="modo-feature critica"><span class="arrow">→</span><span>Avaliação de admissibilidade e prazo de recurso</span></div>
+          <div class="modo-feature critica"><span class="arrow">→</span><span>10 critérios de análise jurídica (Art. 615.º CPC, 379.º CPP e mais)</span></div>
+          <div class="modo-feature critica"><span class="arrow">→</span><span>Verificação de alçada, prazo e dupla conforme</span></div>
+          <div class="modo-feature critica"><span class="arrow">→</span><span>Distinção entre nulidade e revogação</span></div>
           <div class="modo-feature critica"><span class="arrow">→</span><span>Proposta completa de peça de recurso gerada</span></div>
         </div>
         <div class="modo-para">
@@ -530,7 +551,6 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
           <span class="modo-para-val">Advogados · Sociedades de Advogados · Mandatários</span>
         </div>
       </div>
-
       <!-- ANÁLISE ACADÉMICA -->
       <div class="modo-card">
         <div class="modo-card-bar academico"></div>
@@ -549,14 +569,10 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
           <span class="modo-para-val">Docentes · Investigadores · Estudantes de Direito · Universidades</span>
         </div>
       </div>
-
     </div>
-
-    <!-- CTA inline -->
     <div class="reveal" style="text-align:center;margin-top:36px">
       <a href="/app" class="btn-primary" style="display:inline-flex"><span>Experimentar gratuitamente →</span></a>
     </div>
-
   </div>
 </section>
 
@@ -581,9 +597,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     <div class="section-label reveal" style="justify-content:center">Experimente Agora</div>
     <h2 class="section-title reveal" style="text-align:center">Análise em <span>Tempo Real.</span></h2>
     <p class="section-intro reveal" style="margin:0 auto;text-align:center">Cole um excerto de uma decisão judicial portuguesa e veja os 6 indicadores forenses a funcionar — sem conta, sem registo. Uma análise gratuita por hora.</p>
-
     <div class="demo-grid reveal">
-      <!-- INPUT -->
       <div class="demo-input-panel">
         <span class="demo-input-label">Excerto da decisão judicial</span>
         <textarea id="demoTextarea" class="demo-textarea" maxlength="3000"
@@ -602,8 +616,6 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
           <a href="/app">Crie conta gratuita</a> para 5 análises mensais completas.
         </div>
       </div>
-
-      <!-- RESULTADO -->
       <div class="demo-result-panel" id="demoResultPanel">
         <div class="demo-empty" id="demoEmpty">
           <div class="demo-empty-icon">⚖</div>
@@ -654,8 +666,8 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     <h2 class="section-title reveal">Construído para <span>profissionais do direito.</span></h2>
     <div class="features-grid">
       <div class="feat-card reveal reveal-d1"><div class="feat-icon">🏛️</div><h3>Calibrado para Tribunais PT</h3><p>STJ, TRL, TRP, TRC, TRG, TRE, TC, STA, TCAS, TCAN — cada tribunal tem um perfil estilístico próprio incorporado na análise.</p></div>
-      <div class="feat-card reveal reveal-d2"><div class="feat-icon">🔬</div><h3>Análise Crítica de Recurso</h3><p>Identifica nulidades processuais, erros de julgamento e gera argumentos técnicos fundamentados para peça de recurso — Art. 615.º CPC e 379.º CPP.</p></div>
-      <div class="feat-card reveal reveal-d3"><div class="feat-icon">⚠️</div><h3>Citações Verificadas</h3><p>Detecta acórdãos, números de processo e doutrina potencialmente fabricados por IA — um risco real em decisões geradas por modelos de linguagem.</p></div>
+      <div class="feat-card reveal reveal-d2"><div class="feat-icon">🔬</div><h3>Análise Crítica — 10 Critérios</h3><p>Identifica nulidades processuais, erros de julgamento, verifica alçada, prazos, dupla conforme e proporcionalidade da pena. Distingue pedidos de nulidade de pedidos de revogação.</p></div>
+      <div class="feat-card reveal reveal-d3"><div class="feat-icon">⚠️</div><h3>Citações Verificadas</h3><p>Detecta acórdãos, números de processo e doutrina potencialmente fabricados por IA — valida o formato segundo a Portaria 280/2013.</p></div>
       <div class="feat-card reveal reveal-d1"><div class="feat-icon">🔀</div><h3>Detecção de Humanizadores</h3><p>Identifica textos que passaram por ferramentas de "humanização" de IA como Quillbot ou Undetectable.ai — o próximo passo na corrida às armas.</p><span class="feat-soon">Beta</span></div>
       <div class="feat-card reveal reveal-d2"><div class="feat-icon">📂</div><h3>Base DGSI em Progresso</h3><p>Calibração progressiva com acórdãos reais do DGSI — para maior precisão no perfil estilístico de cada relator e tribunal. Em desenvolvimento.</p><span class="feat-soon">Em desenvolvimento</span></div>
       <div class="feat-card reveal reveal-d3"><div class="feat-icon">📊</div><h3>Relatórios PDF</h3><p>Relatórios técnicos profissionais com referência única, tribunal, relator e indicadores visuais — prontos a anexar como suporte jurídico.</p></div>
@@ -685,9 +697,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     <div class="section-label reveal" style="justify-content:center">Acesso à Plataforma</div>
     <h2 class="section-title reveal" style="text-align:center">Uma solução para <span>cada perfil.</span></h2>
     <p class="section-intro reveal" style="margin:0 auto;text-align:center">Existe uma conta gratuita para experimentar. Para necessidades profissionais, societárias ou académicas, contacte-nos e receba uma proposta personalizada.</p>
-
     <div class="pricing-wrapper reveal">
-      <!-- Perfis -->
       <div class="pricing-profiles">
         <div class="pricing-profiles-title">Que tipo de utilizador é?</div>
         <div class="pricing-profiles-sub">Trabalhamos com profissionais e instituições de todas as dimensões.</div>
@@ -697,8 +707,6 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
         <div class="profile-row"><div class="profile-icon">📚</div><div><div class="profile-name">Docente ou Investigador</div><div class="profile-desc">Conta individual com modo académico e histórico completo.</div></div></div>
         <div class="profile-row"><div class="profile-icon">🎒</div><div><div class="profile-name">Estudante de Direito</div><div class="profile-desc">Conta gratuita disponível. 5 análises mensais sem cartão de crédito.</div></div></div>
       </div>
-
-      <!-- Formulário -->
       <div class="pricing-form-panel">
         <span class="pf-label">Pedido de Proposta</span>
         <div class="pf-title">Fale connosco</div>
@@ -722,8 +730,6 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
         <div class="pf-note">Sem compromisso · Sem cartão de crédito · Respondemos em 48horas</div>
       </div>
     </div>
-
-    <!-- Conta gratuita -->
     <div class="free-block reveal">
       <div class="free-block-tag">Já disponível gratuitamente</div>
       <div class="free-block-title">5 análises mensais sem custos</div>
@@ -745,7 +751,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
       </div>
       <div class="faq-item reveal">
         <button class="faq-question"><h3>O que são as "citações suspeitas"?</h3><span class="faq-icon">+</span></button>
-        <div class="faq-answer">Os modelos de IA por vezes inventam acórdãos, números de processo e referências doutrinárias que não existem. O LexVeritas analisa a consistência interna das citações — data, tribunal, número de processo, partes — e assinala as que apresentam indícios de fabricação automática. É uma funcionalidade exclusiva do modo judicial.</div>
+        <div class="faq-answer">Os modelos de IA por vezes inventam acórdãos, números de processo e referências doutrinárias que não existem. O LexVeritas analisa a consistência interna das citações e valida o formato dos números de processo segundo a Portaria 280/2013 — assinalando automaticamente os que têm formato inválido ou incoerente com o tribunal indicado.</div>
       </div>
       <div class="faq-item reveal">
         <button class="faq-question"><h3>O que são as ferramentas de humanização?</h3><span class="faq-icon">+</span></button>
@@ -810,18 +816,15 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ── SUPABASE ──
 const sb = supabase.createClient(
   'https://bsbgizaftamufmmxeyer.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ'
 );
 
-// ── INTRO ──
 window.addEventListener('load', () => {
   setTimeout(() => document.getElementById('intro').classList.add('done'), 2200);
 });
 
-// ── CURSOR (apenas desktop) ──
 if (window.matchMedia('(min-width:1280px)').matches) {
   const cursor = document.getElementById('cursor');
   const ring   = document.getElementById('cursorRing');
@@ -841,12 +844,10 @@ if (window.matchMedia('(min-width:1280px)').matches) {
   });
 }
 
-// ── NAV SCROLL ──
 window.addEventListener('scroll', () => {
   document.getElementById('siteNav').classList.toggle('scrolled', window.scrollY > 60);
 });
 
-// ── HAMBURGER ──
 (function() {
   const burger = document.getElementById('hamburger');
   const drawer = document.getElementById('navDrawer');
@@ -861,24 +862,20 @@ window.addEventListener('scroll', () => {
   window._closeDrawer = closeDrawer;
 })();
 
-// ── PARALLAX GRID ──
 window.addEventListener('scroll', () => {
   const g = document.querySelector('.hero-grid');
   if (g) g.style.transform = `translateY(${window.scrollY * 0.12}px)`;
 });
 
-// ── REVEAL ON SCROLL ──
 const revObs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
 
-// ── FAQ ──
 document.querySelectorAll('.faq-question').forEach(btn => {
   btn.addEventListener('click', () => btn.parentElement.classList.toggle('active'));
 });
 
-// ── COOKIE BANNER ──
 function showCookieBanner() {
   if (!localStorage.getItem('lv_cookie_consent')) {
     setTimeout(() => document.getElementById('cookieBanner').classList.add('visible'), 800);
@@ -893,9 +890,7 @@ function hideCookieBanner() {
 }
 window.addEventListener('load', showCookieBanner);
 
-// ══════════════════════════════════════
-// DEMO INTERATIVA
-// ══════════════════════════════════════
+// ── DEMO ──
 const demoVerdictLabels = {
   'IA_DETECTADA': 'Inteligência Artificial Detectada',
   'PROVAVELMENTE_IA': 'Provavelmente Gerado por IA',
@@ -1041,9 +1036,7 @@ function renderDemoResult(data) {
   }
 }
 
-// ══════════════════════════════════════
-// FORMULÁRIO DE PROPOSTA
-// ══════════════════════════════════════
+// ── FORMULÁRIO DE PROPOSTA ──
 async function enviarProposta() {
   const nome        = document.getElementById('pf-nome').value.trim();
   const email       = document.getElementById('pf-email').value.trim();
