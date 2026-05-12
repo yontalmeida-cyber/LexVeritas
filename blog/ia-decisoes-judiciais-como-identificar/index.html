@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IA nas Decisões Judiciais: Como Identificar — LexVeritas Blog</title>
+<meta name="description" content="Em Fevereiro de 2025, o CSM abriu um processo de averiguação sobre um acórdão do TRL elaborado com IA. Saiba como identificar os seis sinais de autoria artificial em texto jurídico português.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="IA nas Decisões Judiciais: Como Identificar">
+<meta property="og:description" content="Seis sinais forenses que revelam uso de inteligência artificial em acórdãos, sentenças e despachos portugueses.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://lexveritas.pt/blog/ia-decisoes-judiciais-como-identificar/">
+<meta property="article:published_time" content="2026-05-12">
+<meta property="article:author" content="LexVeritas">
+<link rel="canonical" href="https://lexveritas.pt/blog/ia-decisoes-judiciais-como-identificar/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #060608; --dark: #0e0e12; --card: #13131a;
+    --parchment: #f5f0e8; --cream: #f8f6f1;
+    --gold: #c9a84c; --gold-light: #e8c96a;
+    --red: #8b1a1a; --green: #1a5c3a; --grey: #9a9a9a;
+    --ink: #1a1a1a;
+    --rule: rgba(13,13,13,0.1); --rule-dark: rgba(201,168,76,0.15);
+    --serif: 'Instrument Serif', Georgia, serif;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--cream); font-family: var(--sans); line-height: 1.7; }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--rule-dark);
+    padding: 0 clamp(20px, 6vw, 80px);
+    background: var(--black);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .header-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 0;
+  }
+  .logo {
+    font-family: var(--serif); font-size: 24px; font-style: italic;
+    color: var(--cream); text-decoration: none;
+  }
+  .logo em { color: var(--gold); }
+  .header-nav { display: flex; gap: 28px; align-items: center; }
+  .header-nav a {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--grey); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .header-nav a:hover { color: var(--cream); }
+  .header-nav a.active { color: var(--gold); }
+  .btn-cta {
+    background: var(--gold); color: var(--black);
+    font-family: var(--sans); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 8px 18px; text-decoration: none; transition: background 0.2s;
+  }
+  .btn-cta:hover { background: var(--gold-light); }
+
+  /* ── HERO DO ARTIGO ── */
+  .article-hero {
+    background: var(--black);
+    padding: clamp(48px, 8vw, 100px) clamp(20px, 6vw, 80px) 0;
+    max-width: 860px; margin: 0 auto;
+  }
+  .breadcrumb {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--grey);
+    display: flex; align-items: center; gap: 8px; margin-bottom: 32px;
+  }
+  .breadcrumb a { color: var(--grey); text-decoration: none; transition: color 0.2s; }
+  .breadcrumb a:hover { color: var(--gold); }
+  .breadcrumb span { color: var(--gold); }
+
+  .article-category {
+    display: inline-block;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.3); padding: 4px 12px;
+    margin-bottom: 20px;
+  }
+  .article-title {
+    font-family: var(--serif); font-size: clamp(32px, 5vw, 56px);
+    font-style: italic; line-height: 1.1; color: var(--cream);
+    margin-bottom: 20px; letter-spacing: -0.01em;
+  }
+  .article-title em { color: var(--gold); font-style: italic; }
+  .article-subtitle {
+    font-size: 18px; color: var(--grey); line-height: 1.6;
+    margin-bottom: 32px; font-weight: 400;
+  }
+  .article-meta {
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    padding: 20px 0; border-top: 1px solid var(--rule-dark);
+    border-bottom: 1px solid var(--rule-dark);
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--grey);
+  }
+  .meta-item { display: flex; align-items: center; gap: 6px; }
+  .meta-dot { width: 3px; height: 3px; background: var(--gold); border-radius: 50%; }
+
+  /* ── CORPO DO ARTIGO ── */
+  .article-body {
+    max-width: 720px; margin: 0 auto;
+    padding: 56px clamp(20px, 6vw, 80px) 80px;
+  }
+  .article-body p {
+    font-family: var(--sans); font-size: 16px; line-height: 1.85;
+    color: #c8c4bc; margin-bottom: 24px;
+  }
+  .article-body p.lead {
+    font-size: 19px; line-height: 1.7; color: #e0dcd4;
+    font-style: italic; border-left: 3px solid var(--gold);
+    padding-left: 20px; margin-bottom: 36px;
+  }
+  .article-body h2 {
+    font-family: var(--serif); font-size: clamp(22px, 3vw, 30px);
+    font-style: italic; color: var(--cream);
+    margin: 48px 0 18px; line-height: 1.2;
+  }
+  .article-body h2::before {
+    content: '⚖';
+    font-size: 14px; color: var(--gold); margin-right: 10px;
+    font-style: normal;
+  }
+  .article-body strong { color: var(--cream); font-weight: 600; }
+
+  /* Sinal card */
+  .sinal-grid {
+    display: flex; flex-direction: column; gap: 16px;
+    margin: 32px 0 40px;
+  }
+  .sinal-card {
+    background: var(--dark);
+    border: 1px solid var(--rule-dark);
+    border-left: 3px solid var(--gold);
+    padding: 20px 24px;
+  }
+  .sinal-numero {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
+  }
+  .sinal-titulo {
+    font-family: var(--serif); font-size: 18px; font-style: italic;
+    color: var(--cream); margin-bottom: 8px;
+  }
+  .sinal-desc {
+    font-family: var(--sans); font-size: 14px; color: var(--grey);
+    line-height: 1.65; margin: 0;
+  }
+
+  /* Quote/destaque */
+  .destaque {
+    background: var(--card);
+    border: 1px solid var(--rule-dark);
+    border-left: 4px solid var(--red);
+    padding: 24px 28px; margin: 36px 0;
+  }
+  .destaque-label {
+    font-family: var(--mono); font-size: 8px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--red); margin-bottom: 10px;
+  }
+  .destaque p {
+    font-family: var(--serif); font-size: 17px; font-style: italic;
+    color: var(--cream); line-height: 1.6; margin: 0 !important;
+  }
+
+  /* Lei box */
+  .lei-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px; margin: 28px 0 36px;
+  }
+  .lei-card {
+    background: var(--dark); border: 1px solid var(--rule-dark);
+    padding: 16px 18px;
+  }
+  .lei-ref {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
+  }
+  .lei-desc {
+    font-family: var(--sans); font-size: 12px; color: var(--grey);
+    line-height: 1.55; margin: 0;
+  }
+
+  /* CTA final */
+  .article-cta {
+    background: var(--card);
+    border: 1px solid var(--rule-dark);
+    border-top: 3px solid var(--gold);
+    padding: 36px 40px; margin: 48px 0 0; text-align: center;
+  }
+  .article-cta .cta-label {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+  }
+  .article-cta h3 {
+    font-family: var(--serif); font-size: 26px; font-style: italic;
+    color: var(--cream); margin-bottom: 12px; line-height: 1.2;
+  }
+  .article-cta p {
+    font-size: 14px; color: var(--grey);
+    margin-bottom: 24px !important; max-width: 480px; margin-left: auto; margin-right: auto;
+  }
+  .cta-btn {
+    display: inline-block; background: var(--gold); color: var(--black);
+    font-family: var(--sans); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 14px 32px; text-decoration: none; transition: background 0.2s;
+  }
+  .cta-btn:hover { background: var(--gold-light); }
+  .cta-note {
+    font-family: var(--mono); font-size: 9px; color: var(--grey);
+    margin-top: 12px; letter-spacing: 0.1em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--rule-dark);
+    padding: 24px clamp(20px, 6vw, 80px);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-brand {
+    font-family: var(--serif); font-size: 16px; font-style: italic;
+    color: var(--cream);
+  }
+  .footer-brand em { color: var(--gold); }
+  .footer-copy {
+    font-family: var(--mono); font-size: 9px; color: var(--grey);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .header-nav { display: none; }
+    .article-body { padding: 40px 20px 60px; }
+    .article-hero { padding: 40px 20px 0; }
+    .lei-grid { grid-template-columns: 1fr; }
+    .article-cta { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="https://lexveritas.pt" class="logo">Lex<em>Veritas</em></a>
+    <nav class="header-nav">
+      <a href="https://lexveritas.pt">Início</a>
+      <a href="https://lexveritas.pt/blog/" class="active">Blog</a>
+      <a href="https://lexveritas.pt/app" class="btn-cta">Analisar →</a>
+    </nav>
+  </div>
+</header>
+
+<article>
+
+  <div class="article-hero">
+    <div class="breadcrumb">
+      <a href="https://lexveritas.pt">LexVeritas</a>
+      <span>›</span>
+      <a href="https://lexveritas.pt/blog/">Blog</a>
+      <span>›</span>
+      <span style="color:var(--cream)">IA nas Decisões Judiciais</span>
+    </div>
+
+    <span class="article-category">Análise Forense</span>
+
+    <h1 class="article-title">
+      IA nos Tribunais Portugueses:<br>
+      o que está em causa<br>
+      <em>e como identificar</em>
+    </h1>
+
+    <p class="article-subtitle">
+      Em Fevereiro de 2025, o CSM abriu um processo de averiguação sobre um acórdão do TRL elaborado com inteligência artificial. Seis sinais que os advogados precisam de conhecer.
+    </p>
+
+    <div class="article-meta">
+      <span class="meta-item">LexVeritas</span>
+      <span class="meta-dot"></span>
+      <span class="meta-item">12 de Maio de 2026</span>
+      <span class="meta-dot"></span>
+      <span class="meta-item">7 min de leitura</span>
+      <span class="meta-dot"></span>
+      <span class="meta-item" style="color:var(--gold)">Análise Judicial · Transparência</span>
+    </div>
+  </div>
+
+  <div class="article-body">
+
+    <p class="lead">
+      Em Fevereiro de 2025, o Conselho Superior da Magistratura abriu um processo de averiguação sobre um acórdão do Tribunal da Relação de Lisboa que apresentava jurisprudência inexistente, linguagem incomum no registo judicial português e erros jurídicos na qualificação dos crimes. Os advogados participantes afirmavam que o documento tinha sido elaborado com recurso a inteligência artificial.
+    </p>
+
+    <p>
+      Este não foi um caso isolado. É o sinal visível de uma realidade que está a transformar silenciosamente o sistema judicial português — e para a qual os profissionais do direito não têm ainda ferramentas adequadas de verificação.
+    </p>
+
+    <div class="destaque">
+      <div class="destaque-label">⚠ Caso Documentado · CSM · Fevereiro 2025</div>
+      <p>O acórdão apresentava "jurisprudência inexistente, linguagem pouco usual em acórdãos nacionais e erros jurídicos na qualificação dos crimes dos arguidos", segundo a participação dos advogados.</p>
+    </div>
+
+    <h2>O que está a acontecer</h2>
+
+    <p>
+      Os modelos de linguagem de inteligência artificial — como o ChatGPT, o Claude ou o Gemini — são capazes de redigir textos juridicamente plausíveis com grande fluidez. O problema é que também inventam. Citam acórdãos que nunca existiram, atribuem páginas erradas a obras doutrinárias, aplicam normas revogadas como se estivessem em vigor. Fazem-no com total confiança e sem qualquer aviso.
+    </p>
+
+    <p>
+      Quando um profissional do direito usa estas ferramentas sem a devida verificação crítica, o resultado pode ser uma peça processual ou uma decisão judicial construída sobre referências falsas. O dano não é apenas disciplinar. É institucional — e potencialmente irreversível para as partes afectadas.
+    </p>
+
+    <h2>Seis sinais que devem activar a sua atenção</h2>
+
+    <p>
+      A detecção de IA em texto jurídico não é uma operação de adivinhação. Há padrões linguísticos concretos e identificáveis. Estes são os seis indicadores forenses que o LexVeritas analisa em cada documento:
+    </p>
+
+    <div class="sinal-grid">
+      <div class="sinal-card">
+        <div class="sinal-numero">Indicador 01</div>
+        <div class="sinal-titulo">Perplexidade baixa</div>
+        <p class="sinal-desc">Textos gerados por IA tendem a ser estatisticamente previsíveis — cada palavra é a escolha mais provável dado o contexto. Textos humanos têm mais variação e imprevisibilidade linguística. Um texto judicial humano experiente é rico em escolhas lexicais inesperadas mas correctas.</p>
+      </div>
+      <div class="sinal-card">
+        <div class="sinal-numero">Indicador 02</div>
+        <div class="sinal-titulo">Variação rítmica ausente</div>
+        <p class="sinal-desc">A IA tende a produzir parágrafos de comprimento uniforme com estrutura sintáctica repetitiva. Num texto judicial humano encontramos variação natural — parágrafos curtos e incisivos alternados com desenvolvimentos mais longos e analíticos.</p>
+      </div>
+      <div class="sinal-card">
+        <div class="sinal-numero">Indicador 03</div>
+        <div class="sinal-titulo">Marcadores formulaicos</div>
+        <p class="sinal-desc">Expressões como <strong>"Neste contexto"</strong>, <strong>"Importa salientar que"</strong> e <strong>"É de referir que"</strong> aparecem com frequência desproporcional em textos de IA, especialmente no início de parágrafos. São fórmulas de transição que a IA repete mecanicamente.</p>
+      </div>
+      <div class="sinal-card">
+        <div class="sinal-numero">Indicador 04</div>
+        <div class="sinal-titulo">Coesão artificial</div>
+        <p class="sinal-desc">Transições entre parágrafos demasiado suaves e mecânicas, sem as hesitações e os saltos argumentativos que caracterizam o raciocínio jurídico humano. O texto "flui" bem demais — o que numa decisão judicial é paradoxalmente suspeito.</p>
+      </div>
+      <div class="sinal-card" style="border-left-color: var(--red)">
+        <div class="sinal-numero" style="color:var(--red)">Indicador 05 — Mais perigoso</div>
+        <div class="sinal-titulo">Citações não verificadas</div>
+        <p class="sinal-desc">A IA cita acórdãos com números de processo plausíveis mas inexistentes, obras com páginas erradas, diplomas revogados apresentados como em vigor. Este é o sinal mais grave porque é o que tem consequências processuais directas. O LexVeritas verifica cada citação automaticamente em juris.stj.pt, RCAAP e DRE.</p>
+      </div>
+      <div class="sinal-card">
+        <div class="sinal-numero">Indicador 06</div>
+        <div class="sinal-titulo">Humanizadores de IA</div>
+        <p class="sinal-desc">Alguns utilizadores passam os textos por ferramentas como o Quillbot ou o Undetectable.ai para "disfarçar" a autoria artificial. O resultado é um vocabulário artificialmente variado com sinónimos incomuns no registo jurídico português — uma assinatura própria que o LexVeritas detecta.</p>
+      </div>
+    </div>
+
+    <h2>O que diz o direito</h2>
+
+    <p>
+      A questão não é apenas ética. É constitucional e regulatória.
+    </p>
+
+    <div class="lei-grid">
+      <div class="lei-card">
+        <div class="lei-ref">Art. 205.º CRP</div>
+        <p class="lei-desc">Obriga à fundamentação das decisões judiciais. Uma decisão fundamentada com referências inexistentes não é uma decisão fundamentada — é uma nulidade.</p>
+      </div>
+      <div class="lei-card">
+        <div class="lei-ref">RGPD — Art. 22.º</div>
+        <p class="lei-desc">Consagra o direito a não ficar sujeito a decisões baseadas exclusivamente em tratamento automatizado com efeitos jurídicos significativos.</p>
+      </div>
+      <div class="lei-card">
+        <div class="lei-ref">EU AI Act 2024/1689</div>
+        <p class="lei-desc">Classifica a IA aplicada à administração da justiça como sistema de alto risco, sujeito a requisitos rigorosos de transparência e supervisão humana.</p>
+      </div>
+    </div>
+
+    <p>
+      A jurisprudência portuguesa ainda não enfrentou estes casos frontalmente. Não tardará. O processo de averiguação aberto pelo CSM em 2025 é o primeiro passo de um caminho que a advocacia portuguesa tem de percorrer com ferramentas adequadas.
+    </p>
+
+    <h2>O que pode fazer agora</h2>
+
+    <p>
+      A verificação não tem de ser manual nem demorada. O LexVeritas analisa o texto de acórdãos, sentenças e despachos com os seis indicadores descritos acima, calibrados especificamente para a jurisprudência portuguesa. Valida o formato dos números de processo segundo a Portaria 280/2013, detecta incoerências entre o código de comarca e a Relação competente, e consulta automaticamente as fontes oficiais para confirmar se as citações existem.
+    </p>
+
+    <p>
+      A análise demora menos de trinta segundos. O relatório PDF gerado tem referência única e pode ser junto como suporte processual.
+    </p>
+
+    <div class="article-cta">
+      <div class="cta-label">LexVeritas — Análise Gratuita</div>
+      <h3>Verifique a autoria de uma decisão judicial agora</h3>
+      <p>Cinco análises por mês sem custos. Sem cartão de crédito. Resultado em segundos.</p>
+      <a href="https://lexveritas.pt/app" class="cta-btn">Começar a Analisar →</a>
+      <div class="cta-note">⚖ 6 indicadores forenses · Relatório PDF · Verificação de citações</div>
+    </div>
+
+  </div>
+</article>
+
+<footer>
+  <div class="footer-brand">Lex<em>Veritas</em></div>
+  <div class="footer-copy">© 2026 LexVeritas · Tecnologia Forense Jurídica · Portugal</div>
+  <a href="https://lexveritas.pt/blog/" style="font-family:var(--mono);font-size:9px;color:var(--gold);text-decoration:none;letter-spacing:0.1em">← Voltar ao Blog</a>
+</footer>
+
+</body>
+</html>
