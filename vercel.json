@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.lexveritas.pt" }],
+      "destination": "https://lexveritas.pt/$1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/app",          "destination": "/app.html" },
     { "source": "/app/(.*)",     "destination": "/app.html" },
