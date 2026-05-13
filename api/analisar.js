@@ -462,9 +462,95 @@ module.exports = async function handler(req, res) {
   const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
   if (!ANTHROPIC_API_KEY) return res.status(500).json({ erro: 'Serviço indisponível.' });
 
-  const textoTruncado = texto
-    ? (texto.length > 12000 ? texto.substring(0, 12000) + '\n[texto truncado]' : texto)
-    : '';
+  // ══════════════════════════════════════════════════════
+  // SELECÇÃO INTELIGENTE DE TEXTO
+  // Para documentos longos, extrai a secção mais relevante
+  // para análise forense em vez de truncar cegamente.
+  // Limite aumentado para 20.000 chars (cobre a maioria dos acórdãos completos).
+  // ══════════════════════════════════════════════════════
+  const LIMITE_CHARS = 20000;
+
+  function extrairTextoRelevante(txt, modoAnalise) {
+    if (!txt || txt.length <= LIMITE_CHARS) return txt;
+
+    // Para modo crítica e académico: texto completo truncado (estrutura toda importa)
+    if (modoAnalise !== 'judicial') {
+      return txt.substring(0, LIMITE_CHARS) + '\n[texto truncado — ' + txt.length + ' chars total]';
+    }
+
+    // Para modo judicial: tentar extrair a fundamentação
+    // A fundamentação é a secção forense mais relevante (onde a IA costuma aparecer)
+    const MARCADORES_FUND = [
+      /\bII[\s\-–—]*FUNDAMENTA[CÇ]ÃO\b/i,
+      /\bIII[\s\-–—]*FUNDAMENTA[CÇ]ÃO\b/i,
+      /\bFUNDAMENTA[CÇ]ÃO\b/i,
+      /\bII[\s\-–—]*APRECIANDO\b/i,
+      /\bIII[\s\-–—]*APRECIANDO\b/i,
+      /\bAPRECIANDO\b/i,
+      /\bII[\s\-–—]*FUNDAMENTOS\b/i,
+      /\bIII[\s\-–—]*DO DIREITO\b/i,
+      /\bDO MÉRITO\b/i,
+      /\bDECIDINDO\b/i,
+      /\bCONHECENDO DO RECURSO\b/i,
+    ];
+
+    const MARCADORES_FIM = [
+      /\bIII[\s\-–—]*DECISÃO\b/i,
+      /\bIV[\s\-–—]*DECISÃO\b/i,
+      /\bDECISÃO\b/i,
+      /\bACORDAM\b/i,
+      /\bTERMOS EM QUE\b/i,
+      /\bPELO EXPOSTO\b/i,
+      /\bFACE AO EXPOSTO\b/i,
+    ];
+
+    // Localizar início da fundamentação
+    let inicioFund = -1;
+    for (const re of MARCADORES_FUND) {
+      const m = re.exec(txt);
+      if (m && m.index > 200) { // ignorar se muito no início (pode ser sumário)
+        inicioFund = m.index;
+        break;
+      }
+    }
+
+    if (inicioFund === -1) {
+      // Sem marcador de fundamentação — usar segunda metade do documento
+      // (relatório factual costuma ser a primeira metade)
+      const meio = Math.floor(txt.length / 2);
+      const segmento = txt.substring(meio, meio + LIMITE_CHARS);
+      return '[início da fundamentação estimado]\n\n' + segmento +
+             '\n[texto truncado — ' + txt.length + ' chars total]';
+    }
+
+    // Tentar localizar o fim da fundamentação
+    let fimFund = txt.length;
+    for (const re of MARCADORES_FIM) {
+      re.lastIndex = inicioFund + 500; // procurar depois do início
+      const mFim = re.exec(txt.substring(inicioFund + 500));
+      if (mFim) {
+        const posFim = inicioFund + 500 + mFim.index;
+        if (posFim > inicioFund + 1000) { fimFund = posFim; break; }
+      }
+    }
+
+    const secFund = txt.substring(inicioFund, fimFund);
+
+    // Se a fundamentação cabe no limite, incluir também contexto anterior (relatório)
+    if (secFund.length <= LIMITE_CHARS - 2000) {
+      const contextoAnterior = txt.substring(Math.max(0, inicioFund - 2000), inicioFund);
+      const combined = contextoAnterior + secFund;
+      if (combined.length <= LIMITE_CHARS) return combined;
+      return combined.substring(0, LIMITE_CHARS) + '\n[texto truncado]';
+    }
+
+    // Fundamentação é longa — enviar só ela (prioridade máxima)
+    return '[fundamentação extraída automaticamente]\n\n' +
+           secFund.substring(0, LIMITE_CHARS) +
+           '\n[texto truncado — fundamentação com ' + secFund.length + ' chars]';
+  }
+
+  const textoTruncado = extrairTextoRelevante(texto || '', modo);
 
   // ── VALIDAÇÃO LOCAL DE NÚMEROS DE PROCESSO ──
   let validacoesLocais = [];
@@ -619,7 +705,7 @@ Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É
   }
 
   // ── CHAMADA ANTHROPIC com retry ──
-  const maxTokens = modo === 'minuta' ? 16000 : modo === 'critica' ? 5000 : 2000;
+  const maxTokens = modo === 'minuta' ? 16000 : modo === 'critica' ? 5000 : modo === 'judicial' ? 3000 : 2000;
 
   async function chamarAnthropic() {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
