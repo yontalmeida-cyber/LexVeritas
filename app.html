@@ -1144,7 +1144,10 @@ async function extractPDF(file) {
     txt = txt.trim();
     if (!txt || txt.length < 50) { setDropText('⚠️ PDF sem texto extraível. Copie o texto manualmente.'); return; }
     pdfText = txt; actualizarContador(); dropZone.classList.add('has-file');
-    document.getElementById('drop-zone-text').innerHTML = `✅ <strong>${file.name}</strong><br><span style="font-size:11px;color:#888">${pdf.numPages} páginas · ${txt.length.toLocaleString('pt-PT')} caracteres extraídos</span><br><span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover ficheiro</span>`;
+    const avisoLongo = txt.length > 20000
+      ? `<br><span style="font-size:10px;color:var(--gold)">⚡ Documento extenso — fundamentação extraída automaticamente para análise</span>`
+      : '';
+    document.getElementById('drop-zone-text').innerHTML = `✅ <strong>${file.name}</strong><br><span style="font-size:11px;color:#888">${pdf.numPages} páginas · ${txt.length.toLocaleString('pt-PT')} caracteres extraídos</span>${avisoLongo}<br><span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover ficheiro</span>`;
   } catch (err) { setDropText('❌ Erro ao ler o PDF. Tente copiar o texto manualmente.'); }
 }
 function limparPDF() { pdfText = null; document.getElementById('file-input').value = ''; dropZone.classList.remove('has-file'); dropZone.style.borderColor = ''; setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui'); actualizarContador(); }
