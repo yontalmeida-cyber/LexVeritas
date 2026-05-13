@@ -22,14 +22,12 @@
 html { scroll-behavior: smooth; }
 body { background: var(--black); color: var(--white); font-family: var(--sans); }
 
-/* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(6,6,8,0.95); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
 .nav-logo { font-family: var(--serif); font-size: 24px; color: var(--white); text-decoration: none; font-style: italic; }
 .nav-logo span { color: var(--gold); }
 .nav-back { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--grey); text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 8px; }
 .nav-back:hover { color: var(--gold); }
 
-/* PAGE HERO */
 .page-hero { padding: 140px 48px 80px; border-bottom: 1px solid var(--border); }
 .page-hero-inner { max-width: 800px; margin: 0 auto; }
 .page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
@@ -38,7 +36,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .page-title span { color: var(--gold); }
 .page-meta { font-family: var(--mono); font-size: 11px; color: var(--grey); letter-spacing: 0.1em; }
 
-/* CONTENT */
 .content-wrap { max-width: 800px; margin: 0 auto; padding: 64px 48px 120px; }
 .policy-section { margin-bottom: 56px; padding-bottom: 56px; border-bottom: 1px solid var(--border); }
 .policy-section:last-child { border-bottom: none; }
@@ -60,13 +57,27 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .highlight-box p { font-size: 14px; line-height: 1.7; color: rgba(248,246,241,0.65); margin: 0; }
 .highlight-box strong { color: var(--gold); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-family: var(--mono); display: block; margin-bottom: 8px; }
 
-/* FOOTER */
-footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.planos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+.plano-card { background: var(--dark); border: 1px solid var(--border); padding: 24px; position: relative; }
+.plano-card.destaque { border-color: rgba(201,168,76,0.4); }
+.plano-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); opacity: 0.4; }
+.plano-card.destaque::before { opacity: 1; }
+.plano-nome { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.plano-preco { font-family: var(--serif); font-size: 22px; font-style: italic; color: var(--white); margin-bottom: 4px; }
+.plano-sub { font-family: var(--mono); font-size: 10px; color: var(--grey); margin-bottom: 16px; }
+.plano-features { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.plano-features li { font-family: var(--sans); font-size: 12px; color: rgba(248,246,241,0.65); display: flex; gap: 8px; align-items: flex-start; line-height: 1.5; }
+.plano-features li::before { content: '→'; color: var(--gold); font-family: var(--mono); font-size: 10px; flex-shrink: 0; margin-top: 1px; }
+
+footer { border-top: 1px solid var(--border); padding: 32px 48px; }
+.footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
 .footer-brand { font-family: var(--serif); font-size: 20px; font-style: italic; text-decoration: none; color: var(--white); }
 .footer-brand span { color: var(--gold); }
-.footer-copy { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.25); letter-spacing: 0.1em; text-align: right; line-height: 1.6; }
+.footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
+.footer-legal a { font-family: var(--mono); font-size: 10px; color: rgba(154,154,154,0.5); text-decoration: none; transition: color 0.2s; letter-spacing: 0.08em; }
+.footer-legal a:hover { color: var(--grey); }
+.footer-copy { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.2); letter-spacing: 0.08em; line-height: 1.7; text-align: center; width: 100%; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
 
-/* MODAL */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9500; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
 .modal-overlay.visible { display: flex; }
 .modal-box { background: #13131a; border: 1px solid rgba(201,168,76,0.25); padding: 36px; max-width: 440px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
@@ -82,52 +93,18 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
 .btn-submit { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 14px; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
 .btn-submit:hover { background: var(--gold-light); }
 
-/* COOKIE BANNER */
-.cookie-banner {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 3000;
-  background: rgba(13,13,18,.97); border-top: 1px solid var(--border);
-  backdrop-filter: blur(20px);
-  padding: 20px 40px;
-  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
-  transform: translateY(100%);
-  transition: transform .5s cubic-bezier(.16,1,.3,1);
-}
-.cookie-banner.visible { transform: translateY(0); }
-.cookie-banner-text { flex: 1; min-width: 260px; }
-.cookie-banner-text p { font-family: var(--sans); font-size: 13px; color: var(--grey); line-height: 1.6; }
-.cookie-banner-text p strong { color: var(--white); font-weight: 700; }
-.cookie-banner-text a { color: var(--gold); text-decoration: none; }
-.cookie-banner-text a:hover { text-decoration: underline; }
-.cookie-banner-actions { display: flex; gap: 12px; flex-shrink: 0; flex-wrap: wrap; align-items: center; }
-.cookie-btn-reject { background: none; border: 1px solid var(--border); color: var(--grey); padding: 11px 20px; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: all .2s; }
-.cookie-btn-reject:hover { border-color: var(--grey); color: var(--white); }
-.cookie-btn-accept { background: var(--gold); border: none; color: var(--black); padding: 11px 28px; font-family: var(--sans); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: background .2s; }
-.cookie-btn-accept:hover { background: var(--gold-light); }
-
 @media (max-width: 768px) {
   nav { padding: 16px 20px; }
   .page-hero { padding: 100px 20px 48px; }
   .content-wrap { padding: 40px 20px 80px; }
-  footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px 20px; }
-  .footer-copy { text-align: center; }
-  .cookie-banner { padding: 16px 20px; }
-  .cookie-banner-actions { width: 100%; }
-  .cookie-btn-accept, .cookie-btn-reject { flex: 1; text-align: center; }
+  footer { padding: 24px 20px; }
+  .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+  .footer-legal { justify-content: center; }
+  .planos-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
-
-<!-- ═══ COOKIE BANNER ═══ -->
-<div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Aviso de cookies">
-  <div class="cookie-banner-text">
-    <p><strong>Usamos cookies essenciais</strong> para o funcionamento da plataforma (autenticação e sessão). Consulte a nossa <a href="/privacidade">Política de Privacidade</a>.</p>
-  </div>
-  <div class="cookie-banner-actions">
-    <button class="cookie-btn-reject" onclick="rejectCookies()">Só Essenciais</button>
-    <button class="cookie-btn-accept" onclick="acceptCookies()">Aceitar</button>
-  </div>
-</div>
 
 <!-- ═══ NAV ═══ -->
 <nav>
@@ -140,7 +117,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
   <div class="page-hero-inner">
     <div class="page-eyebrow">Documentação Legal</div>
     <h1 class="page-title">Termos de <span>Serviço</span></h1>
-    <p class="page-meta">Última actualização: Maio de 2026 · Versão 1.0</p>
+    <p class="page-meta">Última actualização: Maio de 2026 · Versão 1.1</p>
   </div>
 </div>
 
@@ -149,9 +126,10 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
 
   <div class="highlight-box">
     <strong>Resumo</strong>
-    <p>O LexVeritas é uma ferramenta auxiliar de análise probabilística. Os resultados não constituem prova jurídica definitiva. Ao usar a plataforma, aceita estes termos. O serviço gratuito inclui 5 análises por mês. O plano Profissional custa 19€/mês.</p>
+    <p>O LexVeritas é uma ferramenta auxiliar de análise probabilística. Os resultados não constituem prova jurídica definitiva. Ao usar a plataforma, aceita estes termos. O serviço gratuito inclui 5 análises por mês. Os planos pagos são definidos por proposta personalizada — contacte-nos para saber mais.</p>
   </div>
 
+  <!-- 01 -->
   <div class="policy-section">
     <span class="policy-num">01</span>
     <h2 class="policy-title">Aceitação dos <span>Termos</span></h2>
@@ -161,21 +139,22 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     </div>
   </div>
 
+  <!-- 02 -->
   <div class="policy-section">
     <span class="policy-num">02</span>
     <h2 class="policy-title">Descrição do <span>Serviço</span></h2>
     <div class="policy-body">
-      <p>O LexVeritas é uma plataforma de análise forense linguística que aplica indicadores de inteligência artificial a documentos judiciais portugueses, com o objectivo de identificar padrões associados à geração de texto por modelos de linguagem.</p>
-      <p>O serviço inclui:</p>
+      <p>O LexVeritas é uma plataforma de análise forense linguística que aplica indicadores de inteligência artificial a documentos jurídicos portugueses, com o objectivo de identificar padrões associados à geração de texto por modelos de linguagem.</p>
+      <p>O serviço inclui três modos de análise:</p>
       <ul class="policy-list">
-        <li>Análise de texto judicial com 6 indicadores forenses</li>
-        <li>Geração de relatório PDF com número de referência único</li>
-        <li>Histórico de análises na conta do utilizador</li>
-        <li>Suporte prioritário (plano Profissional)</li>
+        <li><strong>Análise Judicial</strong> — detecção de IA em acórdãos, sentenças, despachos e peças processuais com 6 indicadores forenses e relatório PDF</li>
+        <li><strong>Análise Crítica</strong> — identificação de nulidades processuais, erros de julgamento e geração de proposta de peça de recurso</li>
+        <li><strong>Análise Académica</strong> — verificação de autoria em teses, dissertações e trabalhos jurídicos académicos</li>
       </ul>
     </div>
   </div>
 
+  <!-- 03 -->
   <div class="policy-section">
     <span class="policy-num">03</span>
     <h2 class="policy-title">Limitações e <span>Natureza do Serviço</span></h2>
@@ -191,17 +170,44 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     </div>
   </div>
 
+  <!-- 04 -->
   <div class="policy-section">
     <span class="policy-num">04</span>
-    <h2 class="policy-title">Planos e <span>Pagamentos</span></h2>
+    <h2 class="policy-title">Planos e <span>Acesso</span></h2>
     <div class="policy-body">
-      <p><strong>Plano Gratuito</strong> — 5 análises por mês, sem custos, sem cartão de crédito. Disponível para sempre.</p>
-      <p><strong>Plano Profissional</strong> — 19€/mês. Inclui 100 análises por mês, análise avançada por relator, relatório PDF profissional, histórico ilimitado e suporte prioritário.</p>
-      <p>Os pagamentos do plano Profissional são processados mediante <a onclick="abrirModal('Plano Profissional — pagamento')">contacto através do nosso formulário</a>. Reservamo-nos o direito de alterar os preços com aviso prévio de 30 dias.</p>
-      <p>Não são efectuados reembolsos de períodos já iniciados, salvo em casos de falha técnica grave da nossa parte.</p>
+      <p>O LexVeritas disponibiliza actualmente os seguintes planos de acesso:</p>
+      <div class="planos-grid">
+        <div class="plano-card">
+          <div class="plano-nome">Plano Gratuito</div>
+          <div class="plano-preco">Sem custo</div>
+          <div class="plano-sub">Disponível para sempre</div>
+          <ul class="plano-features">
+            <li>5 análises por mês</li>
+            <li>6 indicadores forenses</li>
+            <li>Relatório PDF</li>
+            <li>Histórico de análises</li>
+            <li>Sem cartão de crédito</li>
+          </ul>
+        </div>
+        <div class="plano-card destaque">
+          <div class="plano-nome">Planos Profissionais</div>
+          <div class="plano-preco">Por proposta</div>
+          <div class="plano-sub">Personalizado ao seu perfil</div>
+          <ul class="plano-features">
+            <li>Análises ilimitadas</li>
+            <li>Análise Crítica completa</li>
+            <li>Geração de minutas</li>
+            <li>Verificação de citações</li>
+            <li>Planos institucionais disponíveis</li>
+          </ul>
+        </div>
+      </div>
+      <p>Os planos profissionais e institucionais são estabelecidos por proposta personalizada, mediante <a onclick="abrirModal('Plano Profissional — informações')">contacto através do nosso formulário</a> ou por email para <a href="mailto:tonybranco@lexveritas.pt">tonybranco@lexveritas.pt</a>. O preço e condições são acordados individualmente com cada cliente.</p>
+      <p>Reservamo-nos o direito de alterar as condições dos planos com aviso prévio de 30 dias aos utilizadores afectados. Não são efectuados reembolsos de períodos já iniciados, salvo em casos de falha técnica grave da nossa parte.</p>
     </div>
   </div>
 
+  <!-- 05 -->
   <div class="policy-section">
     <span class="policy-num">05</span>
     <h2 class="policy-title">Obrigações do <span>Utilizador</span></h2>
@@ -219,16 +225,18 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     </div>
   </div>
 
+  <!-- 06 -->
   <div class="policy-section">
     <span class="policy-num">06</span>
     <h2 class="policy-title">Propriedade <span>Intelectual</span></h2>
     <div class="policy-body">
-      <p>Todos os direitos de propriedade intelectual relativos à plataforma LexVeritas — incluindo o software, design, metodologia de análise, marca e conteúdos — são propriedade exclusiva do LexVeritas.</p>
+      <p>Todos os direitos de propriedade intelectual relativos à plataforma LexVeritas — incluindo o software, design, metodologia de análise, marca e conteúdos — são propriedade exclusiva de Tony de Almeida da Costa Branco, a exercer actividade sob a marca LexVeritas.</p>
       <p>O utilizador mantém todos os direitos sobre os documentos que submete para análise. Ao submeter um documento, o utilizador garante que tem os direitos necessários para o fazer.</p>
       <p>Os relatórios PDF gerados pela plataforma podem ser utilizados para fins profissionais, desde que se identifique claramente a sua natureza auxiliar e probabilística.</p>
     </div>
   </div>
 
+  <!-- 07 -->
   <div class="policy-section">
     <span class="policy-num">07</span>
     <h2 class="policy-title">Limitação de <span>Responsabilidade</span></h2>
@@ -240,34 +248,37 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
         <li>Interrupções temporárias do serviço por razões técnicas</li>
         <li>Imprecisões nos resultados da análise forense</li>
       </ul>
-      <p>A responsabilidade máxima do LexVeritas perante qualquer utilizador está limitada ao valor pago pelo serviço nos últimos 3 meses.</p>
+      <p>A responsabilidade máxima do LexVeritas perante qualquer utilizador com plano pago está limitada ao valor pago pelo serviço nos últimos 3 meses. Para utilizadores do plano gratuito, não existe responsabilidade financeira.</p>
     </div>
   </div>
 
+  <!-- 08 -->
   <div class="policy-section">
     <span class="policy-num">08</span>
     <h2 class="policy-title">Disponibilidade do <span>Serviço</span></h2>
     <div class="policy-body">
       <p>O LexVeritas esforça-se por manter o serviço disponível 24 horas por dia, 7 dias por semana. No entanto, não garantimos disponibilidade ininterrupta e reservamo-nos o direito de realizar manutenções programadas com aviso prévio sempre que possível.</p>
-      <p>O plano Gratuito não inclui garantias de disponibilidade (SLA). O plano Profissional tem suporte prioritário em caso de problemas.</p>
+      <p>O plano gratuito não inclui garantias de disponibilidade (SLA). Os planos profissionais incluem suporte prioritário em caso de problemas.</p>
     </div>
   </div>
 
+  <!-- 09 -->
   <div class="policy-section">
     <span class="policy-num">09</span>
     <h2 class="policy-title">Rescisão e <span>Encerramento</span></h2>
     <div class="policy-body">
-      <p>O utilizador pode encerrar a sua conta a qualquer momento <a onclick="abrirModal('Encerramento de conta')">através do nosso formulário de contacto</a>. Após o encerramento, todos os dados são eliminados no prazo de 30 dias.</p>
+      <p>O utilizador pode encerrar a sua conta a qualquer momento através do email <a href="mailto:tonybranco@lexveritas.pt">tonybranco@lexveritas.pt</a> ou <a onclick="abrirModal('Encerramento de conta')">através do nosso formulário de contacto</a>. Após o encerramento, todos os dados são eliminados no prazo de 30 dias.</p>
       <p>O LexVeritas pode suspender ou encerrar contas que violem estes termos, com ou sem aviso prévio consoante a gravidade da infracção.</p>
     </div>
   </div>
 
+  <!-- 10 -->
   <div class="policy-section">
     <span class="policy-num">10</span>
     <h2 class="policy-title">Lei Aplicável e <span>Jurisdição</span></h2>
     <div class="policy-body">
       <p>Estes Termos de Serviço são regidos pela lei portuguesa. Qualquer litígio será submetido à jurisdição exclusiva dos tribunais portugueses competentes.</p>
-      <p>Para questões relacionadas com estes termos, <a onclick="abrirModal('Questão sobre Termos de Serviço')">contacte-nos através do formulário</a>.</p>
+      <p>Para questões relacionadas com estes termos, contacte-nos por email para <a href="mailto:tonybranco@lexveritas.pt">tonybranco@lexveritas.pt</a> ou <a onclick="abrirModal('Questão sobre Termos de Serviço')">através do formulário</a>.</p>
     </div>
   </div>
 
@@ -275,8 +286,19 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
 
 <!-- ═══ FOOTER ═══ -->
 <footer>
-  <a href="/" class="footer-brand">Lex<span>Veritas</span></a>
-  <span class="footer-copy">© 2026 LexVeritas. Todos os direitos reservados.<br>Marca e conteúdos protegidos nos termos do CDADC &amp; CPI.</span>
+  <div class="footer-inner">
+    <a href="/" class="footer-brand">Lex<span>Veritas</span></a>
+    <div class="footer-legal">
+      <a href="/privacidade">Política de Privacidade</a>
+      <a href="/termos">Termos de Uso</a>
+      <a href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener">📋 Livro de Reclamações</a>
+      <a href="mailto:tonybranco@lexveritas.pt">tonybranco@lexveritas.pt</a>
+    </div>
+    <div class="footer-copy">
+      © 2026 LexVeritas · Tony de Almeida da Costa Branco · NIF 235 938 882 · Feijó, Almada, Portugal<br>
+      <span style="opacity:0.5">Marca e conteúdos protegidos nos termos do CDADC &amp; CPI. Este site usa apenas cookies essenciais de sessão.</span>
+    </div>
+  </div>
 </footer>
 
 <!-- ═══ MODAL CONTACTO ═══ -->
@@ -292,7 +314,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
       <label>Assunto</label>
       <select id="t-assunto">
         <option value="">— Seleccione —</option>
-        <option>Plano Profissional — pagamento</option>
+        <option>Plano Profissional — informações</option>
         <option>Encerramento de conta</option>
         <option>Questão sobre Termos de Serviço</option>
         <option>Outro</option>
@@ -305,32 +327,6 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
 </div>
 
 <script>
-// ── COOKIE BANNER ──
-(function() {
-  function showCookieBanner() {
-    if (!localStorage.getItem('lv_cookie_consent')) {
-      setTimeout(function() {
-        var b = document.getElementById('cookieBanner');
-        if (b) b.classList.add('visible');
-      }, 800);
-    }
-  }
-  window.acceptCookies = function() {
-    localStorage.setItem('lv_cookie_consent', 'all');
-    hideCookieBanner();
-  };
-  window.rejectCookies = function() {
-    localStorage.setItem('lv_cookie_consent', 'essential');
-    hideCookieBanner();
-  };
-  function hideCookieBanner() {
-    var b = document.getElementById('cookieBanner');
-    if (b) { b.style.transform = 'translateY(100%)'; setTimeout(function(){ b.remove(); }, 500); }
-  }
-  window.addEventListener('load', showCookieBanner);
-})();
-
-// ── MODAL ──
 function abrirModal(assunto) {
   const sel = document.getElementById('t-assunto');
   if (assunto && sel) {
@@ -339,12 +335,10 @@ function abrirModal(assunto) {
   document.getElementById('termos-modal').classList.add('visible');
 }
 
-// Fechar com Escape
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') document.getElementById('termos-modal').classList.remove('visible');
 });
 
-// ── FORMULÁRIO ──
 async function enviarTermos() {
   const nome = document.getElementById('t-nome').value.trim();
   const email = document.getElementById('t-email').value.trim();
@@ -353,10 +347,7 @@ async function enviarTermos() {
   const msg = document.getElementById('t-msg');
   if (!nome || !email) {
     msg.textContent = 'Preencha nome e email.';
-    msg.style.color = '#c97850';
-    msg.style.background = 'rgba(139,26,26,0.15)';
-    msg.style.display = 'block';
-    return;
+    msg.style.color = '#c97850'; msg.style.background = 'rgba(139,26,26,0.15)'; msg.style.display = 'block'; return;
   }
   try {
     const r = await fetch('https://formspree.io/f/mzdornkq', {
@@ -366,16 +357,13 @@ async function enviarTermos() {
     });
     if (r.ok) {
       msg.textContent = '✓ Mensagem enviada! Respondemos em 24h.';
-      msg.style.color = '#99ffbb';
-      msg.style.background = 'rgba(26,92,58,0.15)';
+      msg.style.color = '#99ffbb'; msg.style.background = 'rgba(26,92,58,0.15)'; msg.style.display = 'block';
       ['t-nome','t-email','t-assunto','t-mensagem'].forEach(function(id) { document.getElementById(id).value = ''; });
     } else throw new Error();
   } catch(e) {
-    msg.textContent = 'Erro ao enviar. Tente novamente.';
-    msg.style.color = '#c97850';
-    msg.style.background = 'rgba(139,26,26,0.15)';
+    msg.textContent = 'Erro ao enviar. Escreva para tonybranco@lexveritas.pt';
+    msg.style.color = '#c97850'; msg.style.background = 'rgba(139,26,26,0.15)'; msg.style.display = 'block';
   }
-  msg.style.display = 'block';
 }
 </script>
 </body>
