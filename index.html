@@ -387,17 +387,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
 .footer-legal a { font-family: var(--mono); font-size: 10px; color: rgba(154,154,154,.5); text-decoration: none; transition: color .2s; }
 .footer-legal a:hover { color: var(--grey); }
 
-/* ── COOKIE BANNER ── */
-.cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; z-index: 3000; background: rgba(13,13,18,.97); border-top: 1px solid var(--border); backdrop-filter: blur(20px); padding: clamp(14px,2vw,20px) clamp(20px,4vw,40px); display: flex; align-items: center; gap: 20px; flex-wrap: wrap; transform: translateY(100%); transition: transform .5s cubic-bezier(.16,1,.3,1); }
-.cookie-banner.visible { transform: translateY(0); }
-.cookie-banner-text { flex: 1; min-width: 240px; font-family: var(--sans); font-size: 13px; color: var(--grey); line-height: 1.6; }
-.cookie-banner-text strong { color: var(--white); }
-.cookie-banner-text a { color: var(--gold); text-decoration: none; }
-.cookie-banner-actions { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
-.cookie-btn-r { background: none; border: 1px solid var(--border); color: var(--grey); padding: 10px 18px; font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: all .2s; }
-.cookie-btn-r:hover { border-color: var(--grey); color: var(--white); }
-.cookie-btn-a { background: var(--gold); border: none; color: var(--black); padding: 10px 24px; font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: background .2s; }
-.cookie-btn-a:hover { background: var(--gold-light); }
+/* Sem banner de cookies — apenas cookies essenciais de sessão */
 
 /* ── RESPONSIVE ── */
 @media (max-width: 1023px) {
@@ -411,8 +401,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
   .stats-bar { gap: 20px; }
   .hero-actions { flex-direction: column; width: 100%; }
   .btn-primary, .btn-secondary { width: 100%; justify-content: center; text-align: center; }
-  .cookie-banner-actions { width: 100%; }
-  .cookie-btn-a, .cookie-btn-r { flex: 1; text-align: center; }
+
   .footer-bottom { flex-direction: column; text-align: center; }
   .footer-legal { justify-content: center; }
   .demo-inds { grid-template-columns: 1fr; }
@@ -432,16 +421,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
   <div class="intro-bar-track"><div class="intro-bar-fill"></div></div>
 </div>
 
-<!-- COOKIE BANNER -->
-<div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Aviso de cookies">
-  <div class="cookie-banner-text">
-    <strong>Usamos cookies essenciais</strong> para o funcionamento da plataforma. Consulte a nossa <a href="/privacidade">Política de Privacidade</a>.
-  </div>
-  <div class="cookie-banner-actions">
-    <button class="cookie-btn-r" onclick="rejectCookies()">Só Essenciais</button>
-    <button class="cookie-btn-a" onclick="acceptCookies()">Aceitar Todos</button>
-  </div>
-</div>
+
 
 <!-- NAV -->
 <nav class="site-nav" id="siteNav">
@@ -496,20 +476,14 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
       <a href="#modos" class="btn-secondary">Conhecer as Análises</a>
     </div>
     <div class="stats-bar">
-      <div class="stat-item"><span class="stat-number">20+</span><span class="stat-label">Tribunais Cobertos</span></div>
+      <div class="stat-item"><span class="stat-number">14+</span><span class="stat-label">Tribunais Cobertos</span></div>
       <div class="stat-item"><span class="stat-number">6</span><span class="stat-label">Indicadores Forenses</span></div>
       <div class="stat-item"><span class="stat-number">3</span><span class="stat-label">Modos de Análise</span></div>
       <div class="stat-item"><span class="stat-number">EU</span><span class="stat-label">Dados em Portugal</span></div>
     </div>
   </div>
-<section style="background:#060608;overflow:hidden;text-align:center;">
-  <div style="margin:0 -22%;padding:clamp(56px,6vw,80px) 0;">
-    <video autoplay loop muted playsinline
-      style="width:100%;max-width:1100px;">
-      <source src="assetsdemo-lexveritas.mp4" type="video/mp4">
-    </video>
-  </div>
 </section>
+
 <!-- MODOS DE ANÁLISE -->
 <section id="modos" style="background:var(--black);border-bottom:1px solid var(--border)">
   <div class="container sp" style="padding-top:clamp(56px,7vw,80px);padding-bottom:clamp(56px,7vw,80px)">
@@ -731,6 +705,9 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
           <option>Outro</option>
         </select>
         <textarea id="pf-mensagem" class="pf-textarea" placeholder="Descreva a sua necessidade — número de utilizadores, tipo de análises, frequência, etc."></textarea>
+        <div style="font-family:var(--mono);font-size:9px;color:rgba(154,154,154,0.5);letter-spacing:0.06em;margin-bottom:8px;line-height:1.6">
+          Ao enviar, aceita o tratamento dos seus dados conforme a nossa <a href="/privacidade" style="color:var(--gold);text-decoration:none">Política de Privacidade</a>.
+        </div>
         <button class="pf-btn" id="pfBtn" onclick="enviarProposta()">Enviar Pedido de Proposta →</button>
         <div class="pf-msg" id="pfMsg"></div>
         <div class="pf-note">Sem compromisso · Sem cartão de crédito · Respondemos em 48horas</div>
@@ -810,10 +787,13 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     </nav>
     <div class="footer-divider"></div>
     <div class="footer-bottom">
-      <div class="footer-copy">© 2026 LexVeritas. Todos os direitos reservados. Marca e conteúdos protegidos nos termos do CDADC &amp; CPI.</div>
+      <div class="footer-copy">© 2026 LexVeritas. Todos os direitos reservados. Marca e conteúdos protegidos nos termos do CDADC &amp; CPI.<br>
+        <span style="opacity:0.5;font-size:9px;letter-spacing:0.05em">Este site usa apenas cookies essenciais de sessão (autenticação). Sem rastreamento, sem analytics, sem publicidade.</span>
+      </div>
       <div class="footer-legal">
         <a href="/privacidade">Política de Privacidade</a>
         <a href="/termos">Termos de Uso</a>
+        <a href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener">📋 Livro de Reclamações</a>
         <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a>
       </div>
     </div>
@@ -882,19 +862,7 @@ document.querySelectorAll('.faq-question').forEach(btn => {
   btn.addEventListener('click', () => btn.parentElement.classList.toggle('active'));
 });
 
-function showCookieBanner() {
-  if (!localStorage.getItem('lv_cookie_consent')) {
-    setTimeout(() => document.getElementById('cookieBanner').classList.add('visible'), 800);
-  }
-}
-function acceptCookies() { localStorage.setItem('lv_cookie_consent','all'); hideCookieBanner(); }
-function rejectCookies() { localStorage.setItem('lv_cookie_consent','essential'); hideCookieBanner(); }
-function hideCookieBanner() {
-  const b = document.getElementById('cookieBanner');
-  b.style.transform = 'translateY(100%)';
-  setTimeout(() => b.remove(), 500);
-}
-window.addEventListener('load', showCookieBanner);
+
 
 // ── DEMO ──
 const demoVerdictLabels = {
