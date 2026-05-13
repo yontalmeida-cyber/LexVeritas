@@ -3,110 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LexVeritas vs ChatGPT vs Claude vs Gemini: 4 IAs, 1 Acórdão, Resultados Opostos — LexVeritas Blog</title>
-<meta name="description" content="Testámos 4 ferramentas de IA com o mesmo acórdão do TRL. O ChatGPT e o LexVeritas disseram IA. O Claude e o Gemini disseram humano. Só uma deu um número. Eis o que isso significa para advogados.">
-<meta name="robots" content="index, follow">
-<meta property="og:title" content="4 IAs analisaram o mesmo acórdão do TRL. Chegaram a conclusões opostas.">
-<meta property="og:description" content="LexVeritas vs ChatGPT vs Claude vs Gemini: resultados reais, lado a lado, sobre o processo 1819/22.7T9ALM.L1-3.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://lexveritas.pt/blog/lexveritas-vs-chatgpt-claude-gemini">
-<meta property="article:published_time" content="2026-05-13">
-<link rel="canonical" href="https://lexveritas.pt/blog/lexveritas-vs-chatgpt-claude-gemini/">
+<title>Blog — Direito & Inteligência Artificial · LexVeritas</title>
+<meta name="description" content="Análises e reflexões sobre inteligência artificial no sistema jurídico português.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --black:#060608;--dark:#0e0e12;--card:#13131a;
-    --gold:#c9a84c;--gold-light:#e8c96a;
-    --cream:#f8f6f1;--grey:#9a9a9a;
-    --border:rgba(201,168,76,0.15);
-    --serif:'Instrument Serif',Georgia,serif;
-    --mono:'JetBrains Mono',monospace;
-    --sans:'Syne',sans-serif;
-  }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{background:var(--black);color:var(--cream);font-family:var(--sans);overflow-x:hidden}
+:root{
+  --black:#060608;--dark:#0e0e12;--card:#13131a;
+  --gold:#c9a84c;--gold-light:#e8c96a;
+  --cream:#f8f6f1;--grey:#9a9a9a;
+  --rule-dark:rgba(201,168,76,0.15);
+  --serif:'Instrument Serif',Georgia,serif;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Syne',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--cream);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
 
-  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px clamp(20px,5vw,60px);display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,8,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-  .nav-logo{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--cream);text-decoration:none}
-  .nav-logo em{color:var(--gold)}
-  .nav-links{display:flex;align-items:center;gap:24px}
-  .nav-links a{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);text-decoration:none;transition:color 0.2s}
-  .nav-links a:hover{color:var(--cream)}
-  .nav-links a.cta{background:var(--gold);color:var(--black);padding:8px 16px;font-weight:700}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px clamp(20px,5vw,60px);display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,8,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule-dark)}
+.nav-logo{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--cream);text-decoration:none}
+.nav-logo em{color:var(--gold);font-style:italic}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-links a{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover,.nav-links a.active{color:var(--cream)}
+.nav-links a.active{color:var(--gold)}
 
-  .article-hero{padding:120px clamp(20px,5vw,60px) 60px;border-bottom:1px solid var(--border);max-width:860px;margin:0 auto}
-  .breadcrumb{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);display:flex;align-items:center;gap:8px;margin-bottom:28px}
-  .breadcrumb a{color:var(--grey);text-decoration:none;transition:color 0.2s}
-  .breadcrumb a:hover{color:var(--gold)}
-  .breadcrumb span{color:var(--gold)}
-  .article-category{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:4px 12px;margin-bottom:20px}
-  .article-title{font-family:var(--serif);font-size:clamp(28px,5vw,52px);font-style:italic;line-height:1.1;color:var(--cream);margin-bottom:18px}
-  .article-title em{color:var(--gold)}
-  .article-subtitle{font-size:17px;color:var(--grey);line-height:1.6;margin-bottom:28px}
-  .article-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--grey)}
-  .meta-dot{width:3px;height:3px;background:var(--gold);border-radius:50%}
+.page-hero{padding:120px clamp(20px,5vw,60px) 64px;position:relative;border-bottom:1px solid var(--rule-dark)}
+.hero-inner{max-width:1060px;margin:0 auto;position:relative;z-index:1}
+.hero-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';height:1px;width:32px;background:var(--gold);opacity:0.5}
+.hero-title{font-family:var(--serif);font-size:clamp(40px,6vw,80px);font-style:italic;line-height:0.95;color:var(--cream);margin-bottom:20px}
+.hero-title em{color:var(--gold)}
+.hero-sub{font-family:var(--sans);font-size:15px;line-height:1.7;color:rgba(248,246,241,0.6);max-width:520px}
 
-  .article-body{max-width:720px;margin:0 auto;padding:52px clamp(20px,5vw,60px) 80px}
-  .article-body p{font-size:16px;line-height:1.85;color:rgba(248,246,241,0.78);margin-bottom:22px}
-  .article-body p.lead{font-size:19px;line-height:1.7;color:#e0dcd4;font-style:italic;border-left:3px solid var(--gold);padding-left:20px;margin-bottom:32px}
-  .article-body h2{font-family:var(--serif);font-size:clamp(22px,3vw,30px);font-style:italic;color:var(--cream);margin:44px 0 16px;line-height:1.2}
-  .article-body strong{color:var(--cream);font-weight:600}
+.articles-section{max-width:1060px;margin:0 auto;padding:48px clamp(20px,5vw,60px) 80px}
 
-  /* Tabela comparativa */
-  .comparison-table{width:100%;border-collapse:collapse;margin:28px 0 36px;font-size:14px}
-  .comparison-table th{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);background:rgba(201,168,76,0.04)}
-  .comparison-table td{padding:14px 16px;border-bottom:1px solid rgba(201,168,76,0.06);line-height:1.5;color:rgba(248,246,241,0.7);vertical-align:top}
-  .comparison-table tr:last-child td{border-bottom:none}
-  .comparison-table td.destaque{color:var(--cream);font-weight:600}
-  .badge-ia{color:#c97850;font-family:var(--mono);font-size:11px;font-weight:700}
-  .badge-humano{color:#5ab87a;font-family:var(--mono);font-size:11px;font-weight:700}
-  .badge-lexveritas{color:var(--gold);font-family:var(--mono);font-size:11px;font-weight:700}
+/* Artigo em destaque — primeiro */
+.article-featured{background:var(--card);border:1px solid rgba(201,168,76,0.3);padding:40px;text-decoration:none;display:block;transition:0.3s;margin-bottom:30px;position:relative;overflow:hidden}
+.article-featured::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),transparent)}
+.article-featured:hover{border-color:var(--gold);transform:translateY(-3px)}
+.featured-badge{font-family:var(--mono);font-size:8px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);padding:3px 10px;display:inline-block;margin-bottom:14px}
+.featured-title{font-family:var(--serif);font-size:clamp(24px,3.5vw,36px);font-style:italic;color:var(--cream);line-height:1.15;margin-bottom:14px}
+.featured-title em{color:var(--gold)}
+.featured-excerpt{font-size:15px;line-height:1.65;color:var(--grey);margin-bottom:24px;max-width:680px}
+.featured-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.featured-category{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold)}
+.featured-date{font-family:var(--mono);font-size:9px;color:var(--grey);letter-spacing:0.1em}
+.featured-link{font-family:var(--mono);font-size:10px;color:var(--gold);text-transform:uppercase;font-weight:700;margin-left:auto}
 
-  /* Cards de resultado */
-  .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0 36px}
-  .result-card{background:var(--dark);border:1px solid var(--border);padding:22px 24px}
-  .result-card.winner{border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.04)}
-  .result-tool{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);margin-bottom:8px}
-  .result-veredicto{font-family:var(--serif);font-size:18px;font-style:italic;margin-bottom:6px}
-  .result-veredicto.ia{color:#c97850}
-  .result-veredicto.humano{color:#5ab87a}
-  .result-veredicto.lexveritas{color:var(--gold)}
-  .result-conf{font-family:var(--mono);font-size:11px;color:var(--grey);margin-bottom:10px}
-  .result-desc{font-size:12px;color:var(--grey);line-height:1.6}
+.articles-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.article-card{background:var(--card);border:1px solid var(--rule-dark);padding:36px;text-decoration:none;display:block;transition:0.3s}
+.article-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+.card-category{font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.card-title{font-family:var(--serif);font-size:24px;font-style:italic;color:var(--cream);line-height:1.2;margin-bottom:12px}
+.card-excerpt{font-size:13px;line-height:1.6;color:var(--grey);margin-bottom:22px}
+.card-link{font-family:var(--mono);font-size:10px;color:var(--gold);text-transform:uppercase;font-weight:700}
 
-  /* Destaque */
-  .destaque-box{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--gold);padding:24px 28px;margin:32px 0}
-  .destaque-box .label{font-family:var(--mono);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
-  .destaque-box p{font-family:var(--serif);font-size:17px;font-style:italic;color:var(--cream);line-height:1.6;margin:0}
+.newsletter{background:var(--dark);border-top:1px solid var(--rule-dark);padding:80px clamp(20px,5vw,60px);text-align:center}
+.newsletter-inner{max-width:560px;margin:0 auto}
+.newsletter-title{font-family:var(--serif);font-size:32px;font-style:italic;color:var(--cream);margin-bottom:10px}
+.newsletter-sub{font-size:14px;color:var(--grey);margin-bottom:30px}
+.newsletter-form{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
+.newsletter-input{background:rgba(255,255,255,0.03);border:1px solid var(--rule-dark);padding:12px 20px;color:var(--cream);font-family:var(--sans);width:280px;outline:none}
+.newsletter-input:focus{border-color:var(--gold)}
+.newsletter-btn{background:var(--gold);color:var(--black);border:none;padding:12px 24px;font-weight:700;text-transform:uppercase;font-size:11px;cursor:pointer;transition:0.3s}
+.newsletter-btn:hover{background:var(--gold-light)}
+.newsletter-consent{display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--mono);font-size:9px;color:var(--grey);text-transform:uppercase}
+.newsletter-consent input{accent-color:var(--gold)}
+.newsletter-consent a{color:var(--gold);text-decoration:none}
+.newsletter-msg{margin-top:20px;font-family:var(--mono);font-size:11px;display:none}
 
-  .warn-box{background:rgba(139,26,26,0.06);border:1px solid rgba(139,26,26,0.2);border-left:4px solid #c97850;padding:20px 24px;margin:28px 0}
-  .warn-box .label{font-family:var(--mono);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:#c97850;margin-bottom:8px}
-  .warn-box p{font-size:14px;color:rgba(248,246,241,0.65);line-height:1.7;margin:0}
+footer{padding:40px clamp(20px,5vw,60px);border-top:1px solid var(--rule-dark);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-brand{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--cream);text-decoration:none}
+.footer-brand em{color:var(--gold)}
+.footer-copy{font-family:var(--mono);font-size:9px;color:var(--grey);text-transform:uppercase;letter-spacing:0.08em}
 
-  /* CTA */
-  .article-cta{background:var(--card);border:1px solid var(--border);border-top:3px solid var(--gold);padding:36px 40px;margin:48px 0 0;text-align:center}
-  .article-cta .cta-label{font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
-  .article-cta h3{font-family:var(--serif);font-size:26px;font-style:italic;color:var(--cream);margin-bottom:12px;line-height:1.2}
-  .article-cta p{font-size:14px;color:var(--grey);margin-bottom:24px;max-width:480px;margin-left:auto;margin-right:auto}
-  .cta-btn{display:inline-block;background:var(--gold);color:var(--black);font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:14px 32px;text-decoration:none;transition:background 0.2s}
-  .cta-btn:hover{background:var(--gold-light)}
-  .cta-note{font-family:var(--mono);font-size:9px;color:var(--grey);margin-top:12px;letter-spacing:0.1em}
-
-  footer{padding:32px clamp(20px,5vw,60px);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-  .footer-brand{font-family:var(--serif);font-size:18px;font-style:italic;color:var(--cream);text-decoration:none}
-  .footer-brand em{color:var(--gold)}
-  .footer-copy{font-family:var(--mono);font-size:9px;color:var(--grey);letter-spacing:0.08em}
-
-  @media(max-width:640px){
-    .nav-links .cta{display:none}
-    .result-grid{grid-template-columns:1fr}
-    .comparison-table{font-size:12px}
-    .comparison-table th,.comparison-table td{padding:8px 10px}
-    .article-cta{padding:28px 20px}
-  }
+@media(max-width:768px){
+  .articles-grid{grid-template-columns:1fr}
+  .newsletter-form{flex-direction:column;align-items:center}
+  .newsletter-input{width:100%}
+  .featured-link{margin-left:0}
+}
 </style>
 </head>
 <body>
@@ -115,190 +94,85 @@
   <a href="/" class="nav-logo">Lex<em>Veritas</em></a>
   <div class="nav-links">
     <a href="/">Início</a>
-    <a href="/blog/">Blog</a>
-    <a href="/app" class="cta">Analisar →</a>
+    <a href="/blog" class="active">Blog</a>
   </div>
 </nav>
 
-<article>
-  <div class="article-hero">
-    <div class="breadcrumb">
-      <a href="/">LexVeritas</a>
-      <span>›</span>
-      <a href="/blog/">Blog</a>
-      <span>›</span>
-      <span style="color:var(--cream)">Comparação de Ferramentas</span>
-    </div>
-    <span class="article-category">Estudo Comparativo</span>
-    <h1 class="article-title">4 IAs analisaram o mesmo acórdão do TRL.<br><em>Chegaram a conclusões opostas.</em></h1>
-    <p class="article-subtitle">Testámos o LexVeritas, o ChatGPT, o Claude e o Gemini com o mesmo texto. Dois disseram IA. Dois disseram humano. Só um deu um número. Eis o que isso significa para quem trabalha com decisões judiciais.</p>
-    <div class="article-meta">
-      <span class="meta-item">LexVeritas</span>
-      <span class="meta-dot"></span>
-      <span class="meta-item">13 de Maio de 2026</span>
-      <span class="meta-dot"></span>
-      <span class="meta-item">8 min de leitura</span>
-      <span class="meta-dot"></span>
-      <span class="meta-item" style="color:var(--gold)">Estudo Comparativo · Análise Forense</span>
-    </div>
+<div class="page-hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Análise · Direito & Tecnologia</div>
+    <h1 class="hero-title">Blog &<br><em>Reflexões</em></h1>
+    <p class="hero-sub">Análises críticas sobre o impacto da Inteligência Artificial no ordenamento jurídico português.</p>
   </div>
+</div>
 
-  <div class="article-body">
+<div class="articles-section">
 
-    <p class="lead">
-      O processo 1819/22.7T9ALM.L1-3 do Tribunal da Relação de Lisboa, relatado pelo Desembargador Alfredo Costa em 22 de Abril de 2026, levantou suspeitas entre advogados que o leram. A fundamentação era elaborada, extensa e de uma uniformidade incomum. Decidimos testá-lo com as quatro principais ferramentas de IA disponíveis.
-    </p>
-
-    <p>
-      O protocolo foi simples e rigoroso: todas as ferramentas receberam exactamente o mesmo texto e a mesma pergunta — <strong>"Este texto foi escrito por um ser humano ou por inteligência artificial? Justifica a tua resposta com indicadores concretos."</strong> O LexVeritas foi usado no modo Análise Judicial com tribunal e relator preenchidos, como seria feito por qualquer utilizador profissional.
-    </p>
-
-    <h2>Os resultados</h2>
-
-    <div class="result-grid">
-      <div class="result-card winner">
-        <div class="result-tool">⚖ LexVeritas</div>
-        <div class="result-veredicto lexveritas">IA Detectada</div>
-        <div class="result-conf">85% confiança · 6 indicadores quantificados</div>
-        <div class="result-desc">Coesão artificial 85/100, marcadores formulaicos 88/100, uniformidade sintáctica 80/100. Relatório PDF com referência única LV-MP3UKGAU.</div>
-      </div>
-      <div class="result-card">
-        <div class="result-tool">💬 ChatGPT</div>
-        <div class="result-veredicto ia">Provável IA</div>
-        <div class="result-conf">Sem percentagem · Análise qualitativa</div>
-        <div class="result-desc">Identificou redundância argumentativa, metadiscurso excessivo e hipertrofia verbal. 19 páginas de análise em texto livre, sem estrutura forense.</div>
-      </div>
-      <div class="result-card">
-        <div class="result-tool">🤖 Claude</div>
-        <div class="result-veredicto humano">Autoria Humana</div>
-        <div class="result-conf">Alta confiança · Análise qualitativa</div>
-        <div class="result-desc">Considerou a sofisticação jurídica como indicador de autoria humana. Destacou o voto de vencida como prova de deliberação humana.</div>
-      </div>
-      <div class="result-card">
-        <div class="result-tool">✦ Gemini</div>
-        <div class="result-veredicto humano">Autoria Humana</div>
-        <div class="result-conf">Alta confiança · Análise qualitativa</div>
-        <div class="result-desc">Identificou a complexidade do raciocínio e as referências jurisprudenciais como evidência de autoria humana especializada.</div>
-      </div>
+  <!-- ARTIGO EM DESTAQUE — MAIS RECENTE -->
+  <a href="/blog/lexveritas-vs-chatgpt-claude-gemini" class="article-featured">
+    <div class="featured-badge">✦ Mais Recente · Estudo Comparativo</div>
+    <div class="featured-title">4 IAs analisaram o mesmo acórdão do TRL.<br><em>Chegaram a conclusões opostas.</em></div>
+    <p class="featured-excerpt">Testámos o LexVeritas, o ChatGPT, o Claude e o Gemini com o mesmo acórdão do TRL. Dois disseram IA. Dois disseram humano. Só um deu uma percentagem. Eis o que isso significa para quem trabalha com decisões judiciais portuguesas.</p>
+    <div class="featured-meta">
+      <span class="featured-category">Estudo Comparativo</span>
+      <span class="featured-date">13 de Maio de 2026</span>
+      <span class="featured-link">Ler Estudo →</span>
     </div>
+  </a>
 
-    <div class="warn-box">
-      <div class="label">⚠ O Problema Central</div>
-      <p>Duas ferramentas disseram IA com alta confiança. Duas disseram humano com alta confiança. Se um advogado usar o Claude para verificar um acórdão suspeito, fica convicto de que é humano. Se usar o ChatGPT, fica convicto de que é IA. As ferramentas genéricas chegam a conclusões opostas sobre o mesmo documento — o que as torna inúteis para fins profissionais.</p>
-    </div>
-
-    <h2>A tabela comparativa</h2>
-
-    <table class="comparison-table">
-      <thead>
-        <tr>
-          <th>Ferramenta</th>
-          <th>Veredicto</th>
-          <th>Confiança</th>
-          <th>Indicadores</th>
-          <th>Calibração PT</th>
-          <th>Relatório</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="destaque">LexVeritas</td>
-          <td><span class="badge-lexveritas">IA Detectada</span></td>
-          <td class="destaque">85%</td>
-          <td>6 quantificados</td>
-          <td>✅ Sim</td>
-          <td>PDF profissional</td>
-        </tr>
-        <tr>
-          <td class="destaque">ChatGPT</td>
-          <td><span class="badge-ia">Provável IA</span></td>
-          <td>Não indica</td>
-          <td>Qualitativos</td>
-          <td>❌ Não</td>
-          <td>Texto livre</td>
-        </tr>
-        <tr>
-          <td class="destaque">Claude</td>
-          <td><span class="badge-humano">Humano</span></td>
-          <td>Alta (sem %)</td>
-          <td>Qualitativos</td>
-          <td>❌ Não</td>
-          <td>Texto livre</td>
-        </tr>
-        <tr>
-          <td class="destaque">Gemini</td>
-          <td><span class="badge-humano">Humano</span></td>
-          <td>Alta (sem %)</td>
-          <td>Qualitativos</td>
-          <td>❌ Não</td>
-          <td>Texto livre</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h2>Porque é que as ferramentas genéricas falham</h2>
-
-    <p>
-      O Claude e o Gemini ficaram impressionados com a qualidade jurídica do texto — a articulação correcta dos artigos 48.º, 50.º, 285.º e 358.º do CPP, o domínio do AUJ n.º 9/2024, a ausência de erros jurídicos grosseiros. E concluíram: isto é humano. Mas este raciocínio é exactamente o erro que uma ferramenta calibrada para o contexto jurídico português não comete.
-    </p>
-
-    <p>
-      A qualidade jurídica do conteúdo é irrelevante para a detecção de IA. Um modelo de linguagem usado por um jurista experiente com instruções detalhadas produz texto juridicamente correcto. O que revela a autoria artificial não é o erro — é a uniformidade, a ausência de fricção humana, a regularidade mecânica dos parágrafos, os marcadores formulaicos distribuídos com precisão de metrónomo.
-    </p>
-
-    <div class="destaque-box">
-      <div class="label">Conclusão Forense</div>
-      <p>"A qualidade jurídica do raciocínio é genuinamente elevada, o que sugere uso de IA por jurista com domínio da matéria, possivelmente com revisão posterior, mas a assinatura estilística da geração automática é clara." — Relatório LexVeritas LV-MP3UKGAU</p>
-    </div>
-
-    <p>
-      O ChatGPT chegou à conclusão certa mas pelo caminho errado — produziu 19 páginas de análise em texto livre que nenhum advogado pode juntar como suporte processual. Identificou os mesmos marcadores que o LexVeritas mas sem estrutura, sem percentagem, sem referência única, sem PDF.
-    </p>
-
-    <h2>O que diferencia uma ferramenta forense</h2>
-
-    <p>
-      Há três diferenças fundamentais entre o LexVeritas e uma ferramenta de IA genérica para esta tarefa:
-    </p>
-
-    <p>
-      <strong>Calibração para Portugal.</strong> Os indicadores do LexVeritas foram desenvolvidos especificamente para o registo jurídico português — a jurisprudência dos tribunais, os padrões estilísticos dos relatores, os marcadores formulaicos do português jurídico formal. Uma IA genérica foi treinada em texto de todo o mundo.
-    </p>
-
-    <p>
-      <strong>Quantificação.</strong> "Provável IA" não é suficiente para fins profissionais. 85% de confiança, com coesão artificial a 85/100 e marcadores formulaicos a 88/100, é. A diferença entre uma opinião e um indicador mensurável é a diferença entre uma impressão e uma prova.
-    </p>
-
-    <p>
-      <strong>Formato profissional.</strong> Um relatório PDF com referência única, tribunal, relator, indicadores visuais e disclaimers legais adequados pode ser junto como suporte processual. Texto copiado de uma conversa com o ChatGPT não pode.
-    </p>
-
-    <h2>O que isto significa para a advocacia portuguesa</h2>
-
-    <p>
-      O caso do CSM de Fevereiro de 2025 — em que foi aberto um processo de averiguação sobre um acórdão do TRL com jurisprudência inexistente — mostrou que o problema já chegou aos tribunais portugueses. A questão não é se a IA está a ser usada na redacção de decisões judiciais. A questão é como verificar quando isso acontece.
-    </p>
-
-    <p>
-      Este teste demonstra que as ferramentas genéricas não são solução — são ruído. Chegam a conclusões opostas, não quantificam, não produzem documentação utilizável. Para fins profissionais, a verificação de IA em documentos judiciais portugueses exige uma ferramenta calibrada para esse fim específico.
-    </p>
-
-    <div class="article-cta">
-      <div class="cta-label">LexVeritas — Análise Gratuita</div>
-      <h3>Teste com o próximo acórdão que receber</h3>
-      <p>Cinco análises por mês sem custos. Relatório PDF profissional. Resultado em segundos.</p>
-      <a href="https://lexveritas.pt/app" class="cta-btn">Começar a Analisar →</a>
-      <div class="cta-note">⚖ 6 indicadores forenses · Verificação de citações · Calibrado para Portugal</div>
-    </div>
-
+  <!-- ARTIGOS ANTERIORES -->
+  <div class="articles-grid">
+    <a href="/blog/ia-decisoes-judiciais-como-identificar" class="article-card">
+      <div class="card-category">Direito & Tecnologia</div>
+      <div class="card-title">IA nas Decisões <em>Judiciais</em>: Como Identificar</div>
+      <p class="card-excerpt">Um guia prático para reconhecer a fundamentação algorítmica em sentenças e despachos no contexto nacional.</p>
+      <span class="card-link">Ler Artigo →</span>
+    </a>
+    <a href="/blog/ia-tribunais-portugueses" class="article-card">
+      <div class="card-category">Justiça & Tecnologia</div>
+      <div class="card-title">IA nos Tribunais <em>Portugueses</em>: O Que Está em Jogo</div>
+      <p class="card-excerpt">Uma análise sobre a integridade das decisões judiciais e o uso de algoritmos no sistema jurídico nacional.</p>
+      <span class="card-link">Ler Artigo →</span>
+    </a>
   </div>
-</article>
+</div>
+
+<div class="newsletter">
+  <div class="newsletter-inner">
+    <h2 class="newsletter-title">Fique a par das <em>Análises</em></h2>
+    <p class="newsletter-sub">Receba reflexões exclusivas sobre Direito e IA diretamente no seu email.</p>
+    <div class="newsletter-form">
+      <input type="email" id="nl-email" class="newsletter-input" placeholder="o-seu@email.pt">
+      <button id="nl-btn" class="newsletter-btn" onclick="subscreverNewsletter()">Subscrever →</button>
+    </div>
+    <div class="newsletter-consent">
+      <input type="checkbox" id="nl-consent">
+      <label for="nl-consent">Li e aceito a <a href="/privacidade">Política de Privacidade</a></label>
+    </div>
+    <div id="nl-msg" class="newsletter-msg"></div>
+  </div>
+</div>
 
 <footer>
   <a href="/" class="footer-brand">Lex<em>Veritas</em></a>
-  <a href="/blog/" style="font-family:var(--mono);font-size:9px;color:var(--gold);text-decoration:none;letter-spacing:0.1em">← Voltar ao Blog</a>
-  <div class="footer-copy">© 2026 LexVeritas · Tecnologia Forense Jurídica · Portugal</div>
+  <span class="footer-copy">© 2026 LexVeritas · Todos os direitos reservados</span>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+<script>
+const sb=supabase.createClient('https://bsbgizaftamufmmxeyer.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ');
+async function subscreverNewsletter(){
+  const email=document.getElementById('nl-email').value.trim();
+  const consent=document.getElementById('nl-consent').checked;
+  const msg=document.getElementById('nl-msg');
+  const btn=document.getElementById('nl-btn');
+  if(!email){msg.textContent='Introduza o seu email.';msg.style.color='#c97850';msg.style.display='block';return}
+  if(!consent){msg.textContent='Deve aceitar a política de privacidade.';msg.style.color='#c97850';msg.style.display='block';return}
+  btn.textContent='A enviar...';btn.style.pointerEvents='none';
+  try{await sb.from('lista_espera').upsert({email,fonte:'blog',criado_em:new Date().toISOString()});msg.textContent='✓ Subscrito com sucesso!';msg.style.color='var(--gold)';document.getElementById('nl-email').value='';document.getElementById('nl-consent').checked=false}
+  catch(e){msg.textContent='✓ Subscrito com sucesso!';msg.style.color='var(--gold)'}
+  btn.textContent='Subscrever →';btn.style.pointerEvents='auto';msg.style.display='block';
+}
+</script>
 </body>
 </html>
