@@ -29,7 +29,6 @@
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{background:var(--black);color:var(--cream);font-family:var(--sans);overflow-x:hidden}
-
   nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px clamp(20px,5vw,60px);display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,8,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
   .nav-logo{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--cream);text-decoration:none}
   .nav-logo em{color:var(--gold)}
@@ -37,7 +36,6 @@
   .nav-links a{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);text-decoration:none;transition:color 0.2s}
   .nav-links a:hover{color:var(--cream)}
   .nav-links a.cta{background:var(--gold);color:var(--black);padding:8px 16px;font-weight:700}
-
   .article-hero{padding:120px clamp(20px,5vw,60px) 60px;border-bottom:1px solid var(--border);max-width:860px;margin:0 auto}
   .breadcrumb{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);display:flex;align-items:center;gap:8px;margin-bottom:28px}
   .breadcrumb a{color:var(--grey);text-decoration:none;transition:color 0.2s}
@@ -49,45 +47,41 @@
   .article-subtitle{font-size:17px;color:var(--grey);line-height:1.6;margin-bottom:28px}
   .article-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--grey)}
   .meta-dot{width:3px;height:3px;background:var(--gold);border-radius:50%}
-
   .article-body{max-width:720px;margin:0 auto;padding:52px clamp(20px,5vw,60px) 80px}
   .article-body p{font-size:16px;line-height:1.85;color:rgba(248,246,241,0.78);margin-bottom:22px}
   .article-body p.lead{font-size:19px;line-height:1.7;color:#e0dcd4;font-style:italic;border-left:3px solid var(--gold);padding-left:20px;margin-bottom:32px}
   .article-body h2{font-family:var(--serif);font-size:clamp(22px,3vw,30px);font-style:italic;color:var(--cream);margin:44px 0 16px;line-height:1.2}
   .article-body strong{color:var(--cream);font-weight:600}
-
-  /* Tabela de indicadores */
   .indicators-table{width:100%;border-collapse:collapse;margin:28px 0 36px;font-size:14px}
   .indicators-table th{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);background:rgba(201,168,76,0.04)}
   .indicators-table td{padding:14px 16px;border-bottom:1px solid rgba(201,168,76,0.06);line-height:1.5;color:rgba(248,246,241,0.7);vertical-align:top}
   .indicators-table tr:last-child td{border-bottom:none}
   .indicators-table td.val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--cream)}
   .indicators-table td.interp{font-size:12px;color:var(--grey)}
-
-  /* Veredicto destaque */
   .veredicto-box{background:rgba(26,92,58,0.08);border:1px solid rgba(90,184,122,0.25);border-left:4px solid #5ab87a;padding:28px 32px;margin:32px 0;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
   .veredicto-label{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#5ab87a;margin-bottom:6px}
   .veredicto-titulo{font-family:var(--serif);font-size:28px;font-style:italic;color:var(--cream);line-height:1.1}
   .veredicto-pct{font-family:var(--serif);font-size:52px;font-style:italic;color:#5ab87a;line-height:1;flex-shrink:0}
   .veredicto-sub{font-family:var(--mono);font-size:10px;color:var(--grey);margin-top:4px}
-
-  /* Citação do acórdão */
   .acordao-quote{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--gold);padding:24px 28px;margin:32px 0}
   .acordao-quote .label{font-family:var(--mono);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
   .acordao-quote blockquote{font-family:var(--serif);font-size:16px;font-style:italic;color:var(--cream);line-height:1.75;margin:0}
-
-  /* Destaque */
   .destaque-box{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--gold);padding:24px 28px;margin:32px 0}
   .destaque-box .label{font-family:var(--mono);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
   .destaque-box p{font-family:var(--serif);font-size:17px;font-style:italic;color:var(--cream);line-height:1.6;margin:0}
-
-  /* Ref LexVeritas */
+  .citacao-box{background:rgba(201,120,80,0.05);border:1px solid rgba(201,120,80,0.2);border-left:4px solid #c97850;padding:24px 28px;margin:32px 0}
+  .citacao-box .label{font-family:var(--mono);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:#c97850;margin-bottom:14px}
+  .citacao-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(201,120,80,0.1)}
+  .citacao-row:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+  .citacao-badge{font-family:var(--mono);font-size:9px;font-weight:700;padding:3px 8px;border:1px solid;flex-shrink:0;margin-top:2px}
+  .citacao-badge.suspeita{color:#c97850;border-color:#c97850;background:rgba(201,120,80,0.08)}
+  .citacao-badge.ok{color:#5ab87a;border-color:#5ab87a;background:rgba(90,184,122,0.06)}
+  .citacao-nome{font-family:var(--mono);font-size:12px;color:var(--cream);font-weight:700;margin-bottom:4px}
+  .citacao-desc{font-size:13px;color:var(--grey);line-height:1.6}
   .ref-box{background:rgba(201,168,76,0.04);border:1px solid var(--border);padding:16px 20px;margin:28px 0;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
   .ref-box .ref-label{font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey)}
   .ref-box .ref-val{font-family:var(--mono);font-size:11px;color:var(--gold);font-weight:700}
   .ref-box .ref-verdict{font-family:var(--mono);font-size:10px;color:#5ab87a}
-
-  /* CTA */
   .article-cta{background:var(--card);border:1px solid var(--border);border-top:3px solid var(--gold);padding:36px 40px;margin:48px 0 0;text-align:center}
   .article-cta .cta-label{font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
   .article-cta h3{font-family:var(--serif);font-size:26px;font-style:italic;color:var(--cream);margin-bottom:12px;line-height:1.2}
@@ -95,17 +89,16 @@
   .cta-btn{display:inline-block;background:var(--gold);color:var(--black);font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:14px 32px;text-decoration:none;transition:background 0.2s}
   .cta-btn:hover{background:var(--gold-light)}
   .cta-note{font-family:var(--mono);font-size:9px;color:var(--grey);margin-top:12px;letter-spacing:0.1em}
-
   footer{padding:32px clamp(20px,5vw,60px);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
   .footer-brand{font-family:var(--serif);font-size:18px;font-style:italic;color:var(--cream);text-decoration:none}
   .footer-brand em{color:var(--gold)}
   .footer-copy{font-family:var(--mono);font-size:9px;color:var(--grey);letter-spacing:0.08em}
-
   @media(max-width:640px){
     .nav-links .cta{display:none}
     .veredicto-box{flex-direction:column;gap:12px}
     .article-cta{padding:28px 20px}
     .indicators-table th,.indicators-table td{padding:8px 10px;font-size:12px}
+    .citacao-row{flex-direction:column;gap:8px}
   }
 </style>
 </head>
@@ -137,7 +130,7 @@
       <span class="meta-dot"></span>
       <span>13 de Maio de 2026</span>
       <span class="meta-dot"></span>
-      <span>6 min de leitura</span>
+      <span>8 min de leitura</span>
       <span class="meta-dot"></span>
       <span style="color:var(--gold)">Caso Real · TRG · Detecção de IA</span>
     </div>
@@ -181,43 +174,15 @@
 
     <table class="indicators-table">
       <thead>
-        <tr>
-          <th>Indicador</th>
-          <th>Valor</th>
-          <th>Interpretação</th>
-        </tr>
+        <tr><th>Indicador</th><th>Valor</th><th>Interpretação</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Perplexidade</td>
-          <td class="val">30/100</td>
-          <td class="interp">Baixa — texto com variação natural, imprevisível</td>
-        </tr>
-        <tr>
-          <td>Burstiness</td>
-          <td class="val">75/100</td>
-          <td class="interp">Alta — alternância marcada entre frases longas e curtas</td>
-        </tr>
-        <tr>
-          <td>Coesão Artificial</td>
-          <td class="val">20/100</td>
-          <td class="interp">Muito baixa — sem a linearidade mecânica da IA</td>
-        </tr>
-        <tr>
-          <td>Uniformidade Sintáctica</td>
-          <td class="val">25/100</td>
-          <td class="interp">Muito baixa — estrutura frásica diversificada</td>
-        </tr>
-        <tr>
-          <td>Riqueza Lexical</td>
-          <td class="val">80/100</td>
-          <td class="interp">Alta — vocabulário denso e contextualizado</td>
-        </tr>
-        <tr>
-          <td>Marcadores Formulaicos</td>
-          <td class="val">30/100</td>
-          <td class="interp">Baixos — sem as transições-padrão da geração automática</td>
-        </tr>
+        <tr><td>Perplexidade</td><td class="val">30/100</td><td class="interp">Baixa — texto com variação natural, imprevisível</td></tr>
+        <tr><td>Burstiness</td><td class="val">75/100</td><td class="interp">Alta — alternância marcada entre frases longas e curtas</td></tr>
+        <tr><td>Coesão Artificial</td><td class="val">20/100</td><td class="interp">Muito baixa — sem a linearidade mecânica da IA</td></tr>
+        <tr><td>Uniformidade Sintáctica</td><td class="val">25/100</td><td class="interp">Muito baixa — estrutura frásica diversificada</td></tr>
+        <tr><td>Riqueza Lexical</td><td class="val">80/100</td><td class="interp">Alta — vocabulário denso e contextualizado</td></tr>
+        <tr><td>Marcadores Formulaicos</td><td class="val">30/100</td><td class="interp">Baixos — sem as transições-padrão da geração automática</td></tr>
       </tbody>
     </table>
 
@@ -243,6 +208,43 @@
     <p>
       Do lado do tribunal: uma magistrada com décadas de experiência que reconheceu imediatamente o padrão, o nomeou com precisão técnica e actuou em conformidade. O LexVeritas confirmou o que o acórdão já afirmava: a fundamentação da decisão foi escrita por uma mente humana.
     </p>
+
+    <h2>O verificador de citações em acção</h2>
+
+    <p>
+      O acórdão da relatora menciona ainda um segundo tipo de problema: dois acórdãos do Tribunal Constitucional que <strong>existem</strong> — mas cujo conteúdo o advogado atribuiu de forma completamente errada. O acórdão n.º 85/2010 é sobre direito fiscal. O n.º 262/12 versa direito laboral. Nenhum tem qualquer relação com o regime jurídico das armas invocado no recurso.
+    </p>
+
+    <p>
+      Submetemos estas citações ao verificador de citações do LexVeritas. O sistema detectou imediatamente uma anomalia formal:
+    </p>
+
+    <div class="citacao-box">
+      <div class="label">⚠ Citações com Indícios de Fabricação · LexVeritas</div>
+      <div class="citacao-row">
+        <div class="citacao-badge suspeita">! Suspeita</div>
+        <div>
+          <div class="citacao-nome">"Acórdão do Tribunal Constitucional n.º 262/12"</div>
+          <div class="citacao-desc">Formato do número de acórdão do Tribunal Constitucional manifestamente irregular: a notação correcta seria <strong style="color:var(--cream)">'n.º 262/2012'</strong> (ano com quatro dígitos). A abreviatura '262/12' não corresponde ao formato canónico dos acórdãos do TC, podendo indicar geração automática com truncagem do ano.</div>
+        </div>
+      </div>
+      <div class="citacao-row">
+        <div class="citacao-badge ok">✓ OK</div>
+        <div>
+          <div class="citacao-nome">"Acórdão do Tribunal Constitucional n.º 85/2010"</div>
+          <div class="citacao-desc">Formato válido. O acórdão existe — mas o seu conteúdo (direito fiscal) não tem qualquer relação com a matéria invocada pelo recorrente.</div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      O resultado global foi "Análise Inconclusiva" a 45% — o que é correcto e esperado: o fragmento submetido era demasiado curto para uma análise linguística robusta. O sistema foi honesto sobre as suas limitações em vez de produzir uma conclusão sem fundamento. Mas a anomalia de formato foi detectada com precisão: a truncagem do ano em "262/12" em vez de "262/2012" é exactamente o tipo de erro que os modelos de linguagem cometem quando geram referências jurisprudenciais de forma automática.
+    </p>
+
+    <div class="destaque-box">
+      <div class="label">O que isto demonstra</div>
+      <p>O LexVeritas não precisa de um texto longo para detectar indícios de fabricação. Um formato irregular numa referência jurisprudencial é suficiente para levantar a suspeita — e é precisamente este tipo de sinal que passa despercebido numa leitura humana apressada.</p>
+    </div>
 
     <h2>Porque é que isto importa para a advocacia portuguesa</h2>
 
