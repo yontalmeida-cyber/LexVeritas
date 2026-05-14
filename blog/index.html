@@ -40,16 +40,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px clamp(20px,5vw,
 
 .articles-section{max-width:1060px;margin:0 auto;padding:48px clamp(20px,5vw,60px) 80px}
 
-/* Artigo em destaque — primeiro */
-.article-featured{background:var(--card);border:1px solid rgba(201,168,76,0.3);padding:40px;text-decoration:none;display:block;transition:0.3s;margin-bottom:30px;position:relative;overflow:hidden}
-.article-featured::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),transparent)}
-.article-featured:hover{border-color:var(--gold);transform:translateY(-3px)}
-.featured-badge{font-family:var(--mono);font-size:8px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);padding:3px 10px;display:inline-block;margin-bottom:14px}
+.article-featured{background:var(--card);border:1px solid rgba(139,26,26,0.4);padding:40px;text-decoration:none;display:block;transition:0.3s;margin-bottom:30px;position:relative;overflow:hidden}
+.article-featured::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#8b1a1a,transparent)}
+.article-featured:hover{border-color:#c97850;transform:translateY(-3px)}
+.featured-badge{font-family:var(--mono);font-size:8px;letter-spacing:0.25em;text-transform:uppercase;color:#c97850;background:rgba(139,26,26,0.1);border:1px solid rgba(139,26,26,0.3);padding:3px 10px;display:inline-block;margin-bottom:14px}
 .featured-title{font-family:var(--serif);font-size:clamp(24px,3.5vw,36px);font-style:italic;color:var(--cream);line-height:1.15;margin-bottom:14px}
 .featured-title em{color:var(--gold)}
 .featured-excerpt{font-size:15px;line-height:1.65;color:var(--grey);margin-bottom:24px;max-width:680px}
 .featured-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.featured-category{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold)}
+.featured-category{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#c97850}
 .featured-date{font-family:var(--mono);font-size:9px;color:var(--grey);letter-spacing:0.1em}
 .featured-link{font-family:var(--mono);font-size:10px;color:var(--gold);text-transform:uppercase;font-weight:700;margin-left:auto}
 
@@ -109,19 +108,25 @@ footer{padding:40px clamp(20px,5vw,60px);border-top:1px solid var(--rule-dark);d
 <div class="articles-section">
 
   <!-- ARTIGO EM DESTAQUE — MAIS RECENTE -->
-  <a href="/blog/trg-alucinacao-ia" class="article-featured">
-    <div class="featured-badge">✦ Mais Recente · Caso Real</div>
-    <div class="featured-title">O TRG detectou alucinações de IA.<br><em>O LexVeritas confirmou que o juiz é humano.</em></div>
-    <p class="featured-excerpt">O Tribunal da Relação de Guimarães confrontou-se com seis acórdãos fabricados por inteligência artificial numa peça processual. Analisámos o acórdão da relatora com o LexVeritas: autoria humana confirmada a 85%. Um caso que ilustra exactamente o problema que a plataforma foi criada para resolver.</p>
+  <a href="/blog/prompt-injection-sentenca" class="article-featured">
+    <div class="featured-badge">🚨 Urgente · Primeira Sentença Mundial</div>
+    <div class="featured-title">Prompt Injection nos tribunais:<br><em>já não é teoria — é sentença</em></div>
+    <p class="featured-excerpt">Em 12 de maio de 2026, um juiz brasileiro condenou duas advogadas em R$ 84.250 por inserir instruções ocultas numa petição trabalhista para manipular o sistema de IA do tribunal. É o primeiro caso documentado no mundo com sentença proferida. O LexVeritas detecta exactamente este tipo de ataque.</p>
     <div class="featured-meta">
-      <span class="featured-category">Caso Real · Análise Forense</span>
-      <span class="featured-date">13 de Maio de 2026</span>
+      <span class="featured-category">🛡 Prompt Injection · Sentença Real</span>
+      <span class="featured-date">14 de Maio de 2026</span>
       <span class="featured-link">Ler Análise →</span>
     </div>
   </a>
 
   <!-- ARTIGOS ANTERIORES -->
   <div class="articles-grid">
+    <a href="/blog/trg-alucinacao-ia" class="article-card">
+      <div class="card-category">Caso Real · Análise Forense</div>
+      <div class="card-title">O TRG detectou alucinações de IA.<br><em>O LexVeritas confirmou que o juiz é humano.</em></div>
+      <p class="card-excerpt">O Tribunal da Relação de Guimarães confrontou-se com seis acórdãos fabricados por inteligência artificial. Analisámos o acórdão com o LexVeritas: autoria humana confirmada a 85%.</p>
+      <span class="card-link">Ler Análise →</span>
+    </a>
     <a href="/blog/lexveritas-vs-chatgpt-claude-gemini" class="article-card">
       <div class="card-category">Estudo Comparativo</div>
       <div class="card-title">4 IAs analisaram o mesmo acórdão do TRL.<br><em>Chegaram a conclusões opostas.</em></div>
