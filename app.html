@@ -695,6 +695,11 @@
             <strong style="display:block;font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:#8b1a1a;margin-bottom:4px">🛡 Detector de Prompt Injection</strong>
             <p style="font-family:var(--sans);font-size:11px;color:#666;line-height:1.6">Analisa documentos jurídicos em busca de instruções ocultas para manipular sistemas de IA. Detecta caracteres invisíveis, padrões linguísticos suspeitos e anomalias estruturais.</p>
           </div>
+          <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);padding:10px 12px;margin-bottom:8px;font-family:var(--sans);font-size:11px;color:#6b5a1e;line-height:1.6">
+            <strong style="display:block;font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:#8b6914;margin-bottom:4px">⚙ Modo de Análise</strong>
+            <strong>PDF carregado:</strong> análise dos bytes brutos — detecta Unicode invisível mesmo que oculto em camadas não visíveis do ficheiro.<br>
+            <strong>Texto colado:</strong> análise directa dos caracteres — fiável para texto copiado de fontes digitais.
+          </div>
           <div class="info-box warn" style="margin:0;font-size:11px"><strong>Baseado em</strong>Artigo Dierle Nunes (ConJur, Jul 2025) sobre manipulação de IA em sistemas judiciais via prompt injection oculta.</div>
         </div>
       </div>
@@ -869,7 +874,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null, userProfile = null, lastRef = null;
-let pdfText = null, modoActual = 'judicial', loginInProgress = false;
+let pdfText = null, pdfFileObj = null, modoActual = 'judicial', loginInProgress = false;
 
 function getLastResult() {
   try { const s = sessionStorage.getItem('lv_last_result'); return s ? JSON.parse(s) : null; } catch { return null; }
@@ -1162,7 +1167,7 @@ dropZone.addEventListener('click', () => { if (!pdfText) document.getElementById
 dropZone.addEventListener('dragover', e => { e.preventDefault(); if (!pdfText) dropZone.style.borderColor = 'var(--gold)'; });
 dropZone.addEventListener('dragleave', () => { if (!pdfText) dropZone.style.borderColor = ''; });
 dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.style.borderColor = ''; const f = e.dataTransfer.files[0]; if (f && !pdfText) handleFile({ target: { files: [f] } }); });
-function handleFile(e) { const file = e.target.files[0]; if (!file) return; if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) extractPDF(file); else readTxt(file); }
+function handleFile(e) { const file = e.target.files[0]; if (!file) return; if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) { pdfFileObj = file; extractPDF(file); } else { pdfFileObj = null; readTxt(file); } }
 function readTxt(file) { const reader = new FileReader(); reader.onload = ev => { pdfText = ev.target.result; actualizarContador(); dropZone.classList.add('has-file'); document.getElementById('drop-zone-text').innerHTML = `✅ <strong>${file.name}</strong> carregado<br><span style="font-size:11px;color:#888">${pdfText.length.toLocaleString('pt-PT')} caracteres</span> &nbsp;<span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover</span>`; }; reader.readAsText(file); }
 async function extractPDF(file) {
   setDropText('⏳ A extrair texto do PDF...');
@@ -1179,7 +1184,7 @@ async function extractPDF(file) {
     document.getElementById('drop-zone-text').innerHTML = `✅ <strong>${file.name}</strong><br><span style="font-size:11px;color:#888">${pdf.numPages} páginas · ${txt.length.toLocaleString('pt-PT')} caracteres extraídos</span>${avisoLongo}<br><span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover ficheiro</span>`;
   } catch (err) { setDropText('❌ Erro ao ler o PDF. Tente copiar o texto manualmente.'); }
 }
-function limparPDF() { pdfText = null; document.getElementById('file-input').value = ''; dropZone.classList.remove('has-file'); dropZone.style.borderColor = ''; setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui'); actualizarContador(); }
+function limparPDF() { pdfText = null; pdfFileObj = null; document.getElementById('file-input').value = ''; dropZone.classList.remove('has-file'); dropZone.style.borderColor = ''; setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui'); actualizarContador(); }
 function limparDropZone() { document.getElementById('file-input').value = ''; dropZone.classList.remove('has-file'); dropZone.style.borderColor = ''; setDropText('📎 Carregue um ficheiro .pdf ou .txt — ou arraste aqui'); }
 function setDropText(t) { document.getElementById('drop-zone-text').innerHTML = t; }
 
@@ -1249,13 +1254,30 @@ async function analyzeDecision() {
 
     // ── MODO INJECTION — endpoint próprio ──
     if (modoActual === 'injection') {
-      const resp = await fetch('/api/detetar-injection', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
-        body: JSON.stringify({ texto: text })
-      });
-      if (!resp.ok) { const err = await resp.json().catch(() => ({})); throw new Error(err.erro || 'Erro do servidor.'); }
-      const result = await resp.json();
+      let result;
+
+      if (pdfFileObj) {
+        // PDF carregado: enviar bytes brutos para preservar Unicode invisível
+        const ab = await pdfFileObj.arrayBuffer();
+        const base64 = btoa(String.fromCharCode(...new Uint8Array(ab)));
+        const resp = await fetch('/api/detetar-injection-pdf', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+          body: JSON.stringify({ pdfBase64: base64, nomeFile: pdfFileObj.name })
+        });
+        if (!resp.ok) { const err = await resp.json().catch(() => ({})); throw new Error(err.erro || 'Erro do servidor.'); }
+        result = await resp.json();
+      } else {
+        // Texto colado: endpoint de texto (preserva Unicode do clipboard)
+        const resp = await fetch('/api/detetar-injection', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+          body: JSON.stringify({ texto: text })
+        });
+        if (!resp.ok) { const err = await resp.json().catch(() => ({})); throw new Error(err.erro || 'Erro do servidor.'); }
+        result = await resp.json();
+      }
+
       hideOverlay(result);
       renderResultsInjection(result);
       if (window.innerWidth <= 760) setTimeout(() => { const el = document.getElementById('results-area'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 900);
