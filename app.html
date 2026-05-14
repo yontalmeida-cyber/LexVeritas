@@ -84,6 +84,7 @@
   .mode-btn:hover { border-color: rgba(201,168,76,0.4); color: #f8f6f1; }
   .mode-btn.active { background: rgba(201,168,76,0.12); border-color: var(--gold); color: var(--gold); }
   .mode-btn.critica.active { background: rgba(139,26,26,0.1); border-color: #c97850; color: #c97850; }
+  .mode-btn.injection.active { background: rgba(139,26,26,0.1); border-color: #8b1a1a; color: #8b1a1a; }
 
   main { max-width: 1060px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: start; }
   .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
@@ -99,6 +100,7 @@
   .btn-analyze { background: var(--ink); color: var(--cream); border: none; padding: 11px 28px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 8px; }
   .btn-analyze:hover { background: var(--gold); }
   .btn-analyze.critica-mode:hover { background: #c97850; }
+  .btn-analyze.injection-mode:hover { background: #8b1a1a; }
   .btn-analyze:disabled { opacity: 0.5; cursor: not-allowed; }
   .loading-bar { height: 3px; background: var(--rule); overflow: hidden; display: none; }
   .loading-bar.active { display: block; }
@@ -471,7 +473,7 @@
     <a onclick="showTab('analise')" id="tab-analise" class="active">⚖ Análise</a>
     <a onclick="showTab('historico')" id="tab-historico">📋 Histórico</a>
     <a onclick="showTab('perfil')" id="tab-perfil">👤 Perfil</a>
-</nav>
+  </nav>
 </header>
 
 <div class="usage-bar-container">
@@ -486,6 +488,7 @@
   <button class="mode-btn active" id="mode-btn-judicial" onclick="setModo('judicial')">⚖ Análise Judicial</button>
   <button class="mode-btn critica" id="mode-btn-critica" onclick="setModo('critica')">🏛 Análise Crítica</button>
   <button class="mode-btn" id="mode-btn-academico" onclick="setModo('academico')">🎓 Análise Académica</button>
+  <button class="mode-btn injection" id="mode-btn-injection" onclick="setModo('injection')">🛡 Injeção de Prompts</button>
 </div>
 
 <!-- TAB ANÁLISE -->
@@ -519,7 +522,7 @@
     <div class="results-area" id="results-area">
       <div class="section-label" style="margin-top:28px">Resultado da Análise</div>
 
-      <!-- RESULTADOS JUDICIAL / ACADÉMICO -->
+      <!-- RESULTADOS JUDICIAL / ACADÉMICO / INJECTION -->
       <div id="results-standard">
         <div class="verdict-banner" id="verdict-banner">
           <div class="verdict-label">Veredicto Forense</div>
@@ -527,7 +530,7 @@
           <div class="verdict-subtitle" id="verdict-subtitle">—</div>
         </div>
         <div class="confidence-block">
-          <div class="confidence-label"><span>Índice de Confiança na Detecção</span><span class="confidence-value" id="confidence-value">—%</span></div>
+          <div class="confidence-label"><span id="confidence-label-text">Índice de Confiança na Detecção</span><span class="confidence-value" id="confidence-value">—%</span></div>
           <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
         </div>
         <div class="humanizador-banner" id="humanizador-banner" style="display:none">
@@ -538,16 +541,14 @@
           </div>
         </div>
         <div class="indicators-grid" id="indicators-grid"></div>
-        <div class="analysis-card"><h3>Fundamentação da Análise</h3><p id="analysis-narrative">—</p></div>
+        <div class="analysis-card" id="narrative-card"><h3 id="narrative-card-title">Fundamentação da Análise</h3><p id="analysis-narrative">—</p></div>
         <div class="analysis-card" id="relator-card" style="display:none;border-left:3px solid var(--gold)">
           <h3 id="relator-card-title">Análise do Estilo do Relator</h3><p id="relator-analise-text">—</p>
         </div>
 
-        <!-- ── PATCH 1: citações + botão verificar ── -->
         <div class="analysis-card" id="citacoes-card" style="display:none;border-left:3px solid #c97850">
           <h3>⚠ Citações com Indícios de Fabricação</h3>
           <div id="citacoes-list"></div>
-          <!-- BOTÃO VERIFICAR CITAÇÕES -->
           <div id="verificar-btn-container" style="display:none;margin-top:14px">
             <button class="verificar-btn" id="btn-verificar-citacoes" onclick="verificarCitacoes()">
               🔍 Verificar Citações nas Fontes Oficiais
@@ -560,7 +561,7 @@
           <div id="verificacao-resultados" style="display:none;margin-top:14px"></div>
         </div>
 
-        <div class="analysis-card"><h3>Marcadores Identificados</h3><ul class="evidence-list" id="evidence-list"></ul></div>
+        <div class="analysis-card" id="evidence-card"><h3>Marcadores Identificados</h3><ul class="evidence-list" id="evidence-list"></ul></div>
       </div>
 
       <!-- RESULTADOS CRÍTICA -->
@@ -581,7 +582,6 @@
           <h3>Recomendação Estratégica</h3><p id="critica-conclusao">—</p>
         </div>
 
-        <!-- BLOCO GERAR MINUTA -->
         <div id="minuta-btn-container" style="display:none;margin-bottom:16px">
           <div style="background:#f8f5ff;border:1px solid rgba(107,46,168,0.2);border-left:3px solid #6b2ea8;padding:20px 22px">
             <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#6b2ea8;margin-bottom:8px">📄 Proposta de Peça de Recurso</div>
@@ -603,7 +603,6 @@
           </div>
         </div>
 
-        <!-- MINUTA GERADA -->
         <div id="minuta-container" style="display:none">
           <div class="minuta-card">
             <div class="minuta-header">
@@ -689,6 +688,14 @@
             <option>Autor / Demandante</option><option>Réu / Demandado</option><option>Arguido</option><option>Ministério Público</option><option>Assistente</option><option>Interveniente</option>
           </select>
           <div class="info-box warn" style="margin:0;font-size:11px"><strong>Aviso Legal</strong>Esta análise é um apoio técnico. Não substitui consulta jurídica profissional.</div>
+        </div>
+        <!-- INJECTION -->
+        <div id="ctx-injection" style="display:none">
+          <div style="background:rgba(139,26,26,0.06);border:1px solid rgba(139,26,26,0.15);padding:12px 14px;margin-bottom:10px">
+            <strong style="display:block;font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:#8b1a1a;margin-bottom:4px">🛡 Detector de Prompt Injection</strong>
+            <p style="font-family:var(--sans);font-size:11px;color:#666;line-height:1.6">Analisa documentos jurídicos em busca de instruções ocultas para manipular sistemas de IA. Detecta caracteres invisíveis, padrões linguísticos suspeitos e anomalias estruturais.</p>
+          </div>
+          <div class="info-box warn" style="margin:0;font-size:11px"><strong>Baseado em</strong>Artigo Dierle Nunes (ConJur, Jul 2025) sobre manipulação de IA em sistemas judiciais via prompt injection oculta.</div>
         </div>
       </div>
     </div>
@@ -880,25 +887,46 @@ const lvLoad = document.getElementById('lv-loading');
 
 function setModo(modo) {
   modoActual = modo;
-  ['judicial','academico','critica'].forEach(m => {
-    document.getElementById('mode-btn-' + m).classList.toggle('active', m === modo);
-    document.getElementById('ctx-' + m).style.display = m === modo ? 'block' : 'none';
+  ['judicial','academico','critica','injection'].forEach(m => {
+    const btn = document.getElementById('mode-btn-' + m);
+    if (btn) btn.classList.toggle('active', m === modo);
+    const ctx = document.getElementById('ctx-' + m);
+    if (ctx) ctx.style.display = m === modo ? 'block' : 'none';
   });
-  document.getElementById('ref-legais-widget').classList.toggle('hidden', modo === 'critica');
+  document.getElementById('ref-legais-widget').classList.toggle('hidden', modo === 'critica' || modo === 'injection');
   document.getElementById('ref-critica-widget').classList.toggle('hidden', modo !== 'critica');
-  const titles = { judicial: 'Texto do Acórdão / Sentença / Peça Processual', academico: 'Tese / Dissertação / Trabalho Académico', critica: 'Texto da Decisão Judicial a Atacar' };
+
+  const titles = {
+    judicial: 'Texto do Acórdão / Sentença / Peça Processual',
+    academico: 'Tese / Dissertação / Trabalho Académico',
+    critica: 'Texto da Decisão Judicial a Atacar',
+    injection: 'Documento a Verificar — Prompt Injection'
+  };
   const placeholders = {
     judicial: 'Cole aqui o texto completo do documento jurídico para análise forense...\n\nDecisões judiciais: acórdãos, sentenças, despachos\nPeças processuais: petições, contestações, recursos, alegações\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.',
     academico: 'Cole aqui o texto da tese, dissertação ou trabalho académico para verificação de autoria...\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.',
-    critica: 'Cole aqui o texto completo da decisão judicial que pretende analisar criticamente.\n\nO consultor jurídico sénior identificará nulidades, erros de julgamento e gerará argumentos para recurso.'
+    critica: 'Cole aqui o texto completo da decisão judicial que pretende analisar criticamente.\n\nO consultor jurídico sénior identificará nulidades, erros de julgamento e gerará argumentos para recurso.',
+    injection: 'Cole aqui o texto do documento jurídico que pretende verificar.\n\nO sistema irá analisar o documento em busca de caracteres Unicode invisíveis, padrões de prompt injection e anomalias estruturais que possam indicar tentativas de manipulação de sistemas de IA.'
   };
-  const btnTexts = { judicial: 'Analisar Decisão', academico: 'Analisar Documento', critica: 'Analisar para Recurso' };
-  const sidebarLabels = { judicial: 'Tribunal & Relator', academico: 'Instituição & Documento', critica: 'Contexto do Recurso' };
-  document.getElementById('input-card-title').textContent = titles[modo];
-  document.getElementById('decision-text').placeholder = placeholders[modo];
-  document.getElementById('btn-analyze-text').textContent = btnTexts[modo];
+  const btnTexts = {
+    judicial: 'Analisar Decisão',
+    academico: 'Analisar Documento',
+    critica: 'Analisar para Recurso',
+    injection: '🛡 Verificar Documento'
+  };
+  const sidebarLabels = {
+    judicial: 'Tribunal & Relator',
+    academico: 'Instituição & Documento',
+    critica: 'Contexto do Recurso',
+    injection: 'Sobre esta Análise'
+  };
+
+  document.getElementById('input-card-title').textContent = titles[modo] || titles.judicial;
+  document.getElementById('decision-text').placeholder = placeholders[modo] || placeholders.judicial;
+  document.getElementById('btn-analyze-text').textContent = btnTexts[modo] || 'Analisar';
   document.getElementById('btn-analyze').classList.toggle('critica-mode', modo === 'critica');
-  document.getElementById('sidebar-section-label').textContent = sidebarLabels[modo];
+  document.getElementById('btn-analyze').classList.toggle('injection-mode', modo === 'injection');
+  document.getElementById('sidebar-section-label').textContent = sidebarLabels[modo] || '';
   document.getElementById('results-area').classList.remove('visible');
   limparPDF();
 }
@@ -1050,6 +1078,7 @@ function initApp() {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('modo') === 'academico') setTimeout(() => setModo('academico'), 100);
   if (urlParams.get('modo') === 'critica') setTimeout(() => setModo('critica'), 100);
+  if (urlParams.get('modo') === 'injection') setTimeout(() => setModo('injection'), 100);
 }
 
 async function loadPerfil() {
@@ -1146,9 +1175,7 @@ async function extractPDF(file) {
     txt = txt.trim();
     if (!txt || txt.length < 50) { setDropText('⚠️ PDF sem texto extraível. Copie o texto manualmente.'); return; }
     pdfText = txt; actualizarContador(); dropZone.classList.add('has-file');
-    const avisoLongo = txt.length > 20000
-      ? `<br><span style="font-size:10px;color:var(--gold)">⚡ Documento extenso — fundamentação extraída automaticamente para análise</span>`
-      : '';
+    const avisoLongo = txt.length > 20000 ? `<br><span style="font-size:10px;color:var(--gold)">⚡ Documento extenso — fundamentação extraída automaticamente para análise</span>` : '';
     document.getElementById('drop-zone-text').innerHTML = `✅ <strong>${file.name}</strong><br><span style="font-size:11px;color:#888">${pdf.numPages} páginas · ${txt.length.toLocaleString('pt-PT')} caracteres extraídos</span>${avisoLongo}<br><span style="font-size:11px;color:var(--gold);cursor:pointer;text-decoration:underline" onclick="limparPDF()">× Remover ficheiro</span>`;
   } catch (err) { setDropText('❌ Erro ao ler o PDF. Tente copiar o texto manualmente.'); }
 }
@@ -1160,12 +1187,14 @@ function setDropText(t) { document.getElementById('drop-zone-text').innerHTML = 
 const overlayMsgs = {
   judicial: [{text:'A extrair padrões linguísticos...',pct:12},{text:'A calcular perplexidade textual...',pct:25},{text:'A analisar variabilidade rítmica...',pct:38},{text:'A detectar coesão artificial...',pct:52},{text:'A verificar marcadores formulaicos...',pct:65},{text:'A verificar citações e jurisprudência...',pct:78},{text:'A detectar ferramentas de humanização...',pct:88},{text:'A gerar veredicto forense...',pct:96}],
   academico: [{text:'A extrair padrões de escrita...',pct:15},{text:'A analisar estrutura argumentativa...',pct:30},{text:'A verificar citações jurídicas...',pct:45},{text:'A detectar homogeneidade sintáctica...',pct:60},{text:'A detectar ferramentas de humanização...',pct:78},{text:'A analisar perfil do autor...',pct:88},{text:'A gerar veredicto de autoria...',pct:96}],
-  critica: [{text:'A identificar vícios processuais...',pct:15},{text:'A verificar fundamentação da decisão...',pct:30},{text:'A analisar exame crítico das provas...',pct:45},{text:'A pesquisar nulidades processuais...',pct:60},{text:'A verificar artigos violados...',pct:75},{text:'A gerar argumentos de recurso...',pct:88},{text:'A formular recomendação jurídica...',pct:96}]
+  critica: [{text:'A identificar vícios processuais...',pct:15},{text:'A verificar fundamentação da decisão...',pct:30},{text:'A analisar exame crítico das provas...',pct:45},{text:'A pesquisar nulidades processuais...',pct:60},{text:'A verificar artigos violados...',pct:75},{text:'A gerar argumentos de recurso...',pct:88},{text:'A formular recomendação jurídica...',pct:96}],
+  injection: [{text:'A verificar caracteres Unicode invisíveis...',pct:20},{text:'A analisar padrões linguísticos suspeitos...',pct:45},{text:'A detectar anomalias estruturais...',pct:70},{text:'A calcular score de risco...',pct:90},{text:'A gerar relatório de segurança...',pct:96}]
 };
 const overlayIndNames = {
   judicial: ['Perplexidade','Var. Rítmica','Coesão Artificial','Uniform. Sint.','Riqueza Lexical','Marc. Formulaicos'],
   academico: ['Perplexidade','Var. Rítmica','Coesão Artificial','Uniform. Sint.','Riqueza Lexical','Marc. Formulaicos'],
-  critica: ['Vícios Processuais','Fund. da Decisão','Exame das Provas','Coerência Lógica','Citações Legais','Omissões Detect.']
+  critica: ['Vícios Processuais','Fund. da Decisão','Exame das Provas','Coerência Lógica','Citações Legais','Omissões Detect.'],
+  injection: ['Unicode Invisível','Padrões Linguist.','Anomalias Estrut.','Score de Risco','Integridade Doc.','Verificação Final']
 };
 let overlayInterval = null, overlayMsgIdx = 0;
 
@@ -1175,7 +1204,12 @@ function showOverlay() {
   document.getElementById('overlay-status').textContent = 'A iniciar análise...';
   const names = overlayIndNames[modoActual] || overlayIndNames.judicial;
   for (let i = 1; i <= 6; i++) { document.getElementById('oi-' + i).classList.remove('active'); document.getElementById('of-' + i).style.width = '0%'; document.getElementById('ov-' + i).textContent = '—'; document.getElementById('on-' + i).textContent = names[i - 1]; }
-  const subTexts = { judicial: 'A analisar padrões linguísticos forenses<br>calibrados para os tribunais portugueses', academico: 'A analisar padrões de autoria académica<br>calibrados para o português jurídico', critica: 'A actuar como Consultor Jurídico Sénior<br>a identificar nulidades e vícios processuais' };
+  const subTexts = {
+    judicial: 'A analisar padrões linguísticos forenses<br>calibrados para os tribunais portugueses',
+    academico: 'A analisar padrões de autoria académica<br>calibrados para o português jurídico',
+    critica: 'A actuar como Consultor Jurídico Sénior<br>a identificar nulidades e vícios processuais',
+    injection: 'A verificar integridade do documento<br>e detectar prompt injection oculta'
+  };
   document.getElementById('overlay-subtext').innerHTML = subTexts[modoActual] || subTexts.judicial;
   overlayMsgIdx = 0;
   const msgs = overlayMsgs[modoActual] || overlayMsgs.judicial;
@@ -1208,23 +1242,42 @@ async function analyzeDecision() {
   const btn = document.getElementById('btn-analyze'), loadingBar = document.getElementById('loading-bar');
   btn.disabled = true; btn.classList.add('loading'); document.getElementById('spinner').style.display = 'block'; loadingBar.classList.add('active');
   showOverlay(); document.getElementById('results-area').classList.remove('visible');
+
   try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session?.access_token) { hideOverlay(null); btn.disabled = false; btn.classList.remove('loading'); document.getElementById('spinner').style.display = 'none'; loadingBar.classList.remove('active'); alert('Sessão expirada. Por favor faça login novamente.'); logout(); return; }
+
+    // ── MODO INJECTION — endpoint próprio ──
+    if (modoActual === 'injection') {
+      const resp = await fetch('/api/detetar-injection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+        body: JSON.stringify({ texto: text })
+      });
+      if (!resp.ok) { const err = await resp.json().catch(() => ({})); throw new Error(err.erro || 'Erro do servidor.'); }
+      const result = await resp.json();
+      hideOverlay(result);
+      renderResultsInjection(result);
+      if (window.innerWidth <= 760) setTimeout(() => { const el = document.getElementById('results-area'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 900);
+      // Não conta para o limite de análises (é gratuito e ilimitado)
+      return;
+    }
+
+    // ── MODOS NORMAIS ──
     let payload = { texto: text, modo: modoActual };
     if (modoActual === 'judicial') { payload.tribunal = document.getElementById('tribunal-select').value || null; payload.relator = document.getElementById('relator-input').value || null; payload.tipoPeca = (document.getElementById('tipo-peca-select') || {}).value || null; }
     else if (modoActual === 'academico') { payload.instituicao = document.getElementById('instituicao-input').value || null; payload.tipoDoc = document.getElementById('tipo-doc-select').value || null; payload.orientador = document.getElementById('orientador-input').value || null; }
     else if (modoActual === 'critica') { payload.tribunal = document.getElementById('tribunal-critica-select').value || null; payload.tipoProcesso = document.getElementById('tipo-processo-select').value || null; payload.parteRecorrente = document.getElementById('parte-recorrente-select').value || null; }
-    const { data: { session } } = await sb.auth.getSession();
-    if (!session?.access_token) { hideOverlay(null); btn.disabled = false; btn.classList.remove('loading'); document.getElementById('spinner').style.display = 'none'; loadingBar.classList.remove('active'); alert('Sessão expirada. Por favor faça login novamente.'); logout(); return; }
+
     const response = await fetch('/api/analisar', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` }, body: JSON.stringify(payload) });
     if (!response.ok) { const err = await response.json().catch(() => ({})); throw new Error(err.erro || 'Erro do servidor.'); }
     const result = await response.json();
-    // Adicionar metadados ao resultado ANTES de guardar no sessionStorage
     result._modo = modoActual;
     result._tribunal = payload.tribunal;
     result._relator = payload.relator || payload.tipoDoc || null;
     result._tipoProcesso = payload.tipoProcesso || null;
     result._parteRecorrente = payload.parteRecorrente || null;
-    lastResult = result; // sessionStorage guardado aqui com todos os campos
+    lastResult = result;
     lastRef = 'LV-' + Date.now().toString(36).toUpperCase();
     document.getElementById('ref-number').textContent = 'Referência: ' + lastRef;
     hideOverlay(result);
@@ -1263,17 +1316,101 @@ async function analyzeDecision() {
   }
 }
 
+// ── RENDER INJECTION ──
+function renderResultsInjection(result) {
+  document.getElementById('results-standard').style.display = 'block';
+  document.getElementById('results-critica').style.display = 'none';
+  document.getElementById('btn-pdf-wrapper').style.display = 'none';
+
+  const cls = { 'INJECTION_DETECTADA': 'ai', 'SUSPEITO': 'uncertain', 'LIMPO': 'human' };
+  const titulos = {
+    'INJECTION_DETECTADA': '🚨 Prompt Injection Detectada',
+    'SUSPEITO': '⚠️ Documento Suspeito',
+    'LIMPO': '✅ Documento Limpo'
+  };
+
+  const banner = document.getElementById('verdict-banner');
+  banner.className = 'verdict-banner ' + (cls[result.veredicto] || 'uncertain');
+  document.getElementById('verdict-label') && (document.getElementById('verdict-banner').querySelector('.verdict-label').textContent = 'Análise de Segurança — Prompt Injection');
+  document.getElementById('verdict-title').textContent = titulos[result.veredicto] || result.veredicto;
+  document.getElementById('verdict-subtitle').textContent = result.recomendacao || '';
+  document.getElementById('confidence-value').textContent = result.score + '%';
+  document.getElementById('confidence-label-text') && (document.getElementById('confidence-label-text').textContent = 'Score de Risco de Injection');
+  setTimeout(() => { document.getElementById('meter-fill').style.width = result.score + '%'; }, 100);
+
+  document.getElementById('indicators-grid').innerHTML = '';
+  document.getElementById('humanizador-banner').style.display = 'none';
+  document.getElementById('citacoes-card').style.display = 'none';
+  document.getElementById('relator-card').style.display = 'none';
+  document.getElementById('evidence-card').style.display = 'none';
+
+  let html = '';
+
+  if (result.unicode_invisivel?.length > 0) {
+    html += '<div class="analysis-card" style="border-left:3px solid #8b1a1a;margin-bottom:16px"><h3>🔴 Caracteres Unicode Invisíveis</h3>';
+    result.unicode_invisivel.forEach(u => {
+      html += `<div style="padding:8px 0;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:10px"><span style="font-family:var(--mono);font-size:10px;background:rgba(139,26,26,0.08);color:#8b1a1a;padding:2px 8px">${u.codePoint}</span><span style="font-family:var(--sans);font-size:12px;color:#444">${u.desc}</span></div>`;
+    });
+    html += '</div>';
+  }
+
+  if (result.padroes_linguisticos?.length > 0) {
+    html += '<div class="analysis-card" style="border-left:3px solid #c97850;margin-bottom:16px"><h3>⚠️ Padrões Linguísticos de Injection</h3>';
+    result.padroes_linguisticos.forEach(p => {
+      const gravCor = p.gravidade === 'critica' ? '#8b1a1a' : p.gravidade === 'alta' ? '#c97850' : '#8b5e1a';
+      html += `<div style="padding:10px 0;border-bottom:1px solid var(--rule)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-family:var(--mono);font-size:8px;background:rgba(201,168,76,0.1);color:${gravCor};padding:2px 6px;text-transform:uppercase">${p.gravidade}</span>
+          <strong style="font-family:var(--sans);font-size:12px;color:#333">${p.desc}</strong>
+        </div>
+        ${p.ocorrencias?.[0]?.contexto ? `<div style="font-family:var(--mono);font-size:10px;color:#888;background:#f8f8f8;padding:6px 8px;margin-top:4px;line-height:1.5">...${p.ocorrencias[0].contexto}...</div>` : ''}
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  if (result.anomalias_estruturais?.length > 0) {
+    html += '<div class="analysis-card" style="border-left:3px solid var(--gold);margin-bottom:16px"><h3>🔶 Anomalias Estruturais</h3>';
+    result.anomalias_estruturais.forEach(a => {
+      html += `<div style="padding:8px 0;border-bottom:1px solid var(--rule);font-family:var(--sans);font-size:12px;color:#444">${a.desc}</div>`;
+    });
+    html += '</div>';
+  }
+
+  if (!html) {
+    html = '<div class="analysis-card" style="margin-bottom:16px"><p style="color:#1a5c2a;font-weight:600;font-size:13px">✅ Nenhum indicador de prompt injection encontrado. O documento aparenta ser legítimo.</p></div>';
+  }
+
+  // Nota informativa
+  html += `<div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);padding:12px 16px;font-family:var(--sans);font-size:11px;color:#666;line-height:1.6">
+    <strong style="display:block;font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:#8b5e1a;margin-bottom:4px">Nota</strong>
+    Esta análise é automática e pode não detectar técnicas de injection muito sofisticadas. A supervisão humana qualificada é sempre indispensável.
+  </div>`;
+
+  document.getElementById('narrative-card').style.display = 'block';
+  document.getElementById('narrative-card-title').textContent = 'Resultado Detalhado da Verificação';
+  document.getElementById('analysis-narrative').innerHTML = html;
+
+  document.getElementById('results-area').classList.add('visible');
+  document.getElementById('results-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 // ── RENDER JUDICIAL / ACADÉMICO ──
 function renderResults(result) {
   document.getElementById('results-standard').style.display = 'block';
   document.getElementById('results-critica').style.display = 'none';
   document.getElementById('btn-pdf-wrapper').style.display = 'block';
+  document.getElementById('evidence-card').style.display = 'block';
+  document.getElementById('narrative-card').style.display = 'block';
+  document.getElementById('narrative-card-title').textContent = 'Fundamentação da Análise';
+  if (document.getElementById('confidence-label-text')) document.getElementById('confidence-label-text').textContent = 'Índice de Confiança na Detecção';
 
   const titles = { 'IA_DETECTADA': 'Inteligência Artificial Detectada', 'PROVAVELMENTE_IA': 'Provavelmente Gerado por IA', 'INCONCLUSIVO': 'Análise Inconclusiva', 'PROVAVELMENTE_HUMANO': 'Provavelmente Autoria Humana', 'HUMANO': 'Autoria Humana Confirmada' };
   const subs = { 'IA_DETECTADA': 'Os marcadores linguísticos indicam fortemente o uso de inteligência artificial.', 'PROVAVELMENTE_IA': 'Vários indicadores sugerem uso significativo de IA.', 'INCONCLUSIVO': 'Os indicadores não permitem determinar com segurança o uso de IA.', 'PROVAVELMENTE_HUMANO': 'O texto apresenta características predominantemente humanas.', 'HUMANO': 'Os marcadores são consistentes com autoria humana.' };
   const cls = { 'IA_DETECTADA': 'ai', 'PROVAVELMENTE_IA': 'ai', 'INCONCLUSIVO': 'uncertain', 'PROVAVELMENTE_HUMANO': 'human', 'HUMANO': 'human' };
   const banner = document.getElementById('verdict-banner');
   banner.className = 'verdict-banner ' + (cls[result.veredicto] || 'uncertain');
+  banner.querySelector('.verdict-label').textContent = 'Veredicto Forense';
   document.getElementById('verdict-title').textContent = titles[result.veredicto] || result.veredicto;
   document.getElementById('verdict-subtitle').textContent = subs[result.veredicto] || '';
   document.getElementById('confidence-value').textContent = result.confianca + '%';
@@ -1302,11 +1439,8 @@ function renderResults(result) {
   const citacoesCard = document.getElementById('citacoes-card');
   const citacoesList = document.getElementById('citacoes-list');
   const citacoes = result.citacoes_suspeitas || [];
-
-  // ── PATCH 2: mostrar/esconder botão verificar ──
   if (citacoes.length > 0 && modoActual === 'judicial') {
     citacoesCard.style.display = 'block';
-    // Mostrar botão e limpar resultados anteriores
     document.getElementById('verificar-btn-container').style.display = 'block';
     document.getElementById('verificacao-resultados').style.display = 'none';
     document.getElementById('verificacao-resultados').innerHTML = '';
@@ -1582,7 +1716,7 @@ function gerarPDFStandard() {
   } catch (err) { console.error('Erro PDF:', err); alert('Erro ao gerar PDF: ' + err.message); }
 }
 
-// ── PATCH 3: VERIFICAR CITAÇÕES NAS FONTES OFICIAIS ──
+// ── VERIFICAR CITAÇÕES ──
 async function verificarCitacoes() {
   const citacoes = lastResult && lastResult.citacoes_suspeitas;
   if (!citacoes || citacoes.length === 0) { alert('Sem citações para verificar.'); return; }
@@ -1622,8 +1756,6 @@ async function verificarCitacoes() {
     const iconMap = { 'true': '✅', 'false': '❌', 'null': '⚠️' };
     const labelMap = { 'true': 'ENCONTRADO', 'false': 'NÃO ENCONTRADO', 'null': 'INCONCLUSIVO' };
     const colorMap = { 'true': '#1a5c2a', 'false': '#8b1a1a', 'null': '#8b5e1a' };
-    const bgMap    = { 'true': 'rgba(26,92,58,0.06)', 'false': 'rgba(139,26,26,0.06)', 'null': 'rgba(201,168,76,0.06)' };
-    const borderMap = { 'true': '#1a5c2a', 'false': '#8b1a1a', 'null': '#c9a84c' };
     const tipoLabels = { acordao: 'Acórdão', diploma_legal: 'Diploma Legal', doutrina: 'Doutrina', jurisprudencia: 'Jurisprudência' };
 
     const stats = data.stats || {};
@@ -1639,9 +1771,7 @@ async function verificarCitacoes() {
       const enc = v.encontrado;
       const k = enc === true ? 'true' : enc === false ? 'false' : 'null';
       const cls = enc === true ? 'encontrado' : enc === false ? 'nao-encontrado' : 'inconclusivo';
-      const urlHtml = v.url
-        ? '<a href="' + v.url + '" target="_blank" rel="noopener" class="verificar-card-link">→ Verificar manualmente</a>'
-        : '';
+      const urlHtml = v.url ? '<a href="' + v.url + '" target="_blank" rel="noopener" class="verificar-card-link">→ Verificar manualmente</a>' : '';
       const fonteHtml = v.fonte ? '<span class="verificar-card-fonte">via ' + v.fonte + '</span>' : '';
       const detalheHtml = v.detalhe ? '<div class="verificar-card-detalhe">' + v.detalhe + '</div>' : '';
       const erroHtml = v.erro ? '<div style="font-family:var(--mono);font-size:9px;color:#aaa;margin-top:4px">Erro: ' + v.erro + '</div>' : '';
