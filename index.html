@@ -6,17 +6,17 @@
 
 <!-- ── SEO & META TAGS ── -->
 <title>LexVeritas — Detector de IA, Nulidades e Recursos | Portugal</title>
-<meta name="description" content="Detecta IA em acórdãos e sentenças, identifica nulidades e vícios processuais, gera minutas de recurso e verifica autoria em teses jurídicas. Calibrado para os tribunais portugueses.">
-<meta name="keywords" content="detector IA acórdãos, detector IA sentenças, nulidades processuais, recurso judicial Portugal, análise crítica sentença, verificar autoria tese direito, plágio IA direito, LexVeritas, advogados Portugal, magistrados Portugal, análise forense jurídica">
+<meta name="description" content="Detecta IA em acórdãos e sentenças, identifica nulidades e vícios processuais, gera minutas de recurso, verifica autoria em teses jurídicas e detecta prompt injection em documentos. Calibrado para os tribunais portugueses.">
+<meta name="keywords" content="detector IA acórdãos, detector IA sentenças, nulidades processuais, recurso judicial Portugal, análise crítica sentença, verificar autoria tese direito, plágio IA direito, prompt injection detector, LexVeritas, advogados Portugal, magistrados Portugal, análise forense jurídica">
 <meta name="author" content="LexVeritas">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://lexveritas.pt/">
 
-<!-- ── OPEN GRAPH (LinkedIn, WhatsApp, Facebook) ── -->
+<!-- ── OPEN GRAPH ── -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://lexveritas.pt/">
 <meta property="og:title" content="LexVeritas — A plataforma forense para a justiça portuguesa">
-<meta property="og:description" content="Detecte IA em decisões judiciais, identifique fundamentos de recurso e gere peças processuais automaticamente. Para advogados, magistrados e académicos portugueses.">
+<meta property="og:description" content="Detecte IA em decisões judiciais, identifique fundamentos de recurso, gere peças processuais e proteja-se de prompt injection. Para advogados, magistrados e académicos portugueses.">
 <meta property="og:image" content="https://lexveritas.pt/og-image.png">
 <meta property="og:locale" content="pt_PT">
 <meta property="og:site_name" content="LexVeritas">
@@ -24,17 +24,17 @@
 <!-- ── TWITTER/X CARD ── -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="LexVeritas — Detector de IA, Nulidades e Recursos">
-<meta name="twitter:description" content="Detecta IA em acórdãos, identifica nulidades processuais e gera minutas de recurso. Para advogados e magistrados portugueses.">
+<meta name="twitter:description" content="Detecta IA em acórdãos, identifica nulidades processuais, gera minutas de recurso e detecta prompt injection. Para advogados e magistrados portugueses.">
 <meta name="twitter:image" content="https://lexveritas.pt/og-image.png">
 
-<!-- ── SCHEMA.ORG STRUCTURED DATA ── -->
+<!-- ── SCHEMA.ORG ── -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "LexVeritas",
   "url": "https://lexveritas.pt",
-  "description": "Plataforma forense para advogados e magistrados portugueses. Detecta autoria de IA em decisões judiciais, identifica nulidades processuais, gera minutas de recurso e verifica autoria em trabalhos académicos jurídicos.",
+  "description": "Plataforma forense para advogados e magistrados portugueses. Detecta autoria de IA em decisões judiciais, identifica nulidades processuais, gera minutas de recurso, verifica autoria em trabalhos académicos jurídicos e detecta prompt injection em documentos.",
   "applicationCategory": "LegalApplication",
   "operatingSystem": "Web",
   "inLanguage": "pt-PT",
@@ -68,7 +68,7 @@
 html { scroll-behavior: smooth; }
 body { background: var(--black); color: var(--white); font-family: var(--sans); overflow-x: hidden; }
 
-/* ── CURSOR (só desktop ≥1280px) ── */
+/* ── CURSOR ── */
 .cursor { position: fixed; width: 10px; height: 10px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); mix-blend-mode: difference; display: none; }
 .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(201,168,76,.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width .4s cubic-bezier(.16,1,.3,1), height .4s cubic-bezier(.16,1,.3,1), left .12s linear, top .12s linear; display: none; }
 @media (min-width: 1280px) {
@@ -87,9 +87,7 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 @keyframes introFadeUp { to { opacity: 1; transform: translateY(0); } }
 @keyframes introLoad { to { width: 100%; } }
 
-/* ══════════════════════════════════════
-   NAV
-══════════════════════════════════════ */
+/* ── NAV ── */
 .site-nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 200;
   display: flex; align-items: center; justify-content: space-between;
@@ -199,18 +197,20 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 .sp { padding: clamp(72px,8vw,100px) clamp(24px,5vw,48px); }
 .container { max-width: 1180px; margin: 0 auto; }
 
-/* ── MODOS DE ANÁLISE ── */
-.modos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+/* ── MODOS DE ANÁLISE — grid de 2×2 em desktop, 1 col mobile ── */
+.modos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
 .modo-card { background: var(--dark); padding: 36px 30px; position: relative; overflow: hidden; transition: background .3s; }
 .modo-card:hover { background: #161620; }
 .modo-card-bar { position: absolute; top: 0; left: 0; right: 0; height: 2px; }
-.modo-card-bar.judicial { background: linear-gradient(90deg, var(--gold), transparent); }
-.modo-card-bar.critica  { background: linear-gradient(90deg, #c97850, transparent); }
-.modo-card-bar.academico{ background: linear-gradient(90deg, #4c9ee8, transparent); }
+.modo-card-bar.judicial  { background: linear-gradient(90deg, var(--gold), transparent); }
+.modo-card-bar.critica   { background: linear-gradient(90deg, #c97850, transparent); }
+.modo-card-bar.academico { background: linear-gradient(90deg, #4c9ee8, transparent); }
+.modo-card-bar.injection { background: linear-gradient(90deg, #8b1a1a, transparent); }
 .modo-label { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 10px; }
 .modo-label.judicial  { color: var(--gold); }
 .modo-label.critica   { color: #c97850; }
 .modo-label.academico { color: #4c9ee8; }
+.modo-label.injection { color: #c44; }
 .modo-card h3 { font-family: var(--serif); font-size: 19px; font-style: italic; margin-bottom: 14px; color: var(--white); line-height: 1.25; }
 .modo-card p  { font-size: 12px; line-height: 1.85; color: var(--grey); margin-bottom: 18px; }
 .modo-features { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
@@ -222,6 +222,8 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 .modo-feature.critica   .arrow { color: #c97850; }
 .modo-feature.academico { color: rgba(76,158,232,.8); }
 .modo-feature.academico .arrow { color: #4c9ee8; }
+.modo-feature.injection { color: rgba(204,68,68,.8); }
+.modo-feature.injection .arrow { color: #c44; }
 .modo-para { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .modo-para-label { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--grey); flex-shrink: 0; }
 .modo-para-val { font-family: var(--sans); font-size: 11px; color: var(--white); }
@@ -235,7 +237,7 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 .problem-card h3 { font-family: var(--serif); font-size: 20px; font-style: italic; margin-bottom: 10px; }
 .problem-card p { font-size: 13px; line-height: 1.7; color: var(--grey); }
 
-/* ── DEMO INTERATIVA ── */
+/* ── DEMO ── */
 .demo-section { background: var(--dark); }
 .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 44px; }
 .demo-input-panel { background: var(--black); padding: 32px; }
@@ -319,7 +321,7 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 .trib-tag { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; padding: 9px 16px; border: 1px solid var(--border); color: var(--grey); transition: all .25s; cursor: default; }
 .trib-tag:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,.05); transform: translateY(-2px); }
 
-/* ── PLANOS & CONTACTO ── */
+/* ── PLANOS ── */
 .pricing-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 52px; max-width: 940px; margin-left: auto; margin-right: auto; }
 .pricing-profiles { background: var(--black); padding: 44px 36px; }
 .pricing-profiles-title { font-family: var(--serif); font-size: 20px; font-style: italic; margin-bottom: 8px; }
@@ -361,7 +363,7 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 .faq-icon { color: var(--gold); font-size: 22px; transition: transform .3s; flex-shrink: 0; }
 .faq-item.active .faq-icon { transform: rotate(45deg); }
 .faq-answer { max-height: 0; overflow: hidden; transition: all .4s ease; color: var(--grey); font-size: 15px; line-height: 1.8; }
-.faq-item.active .faq-answer { max-height: 260px; padding-bottom: 22px; }
+.faq-item.active .faq-answer { max-height: 300px; padding-bottom: 22px; }
 
 /* ── CTA FINAL ── */
 .cta-section { text-align: center; position: relative; overflow: hidden; }
@@ -387,11 +389,10 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
 .footer-legal a { font-family: var(--mono); font-size: 10px; color: rgba(154,154,154,.5); text-decoration: none; transition: color .2s; }
 .footer-legal a:hover { color: var(--grey); }
 
-/* Sem banner de cookies — apenas cookies essenciais de sessão */
-
 /* ── RESPONSIVE ── */
 @media (max-width: 1023px) {
-  .problem-grid, .steps-grid, .features-grid, .modos-grid { grid-template-columns: 1fr; }
+  .modos-grid { grid-template-columns: 1fr; }
+  .problem-grid, .steps-grid, .features-grid { grid-template-columns: 1fr; }
   .pricing-wrapper { grid-template-columns: 1fr; }
   .demo-grid { grid-template-columns: 1fr; }
   .demo-result-panel { min-height: auto; }
@@ -401,7 +402,6 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
   .stats-bar { gap: 20px; }
   .hero-actions { flex-direction: column; width: 100%; }
   .btn-primary, .btn-secondary { width: 100%; justify-content: center; text-align: center; }
-
   .footer-bottom { flex-direction: column; text-align: center; }
   .footer-legal { justify-content: center; }
   .demo-inds { grid-template-columns: 1fr; }
@@ -420,8 +420,6 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
   <div class="intro-label">Sistema de Análise Forense Jurídica</div>
   <div class="intro-bar-track"><div class="intro-bar-fill"></div></div>
 </div>
-
-
 
 <!-- NAV -->
 <nav class="site-nav" id="siteNav">
@@ -478,7 +476,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     <div class="stats-bar">
       <div class="stat-item"><span class="stat-number">20+</span><span class="stat-label">Tribunais Cobertos</span></div>
       <div class="stat-item"><span class="stat-number">6</span><span class="stat-label">Indicadores Forenses</span></div>
-      <div class="stat-item"><span class="stat-number">3</span><span class="stat-label">Modos de Análise</span></div>
+      <div class="stat-item"><span class="stat-number">4</span><span class="stat-label">Modos de Análise</span></div>
       <div class="stat-item"><span class="stat-number">EU</span><span class="stat-label">Dados em Portugal</span></div>
     </div>
   </div>
@@ -487,9 +485,8 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
 <!-- VÍDEO DEMO -->
 <section style="background:#060608;overflow:hidden;text-align:center;">
   <div style="margin:0 -22%;padding:clamp(56px,6vw,80px) 0;">
-    <video autoplay loop muted playsinline
-      style="width:100%;max-width:1100px;">
-      <source src="assetsdemo-lexveritas.mp4" type="video/mp4">
+    <video autoplay loop muted playsinline style="width:100%;max-width:1100px;">
+      <source src="assets/demo-lexveritas.mp4" type="video/mp4">
     </video>
   </div>
 </section>
@@ -508,12 +505,13 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
   <div class="container sp" style="padding-top:clamp(56px,7vw,80px);padding-bottom:clamp(56px,7vw,80px)">
     <div class="section-label reveal" style="justify-content:center">O Que Analisamos</div>
     <h2 class="section-title reveal" style="text-align:center;margin-bottom:12px">
-      Três modos de análise.<br><span>Uma plataforma forense.</span>
+      Quatro modos de análise.<br><span>Uma plataforma forense.</span>
     </h2>
-    <p class="section-intro reveal" style="margin:0 auto 48px;text-align:center;max-width:600px">
-      O LexVeritas oferece três análises distintas, calibradas para as necessidades específicas de advogados, magistrados, académicos e investigadores jurídicos portugueses.
+    <p class="section-intro reveal" style="margin:0 auto 48px;text-align:center;max-width:640px">
+      O LexVeritas oferece quatro análises distintas, calibradas para as necessidades específicas de advogados, magistrados, académicos e investigadores jurídicos portugueses.
     </p>
     <div class="modos-grid reveal">
+
       <!-- ANÁLISE JUDICIAL -->
       <div class="modo-card">
         <div class="modo-card-bar judicial"></div>
@@ -532,6 +530,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
           <span class="modo-para-val">Advogados · Magistrados · Solicitadores · Notários</span>
         </div>
       </div>
+
       <!-- ANÁLISE CRÍTICA -->
       <div class="modo-card">
         <div class="modo-card-bar critica"></div>
@@ -550,6 +549,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
           <span class="modo-para-val">Advogados · Sociedades de Advogados · Mandatários</span>
         </div>
       </div>
+
       <!-- ANÁLISE ACADÉMICA -->
       <div class="modo-card">
         <div class="modo-card-bar academico"></div>
@@ -568,6 +568,26 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
           <span class="modo-para-val">Docentes · Investigadores · Estudantes de Direito · Universidades</span>
         </div>
       </div>
+
+      <!-- DETECTOR DE PROMPT INJECTION — NOVO -->
+      <div class="modo-card">
+        <div class="modo-card-bar injection"></div>
+        <div style="font-size:28px;margin-bottom:16px">🛡️</div>
+        <div class="modo-label injection">Detector de Injection</div>
+        <h3>Protecção contra prompt injection em documentos jurídicos</h3>
+        <p>Analisa documentos jurídicos — contratos, procurações, requerimentos, pareceres — em busca de instruções ocultas destinadas a manipular sistemas de IA. Detecta caracteres Unicode invisíveis, padrões linguísticos de injecção, anomalias estruturais e texto escondido em PDFs. Essencial para advogados e magistrados que utilizam ferramentas de IA no processamento de documentos.</p>
+        <div class="modo-features">
+          <div class="modo-feature injection"><span class="arrow">→</span><span>Detecção de caracteres Unicode invisíveis e zero-width</span></div>
+          <div class="modo-feature injection"><span class="arrow">→</span><span>Identificação de padrões linguísticos de injecção</span></div>
+          <div class="modo-feature injection"><span class="arrow">→</span><span>Análise de PDFs camada a camada (texto oculto)</span></div>
+          <div class="modo-feature injection"><span class="arrow">→</span><span>Score de risco com relatório de anomalias</span></div>
+        </div>
+        <div class="modo-para">
+          <span class="modo-para-label">Para</span>
+          <span class="modo-para-val">Advogados · Magistrados · Compliance · Gestores de Risco</span>
+        </div>
+      </div>
+
     </div>
     <div class="reveal" style="text-align:center;margin-top:36px">
       <a href="/app" class="btn-primary" style="display:inline-flex"><span>Experimentar gratuitamente →</span></a>
@@ -585,7 +605,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
       <div class="problem-card reveal reveal-d1"><div class="problem-num">01</div><h3>Transparência em risco</h3><p>O Art. 205.º da CRP garante a fundamentação das decisões por magistrados. O uso oculto de IA levanta questões constitucionais sérias.</p></div>
       <div class="problem-card reveal reveal-d2"><div class="problem-num">02</div><h3>Sem ferramentas específicas</h3><p>Os detectores genéricos não conhecem o estilo jurídico português, os tribunais, os relatores nem a doutrina nacional.</p></div>
       <div class="problem-card reveal reveal-d1"><div class="problem-num">03</div><h3>EU AI Act em vigor</h3><p>O Reg. (UE) 2024/1689 classifica sistemas de IA na administração da justiça como de alto risco, exigindo transparência e supervisão humana.</p></div>
-      <div class="problem-card reveal reveal-d2"><div class="problem-num">04</div><h3>Citações fabricadas</h3><p>Modelos de IA inventam acórdãos, números de processo e doutrina que não existem. O LexVeritas verifica a consistência de cada citação.</p></div>
+      <div class="problem-card reveal reveal-d2"><div class="problem-num">04</div><h3>Citações fabricadas e injection</h3><p>Modelos de IA inventam acórdãos e doutrina que não existem — e documentos maliciosos podem conter instruções ocultas para manipular sistemas de IA utilizados por advogados.</p></div>
     </div>
   </div>
 </section>
@@ -667,8 +687,8 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
       <div class="feat-card reveal reveal-d1"><div class="feat-icon">🏛️</div><h3>Calibrado para Tribunais PT</h3><p>STJ, TRL, TRP, TRC, TRG, TRE, TC, STA, TCAS, TCAN — cada tribunal tem um perfil estilístico próprio incorporado na análise.</p></div>
       <div class="feat-card reveal reveal-d2"><div class="feat-icon">🔬</div><h3>Análise Crítica — 10 Critérios</h3><p>Identifica nulidades processuais, erros de julgamento, verifica alçada, prazos, dupla conforme e proporcionalidade da pena. Distingue pedidos de nulidade de pedidos de revogação.</p></div>
       <div class="feat-card reveal reveal-d3"><div class="feat-icon">⚠️</div><h3>Citações Verificadas</h3><p>Detecta acórdãos, números de processo e doutrina potencialmente fabricados por IA — valida o formato segundo a Portaria 280/2013.</p></div>
-      <div class="feat-card reveal reveal-d1"><div class="feat-icon">🔀</div><h3>Detecção de Humanizadores</h3><p>Identifica textos que passaram por ferramentas de "humanização" de IA como Quillbot ou Undetectable.ai — o próximo passo na corrida às armas.</p><span class="feat-soon">Beta</span></div>
-      <div class="feat-card reveal reveal-d2"><div class="feat-icon">📂</div><h3>Base DGSI em Progresso</h3><p>Calibração progressiva com acórdãos reais do DGSI — para maior precisão no perfil estilístico de cada relator e tribunal. Em desenvolvimento.</p><span class="feat-soon">Em desenvolvimento</span></div>
+      <div class="feat-card reveal reveal-d1"><div class="feat-icon">🛡️</div><h3>Detector de Prompt Injection</h3><p>Analisa documentos jurídicos em busca de instruções ocultas para manipular sistemas de IA. Detecta caracteres invisíveis, padrões de injecção e anomalias em PDFs — protege advogados e magistrados que usam IA no seu fluxo de trabalho.</p></div>
+      <div class="feat-card reveal reveal-d2"><div class="feat-icon">🔀</div><h3>Detecção de Humanizadores</h3><p>Identifica textos que passaram por ferramentas de "humanização" de IA como Quillbot ou Undetectable.ai — o próximo passo na corrida às armas.</p><span class="feat-soon">Beta</span></div>
       <div class="feat-card reveal reveal-d3"><div class="feat-icon">📊</div><h3>Relatórios PDF</h3><p>Relatórios técnicos profissionais com referência única, tribunal, relator e indicadores visuais — prontos a anexar como suporte jurídico.</p></div>
     </div>
   </div>
@@ -758,6 +778,10 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
       <div class="faq-item reveal">
         <button class="faq-question"><h3>O que são as ferramentas de humanização?</h3><span class="faq-icon">+</span></button>
         <div class="faq-answer">Ferramentas como Quillbot, Undetectable.ai ou WordAI reformulam texto gerado por IA para enganar detectores. O LexVeritas identifica padrões típicos desta reformulação — vocabulário artificialmente variado com sinónimos incomuns no registo jurídico português, fluência inconsistente e alternância súbita de registo. Esta funcionalidade está em fase beta.</div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question"><h3>O que é o Detector de Prompt Injection e por que importa na advocacia?</h3><span class="faq-icon">+</span></button>
+        <div class="faq-answer">Prompt injection é uma técnica em que instruções maliciosas são ocultadas num documento para manipular sistemas de IA que o processem. Na prática jurídica, um contrato ou requerimento pode conter texto invisível ao olho humano (caracteres Unicode zero-width, texto em branco sobre branco, camadas ocultas em PDF) que instrui uma IA a ignorar cláusulas, resumir de forma enviesada ou executar acções não pretendidas. O LexVeritas analisa o documento camada a camada — incluindo os bytes brutos do PDF — e gera um score de risco com identificação das anomalias encontradas.</div>
       </div>
       <div class="faq-item reveal">
         <button class="faq-question"><h3>A análise de nulidades substitui o advogado?</h3><span class="faq-icon">+</span></button>
@@ -881,8 +905,6 @@ document.querySelectorAll('.faq-question').forEach(btn => {
   btn.addEventListener('click', () => btn.parentElement.classList.toggle('active'));
 });
 
-
-
 // ── DEMO ──
 const demoVerdictLabels = {
   'IA_DETECTADA': 'Inteligência Artificial Detectada',
@@ -975,9 +997,7 @@ async function runDemo() {
       btn.disabled = false; btn.classList.remove('loading'); btnTxt.textContent = '⚖ Analisar Excerto';
       return;
     }
-
     renderDemoResult(data);
-
   } catch (err) {
     clearInterval(msgInterval);
     errorEl.textContent = 'Erro de ligação. Verifique a internet e tente novamente.';
