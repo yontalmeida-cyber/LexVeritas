@@ -1259,7 +1259,13 @@ async function analyzeDecision() {
       if (pdfFileObj) {
         // PDF carregado: enviar bytes brutos para preservar Unicode invisível
         const ab = await pdfFileObj.arrayBuffer();
-        const base64 = btoa(String.fromCharCode(...new Uint8Array(ab)));
+        const uint8 = new Uint8Array(ab);
+        let b64str = '';
+        const CHUNK = 8192;
+        for (let i = 0; i < uint8.length; i += CHUNK) {
+          b64str += String.fromCharCode(...uint8.subarray(i, i + CHUNK));
+        }
+        const base64 = btoa(b64str);
         const resp = await fetch('/api/detetar-injection-pdf', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
