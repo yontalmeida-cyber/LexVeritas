@@ -444,6 +444,174 @@ function veredictoRisco(score, unicodeEncontrados, padroesEncontrados, anomalias
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
+// DETECÇÃO DE METADADOS SUSPEITOS
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Software de criação associado a IA ou ferramentas suspeitas
+const SOFTWARE_SUSPEITO = [
+  /chatgpt/i, /openai/i, /gpt-?[0-9]/i, /claude/i, /gemini/i, /copilot/i,
+  /llama/i, /mistral/i, /ai.?pdf/i, /pdf.?ai/i, /undetectable/i, /quillbot/i,
+  /jasper/i, /writesonic/i, /copy\.ai/i, /anyword/i,
+];
+
+function extrairMetadados(pdfBuffer) {
+  const alertas = [];
+  const pdfStr = pdfBuffer.toString('latin1');
+
+  // ── Extrair dicionário /Info ──
+  const infoMatch = pdfStr.match(/\/Info\s*<<([\s\S]{0,2000}?)>>/);
+  const metadados = {};
+
+  if (infoMatch) {
+    const infoBlock = infoMatch[1];
+
+    // Extrair campos standard do dicionário Info
+    const campos = ['Creator', 'Producer', 'Author', 'Title', 'Subject', 'Keywords', 'CreationDate', 'ModDate'];
+    for (const campo of campos) {
+      // Formato: /Campo (valor) ou /Campo <hex>
+      const m = infoBlock.match(new RegExp(`/${campo}\\s*\\(([^)]*)\\)`));
+      if (m) metadados[campo] = m[1].replace(/\\(\d{3})/g, (_, o) => String.fromCharCode(parseInt(o, 8))).trim();
+      const mHex = infoBlock.match(new RegExp(`/${campo}\\s*<([0-9A-Fa-f]+)>`));
+      if (mHex) {
+        try {
+          const hex = mHex[1];
+          let decoded = '';
+          for (let i = 0; i < hex.length; i += 2) decoded += String.fromCharCode(parseInt(hex.substring(i, i + 2), 16));
+          metadados[campo] = decoded.replace(/\x00/g, '').trim();
+        } catch {}
+      }
+    }
+  }
+
+  // ── Verificar software de criação ──
+  const softwareFields = [metadados.Creator, metadados.Producer].filter(Boolean);
+  for (const field of softwareFields) {
+    for (const pattern of SOFTWARE_SUSPEITO) {
+      if (pattern.test(field)) {
+        alertas.push({
+          tipo: 'metadata_software_suspeito',
+          gravidade: 'critica',
+          desc: `Software de criação suspeito detectado: "${field}" — documento possivelmente gerado por IA`,
+          campo: softwareFields.indexOf(field) === 0 ? 'Creator' : 'Producer',
+          valor: field,
+        });
+        break;
+      }
+    }
+  }
+
+  // ── Verificar inconsistência de datas ──
+  // CreationDate e ModDate em formato PDF: D:YYYYMMDDHHmmSS
+  const parsePDFDate = (d) => {
+    if (!d) return null;
+    const m = d.replace('D:', '').match(/^(\d{4})(\d{2})(\d{2})/);
+    if (!m) return null;
+    return new Date(`${m[1]}-${m[2]}-${m[3]}`);
+  };
+
+  const dataCriacao = parsePDFDate(metadados.CreationDate);
+  const dataModificacao = parsePDFDate(metadados.ModDate);
+
+  if (dataCriacao && dataModificacao && dataModificacao < dataCriacao) {
+    alertas.push({
+      tipo: 'metadata_datas_inconsistentes',
+      gravidade: 'alta',
+      desc: `Data de modificação (${metadados.ModDate}) anterior à data de criação (${metadados.CreationDate}) — metadados manipulados`,
+    });
+  }
+
+  // Documento muito recente comparado com data declarada no conteúdo
+  if (dataCriacao) {
+    const agora = new Date();
+    const diffAnos = (agora - dataCriacao) / (1000 * 60 * 60 * 24 * 365);
+    if (diffAnos < 0) {
+      alertas.push({
+        tipo: 'metadata_data_futura',
+        gravidade: 'alta',
+        desc: `Data de criação no futuro (${metadados.CreationDate}) — metadados manipulados`,
+      });
+    }
+  }
+
+  // ── Verificar ausência total de metadados (suspeito em documentos oficiais) ──
+  const temMetadados = Object.keys(metadados).length > 0;
+  if (!temMetadados) {
+    alertas.push({
+      tipo: 'metadata_ausentes',
+      gravidade: 'media',
+      desc: 'Documento sem metadados — incomum em documentos judiciais oficiais; possível remoção deliberada',
+    });
+  }
+
+  return { alertas, metadados };
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DETECÇÃO DE CAMADAS OCULTAS (OCG — Optional Content Groups)
+// ══════════════════════════════════════════════════════════════════════════════
+
+function detectarCamadasOcultas(pdfBuffer) {
+  const alertas = [];
+  const pdfStr = pdfBuffer.toString('latin1');
+
+  // ── Verificar existência de /OCProperties ──
+  const ocPropsMatch = pdfStr.match(/\/OCProperties\s*<<([\s\S]{0,5000}?)>>/);
+  if (!ocPropsMatch) return alertas; // Sem camadas — documento normal
+
+  const ocBlock = ocPropsMatch[1];
+
+  // ── Extrair nomes das camadas (/OCGs array) ──
+  const ocgNames = [];
+  const nameRegex = /\/Name\s*\(([^)]*)\)/g;
+  let m;
+  while ((m = nameRegex.exec(ocBlock)) !== null) {
+    ocgNames.push(m[1]);
+  }
+
+  // ── Verificar estado das camadas no dicionário /D (Default) ──
+  // /OFF array contém as camadas desligadas por defeito
+  const offMatch = ocBlock.match(/\/OFF\s*\[([\s\S]*?)\]/);
+  const offCount = offMatch ? (offMatch[1].match(/\d+\s+\d+\s+R/g) || []).length : 0;
+
+  // ── Verificar /AS (Aplicação de Estado) com eventos suspeitos ──
+  const asMatch = ocBlock.match(/\/AS\s*\[([\s\S]*?)\]/);
+
+  if (offCount > 0) {
+    alertas.push({
+      tipo: 'camada_oculta_off',
+      gravidade: 'critica',
+      desc: `${offCount} camada${offCount > 1 ? 's' : ''} PDF oculta${offCount > 1 ? 's' : ''} por defeito (estado OFF) — pode conter texto invisível ao leitor`,
+      camadas: ocgNames.length > 0 ? ocgNames.join(', ') : 'nomes não disponíveis',
+    });
+  }
+
+  // ── Verificar camadas com nomes suspeitos ──
+  const nomesSuspeitos = ocgNames.filter(n =>
+    /injection|hidden|oculto|invisible|prompt|instruc|command|ai|system/i.test(n)
+  );
+  if (nomesSuspeitos.length > 0) {
+    alertas.push({
+      tipo: 'camada_nome_suspeito',
+      gravidade: 'critica',
+      desc: `Camada PDF com nome suspeito: "${nomesSuspeitos.join('", "')}"`,
+      camadas: nomesSuspeitos.join(', '),
+    });
+  }
+
+  // ── Verificar se há camadas mesmo sem estar explicitamente OFF ──
+  // A simples existência de OCG num documento judicial é incomum
+  if (ocgNames.length > 0 && offCount === 0) {
+    alertas.push({
+      tipo: 'camadas_presentes',
+      gravidade: 'media',
+      desc: `Documento contém ${ocgNames.length} camada${ocgNames.length > 1 ? 's' : ''} PDF (${ocgNames.join(', ')}) — incomum em documentos judiciais; verifique se contêm conteúdo oculto`,
+    });
+  }
+
+  return alertas;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
 // HANDLER PRINCIPAL
 // ══════════════════════════════════════════════════════════════════════════════
 module.exports = async function handler(req, res) {
@@ -500,14 +668,29 @@ module.exports = async function handler(req, res) {
   const textoUTF8 = pdfBuffer.toString('utf8');
   const textoCombinado = textoExtraido + ' ' + textoUTF8.substring(0, 50000);
 
-  // ── 4. Análise ──
-  const unicodeEncontrados    = detectarUnicodeInvisivelBruto(textoUTF8, textoExtraido);
-  const padroesEncontrados    = detectarPadroesLinguisticos(textoCombinado);
-  const anomaliasEncontradas  = detectarAnomalias(textoExtraido || textoUTF8.substring(0, 30000));
+  // ── 4. Metadados ──
+  const { alertas: alertasMetadados, metadados } = extrairMetadados(pdfBuffer);
 
-  const score = calcularRisco(unicodeEncontrados, padroesEncontrados, anomaliasEncontradas, textoInvisivel);
-  const veredicto = veredictoRisco(score, unicodeEncontrados, padroesEncontrados, anomaliasEncontradas, textoInvisivel);
-  const totalIndicadores = unicodeEncontrados.length + padroesEncontrados.length + anomaliasEncontradas.length + textoInvisivel.length;
+  // ── 5. Camadas ocultas ──
+  const alertasCamadas = detectarCamadasOcultas(pdfBuffer);
+
+  // ── 6. Análise linguística e Unicode ──
+  const unicodeEncontrados   = detectarUnicodeInvisivelBruto(textoUTF8, textoExtraido);
+  const padroesEncontrados   = detectarPadroesLinguisticos(textoCombinado);
+  const anomaliasEncontradas = detectarAnomalias(textoExtraido || textoUTF8.substring(0, 30000));
+
+  // ── 7. Score e veredicto ──
+  // Metadados suspeitos e camadas ocultas contribuem para o score
+  const todasAnomalias = [
+    ...anomaliasEncontradas,
+    ...textoInvisivel,
+    ...alertasMetadados,
+    ...alertasCamadas,
+  ];
+
+  const score = calcularRisco(unicodeEncontrados, padroesEncontrados, todasAnomalias, textoInvisivel);
+  const veredicto = veredictoRisco(score, unicodeEncontrados, padroesEncontrados, todasAnomalias, textoInvisivel);
+  const totalIndicadores = unicodeEncontrados.length + padroesEncontrados.length + todasAnomalias.length;
 
   return res.status(200).json({
     veredicto,
@@ -515,13 +698,16 @@ module.exports = async function handler(req, res) {
     total_indicadores: totalIndicadores,
     unicode_invisivel: unicodeEncontrados,
     padroes_linguisticos: padroesEncontrados,
-    anomalias_estruturais: [...anomaliasEncontradas, ...textoInvisivel],
+    anomalias_estruturais: todasAnomalias,
+    metadados_pdf: metadados,
     meta: {
       fonte: 'bytes_brutos_pdf',
       nome_ficheiro: nomeFile || 'desconhecido',
       tamanho_bytes: pdfBuffer.length,
       streams_extraidos: streamContents.length,
       texto_invisivel_detectado: textoInvisivel.length,
+      alertas_metadados: alertasMetadados.length,
+      alertas_camadas: alertasCamadas.length,
     },
     recomendacao: veredicto === 'INJECTION_DETECTADA'
       ? 'PDF contém indícios fortes de prompt injection. Não processe com IA sem revisão humana completa.'
