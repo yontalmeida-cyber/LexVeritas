@@ -298,6 +298,14 @@ module.exports = async function handler(req, res) {
   const veredicto = veredictoRisco(score, unicodeEncontrados, padroesEncontrados, todasAnomalias);
   const totalIndicadores = unicodeEncontrados.length + padroesEncontrados.length + todasAnomalias.length;
 
+  // ── Detecção de jurisdição ──
+  const textoParaJurisdicao = texto.toLowerCase().substring(0, 5000);
+  const tribunaisPortugueses = ['stj','trl','trp','trc','trg','tre','sta','supremo tribunal de justiça','tribunal da relação','tribunal constitucional','comarca','dgsi','tcas','tcan','tribunal de trabalho','tribunal administrativo'];
+  const dominioPortugues = tribunaisPortugueses.some(t => textoParaJurisdicao.includes(t));
+  const notaDominio = dominioPortugues
+    ? null
+    : 'Documento fora do domínio de calibração (jurisdição não portuguesa detectada). Os resultados têm fiabilidade indeterminada e não devem ser utilizados como base de análise.';
+
   return res.status(200).json({
     veredicto,
     score,
@@ -305,6 +313,10 @@ module.exports = async function handler(req, res) {
     unicode_invisivel: unicodeEncontrados,
     padroes_linguisticos: padroesEncontrados,
     anomalias_estruturais: todasAnomalias,
+    nota_dominio: notaDominio,
+    meta: {
+      dominio_portugues: dominioPortugues,
+    },
     recomendacao: veredicto === 'INJECTION_DETECTADA'
       ? 'Documento contém indícios fortes de prompt injection. Não processe com IA sem revisão humana completa.'
       : veredicto === 'SUSPEITO'

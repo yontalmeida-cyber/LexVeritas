@@ -894,6 +894,17 @@ module.exports = async function handler(req, res) {
   const veredicto = veredictoRisco(score, unicodeEncontrados, padroesEncontrados, todasAnomalias, textoInvisivel);
   const totalIndicadores = unicodeEncontrados.length + padroesEncontrados.length + todasAnomalias.length;
 
+  // ── Detecção de jurisdição ──
+  // O LexVeritas está calibrado para jurisprudência portuguesa.
+  // Se o documento não contiver referências a tribunais portugueses,
+  // emite uma nota de aviso no resultado.
+  const textoParaJurisdicao = (textoExtraido || '').toLowerCase().substring(0, 5000);
+  const tribunaisPortugueses = ['stj','trl','trp','trc','trg','tre','sta','supremo tribunal de justiça','tribunal da relação','tribunal constitucional','comarca','dgsi','tcas','tcan','tribunal de trabalho','tribunal administrativo'];
+  const dominioPortugues = tribunaisPortugueses.some(t => textoParaJurisdicao.includes(t));
+  const notaDominio = dominioPortugues
+    ? null
+    : 'Documento fora do domínio de calibração (jurisdição não portuguesa detectada). Os resultados têm fiabilidade indeterminada e não devem ser utilizados como base de análise.';
+
   return res.status(200).json({
     veredicto,
     score,
@@ -902,6 +913,7 @@ module.exports = async function handler(req, res) {
     padroes_linguisticos: padroesEncontrados,
     anomalias_estruturais: todasAnomalias,
     metadados_pdf: metadados,
+    nota_dominio: notaDominio,
     meta: {
       fonte: 'bytes_brutos_pdf',
       nome_ficheiro: nomeFile || 'desconhecido',
@@ -911,6 +923,7 @@ module.exports = async function handler(req, res) {
       alertas_metadados: alertasMetadados.length,
       alertas_camadas: alertasCamadas.length,
       alertas_entropia: alertasEntropia.length,
+      dominio_portugues: dominioPortugues,
     },
     recomendacao: veredicto === 'INJECTION_DETECTADA'
       ? 'PDF contém indícios fortes de prompt injection. Não processe com IA sem revisão humana completa.'
