@@ -10,11 +10,24 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--black:#060608;--dark:#0e0e12;--card:#13131a;--gold:#c9a84c;--gold-light:#e8c96a;--cream:#f8f6f1;--grey:#9a9a9a;--rule-dark:rgba(201,168,76,0.15);--serif:'Instrument Serif',Georgia,serif;--mono:'JetBrains Mono',monospace;--sans:'Syne',sans-serif}
+:root{
+  --black:#060608;
+  --dark:#0e0e12;
+  --card:#13131a;
+  --gold:#c9a84c;
+  --gold-light:#e8c96a;
+  --cream:#f8f6f1;
+  --grey:#9a9a9a;
+  --rule-dark:rgba(201,168,76,0.15);
+  --serif:'Instrument Serif',Georgia,serif;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Syne',sans-serif
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--black);color:var(--cream);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
 
+/* ── NAV ── */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px clamp(20px,5vw,60px);display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,8,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule-dark)}
 .nav-logo{font-family:var(--serif);font-size:22px;font-style:italic;color:var(--cream);text-decoration:none;flex-shrink:0;margin-right:24px}
 .nav-logo em{color:var(--gold);font-style:italic}
@@ -24,6 +37,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px clamp(20px,5vw,
 .nav-cta{background:var(--gold);color:var(--black);padding:8px 20px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;transition:all 0.2s}
 .nav-cta:hover{background:var(--gold-light)}
 
+/* ── HERO ── */
 .hero{min-height:100vh;display:flex;align-items:center;padding:120px clamp(20px,5vw,60px) 80px;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 60% 40%,rgba(201,168,76,0.08) 0%,transparent 60%);pointer-events:none}
 .hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.03) 1px,transparent 1px);background-size:80px 80px;pointer-events:none}
@@ -42,6 +56,7 @@ h1 em{color:var(--gold);font-style:italic}
 .btn-site{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--grey);border:1px solid var(--rule-dark);padding:14px 28px;font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;transition:all 0.25s}
 .btn-site:hover{border-color:var(--gold);color:var(--cream)}
 
+/* ── PHOTO ── */
 .photo-wrap{position:relative;display:flex;justify-content:center;align-items:center}
 .photo-frame{position:relative;width:360px;height:420px}
 .photo-frame::before{content:'';position:absolute;top:-16px;left:-16px;right:16px;bottom:16px;border:1px solid rgba(201,168,76,0.2);z-index:0}
@@ -51,11 +66,13 @@ h1 em{color:var(--gold);font-style:italic}
 .photo-badge-text{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--black);font-weight:700}
 .photo-badge-year{font-family:var(--serif);font-size:22px;font-style:italic;color:var(--black);line-height:1}
 
+/* ── STATS BAR ── */
 .stats-bar{border-top:1px solid var(--rule-dark);border-bottom:1px solid var(--rule-dark);padding:32px clamp(20px,5vw,60px);display:flex;justify-content:center;gap:60px;flex-wrap:wrap}
 .stat-item{text-align:center}
 .stat-num{font-family:var(--serif);font-size:36px;font-style:italic;color:var(--gold);line-height:1;margin-bottom:6px}
 .stat-label{font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--grey)}
 
+/* ── STORY SECTION ── */
 .story-section{padding:clamp(60px,8vw,100px) clamp(20px,5vw,60px);max-width:1100px;margin:0 auto}
 .section-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:10px}
 .section-eyebrow::after{content:'';height:1px;flex:1;max-width:60px;background:var(--gold);opacity:0.4}
@@ -67,6 +84,7 @@ h1 em{color:var(--gold);font-style:italic}
 .story-card-title{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--cream);margin-bottom:12px}
 .story-card-text{font-family:var(--sans);font-size:13px;line-height:1.8;color:rgba(248,246,241,0.55)}
 
+/* ── PROFILE SECTION ── */
 .profile-section{padding:clamp(40px,6vw,80px) clamp(20px,5vw,60px);background:var(--dark);border-top:1px solid var(--rule-dark);border-bottom:1px solid var(--rule-dark)}
 .profile-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
 .profile-details{display:flex;flex-direction:column;gap:20px}
@@ -75,13 +93,22 @@ h1 em{color:var(--gold);font-style:italic}
 .profile-item-label{font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);opacity:0.7}
 .profile-item-value{font-family:var(--sans);font-size:14px;color:var(--cream);font-weight:500}
 .profile-item-sub{font-family:var(--sans);font-size:12px;color:var(--grey)}
-.skills-wrap{display:flex;flex-direction:column;gap:14px}
-.skill-item{display:flex;flex-direction:column;gap:8px}
-.skill-label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:var(--grey)}
-.skill-label span:last-child{color:var(--gold)}
-.skill-track{height:2px;background:rgba(255,255,255,0.06)}
-.skill-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light))}
 
+/* ── EXPERTISE TAGS (substitui barras com %) ── */
+.expertise-wrap{display:flex;flex-direction:column;gap:12px}
+.expertise-group{margin-bottom:8px}
+.expertise-group-label{font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);opacity:0.7;margin-bottom:10px}
+.expertise-tags{display:flex;flex-wrap:wrap;gap:8px}
+.expertise-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:rgba(248,246,241,0.7);border:1px solid var(--rule-dark);padding:6px 14px;background:rgba(201,168,76,0.04);transition:all 0.2s}
+.expertise-tag:hover{border-color:rgba(201,168,76,0.4);color:var(--cream)}
+.expertise-tag.primary{border-color:rgba(201,168,76,0.35);color:var(--gold);background:rgba(201,168,76,0.07)}
+
+/* ── DISCLAIMER STRIP ── */
+.disclaimer-strip{background:rgba(201,168,76,0.05);border:1px solid var(--rule-dark);border-left:3px solid var(--gold);padding:16px 24px;max-width:1100px;margin:0 auto 0;display:flex;align-items:flex-start;gap:14px}
+.disclaimer-strip-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.disclaimer-strip-text{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:rgba(248,246,241,0.45);line-height:1.7}
+
+/* ── MISSION SECTION ── */
 .mission-section{padding:clamp(60px,8vw,100px) clamp(20px,5vw,60px)}
 .mission-inner{max-width:800px;margin:0 auto;text-align:center}
 .mission-quote{font-family:var(--serif);font-size:clamp(22px,3.5vw,38px);font-style:italic;line-height:1.4;color:var(--cream);margin-bottom:20px;position:relative}
@@ -89,6 +116,17 @@ h1 em{color:var(--gold);font-style:italic}
 .mission-author{font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold)}
 .mission-divider{width:60px;height:1px;background:var(--gold);margin:24px auto;opacity:0.4}
 
+/* ── USE CASES SECTION ── */
+.usecases-section{padding:clamp(40px,6vw,80px) clamp(20px,5vw,60px);background:var(--dark);border-top:1px solid var(--rule-dark);border-bottom:1px solid var(--rule-dark)}
+.usecases-inner{max-width:1100px;margin:0 auto}
+.usecases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.usecase-item{padding:24px;border:1px solid var(--rule-dark);position:relative}
+.usecase-item::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0.5}
+.usecase-num{font-family:var(--serif);font-size:32px;font-style:italic;color:rgba(201,168,76,0.2);line-height:1;margin-bottom:10px}
+.usecase-title{font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:0.05em;color:var(--cream);margin-bottom:8px;text-transform:uppercase}
+.usecase-text{font-family:var(--sans);font-size:12px;line-height:1.7;color:rgba(248,246,241,0.45)}
+
+/* ── CTA SECTION ── */
 .cta-section{padding:clamp(60px,8vw,100px) clamp(20px,5vw,60px);text-align:center;position:relative;overflow:hidden}
 .cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(201,168,76,0.08) 0%,transparent 60%);pointer-events:none}
 .cta-inner{position:relative;z-index:1}
@@ -97,6 +135,7 @@ h1 em{color:var(--gold);font-style:italic}
 .cta-sub{font-family:var(--sans);font-size:14px;color:var(--grey);margin-bottom:36px;line-height:1.6}
 .cta-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
 
+/* ── FOOTER ── */
 footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .footer-brand{font-family:var(--serif);font-size:18px;font-style:italic;color:var(--cream)}
 .footer-brand em{color:var(--gold)}
@@ -105,6 +144,7 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
 .footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);text-decoration:none;transition:color 0.2s}
 .footer-links a:hover{color:var(--gold)}
 
+/* ── RESPONSIVE ── */
 @media(pointer:coarse){.nav-links{display:none!important}}
 @media(max-width:1024px){.nav-links{display:none}}
 @media(max-width:768px){
@@ -114,6 +154,7 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
   .story-grid{grid-template-columns:1fr}
   .profile-inner{grid-template-columns:1fr}
   .stats-bar{gap:32px}
+  .usecases-grid{grid-template-columns:1fr}
   footer{flex-direction:column;text-align:center}
 }
 </style>
@@ -130,20 +171,23 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
   </div>
 </nav>
 
+<!-- ═══ HERO ═══ -->
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-content">
       <div class="hero-eyebrow">Fundador &amp; Criador</div>
       <div class="hero-tag">Almada, Setúbal · Portugal · 2026</div>
       <h1>Tony<br><em>Branco</em></h1>
-      <div class="hero-role">Jurista · Fundador do LexVeritas · AI Integration</div>
-<p class="hero-bio">
-  Formado em Direito pela <strong>Faculdade de Direito da Universidade de Lisboa</strong>, criou o LexVeritas — o primeiro sistema de análise forense de IA construído especificamente para o universo jurídico português.
-  <br><br>
-  A combinação entre formação jurídica e especialização em integração de IA permitiu desenvolver uma plataforma calibrada para os tribunais portugueses, os seus relatores e a doutrina nacional — algo que nenhum detector genérico consegue replicar.
-</p>
+      <!-- ALTERADO: cargo principal é agora Fundador, não QA Analyst -->
+      <div class="hero-role">Jurista · Fundador do LexVeritas · Especialista em IA Jurídica</div>
+      <!-- ALTERADO: removida menção à Teleperformance como elemento central; foco na formação jurídica e na lacuna identificada -->
+      <p class="hero-bio">
+        Formado em Direito pela <strong>Faculdade de Direito da Universidade de Lisboa</strong>, identificou uma lacuna crítica no sistema judicial português: a ausência de ferramentas especializadas para avaliar a autenticidade de textos jurídicos num contexto de proliferação de IA generativa.
+        <br><br>
+        O LexVeritas nasceu dessa constatação — construído de raiz para os tribunais portugueses, calibrado para a linguagem dos seus relatores e conforme com o RGPD. Uma ferramenta auxiliar de análise forense, não um substituto do julgamento humano.
+      </p>
       <div class="hero-actions">
-        <a href="https://linkedin.com/company/lexveritas-pt" target="_blank" rel="noopener" class="btn-linkedin">
+        <a href="https://linkedin.com/in/tony-branco-b069b097" target="_blank" rel="noopener" class="btn-linkedin">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
           LinkedIn
         </a>
@@ -162,41 +206,45 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
   </div>
 </section>
 
-<!-- ═══ STATS BAR — alteração: 3 → 4 Modos de análise ═══ -->
+<!-- ═══ STATS BAR — ALTERADO: removido "20+ Tribunais" por ser overclaim não validado; substituído por métricas mais defensáveis ═══ -->
 <div class="stats-bar">
-  <div class="stat-item"><div class="stat-num">20+</div><div class="stat-label">Tribunais cobertos</div></div>
   <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">Indicadores forenses</div></div>
   <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">Modos de análise</div></div>
-  <div class="stat-item"><div class="stat-num">PT</div><div class="stat-label">Dados na UE</div></div>
+  <div class="stat-item"><div class="stat-num">PT</div><div class="stat-label">Calibrado para PT</div></div>
+  <div class="stat-item"><div class="stat-num">UE</div><div class="stat-label">Dados na União Europeia</div></div>
 </div>
 
+<!-- ═══ STORY SECTION ═══ -->
 <section class="story-section">
   <div class="section-eyebrow">A História</div>
   <div class="section-title">Porquê o LexVeritas?</div>
   <div class="story-grid">
     <div class="story-card">
       <div class="story-card-icon">⚖️</div>
-      <div class="story-card-title">O Problema</div>
-      <div class="story-card-text">Com a proliferação de ferramentas de IA generativa, surgiu uma preocupação crescente no sistema judicial e académico português: como garantir a autenticidade das decisões judiciais e dos trabalhos académicos de direito? As ferramentas existentes foram construídas para o inglês e desconhecem por completo o estilo do STJ ou do TRL.</div>
+      <div class="story-card-title">O Problema Identificado</div>
+      <!-- ALTERADO: foco na lacuna real, sem referência a métricas não validadas -->
+      <div class="story-card-text">Com a proliferação de ferramentas de IA generativa, emergiu uma preocupação crescente no sistema judicial e académico português: como avaliar a autenticidade de decisões judiciais e trabalhos jurídicos? As ferramentas existentes foram construídas para o inglês e desconhecem por completo a estrutura e o estilo dos tribunais portugueses.</div>
     </div>
     <div class="story-card">
       <div class="story-card-icon">🎓</div>
-      <div class="story-card-title">A Formação</div>
-      <div class="story-card-text">Formado em Direito pela Faculdade de Direito da Universidade de Lisboa, Tony conhece por dentro a linguagem jurídica portuguesa — os seus idiomatismos, a estrutura dos acórdãos, o estilo singular de cada tribunal. É esse conhecimento que torna o LexVeritas diferente de qualquer outro detector.</div>
+      <div class="story-card-title">A Formação Jurídica</div>
+      <div class="story-card-text">Formado em Direito pela Faculdade de Direito da Universidade de Lisboa, Tony conhece por dentro a linguagem jurídica portuguesa — os seus idiomatismos, a estrutura dos acórdãos, o registo singular de cada tribunal. É esse conhecimento de base que torna o LexVeritas diferente de qualquer detector genérico.</div>
     </div>
     <div class="story-card">
-      <div class="story-card-icon">🤖</div>
-      <div class="story-card-title">O Fascínio pela IA</div>
-      <div class="story-card-text">Como Quality Assurance Analyst II com especialização em AI Integration e Lean Six Sigma na Teleperformance, Tony acompanha de perto a transformação que a IA está a provocar no mundo do trabalho. O LexVeritas é a materialização desse fascínio ao serviço do Direito.</div>
+      <div class="story-card-icon">🔬</div>
+      <!-- ALTERADO: card "O Fascínio pela IA" reescrito — removida referência a Teleperformance como elemento de credibilidade; foco na decisão de construir -->
+      <div class="story-card-title">A Decisão de Construir</div>
+      <div class="story-card-text">A combinação entre formação jurídica e especialização em integração de inteligência artificial criou uma perspetiva única: a de quem entende simultaneamente a linguagem dos tribunais e o funcionamento dos modelos de linguagem. Dessa intersecção nasceu o LexVeritas — construído por necessidade, não por tendência.</div>
     </div>
     <div class="story-card">
       <div class="story-card-icon">🇵🇹</div>
       <div class="story-card-title">A Solução Portuguesa</div>
-      <div class="story-card-text">O LexVeritas foi construído do zero para o sistema jurídico português. Calibrado com jurisprudência real, treinado para reconhecer os padrões de cada tribunal, em conformidade com o RGPD e com dados alojados na União Europeia. Não é uma adaptação — é uma criação original.</div>
+      <div class="story-card-text">O LexVeritas foi construído de raiz para o sistema jurídico português. Calibrado com jurisprudência real, desenvolvido para reconhecer os padrões de cada tribunal e o estilo de cada relator, em conformidade com o RGPD e com dados alojados na União Europeia. Não é uma adaptação de uma ferramenta genérica — é uma criação original.</div>
     </div>
   </div>
 </section>
 
+<!-- ═══ PROFILE SECTION ═══ -->
 <section class="profile-section">
   <div class="profile-inner">
     <div>
@@ -206,8 +254,14 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
           <span class="profile-item-label">Nome completo</span>
           <span class="profile-item-value">Tony de Almeida da Costa Branco</span>
         </div>
+        <!-- ALTERADO: cargo principal passa a ser Fundador; Teleperformance como contexto secundário -->
         <div class="profile-item">
-          <span class="profile-item-label">Cargo actual</span>
+          <span class="profile-item-label">Função principal</span>
+          <span class="profile-item-value">Fundador &amp; Criador — LexVeritas</span>
+          <span class="profile-item-sub">Análise forense de IA · Direito português · Legal tech</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-item-label">Experiência profissional</span>
           <span class="profile-item-value">Quality Assurance Analyst II</span>
           <span class="profile-item-sub">Lean Six Sigma · AI Integration · Teleperformance</span>
         </div>
@@ -229,27 +283,98 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
       </div>
     </div>
     <div>
-      <div class="section-eyebrow" style="margin-bottom:24px">Competências</div>
-      <div class="skills-wrap">
-        <div class="skill-item"><div class="skill-label"><span>Direito Português</span><span>95</span></div><div class="skill-track"><div class="skill-fill" style="width:95%"></div></div></div>
-        <div class="skill-item"><div class="skill-label"><span>Integração de IA</span><span>88</span></div><div class="skill-track"><div class="skill-fill" style="width:88%"></div></div></div>
-        <div class="skill-item"><div class="skill-label"><span>Quality Assurance</span><span>90</span></div><div class="skill-track"><div class="skill-fill" style="width:90%"></div></div></div>
-        <div class="skill-item"><div class="skill-label"><span>Lean Six Sigma</span><span>82</span></div><div class="skill-track"><div class="skill-fill" style="width:82%"></div></div></div>
-        <div class="skill-item"><div class="skill-label"><span>Análise Forense Linguística</span><span>85</span></div><div class="skill-track"><div class="skill-fill" style="width:85%"></div></div></div>
+      <!-- ALTERADO: barras com percentagens removidas — substituídas por tags de áreas de especialização, mais defensáveis e sérias num contexto jurídico -->
+      <div class="section-eyebrow" style="margin-bottom:24px">Áreas de Especialização</div>
+      <div class="expertise-wrap">
+        <div class="expertise-group">
+          <div class="expertise-group-label">Direito &amp; Jurisprudência</div>
+          <div class="expertise-tags">
+            <span class="expertise-tag primary">Direito Português</span>
+            <span class="expertise-tag primary">Jurisprudência Nacional</span>
+            <span class="expertise-tag">Análise de Acórdãos</span>
+            <span class="expertise-tag">Doutrina Portuguesa</span>
+            <span class="expertise-tag">EU AI Act</span>
+            <span class="expertise-tag">RGPD</span>
+          </div>
+        </div>
+        <div class="expertise-group" style="margin-top:20px">
+          <div class="expertise-group-label">Tecnologia &amp; Metodologia</div>
+          <div class="expertise-tags">
+            <span class="expertise-tag primary">Integração de IA</span>
+            <span class="expertise-tag primary">Análise Forense Linguística</span>
+            <span class="expertise-tag">Quality Assurance</span>
+            <span class="expertise-tag">Lean Six Sigma</span>
+            <span class="expertise-tag">Modelos de Linguagem</span>
+            <span class="expertise-tag">Detecção de IA Generativa</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOVO: disclaimer strip dentro do perfil — reforça transparência e reduz risco jurídico -->
+  <div style="max-width:1100px;margin:40px auto 0">
+    <div class="disclaimer-strip">
+      <div class="disclaimer-strip-icon">⚠</div>
+      <div class="disclaimer-strip-text">
+        O LexVeritas é uma ferramenta auxiliar de análise forense. Os seus resultados constituem indícios técnicos sujeitos a interpretação e validação humana. Não substitui advogado, perito judicial, tribunal ou qualquer forma de apreciação profissional. Documento auxiliar — não constitui prova jurídica.
       </div>
     </div>
   </div>
 </section>
 
+<!-- ═══ CASOS DE USO — NOVO: secção adicionada conforme recomendação do feedback ═══ -->
+<section class="usecases-section">
+  <div class="usecases-inner">
+    <div class="section-eyebrow">Aplicações</div>
+    <div class="section-title">Para quem é o LexVeritas?</div>
+    <div class="usecases-grid">
+      <div class="usecase-item">
+        <div class="usecase-num">01</div>
+        <div class="usecase-title">Advogados &amp; Sociedades</div>
+        <div class="usecase-text">Triagem interna de documentos judiciais. Sinalização de risco processual. Apoio à análise de peças produzidas com auxílio de ferramentas de IA generativa.</div>
+      </div>
+      <div class="usecase-item">
+        <div class="usecase-num">02</div>
+        <div class="usecase-title">Investigação Académica</div>
+        <div class="usecase-text">Análise de trabalhos académicos jurídicos. Estudo da evolução do estilo dos tribunais portugueses. Investigação sobre o impacto da IA na produção jurídica nacional.</div>
+      </div>
+      <div class="usecase-item">
+        <div class="usecase-num">03</div>
+        <div class="usecase-title">Compliance &amp; Auditoria</div>
+        <div class="usecase-text">Auditoria interna de decisões e pareceres. Verificação de conformidade com políticas de uso de IA. Relatórios rastreáveis com número de referência único.</div>
+      </div>
+      <div class="usecase-item">
+        <div class="usecase-num">04</div>
+        <div class="usecase-title">Jornalismo Jurídico</div>
+        <div class="usecase-text">Investigação sobre o uso de IA no sistema judicial. Análise comparativa de decisões ao longo do tempo. Relatórios documentados e exportáveis para publicação.</div>
+      </div>
+      <div class="usecase-item">
+        <div class="usecase-num">05</div>
+        <div class="usecase-title">Instituições de Ensino</div>
+        <div class="usecase-text">Verificação da autenticidade de trabalhos académicos jurídicos. Promoção da integridade académica em faculdades de direito e centros de investigação.</div>
+      </div>
+      <div class="usecase-item">
+        <div class="usecase-num">06</div>
+        <div class="usecase-title">Análise de Risco</div>
+        <div class="usecase-text">Sinalização precoce de inconsistências estilísticas em documentos judiciais. Ferramenta de apoio à decisão — nunca substituto do julgamento profissional humano.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MISSION / QUOTE ═══ -->
 <section class="mission-section">
   <div class="mission-inner">
     <div class="section-eyebrow" style="justify-content:center;margin-bottom:32px"><span style="margin-left:auto">A Visão</span><span style="margin-right:auto"></span></div>
-    <div class="mission-quote">"Estudei Direito e apaixonei-me pela IA. O LexVeritas nasceu dessa combinação — a convicção de que o sistema jurídico português merecia uma ferramenta construída especificamente para ele."</div>
+    <!-- ALTERADO: quote revista — mais focada na lacuna e na responsabilidade, menos no percurso pessoal -->
+    <div class="mission-quote">"Estudei Direito e percebi que a IA chegou aos tribunais antes de existir qualquer ferramenta portuguesa para a verificar. O LexVeritas nasceu dessa lacuna — e da convicção de que a transparência na justiça não é opcional."</div>
     <div class="mission-divider"></div>
     <div class="mission-author">Tony Branco · Fundador, LexVeritas</div>
   </div>
 </section>
 
+<!-- ═══ CTA ═══ -->
 <section class="cta-section">
   <div class="cta-inner">
     <div class="section-eyebrow" style="justify-content:center;margin-bottom:20px">Experimente</div>
@@ -264,8 +389,7 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
 
 <footer>
   <div class="footer-brand">Lex<em>Veritas</em></div>
-  <div class="footer-copy">© 2026 LexVeritas. Todos os direitos reservados.
-Marca e conteúdos protegidos nos termos do CDADC & CPI.</div>
+  <div class="footer-copy">© 2026 LexVeritas. Todos os direitos reservados. Marca e conteúdos protegidos nos termos do CDADC &amp; CPI.</div>
   <div class="footer-links">
     <a href="/">Início</a>
     <a href="/blog">Blog</a>
