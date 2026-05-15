@@ -1253,7 +1253,21 @@ async function analyzeDecision() {
     if (!session?.access_token) { hideOverlay(null); btn.disabled = false; btn.classList.remove('loading'); document.getElementById('spinner').style.display = 'none'; loadingBar.classList.remove('active'); alert('Sessão expirada. Por favor faça login novamente.'); logout(); return; }
 
     // ── MODO INJECTION — endpoint próprio ──
-    if (modoActual === 'injection') {
+    if (modoActual === 'injection') {if (resp.status === 422) {
+  const err = await resp.json().catch(() => ({}));
+  hideOverlay(null);
+  // Mostrar aviso amigável em vez de alert
+  document.getElementById('results-area').classList.add('visible');
+  document.getElementById('results-standard').style.display = 'block';
+  document.getElementById('verdict-banner').className = 'verdict-banner uncertain';
+  document.getElementById('verdict-title').textContent = '⚠ Documento fora do domínio';
+  document.getElementById('verdict-subtitle').textContent = 'O Detector de Prompt Injection está calibrado exclusivamente para documentos jurídicos portugueses.';
+  document.getElementById('narrative-card').style.display = 'block';
+  document.getElementById('narrative-card-title').textContent = 'Porquê esta limitação?';
+  document.getElementById('analysis-narrative').textContent = 'Documentos de outras jurisdições (Brasil, Espanha, TJUE, etc.) produzem falsos positivos porque os seus sistemas de exportação PDF inserem caracteres Unicode como artefacto legítimo. Para garantir rigor forense, a análise está restrita a documentos PT-PT.';
+  btn.disabled = false; btn.classList.remove('loading'); document.getElementById('spinner').style.display = 'none'; loadingBar.classList.remove('active');
+  return;
+}
       let result;
 
       if (pdfFileObj) {
