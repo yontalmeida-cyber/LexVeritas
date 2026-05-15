@@ -1,6 +1,6 @@
 // /api/detetar-injection-pdf.js — LexVeritas Detector de Prompt Injection (PDF bytes brutos)
 // Vercel Serverless Function — Node.js 18+ — CommonJS
-// v1.2 — fix: descompressão FlateDecode; detecção cor branca (scn) e font-size 0 (Tf); soft hyphen limiar
+// v1.3 — XObject forms recursivos; análise de entropia; metadados; camadas ocultas
 
 const zlib = require('zlib');
 const { promisify } = require('util');
@@ -444,6 +444,184 @@ function veredictoRisco(score, unicodeEncontrados, padroesEncontrados, anomalias
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
+// RESOLUÇÃO RECURSIVA DE XOBJECT FORMS
+// ══════════════════════════════════════════════════════════════════════════════
+// XObject Forms são sub-streams referenciados no PDF como /XObject /Form.
+// O texto neles não aparece no fluxo principal — é uma técnica de ocultação.
+// Resolvemos recursivamente até 3 níveis de profundidade.
+
+async function resolverXObjects(pdfBuffer, streamContents, profundidade = 0) {
+  if (profundidade >= 3) return; // Limite de recursão
+
+  const pdfBytes = Buffer.from(pdfBuffer);
+  const pdfStr = pdfBytes.toString('latin1');
+
+  // Encontrar referências a XObject Forms: /XObject << /NomeQualquer X Y R >>
+  // onde X Y R é uma referência indirecta a um objecto PDF
+  const xobjRegex = /\/XObject\s*<<([\s\S]{0,500}?)>>/g;
+  let xobjMatch;
+  const refsProcessadas = new Set();
+
+  while ((xobjMatch = xobjRegex.exec(pdfStr)) !== null) {
+    const xobjBlock = xobjMatch[1];
+
+    // Extrair todas as referências indirectas (ex: /Im1 5 0 R)
+    const refRegex = /\/\w+\s+(\d+)\s+(\d+)\s+R/g;
+    let refMatch;
+
+    while ((refMatch = refRegex.exec(xobjBlock)) !== null) {
+      const objNum = refMatch[1];
+      const genNum = refMatch[2];
+      const refKey = `${objNum}_${genNum}`;
+
+      if (refsProcessadas.has(refKey)) continue;
+      refsProcessadas.add(refKey);
+
+      // Encontrar o objecto referenciado no PDF
+      // Formato: "X Y obj << ... /Subtype /Form ... >> stream ... endstream"
+      const objPattern = new RegExp(`${objNum}\\s+${genNum}\\s+obj[\\s\\S]{0,2000}?endobj`, 'g');
+      const objMatch = objPattern.exec(pdfStr);
+      if (!objMatch) continue;
+
+      const objStr = objMatch[0];
+
+      // Verificar se é um XObject Form (não Image)
+      if (!/\/Subtype\s*\/Form/i.test(objStr)) continue;
+
+      // Extrair o stream deste XObject
+      const streamStart = objStr.indexOf('stream');
+      const streamEnd = objStr.lastIndexOf('endstream');
+      if (streamStart === -1 || streamEnd === -1) continue;
+
+      let rawStream = objStr.substring(streamStart + 6, streamEnd);
+      if (rawStream.startsWith('\r\n')) rawStream = rawStream.substring(2);
+      else if (rawStream.startsWith('\n')) rawStream = rawStream.substring(1);
+
+      const hasFlateDecode = /\/Filter\s*\/FlateDecode/i.test(objStr);
+      const streamBuf = Buffer.from(rawStream, 'latin1');
+
+      let content;
+      if (hasFlateDecode) {
+        const decompressed = await descomprimirStream(streamBuf);
+        if (decompressed) {
+          content = decompressed.toString('utf8');
+          streamContents.push(content);
+          streamContents.push(decompressed.toString('latin1'));
+        }
+      } else {
+        content = rawStream;
+        streamContents.push(content);
+      }
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ANÁLISE DE ENTROPIA DO TEXTO
+// ══════════════════════════════════════════════════════════════════════════════
+// Texto jurídico português tem um perfil de entropia característico.
+// Texto de injection oculto (especialmente codificado ou fragmentado)
+// tem distribuição estatística diferente.
+// Usamos entropia de Shannon sobre blocos do texto para detectar anomalias.
+
+function calcularEntropiaShannon(texto) {
+  if (!texto || texto.length === 0) return 0;
+  const freq = {};
+  for (const ch of texto) {
+    freq[ch] = (freq[ch] || 0) + 1;
+  }
+  const n = texto.length;
+  let entropia = 0;
+  for (const count of Object.values(freq)) {
+    const p = count / n;
+    entropia -= p * Math.log2(p);
+  }
+  return entropia;
+}
+
+function analisarEntropia(textoExtraido) {
+  const alertas = [];
+  if (!textoExtraido || textoExtraido.length < 200) return alertas;
+
+  // ── Entropia global ──
+  // Texto jurídico PT tem entropia típica entre 4.0 e 5.2 bits/char
+  // Valores muito altos (>6.5) indicam conteúdo codificado/encriptado
+  // Valores muito baixos (<2.5) indicam repetição anómala
+  const entropiaGlobal = calcularEntropiaShannon(textoExtraido.substring(0, 10000));
+
+  if (entropiaGlobal > 6.5) {
+    alertas.push({
+      tipo: 'entropia_anomala_alta',
+      gravidade: 'alta',
+      desc: `Entropia do texto anormalmente alta (${entropiaGlobal.toFixed(2)} bits/char) — possível conteúdo codificado ou encriptado oculto no documento`,
+      valor: entropiaGlobal.toFixed(2),
+    });
+  } else if (entropiaGlobal < 2.5 && textoExtraido.length > 500) {
+    alertas.push({
+      tipo: 'entropia_anomala_baixa',
+      gravidade: 'media',
+      desc: `Entropia do texto anormalmente baixa (${entropiaGlobal.toFixed(2)} bits/char) — possível repetição estruturada ou conteúdo gerado`,
+      valor: entropiaGlobal.toFixed(2),
+    });
+  }
+
+  // ── Análise por blocos — detectar secções anómalas ──
+  // Dividir o texto em blocos de 500 chars e calcular entropia de cada um
+  // Um bloco com entropia muito diferente da média é suspeito
+  const tamanhoBloco = 500;
+  const blocos = [];
+  for (let i = 0; i < Math.min(textoExtraido.length, 20000); i += tamanhoBloco) {
+    const bloco = textoExtraido.substring(i, i + tamanhoBloco);
+    if (bloco.trim().length > 50) {
+      blocos.push(calcularEntropiaShannon(bloco));
+    }
+  }
+
+  if (blocos.length > 3) {
+    const media = blocos.reduce((a, b) => a + b, 0) / blocos.length;
+    const desvioPadrao = Math.sqrt(blocos.map(b => Math.pow(b - media, 2)).reduce((a, b) => a + b, 0) / blocos.length);
+
+    // Blocos com entropia > média + 2.5 desvios padrão são suspeitos
+    const blocosAnomalia = blocos.filter(b => b > media + 2.5 * desvioPadrao || b < media - 2.5 * desvioPadrao);
+
+    if (blocosAnomalia.length > 0 && desvioPadrao > 0.8) {
+      alertas.push({
+        tipo: 'entropia_blocos_anomalos',
+        gravidade: 'media',
+        desc: `${blocosAnomalia.length} bloco${blocosAnomalia.length > 1 ? 's' : ''} de texto com entropia anómala (σ=${desvioPadrao.toFixed(2)}) — possíveis secções ocultas com conteúdo diferente do restante documento`,
+        valor: `média=${media.toFixed(2)}, σ=${desvioPadrao.toFixed(2)}`,
+      });
+    }
+  }
+
+  // ── Detecção de sequências de alta entropia em texto curto ──
+  // Sequências de 20+ chars com apenas caracteres de alta entropia
+  // são típicas de conteúdo codificado em base64 ou hex escondido no texto
+  const altaEntropiaRegex = /[A-Za-z0-9+/=]{30,}/g;
+  const sequenciasBase64 = textoExtraido.match(altaEntropiaRegex) || [];
+  const suspeitas = sequenciasBase64.filter(s => {
+    // Base64 válido tem proporção equilibrada de maiúsculas/minúsculas/números
+    const upper = (s.match(/[A-Z]/g) || []).length;
+    const lower = (s.match(/[a-z]/g) || []).length;
+    const digits = (s.match(/[0-9]/g) || []).length;
+    const total = s.length;
+    // Texto normal não tem estas proporções em sequências longas
+    return upper > total * 0.2 && lower > total * 0.2 && digits > total * 0.1;
+  });
+
+  if (suspeitas.length > 2) {
+    alertas.push({
+      tipo: 'sequencias_codificadas',
+      gravidade: 'media',
+      desc: `${suspeitas.length} sequências com padrão de texto codificado (possível base64/hex) detectadas no documento`,
+      valor: suspeitas.length.toString(),
+    });
+  }
+
+  return alertas;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
 // DETECÇÃO DE METADADOS SUSPEITOS
 // ══════════════════════════════════════════════════════════════════════════════
 
@@ -654,7 +832,14 @@ module.exports = async function handler(req, res) {
     console.error('Erro extracção streams:', e.message);
   }
 
-  // ── 2. Detectar texto invisível (cor branca / font-size 0) ──
+  // ── 2. Resolver XObject Forms recursivamente ──
+  try {
+    await resolverXObjects(pdfBuffer, streamContents, 0);
+  } catch (e) {
+    console.error('Erro XObjects:', e.message);
+  }
+
+  // ── 3. Detectar texto invisível (cor branca / font-size 0) ──
   const textoInvisivel = [];
   for (const content of streamContents) {
     try {
@@ -663,29 +848,32 @@ module.exports = async function handler(req, res) {
     } catch {}
   }
 
-  // ── 3. Extrair texto para análise linguística ──
+  // ── 4. Extrair texto para análise linguística ──
   const textoExtraido = extrairTextoDosStreams(streamContents);
   const textoUTF8 = pdfBuffer.toString('utf8');
   const textoCombinado = textoExtraido + ' ' + textoUTF8.substring(0, 50000);
 
-  // ── 4. Metadados ──
+  // ── 5. Análise de entropia ──
+  const alertasEntropia = analisarEntropia(textoExtraido || textoUTF8.substring(0, 20000));
+
+  // ── 6. Metadados ──
   const { alertas: alertasMetadados, metadados } = extrairMetadados(pdfBuffer);
 
-  // ── 5. Camadas ocultas ──
+  // ── 7. Camadas ocultas ──
   const alertasCamadas = detectarCamadasOcultas(pdfBuffer);
 
-  // ── 6. Análise linguística e Unicode ──
+  // ── 8. Análise linguística e Unicode ──
   const unicodeEncontrados   = detectarUnicodeInvisivelBruto(textoUTF8, textoExtraido);
   const padroesEncontrados   = detectarPadroesLinguisticos(textoCombinado);
   const anomaliasEncontradas = detectarAnomalias(textoExtraido || textoUTF8.substring(0, 30000));
 
-  // ── 7. Score e veredicto ──
-  // Metadados suspeitos e camadas ocultas contribuem para o score
+  // ── 9. Score e veredicto ──
   const todasAnomalias = [
     ...anomaliasEncontradas,
     ...textoInvisivel,
     ...alertasMetadados,
     ...alertasCamadas,
+    ...alertasEntropia,
   ];
 
   const score = calcularRisco(unicodeEncontrados, padroesEncontrados, todasAnomalias, textoInvisivel);
@@ -708,6 +896,7 @@ module.exports = async function handler(req, res) {
       texto_invisivel_detectado: textoInvisivel.length,
       alertas_metadados: alertasMetadados.length,
       alertas_camadas: alertasCamadas.length,
+      alertas_entropia: alertasEntropia.length,
     },
     recomendacao: veredicto === 'INJECTION_DETECTADA'
       ? 'PDF contém indícios fortes de prompt injection. Não processe com IA sem revisão humana completa.'

@@ -131,6 +131,67 @@ function detectarPadroesLinguisticos(texto) {
   return encontrados;
 }
 
+// ── Análise de entropia ──
+function calcularEntropiaShannon(texto) {
+  if (!texto || texto.length === 0) return 0;
+  const freq = {};
+  for (const ch of texto) freq[ch] = (freq[ch] || 0) + 1;
+  const n = texto.length;
+  let entropia = 0;
+  for (const count of Object.values(freq)) {
+    const p = count / n;
+    entropia -= p * Math.log2(p);
+  }
+  return entropia;
+}
+
+function analisarEntropia(texto) {
+  const alertas = [];
+  if (!texto || texto.length < 200) return alertas;
+
+  const entropiaGlobal = calcularEntropiaShannon(texto.substring(0, 10000));
+
+  if (entropiaGlobal > 6.5) {
+    alertas.push({
+      tipo: 'entropia_anomala_alta',
+      gravidade: 'alta',
+      desc: `Entropia anormalmente alta (${entropiaGlobal.toFixed(2)} bits/char) — possível conteúdo codificado ou encriptado`,
+      valor: entropiaGlobal.toFixed(2),
+    });
+  } else if (entropiaGlobal < 2.5 && texto.length > 500) {
+    alertas.push({
+      tipo: 'entropia_anomala_baixa',
+      gravidade: 'media',
+      desc: `Entropia anormalmente baixa (${entropiaGlobal.toFixed(2)} bits/char) — possível repetição estruturada`,
+      valor: entropiaGlobal.toFixed(2),
+    });
+  }
+
+  // Blocos anómalos
+  const tamanhoBloco = 500;
+  const blocos = [];
+  for (let i = 0; i < Math.min(texto.length, 20000); i += tamanhoBloco) {
+    const bloco = texto.substring(i, i + tamanhoBloco);
+    if (bloco.trim().length > 50) blocos.push(calcularEntropiaShannon(bloco));
+  }
+
+  if (blocos.length > 3) {
+    const media = blocos.reduce((a, b) => a + b, 0) / blocos.length;
+    const desvioPadrao = Math.sqrt(blocos.map(b => Math.pow(b - media, 2)).reduce((a, b) => a + b, 0) / blocos.length);
+    const blocosAnomalia = blocos.filter(b => b > media + 2.5 * desvioPadrao || b < media - 2.5 * desvioPadrao);
+    if (blocosAnomalia.length > 0 && desvioPadrao > 0.8) {
+      alertas.push({
+        tipo: 'entropia_blocos_anomalos',
+        gravidade: 'media',
+        desc: `${blocosAnomalia.length} bloco${blocosAnomalia.length > 1 ? 's' : ''} com entropia anómala (σ=${desvioPadrao.toFixed(2)}) — possíveis secções ocultas`,
+        valor: `média=${media.toFixed(2)}, σ=${desvioPadrao.toFixed(2)}`,
+      });
+    }
+  }
+
+  return alertas;
+}
+
 // ── Detector de anomalias estruturais ──
 function detectarAnomalias(texto) {
   const alertas = [];
@@ -226,10 +287,12 @@ module.exports = async function handler(req, res) {
   const unicodeEncontrados = detectarUnicodeInvisivel(texto);
   const padroesEncontrados = detectarPadroesLinguisticos(texto);
   const anomaliasEncontradas = detectarAnomalias(texto);
+  const alertasEntropia = analisarEntropia(texto);
 
-  const score = calcularRisco(unicodeEncontrados, padroesEncontrados, anomaliasEncontradas);
-  const veredicto = veredictoRisco(score, unicodeEncontrados, padroesEncontrados, anomaliasEncontradas);
-  const totalIndicadores = unicodeEncontrados.length + padroesEncontrados.length + anomaliasEncontradas.length;
+  const todasAnomalias = [...anomaliasEncontradas, ...alertasEntropia];
+  const score = calcularRisco(unicodeEncontrados, padroesEncontrados, todasAnomalias);
+  const veredicto = veredictoRisco(score, unicodeEncontrados, padroesEncontrados, todasAnomalias);
+  const totalIndicadores = unicodeEncontrados.length + padroesEncontrados.length + todasAnomalias.length;
 
   return res.status(200).json({
     veredicto,
@@ -237,7 +300,7 @@ module.exports = async function handler(req, res) {
     total_indicadores: totalIndicadores,
     unicode_invisivel: unicodeEncontrados,
     padroes_linguisticos: padroesEncontrados,
-    anomalias_estruturais: anomaliasEncontradas,
+    anomalias_estruturais: todasAnomalias,
     recomendacao: veredicto === 'INJECTION_DETECTADA'
       ? 'Documento contém indícios fortes de prompt injection. Não processe com IA sem revisão humana completa.'
       : veredicto === 'SUSPEITO'
