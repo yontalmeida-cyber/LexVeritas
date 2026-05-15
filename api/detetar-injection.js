@@ -288,6 +288,26 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ erro: 'Texto insuficiente.' });
   }
 
+  // ── Validação de domínio — apenas documentos jurídicos PT-PT ──
+  const textoValidacao = texto.toLowerCase().substring(0, 6000);
+  const indicadoresPortugues = [
+    'stj', 'trl', 'trp', 'trc', 'trg', 'tre', 'sta',
+    'supremo tribunal de justiça', 'tribunal da relação',
+    'tribunal constitucional', 'comarca', 'dgsi',
+    'tcas', 'tcan', 'tribunal administrativo',
+    'diário da república', 'ministério público',
+    'código de processo civil', 'código penal português',
+    'tribunal judicial', 'juízo', 'portaria', 'decreto-lei',
+  ];
+  const isDocumentoPortugues = indicadoresPortugues.some(t => textoValidacao.includes(t));
+
+  if (!isDocumentoPortugues && texto.trim().length > 200) {
+    return res.status(422).json({
+      erro: 'Documento fora do domínio de análise. O Detector de Prompt Injection do LexVeritas está calibrado exclusivamente para documentos jurídicos portugueses (acórdãos, contratos, requerimentos, pareceres PT-PT). Não é possível analisar documentos de outras jurisdições.',
+      codigo: 'DOMINIO_NAO_SUPORTADO',
+    });
+  }
+
   const unicodeEncontrados = detectarUnicodeInvisivel(texto);
   const padroesEncontrados = detectarPadroesLinguisticos(texto);
   const anomaliasEncontradas = detectarAnomalias(texto);

@@ -315,7 +315,6 @@ function decodePDFString(raw) {
 
 function detectarUnicodeInvisivelBruto(textoUTF8, textoExtraido) {
   const encontrados = [];
-  const textoCombinado = textoUTF8 + ' ' + textoExtraido;
 
   for (const { char, nome, limiar } of UNICODE_INVISIVEL) {
     const countUTF8     = (textoUTF8.split(char)).length - 1;
@@ -866,6 +865,30 @@ module.exports = async function handler(req, res) {
   const textoExtraido = extrairTextoDosStreams(streamContents);
   const textoUTF8 = pdfBuffer.toString('utf8');
   const textoCombinado = textoExtraido + ' ' + textoUTF8.substring(0, 50000);
+
+  // ── 4A. Validação de domínio — apenas jurisprudência e documentos PT-PT ──
+  // O detector está calibrado exclusivamente para o sistema jurídico português.
+  // Documentos de outras jurisdições (Brasil, Espanha, TJUE, etc.) produzem
+  // falsos positivos porque os seus sistemas de exportação PDF inserem
+  // caracteres Unicode (U+034F, U+0300–U+036F) como artefacto legítimo.
+  const textoValidacao = (textoExtraido || '').toLowerCase().substring(0, 6000);
+  const indicadoresPortugues = [
+    'stj', 'trl', 'trp', 'trc', 'trg', 'tre', 'sta',
+    'supremo tribunal de justiça', 'tribunal da relação',
+    'tribunal constitucional', 'comarca', 'dgsi',
+    'tcas', 'tcan', 'tribunal administrativo',
+    'diário da república', 'ministério público',
+    'código de processo civil', 'código penal português',
+    'tribunal judicial', 'juízo', 'portaria', 'decreto-lei',
+  ];
+  const isDocumentoPortugues = indicadoresPortugues.some(t => textoValidacao.includes(t));
+
+  if (!isDocumentoPortugues && textoExtraido.length > 200) {
+    return res.status(422).json({
+      erro: 'Documento fora do domínio de análise. O Detector de Prompt Injection do LexVeritas está calibrado exclusivamente para documentos jurídicos portugueses (acórdãos, contratos, requerimentos, pareceres PT-PT). Não é possível analisar documentos de outras jurisdições.',
+      codigo: 'DOMINIO_NAO_SUPORTADO',
+    });
+  }
 
   // ── 5. Análise de entropia ──
   const alertasEntropia = analisarEntropia(textoExtraido || textoUTF8.substring(0, 20000));
