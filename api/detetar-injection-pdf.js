@@ -423,7 +423,10 @@ function calcularRisco(unicode, padroes, anomalias, textoInvisivel) {
   }
 
   for (const a of anomalias) {
-    score += a.gravidade === 'media' ? 8 : 4;
+    // Metadados ausentes sozinhos não devem ser suficientes para SUSPEITO
+    if (a.tipo === 'metadata_ausentes') score += 2;
+    else if (a.tipo === 'camadas_presentes') score += 5;
+    else score += a.gravidade === 'media' ? 8 : 4;
   }
 
   return Math.min(100, score);
@@ -433,9 +436,20 @@ function veredictoRisco(score, unicodeEncontrados, padroesEncontrados, anomalias
   // Texto invisível por cor branca ou font-size 0 é imediatamente crítico
   if (textoInvisivel.length > 0) return 'INJECTION_DETECTADA';
 
+  // Indicadores graves — excluir:
+  // - soft hyphens moderados (inseridos automaticamente pelo Word)
+  // - ausência de metadados isolada (pode ser documento legítimo sem metadados)
+  // - anomalias de entropia baixa/média isoladas
   const indicadoresGraves = [
     ...unicodeEncontrados.filter(u => !(u.codePoint === 'U+00AD' && u.gravidade === 'media')),
     ...padroesEncontrados,
+    ...anomaliasEncontradas.filter(a =>
+      a.tipo !== 'metadata_ausentes' &&
+      !(a.tipo === 'entropia_anomala_baixa') &&
+      !(a.tipo === 'entropia_blocos_anomalos' && a.gravidade === 'media') &&
+      !(a.tipo === 'sequencias_codificadas' && a.gravidade === 'media') &&
+      a.gravidade !== 'baixa'
+    ),
   ];
 
   if (score >= 60 || indicadoresGraves.length >= 3) return 'INJECTION_DETECTADA';

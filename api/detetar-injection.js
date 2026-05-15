@@ -247,11 +247,15 @@ function calcularRisco(unicode, padroes, anomalias) {
 // Fix: threshold ajustado para evitar falsos positivos com soft hyphens
 // totalIndicadores só conta indicadores com gravidade >= alta (exclui soft hyphen isolado)
 function veredictoRisco(score, unicodeEncontrados, padroesEncontrados, anomaliasEncontradas) {
-  // Indicadores de alta gravidade (excluindo soft hyphens moderados)
   const indicadoresGraves = [
     ...unicodeEncontrados.filter(u => !(u.codePoint === 'U+00AD' && u.gravidade === 'media')),
     ...padroesEncontrados,
-    ...anomaliasEncontradas.filter(a => a.gravidade !== 'baixa'),
+    ...anomaliasEncontradas.filter(a =>
+      !(a.tipo === 'entropia_anomala_baixa') &&
+      !(a.tipo === 'entropia_blocos_anomalos' && a.gravidade === 'media') &&
+      !(a.tipo === 'sequencias_codificadas' && a.gravidade === 'media') &&
+      a.gravidade !== 'baixa'
+    ),
   ];
 
   if (score >= 60 || indicadoresGraves.length >= 3) return 'INJECTION_DETECTADA';
