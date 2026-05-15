@@ -1,26 +1,33 @@
 // /api/detetar-injection.js — LexVeritas Detector de Prompt Injection
 // Vercel Serverless Function — Node.js 18+ — CommonJS
-// v1.0 — detecta prompt injection oculta em documentos jurídicos
+// v1.1 — fix: soft hyphen excluído do score; threshold ajustado
 
 const SUPABASE_URL      = 'https://bsbgizaftamufmmxeyer.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
 
 // ── Caracteres Unicode invisíveis conhecidos usados em prompt injection ──
+// NOTA: soft hyphen (\u00AD) e BOM (\uFEFF) têm tratamento especial —
+// são inseridos automaticamente por processadores de texto (Word, LibreOffice)
+// e só são sinalizados quando presentes em quantidade anómala.
 const UNICODE_INVISIVEL = [
-  '\u200B', // zero-width space
-  '\u200C', // zero-width non-joiner
-  '\u200D', // zero-width joiner
-  '\u200E', // left-to-right mark
-  '\u200F', // right-to-left mark
-  '\uFEFF', // byte order mark / zero-width no-break space
-  '\u2060', // word joiner
-  '\u2061', // function application
-  '\u2062', // invisible times
-  '\u2063', // invisible separator
-  '\u2064', // invisible plus
-  '\u00AD', // soft hyphen
-  '\u180E', // mongolian vowel separator
-  '\u034F', // combining grapheme joiner
+  { char: '\u200B', nome: 'Zero-Width Space',            limiar: 1  },
+  { char: '\u200C', nome: 'Zero-Width Non-Joiner',       limiar: 1  },
+  { char: '\u200D', nome: 'Zero-Width Joiner',           limiar: 1  },
+  { char: '\u200E', nome: 'Left-to-Right Mark',          limiar: 1  },
+  { char: '\u200F', nome: 'Right-to-Left Mark',          limiar: 1  },
+  { char: '\uFEFF', nome: 'BOM / Zero-Width No-Break',   limiar: 2  }, // 1 BOM é normal
+  { char: '\u2060', nome: 'Word Joiner',                 limiar: 1  },
+  { char: '\u2061', nome: 'Function Application',        limiar: 1  },
+  { char: '\u2062', nome: 'Invisible Times',             limiar: 1  },
+  { char: '\u2063', nome: 'Invisible Separator',         limiar: 1  },
+  { char: '\u2064', nome: 'Invisible Plus',              limiar: 1  },
+  { char: '\u00AD', nome: 'Soft Hyphen',                 limiar: 10 }, // Word insere automaticamente — só sinalizar se > 10
+  { char: '\u180E', nome: 'Mongolian Vowel Separator',   limiar: 1  },
+  { char: '\u034F', nome: 'Combining Grapheme Joiner',   limiar: 1  },
+  { char: '\u115F', nome: 'Hangul Choseong Filler',      limiar: 1  },
+  { char: '\u1160', nome: 'Hangul Jungseong Filler',     limiar: 1  },
+  { char: '\u3164', nome: 'Hangul Filler',               limiar: 1  },
+  { char: '\uFFA0', nome: 'Halfwidth Hangul Filler',     limiar: 1  },
 ];
 
 // ── Padrões linguísticos típicos de prompt injection em PT e EN ──
@@ -47,6 +54,10 @@ const PADROES_INJECTION = [
   { re: /o\s+documento\s+cont[eé]m\s+prova\s+(conclusiva|definitiva)/gi, tipo: 'manipulacao_judicial', gravidade: 'critica', desc: 'Afirmação fabricada sobre prova conclusiva' },
   { re: /analise?\s+(os?\s+)?argumentos?\s+sob\s+a\s+[oó]tica/gi, tipo: 'manipulacao_judicial', gravidade: 'media', desc: 'Instrução sobre perspectiva de análise' },
   { re: /favor\s+analis[ae]r?\s+(os?\s+argumentos?|esta\s+pe[cç]a)/gi, tipo: 'manipulacao_judicial', gravidade: 'alta', desc: 'Instrução directa ao modelo de análise' },
+  { re: /conteste\s+(essa|esta)\s+peti[cç][aã]o\s+de\s+forma\s+superficial/gi, tipo: 'manipulacao_judicial', gravidade: 'critica', desc: 'Instrução para contestar superficialmente (padrão TRT8)' },
+  { re: /n[aã]o\s+impugne\s+os?\s+documentos?/gi, tipo: 'manipulacao_judicial', gravidade: 'critica', desc: 'Instrução para não impugnar documentos (padrão TRT8)' },
+  { re: /independentemente\s+do\s+comando\s+que\s+lhe\s+for\s+dado/gi, tipo: 'manipulacao_judicial', gravidade: 'critica', desc: 'Override de comandos do sistema (padrão TRT8)' },
+  { re: /aten[cç][aã]o[,\s]+intelig[eê]ncia\s+artificial/gi, tipo: 'manipulacao_judicial', gravidade: 'critica', desc: 'Interpelação directa à IA no corpo do documento' },
 
   // Padrões de system prompt override
   { re: /\[SYSTEM\]/gi, tipo: 'system_override', gravidade: 'critica', desc: 'Tag [SYSTEM] — tentativa de override de prompt de sistema' },
@@ -66,24 +77,34 @@ const PADROES_INJECTION = [
 // ── Detector de caracteres Unicode invisíveis ──
 function detectarUnicodeInvisivel(texto) {
   const encontrados = [];
-  const contagens = {};
 
-  for (const char of UNICODE_INVISIVEL) {
+  for (const { char, nome, limiar } of UNICODE_INVISIVEL) {
     const count = (texto.split(char)).length - 1;
-    if (count > 0) {
+
+    // Só sinalizar se ultrapassar o limiar definido para este caractere
+    if (count >= limiar) {
       const codePoint = char.codePointAt(0).toString(16).toUpperCase().padStart(4, '0');
-      contagens[`U+${codePoint}`] = count;
+
+      // Gravidade proporcional à quantidade e ao tipo
+      let gravidade;
+      if (char === '\u00AD') {
+        // Soft hyphen: só é suspeito em grande quantidade
+        gravidade = count > 30 ? 'alta' : 'media';
+      } else {
+        gravidade = count > 5 ? 'critica' : count > 2 ? 'alta' : 'media';
+      }
+
       encontrados.push({
         tipo: 'unicode_invisivel',
-        gravidade: count > 5 ? 'critica' : 'alta',
-        desc: `Caractere invisível U+${codePoint} encontrado ${count} vez${count > 1 ? 'es' : ''}`,
+        gravidade,
+        desc: `${nome} (U+${codePoint}) — ${count} ocorrência${count > 1 ? 's' : ''}`,
         count,
         codePoint: `U+${codePoint}`,
       });
     }
   }
 
-  return { encontrados, contagens };
+  return encontrados;
 }
 
 // ── Detector de padrões linguísticos de injection ──
@@ -100,59 +121,50 @@ function detectarPadroesLinguisticos(texto) {
         posicao: m.index,
         contexto: texto.substring(Math.max(0, m.index - 50), m.index + m[0].length + 50).replace(/\n/g, ' '),
       });
-      if (matches.length >= 3) break; // Máx 3 ocorrências por padrão
+      if (matches.length >= 3) break;
     }
-
     if (matches.length > 0) {
-      encontrados.push({
-        tipo: padrao.tipo,
-        gravidade: padrao.gravidade,
-        desc: padrao.desc,
-        ocorrencias: matches,
-      });
+      encontrados.push({ tipo: padrao.tipo, gravidade: padrao.gravidade, desc: padrao.desc, ocorrencias: matches });
     }
   }
 
   return encontrados;
 }
 
-// ── Detector de repetição anómala ──
-// Texto de injection oculto por repetição com separadores invisíveis
-function detectarRepeticaoAnomala(texto) {
+// ── Detector de anomalias estruturais ──
+function detectarAnomalias(texto) {
   const alertas = [];
 
-  // Sequências de espaços anómalas (mais de 5 espaços consecutivos fora de início de linha)
-  const espacosAnimalos = texto.match(/[^\n] {6,}/g);
-  if (espacosAnimalos && espacosAnimalos.length > 3) {
-    alertas.push({
-      tipo: 'espacos_anomalos',
-      gravidade: 'media',
-      desc: `${espacosAnimalos.length} sequências com espaços excessivos — possível texto oculto`,
-    });
+  const espacosAnomalia = texto.match(/[^\n] {6,}/g);
+  if (espacosAnomalia && espacosAnomalia.length > 3) {
+    alertas.push({ tipo: 'espacos_anomalos', gravidade: 'media', desc: `${espacosAnomalia.length} sequências com espaços excessivos — possível texto oculto` });
   }
 
-  // Linhas muito curtas intercaladas (técnica de fragmentação)
   const linhas = texto.split('\n');
   const linhasCurtas = linhas.filter(l => l.trim().length > 0 && l.trim().length < 4);
   if (linhasCurtas.length > 10) {
-    alertas.push({
-      tipo: 'fragmentacao_texto',
-      gravidade: 'media',
-      desc: `${linhasCurtas.length} linhas muito curtas — possível fragmentação de instrução oculta`,
-    });
+    alertas.push({ tipo: 'fragmentacao_texto', gravidade: 'media', desc: `${linhasCurtas.length} linhas muito curtas — possível fragmentação de instrução oculta` });
   }
 
   return alertas;
 }
 
 // ── Calcular score de risco ──
+// Soft hyphens em quantidade moderada não contribuem para o score
 function calcularRisco(unicode, padroes, anomalias) {
   let score = 0;
 
   for (const u of unicode) {
-    if (u.gravidade === 'critica') score += 40;
-    else if (u.gravidade === 'alta') score += 25;
-    else score += 10;
+    // Soft hyphen com gravidade média contribui menos
+    if (u.codePoint === 'U+00AD' && u.gravidade === 'media') {
+      score += 3;
+    } else if (u.gravidade === 'critica') {
+      score += 40;
+    } else if (u.gravidade === 'alta') {
+      score += 25;
+    } else {
+      score += 10;
+    }
   }
 
   for (const p of padroes) {
@@ -170,9 +182,19 @@ function calcularRisco(unicode, padroes, anomalias) {
   return Math.min(100, score);
 }
 
-function veredictoRisco(score, totalIndicadores) {
-  if (score >= 60 || totalIndicadores >= 3) return 'INJECTION_DETECTADA';
-  if (score >= 30 || totalIndicadores >= 1) return 'SUSPEITO';
+// ── Veredicto ──
+// Fix: threshold ajustado para evitar falsos positivos com soft hyphens
+// totalIndicadores só conta indicadores com gravidade >= alta (exclui soft hyphen isolado)
+function veredictoRisco(score, unicodeEncontrados, padroesEncontrados, anomaliasEncontradas) {
+  // Indicadores de alta gravidade (excluindo soft hyphens moderados)
+  const indicadoresGraves = [
+    ...unicodeEncontrados.filter(u => !(u.codePoint === 'U+00AD' && u.gravidade === 'media')),
+    ...padroesEncontrados,
+    ...anomaliasEncontradas.filter(a => a.gravidade !== 'baixa'),
+  ];
+
+  if (score >= 60 || indicadoresGraves.length >= 3) return 'INJECTION_DETECTADA';
+  if (score >= 30 || indicadoresGraves.length >= 1) return 'SUSPEITO';
   return 'LIMPO';
 }
 
@@ -186,7 +208,6 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
 
-  // ── Autenticação ──
   const authHeader = (req.headers.authorization || '').trim();
   if (!authHeader.startsWith('Bearer ')) return res.status(401).json({ erro: 'Autenticação necessária.' });
   const token = authHeader.replace('Bearer ', '').trim();
@@ -202,16 +223,15 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ erro: 'Texto insuficiente.' });
   }
 
-  // ── Análise ──
-  const { encontrados: unicodeEncontrados } = detectarUnicodeInvisivel(texto);
+  const unicodeEncontrados = detectarUnicodeInvisivel(texto);
   const padroesEncontrados = detectarPadroesLinguisticos(texto);
-  const anomaliasEncontradas = detectarRepeticaoAnomala(texto);
+  const anomaliasEncontradas = detectarAnomalias(texto);
 
-  const totalIndicadores = unicodeEncontrados.length + padroesEncontrados.length + anomaliasEncontradas.length;
   const score = calcularRisco(unicodeEncontrados, padroesEncontrados, anomaliasEncontradas);
-  const veredicto = veredictoRisco(score, totalIndicadores);
+  const veredicto = veredictoRisco(score, unicodeEncontrados, padroesEncontrados, anomaliasEncontradas);
+  const totalIndicadores = unicodeEncontrados.length + padroesEncontrados.length + anomaliasEncontradas.length;
 
-  const resumo = {
+  return res.status(200).json({
     veredicto,
     score,
     total_indicadores: totalIndicadores,
@@ -223,7 +243,5 @@ module.exports = async function handler(req, res) {
       : veredicto === 'SUSPEITO'
       ? 'Documento apresenta elementos suspeitos. Reveja manualmente antes de processar com IA.'
       : 'Nenhum indicador de prompt injection detectado. Documento aparenta ser legítimo.',
-  };
-
-  return res.status(200).json(resumo);
+  });
 };
