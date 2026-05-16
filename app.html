@@ -1398,14 +1398,22 @@ function renderResultsInjection(result) {
   document.getElementById('citacoes-card').style.display = 'none';
   document.getElementById('relator-card').style.display = 'none';
   document.getElementById('evidence-card').style.display = 'none';
-
-  let html = '';
+let html = '';
 
   if (result.unicode_invisivel?.length > 0) {
     html += '<div class="analysis-card" style="border-left:3px solid #8b1a1a;margin-bottom:16px"><h3>🔴 Caracteres Unicode Invisíveis</h3>';
     result.unicode_invisivel.forEach(u => {
       html += `<div style="padding:8px 0;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:10px"><span style="font-family:var(--mono);font-size:10px;background:rgba(139,26,26,0.08);color:#8b1a1a;padding:2px 8px">${u.codePoint}</span><span style="font-family:var(--sans);font-size:12px;color:#444">${u.desc}</span></div>`;
     });
+    html += '</div>';
+  }
+
+  if (result.homoglyphs?.filter(h => h.agrupado).length > 0) {
+    html += '<div class="analysis-card" style="border-left:3px solid #8b1a1a;margin-bottom:16px"><h3>🔤 Homoglyphs Detectados</h3>';
+    result.homoglyphs.filter(h => h.agrupado).forEach(r => {
+      html += `<div style="padding:10px 0;border-bottom:1px solid var(--rule)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-family:var(--mono);font-size:8px;background:rgba(139,26,26,0.1);color:#8b1a1a;padding:2px 6px;text-transform:uppercase">${r.gravidade}</span><strong style="font-family:var(--sans);font-size:12px;color:#333">${r.desc}</strong></div></div>`;
+    });
+    html += '<div style="font-family:var(--sans);font-size:11px;color:#888;margin-top:8px;line-height:1.6">Caracteres visualmente idênticos a letras latinas mas de scripts diferentes (Cirílico, Grego, Arménio). Podem invalidar assinaturas digitais e enganar sistemas de verificação automática.</div>';
     html += '</div>';
   }
 
