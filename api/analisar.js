@@ -1,6 +1,12 @@
 // /api/analisar.js — LexVeritas API Endpoint
 // Vercel Serverless Function — Node.js 18+ — CommonJS
-// v2.6 — mapeamento tribunais verificado LOSJ (Lei 62/2013) + DL 49/2014 + fonte CSM oficial
+// v2.8 — citacoes_suspeitas no modo académico (Nível 1: prompt + schema; Nível 2: backend)
+//        Nível 1: systemPrompt académico inclui citacoes_suspeitas com regras para notas
+//                 de rodapé, bibliografia, doutrina e acórdãos; max_tokens académico → 3000
+//        Nível 2: extrairEValidarProcessos() activo também para modo académico;
+//                 normalização citacoes_suspeitas partilhada entre judicial e académico
+// v2.7 — extracção inteligente de texto para modo académico (50.000 chars, heurística estrutural)
+//        mapeamento tribunais verificado LOSJ (Lei 62/2013) + DL 49/2014 + fonte CSM oficial
 //        fix: Aveiro→Porto, Bragança→Guimarães, Vila Real→Guimarães, Braga→Guimarães
 //        max_tokens crítica 5000, retry automático, correcção tribunal no backend
 
@@ -305,7 +311,6 @@ function validarNumeroProcesso(numero) {
   const anoReal = anoNum < 100 ? (anoNum >= 90 ? 1900 + anoNum : 2000 + anoNum) : anoNum;
   const anoAtual = new Date().getFullYear();
   if (anoReal < 1990) resultado.problemas.push(`Ano ${anoReal} anterior à informatização (1990). Provavelmente fabricado.`);
-  // Permitir até 1 ano no futuro — acórdãos recentes têm datas correntes válidas
   if (anoReal > anoAtual + 1) resultado.problemas.push(`Ano ${anoReal} improvável (actual: ${anoAtual}). Verifique.`);
   if (!LETRAS_RELACAO[letraRelacao]) {
     resultado.problemas.push(`Letra tribunal desconhecida: "${letraRelacao}". Válidas: L, P, C, G, E, S, A, T.`);
@@ -464,22 +469,79 @@ module.exports = async function handler(req, res) {
 
   // ══════════════════════════════════════════════════════
   // SELECÇÃO INTELIGENTE DE TEXTO
-  // Para documentos longos, extrai a secção mais relevante
-  // para análise forense em vez de truncar cegamente.
-  // Limite aumentado para 20.000 chars (cobre a maioria dos acórdãos completos).
+  // Limites:
+  //   Judicial:  20.000 chars — extracção da fundamentação
+  //   Académico: 50.000 chars — extracção do corpo via heurística estrutural
+  //   Crítica:   20.000 chars — truncagem simples (acórdãos mais curtos)
   // ══════════════════════════════════════════════════════
   const LIMITE_CHARS = 20000;
+  const LIMITE_CHARS_ACADEMICO = 50000;
 
   function extrairTextoRelevante(txt, modoAnalise) {
-    if (!txt || txt.length <= LIMITE_CHARS) return txt;
+    if (!txt) return txt;
 
-    // Para modo crítica e académico: texto completo truncado (estrutura toda importa)
-    if (modoAnalise !== 'judicial') {
+    // ── MODO ACADÉMICO ──────────────────────────────────
+    // Teses jurídicas têm estrutura previsível:
+    //   0-15%  → capa, índice, resumo, introdução (escrita com atenção — menos IA)
+    //   15-85% → desenvolvimento, revisão de literatura, argumentação (onde IA aparece)
+    //   85-100% → conclusões, bibliografia
+    // Estratégia: tentar localizar o início do corpo via marcadores;
+    // fallback para 25% do documento se não encontrar marcador.
+    if (modoAnalise === 'academico') {
+      if (txt.length <= LIMITE_CHARS_ACADEMICO) return txt;
+
+      const MARCADORES_CORPO = [
+        /\bCAPÍTULO\s+(?:II|III|IV|2|3|4)\b/i,
+        /^\s*2\s*[\.\-–—]\s+[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ]/m,   // "2. Revisão da Literatura"
+        /^\s*II\s*[\.\-–—]\s+[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ]/im,
+        /\bREVISÃO\s+(?:DA\s+)?LITERATURA\b/i,
+        /\bESTADO\s+DA\s+ARTE\b/i,
+        /\bENQUADRAMENTO\s+TE[OÓ]RICO\b/i,
+        /\bQUADRO\s+TE[OÓ]RICO\b/i,
+        /\bFUNDAMENTAÇÃO\s+TE[OÓ]RICA\b/i,
+        /\bMETODOLOGIA\b/i,
+        /\bDESENVOLVIMENTO\b/i,
+      ];
+
+      // Ignorar ocorrências nos primeiros 5% (podem ser do índice)
+      const ignorarAte = Math.floor(txt.length * 0.05);
+
+      let inicioCorpor = -1;
+      for (const re of MARCADORES_CORPO) {
+        const m = re.exec(txt);
+        if (m && m.index > ignorarAte) {
+          inicioCorpor = m.index;
+          break;
+        }
+      }
+
+      // Fallback: sem marcador → começar a 25% do documento (salta introdução típica)
+      if (inicioCorpor === -1) {
+        inicioCorpor = Math.floor(txt.length * 0.25);
+      }
+
+      const segmento = txt.substring(inicioCorpor, inicioCorpor + LIMITE_CHARS_ACADEMICO);
+      const etiqueta = inicioCorpor > Math.floor(txt.length * 0.24)
+        ? '[corpo extraído automaticamente via marcador estrutural'
+        : '[corpo extraído automaticamente via posição estimada (25%)';
+
+      return `${etiqueta} — posição ${inicioCorpor} de ${txt.length} chars totais]\n\n` + segmento +
+             (inicioCorpor + LIMITE_CHARS_ACADEMICO < txt.length
+               ? `\n\n[texto truncado — analisados ${LIMITE_CHARS_ACADEMICO} chars a partir da posição ${inicioCorpor}]`
+               : '');
+    }
+
+    // ── MODO CRÍTICA ────────────────────────────────────
+    // Acórdãos são mais curtos; truncagem simples é suficiente.
+    if (modoAnalise === 'critica') {
+      if (txt.length <= LIMITE_CHARS) return txt;
       return txt.substring(0, LIMITE_CHARS) + '\n[texto truncado — ' + txt.length + ' chars total]';
     }
 
-    // Para modo judicial: tentar extrair a fundamentação
-    // A fundamentação é a secção forense mais relevante (onde a IA costuma aparecer)
+    // ── MODO JUDICIAL ───────────────────────────────────
+    // Lógica original: extrai a fundamentação quando possível.
+    if (txt.length <= LIMITE_CHARS) return txt;
+
     const MARCADORES_FUND = [
       /\bII[\s\-–—]*FUNDAMENTA[CÇ]ÃO\b/i,
       /\bIII[\s\-–—]*FUNDAMENTA[CÇ]ÃO\b/i,
@@ -504,29 +566,25 @@ module.exports = async function handler(req, res) {
       /\bFACE AO EXPOSTO\b/i,
     ];
 
-    // Localizar início da fundamentação
     let inicioFund = -1;
     for (const re of MARCADORES_FUND) {
       const m = re.exec(txt);
-      if (m && m.index > 200) { // ignorar se muito no início (pode ser sumário)
+      if (m && m.index > 200) {
         inicioFund = m.index;
         break;
       }
     }
 
     if (inicioFund === -1) {
-      // Sem marcador de fundamentação — usar segunda metade do documento
-      // (relatório factual costuma ser a primeira metade)
       const meio = Math.floor(txt.length / 2);
       const segmento = txt.substring(meio, meio + LIMITE_CHARS);
       return '[início da fundamentação estimado]\n\n' + segmento +
              '\n[texto truncado — ' + txt.length + ' chars total]';
     }
 
-    // Tentar localizar o fim da fundamentação
     let fimFund = txt.length;
     for (const re of MARCADORES_FIM) {
-      re.lastIndex = inicioFund + 500; // procurar depois do início
+      re.lastIndex = inicioFund + 500;
       const mFim = re.exec(txt.substring(inicioFund + 500));
       if (mFim) {
         const posFim = inicioFund + 500 + mFim.index;
@@ -536,7 +594,6 @@ module.exports = async function handler(req, res) {
 
     const secFund = txt.substring(inicioFund, fimFund);
 
-    // Se a fundamentação cabe no limite, incluir também contexto anterior (relatório)
     if (secFund.length <= LIMITE_CHARS - 2000) {
       const contextoAnterior = txt.substring(Math.max(0, inicioFund - 2000), inicioFund);
       const combined = contextoAnterior + secFund;
@@ -544,7 +601,6 @@ module.exports = async function handler(req, res) {
       return combined.substring(0, LIMITE_CHARS) + '\n[texto truncado]';
     }
 
-    // Fundamentação é longa — enviar só ela (prioridade máxima)
     return '[fundamentação extraída automaticamente]\n\n' +
            secFund.substring(0, LIMITE_CHARS) +
            '\n[texto truncado — fundamentação com ' + secFund.length + ' chars]';
@@ -554,7 +610,7 @@ module.exports = async function handler(req, res) {
 
   // ── VALIDAÇÃO LOCAL DE NÚMEROS DE PROCESSO ──
   let validacoesLocais = [];
-  if (modo === 'judicial' && texto) validacoesLocais = extrairEValidarProcessos(texto);
+  if ((modo === 'judicial' || modo === 'academico') && texto) validacoesLocais = extrairEValidarProcessos(texto);
 
   // ── TRIBUNAL DE RECURSO DETERMINADO LOCALMENTE (para crítica) ──
   const tribunalRecursoLocal = modo === 'critica' ? determinarTribunalRecurso(tribunal) : null;
@@ -660,9 +716,24 @@ IV. PEDIDO
 
     systemPrompt = `Perito forense em análise linguística de IA em textos académicos jurídicos portugueses. JSON PURO apenas.
 
-{"veredicto":"IA_DETECTADA","confianca":80,"indicadores":{"perplexidade":75,"burstiness":60,"coesao_artificial":70,"uniformidade_sintatica":65,"riqueza_lexical":55,"marcadores_formulaicos":80},"humanizador_detectado":false,"narrativa":"...","relator_analise":"...","marcadores":[{"tipo":"ai","texto":"..."}]}
+{"veredicto":"IA_DETECTADA","confianca":80,"indicadores":{"perplexidade":75,"burstiness":60,"coesao_artificial":70,"uniformidade_sintatica":65,"riqueza_lexical":55,"marcadores_formulaicos":80},"humanizador_detectado":false,"citacoes_suspeitas":[],"narrativa":"...","relator_analise":"...","marcadores":[{"tipo":"ai","texto":"..."}]}
 
-veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMANO | tipo: ai/humano | indicadores 0-100 | humanizador_detectado: true se Quillbot/Undetectable.ai/WordAI`;
+veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMANO | tipo: ai/humano | indicadores 0-100 | humanizador_detectado: true se Quillbot/Undetectable.ai/WordAI
+
+citacoes_suspeitas — ANÁLISE OBRIGATÓRIA de notas de rodapé e bibliografia:
+[{"citacao":"...","tipo":"acordao|diploma_legal|doutrina|jurisprudencia","problema":"...","gravidade":"alta|media|baixa","validacao_formato":"ok|formato_invalido|nao_aplicavel"}]
+
+REGRAS CRÍTICAS para citacoes_suspeitas em texto académico:
+
+ACÓRDÃOS (notas de rodapé): assinala se o número de processo tiver formato manifestamente inválido (não segue padrão NNNNN/AA.NTTTTT.XN), ano impossível (anterior a 1990 ou superior ao ano actual +1), ou incoerência comarca/Relação detectável. NÃO assinales por mera dúvida.
+
+DOUTRINA (notas de rodapé e bibliografia): assinala se o autor claramente não existe ou é internamente contraditório, se a obra tem título impossível ou atribuição absurda (ex: Figueiredo Dias como autor de obra de direito civil), ou se edição/data é manifestamente impossível. NÃO assinales apenas por não reconheceres a obra — é normal em textos académicos citar obras menos conhecidas.
+
+DIPLOMAS LEGAIS: NUNCA assinales um diploma legal apenas por incerteza. Só assinala se houver erro POSITIVO e CLARO: formato manifestamente errado (ex: "Lei n.º 0/0000"), contradição interna, ou data de entrada em vigor impossível.
+
+PRINCÍPIO GERAL ACADÉMICO: textos de mestrado/doutoramento contêm habitualmente 20-60 citações bibliográficas legítimas. Em caso de dúvida, NÃO incluas no array. Falsos positivos (assinalar obra correcta) são muito piores do que omitir uma suspeita. Array vazio [] é resposta válida e preferível.
+
+Foca a análise citacional nas notas de rodapé numeradas e na secção de bibliografia/referências bibliográficas.`;
 
     userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}TEXTO:\n\n${textoTruncado}\n\nJSON puro.`;
 
@@ -705,7 +776,7 @@ Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É
   }
 
   // ── CHAMADA ANTHROPIC com retry ──
-  const maxTokens = modo === 'minuta' ? 16000 : modo === 'critica' ? 5000 : modo === 'judicial' ? 3000 : 2000;
+  const maxTokens = modo === 'minuta' ? 16000 : modo === 'critica' ? 5000 : (modo === 'judicial' || modo === 'academico') ? 3000 : 2000;
 
   async function chamarAnthropic() {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -783,7 +854,6 @@ Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É
       parsed.sumario        = String(parsed.sumario        || 'Análise concluída.');
       parsed.conclusao      = String(parsed.conclusao      || 'Consulte um advogado.');
 
-      // Correcção do tribunal — backend tem precedência absoluta sobre o modelo
       parsed.tribunal_recurso = corrigirTribunalRecurso(parsed.tribunal_recurso, tribunal);
 
       parsed.alerta_contraditorio          = String(parsed.alerta_contraditorio          || '');
@@ -825,7 +895,7 @@ Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É
       parsed.relator_analise       = String(parsed.relator_analise || 'Não indicado.');
       parsed.humanizador_detectado = parsed.humanizador_detectado === true;
 
-      if (modo === 'judicial') {
+      if (modo === 'judicial' || modo === 'academico') {
         const okGravCit    = ['alta','media','baixa'];
         const okTipoCit    = ['acordao','diploma_legal','doutrina','jurisprudencia'];
         const okFormatoCit = ['ok','formato_invalido','nao_aplicavel'];
