@@ -31,7 +31,6 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 @keyframes introFadeUp { to { opacity: 1; transform: translateY(0); } }
 @keyframes introLoad { to { width: 100%; } }
 
-/* NAV — oculto por defeito, só visível em ecrãs grandes */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(6,6,8,0); backdrop-filter: blur(0px); border-bottom: 1px solid transparent; transition: all 0.4s ease; }
 nav.scrolled { background: rgba(6,6,8,0.9); backdrop-filter: blur(24px); border-bottom-color: var(--border); }
 .nav-logo { font-family: var(--serif); font-size: 22px; color: var(--white); text-decoration: none; font-style: italic; flex-shrink: 0; margin-right: 24px; }
@@ -42,7 +41,6 @@ nav.scrolled { background: rgba(6,6,8,0.9); backdrop-filter: blur(24px); border-
 .nav-cta { background: var(--gold) !important; color: var(--black) !important; padding: 10px 24px !important; font-weight: 700 !important; transition: background 0.2s !important; }
 .nav-cta:hover { background: var(--gold-light) !important; }
 
-/* HERO */
 .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 120px 48px 80px; position: relative; overflow: hidden; text-align: center; }
 .hero-canvas { position: absolute; inset: 0; overflow: hidden; }
 .hero-glow { position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(201,168,76,0.15) 0%, transparent 60%); animation: glowPulse 4s ease-in-out infinite; }
@@ -192,10 +190,7 @@ footer { border-top: 1px solid var(--border); padding: 60px 48px 32px; }
 .footer-bottom { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; padding-top: 24px; border-top: 1px solid var(--border); }
 .footer-copy { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; }
 
-/* Mostrar nav APENAS em ecrãs grandes — sempre oculto por defeito */
-@media (min-width: 1280px) {
-  .nav-links { display: flex !important; }
-}
+@media (min-width: 1280px) { .nav-links { display: flex !important; } }
 @media (max-width: 900px) {
   body { cursor: auto; }
   .cursor, .cursor-ring { display: none; }
@@ -253,7 +248,7 @@ footer { border-top: 1px solid var(--border); padding: 60px 48px 32px; }
     <div class="stats-bar">
       <div class="stat-item"><span class="stat-number">14+</span><span class="stat-label">Tribunais Cobertos</span></div>
       <div class="stat-item"><span class="stat-number">6</span><span class="stat-label">Indicadores Forenses</span></div>
-      <div class="stat-item"><span class="stat-number">3</span><span class="stat-label">Modos de Análise</span></div>
+      <div class="stat-item"><span class="stat-number">4</span><span class="stat-label">Modos de Análise</span></div>
       <div class="stat-item"><span class="stat-number">EU</span><span class="stat-label">Dados em Portugal</span></div>
     </div>
   </div>
@@ -314,7 +309,7 @@ footer { border-top: 1px solid var(--border); padding: 60px 48px 32px; }
     <h2 class="section-title reveal">Construído para <span>profissionais do direito</span></h2>
     <div class="features-grid">
       <div class="feat-card reveal reveal-delay-1"><div class="feat-icon">🏛️</div><h3>Calibrado para Tribunais PT</h3><p>STJ, TRL, TRP, TRC, TRG, TRE, TC, TCAS, TCAN — cada tribunal tem um perfil estilístico próprio.</p></div>
-      <div class="feat-card reveal reveal-delay-2"><div class="feat-icon">🔬</div><h3>Análise Crítica de Recurso</h3><p>Identifica nulidades processuais, erros de julgamento e gera argumentos técnicos fundamentados para peça de recurso.</p></div>
+      <div class="feat-card reveal reveal-delay-2"><div class="feat-icon">🔬</div><h3>Análise de Recurso</h3><p>Identifica nulidades processuais, erros de julgamento e gera argumentos técnicos fundamentados para peça de recurso.</p></div>
       <div class="feat-card reveal reveal-delay-3"><div class="feat-icon">📋</div><h3>Relatório PDF</h3><p>Cada análise gera um relatório PDF com número de referência único e indicadores visuais.</p></div>
       <div class="feat-card reveal reveal-delay-1"><div class="feat-icon">📝</div><h3>Proposta de Recurso</h3><p>Geração automática de minuta de recurso com conclusões numeradas e pedido final, pronta a adaptar.</p></div>
       <div class="feat-card reveal reveal-delay-2"><div class="feat-icon">🔒</div><h3>Segurança RGPD</h3><p>Dados alojados na União Europeia. Conformidade total com o RGPD. A chave da API nunca é exposta ao browser.</p></div>
@@ -363,7 +358,7 @@ footer { border-top: 1px solid var(--border); padding: 60px 48px 32px; }
         <div class="price-period">por mês</div>
         <ul class="price-list">
           <li>100 análises por mês</li>
-          <li>Análise Crítica de Nulidades</li>
+          <li>Análise de Recurso</li>
           <li>Proposta de Recurso</li>
           <li>Relatório PDF profissional</li>
           <li>Histórico ilimitado</li>
@@ -432,8 +427,7 @@ footer { border-top: 1px solid var(--border); padding: 60px 48px 32px; }
     </div>
   </div>
   <div class="footer-bottom">
-    <span class="footer-copy">© 2026 LexVeritas. Todos os direitos reservados.
-Marca e conteúdos protegidos nos termos do CDADC & CPI.</span>
+    <span class="footer-copy">© 2026 LexVeritas. Todos os direitos reservados. Marca e conteúdos protegidos nos termos do CDADC &amp; CPI.</span>
     <span class="footer-copy">FERRAMENTA AUXILIAR · NÃO CONSTITUI PROVA JURÍDICA</span>
   </div>
 </footer>
