@@ -200,7 +200,7 @@ body { background: var(--black); color: var(--white); font-family: var(--sans); 
 .sp { padding: clamp(72px,8vw,100px) clamp(24px,5vw,48px); }
 .container { max-width: 1180px; margin: 0 auto; }
 
-/* ── MODOS DE ANÁLISE — grid de 2×2 em desktop, 1 col mobile ── */
+/* ── MODOS DE ANÁLISE ── */
 .modos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
 .modo-card { background: var(--dark); padding: 36px 30px; position: relative; overflow: hidden; transition: background .3s; }
 .modo-card:hover { background: #161620; }
@@ -472,7 +472,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     <div class="hero-eyebrow">Tecnologia Forense Jurídica · Portugal</div>
     <h1 class="hero-title">Lex<span>Veritas</span></h1>
     <p class="hero-sub">O primeiro sistema de análise forense de inteligência artificial em decisões judiciais dos tribunais portugueses.</p>
-<p style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(201,168,76,0.5);margin-top:-32px;margin-bottom:44px">Desenvolvido especificamente para a jurisprudência portuguesa · 2026</p>
+    <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(201,168,76,0.5);margin-top:-32px;margin-bottom:44px">Desenvolvido especificamente para a jurisprudência portuguesa · 2026</p>
     <div class="hero-actions">
       <a href="#demo" class="btn-primary"><span>Testar Agora — Grátis →</span></a>
       <a href="#modos" class="btn-secondary">Conhecer as Análises</a>
@@ -495,12 +495,12 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
   </div>
 </section>
 
-<!-- BARRA DE DESTAQUE ARTIGO BLOG -->
+<!-- BARRA DE DESTAQUE — ARTIGO TEK NOTÍCIAS -->
 <div style="background:#0e0e12;border-top:1px solid rgba(201,168,76,0.15);border-bottom:1px solid rgba(201,168,76,0.15);padding:14px clamp(20px,5vw,60px)">
-  <a href="/blog/lexveritas-vs-chatgpt-claude-gemini" style="display:flex;align-items:center;justify-content:center;gap:12px;text-decoration:none;flex-wrap:wrap">
-    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);padding:3px 10px;flex-shrink:0">✦ NOVO ESTUDO</span>
-    <span style="font-family:'Syne',sans-serif;font-size:13px;color:#e0dcd4">Testámos 4 ferramentas de IA com o mesmo acórdão do TRL. Os resultados foram opostos.</span>
-    <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);font-weight:700;flex-shrink:0">Ler o estudo →</span>
+  <a href="https://tek.sapo.pt/opiniao/artigos/quando-a-ia-inventa-jurisprudencia-o-caso-do-tribunal-portugues-que-apanhou-o-chatgpt-em-flagrante/" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:12px;text-decoration:none;flex-wrap:wrap">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);padding:3px 10px;flex-shrink:0">✦ TEK NOTÍCIAS</span>
+    <span style="font-family:'Syne',sans-serif;font-size:13px;color:#e0dcd4">Quando a IA inventa jurisprudência: o caso do tribunal português que apanhou o ChatGPT em flagrante.</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);font-weight:700;flex-shrink:0">Ler o artigo →</span>
   </a>
 </div>
 
@@ -527,7 +527,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
           <div class="modo-feature judicial"><span class="arrow">→</span><span>STJ, TRL, TRP, TRC, TRG, TRE, STA, TC e mais</span></div>
           <div class="modo-feature judicial"><span class="arrow">→</span><span>Verificação de citações e acórdãos suspeitos</span></div>
           <div class="modo-feature judicial"><span class="arrow">→</span><span>Detecção de ferramentas de humanização de IA</span></div>
-        <div class="modo-feature judicial"><span class="arrow">→</span><span>Relatório PDF profissional com referência única</span></div>
+          <div class="modo-feature judicial"><span class="arrow">→</span><span>Relatório PDF profissional com referência única</span></div>
         </div>
         <div style="margin:14px 0 4px;padding:9px 12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);font-family:var(--mono);font-size:9px;color:rgba(201,168,76,0.7);line-height:1.6;letter-spacing:0.04em">⚠ Calibrado exclusivamente para o sistema judicial português. Documentos de outras jurisdições produzem resultados sem validade — o sistema alertará quando o domínio não for reconhecido.</div>
         <div class="modo-para">
@@ -574,7 +574,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
         </div>
       </div>
 
-      <!-- DETECTOR DE PROMPT INJECTION — NOVO -->
+      <!-- DETECTOR DE PROMPT INJECTION -->
       <div class="modo-card">
         <div class="modo-card-bar injection"></div>
         <div style="font-size:28px;margin-bottom:16px">🛡️</div>
