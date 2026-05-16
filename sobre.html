@@ -66,6 +66,13 @@ h1 em{color:var(--gold);font-style:italic}
 .photo-badge-text{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--black);font-weight:700}
 .photo-badge-year{font-family:var(--serif);font-size:22px;font-style:italic;color:var(--black);line-height:1}
 
+/* ── ARTIGO DESTAQUE ── */
+.artigo-destaque{background:rgba(201,168,76,0.06);border:1px solid var(--rule-dark);border-left:3px solid var(--gold);padding:16px 20px;margin-top:24px;display:flex;align-items:center;gap:14px;text-decoration:none;transition:all 0.25s;max-width:520px}
+.artigo-destaque:hover{background:rgba(201,168,76,0.1);border-left-color:var(--gold-light)}
+.artigo-destaque-label{font-family:var(--mono);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.artigo-destaque-title{font-family:var(--sans);font-size:12px;color:var(--cream);line-height:1.5}
+.artigo-destaque-arrow{font-size:16px;color:var(--gold);flex-shrink:0;margin-left:auto}
+
 /* ── STATS BAR ── */
 .stats-bar{border-top:1px solid var(--rule-dark);border-bottom:1px solid var(--rule-dark);padding:32px clamp(20px,5vw,60px);display:flex;justify-content:center;gap:60px;flex-wrap:wrap}
 .stat-item{text-align:center}
@@ -94,7 +101,7 @@ h1 em{color:var(--gold);font-style:italic}
 .profile-item-value{font-family:var(--sans);font-size:14px;color:var(--cream);font-weight:500}
 .profile-item-sub{font-family:var(--sans);font-size:12px;color:var(--grey)}
 
-/* ── EXPERTISE TAGS (substitui barras com %) ── */
+/* ── EXPERTISE TAGS ── */
 .expertise-wrap{display:flex;flex-direction:column;gap:12px}
 .expertise-group{margin-bottom:8px}
 .expertise-group-label{font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);opacity:0.7;margin-bottom:10px}
@@ -102,6 +109,10 @@ h1 em{color:var(--gold);font-style:italic}
 .expertise-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:rgba(248,246,241,0.7);border:1px solid var(--rule-dark);padding:6px 14px;background:rgba(201,168,76,0.04);transition:all 0.2s}
 .expertise-tag:hover{border-color:rgba(201,168,76,0.4);color:var(--cream)}
 .expertise-tag.primary{border-color:rgba(201,168,76,0.35);color:var(--gold);background:rgba(201,168,76,0.07)}
+
+/* ── LINKEDIN BADGE WRAP ── */
+.linkedin-badge-wrap{margin-top:32px;padding-top:28px;border-top:1px solid var(--rule-dark)}
+.linkedin-badge-label{font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);opacity:0.7;margin-bottom:14px}
 
 /* ── DISCLAIMER STRIP ── */
 .disclaimer-strip{background:rgba(201,168,76,0.05);border:1px solid var(--rule-dark);border-left:3px solid var(--gold);padding:16px 24px;max-width:1100px;margin:0 auto 0;display:flex;align-items:flex-start;gap:14px}
@@ -178,22 +189,30 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
       <div class="hero-eyebrow">Fundador &amp; Criador</div>
       <div class="hero-tag">Almada, Setúbal · Portugal · 2026</div>
       <h1>Tony<br><em>Branco</em></h1>
-      <!-- ALTERADO: cargo principal é agora Fundador, não QA Analyst -->
       <div class="hero-role">Jurista · Fundador do LexVeritas · Especialista em IA Jurídica</div>
-      <!-- ALTERADO: removida menção à Teleperformance como elemento central; foco na formação jurídica e na lacuna identificada -->
       <p class="hero-bio">
         Formado em Direito pela <strong>Faculdade de Direito da Universidade de Lisboa</strong>, identificou uma lacuna crítica no sistema judicial português: a ausência de ferramentas especializadas para avaliar a autenticidade de textos jurídicos num contexto de proliferação de IA generativa.
         <br><br>
         O LexVeritas nasceu dessa constatação — construído de raiz para os tribunais portugueses, calibrado para a linguagem dos seus relatores e conforme com o RGPD. Uma ferramenta auxiliar de análise forense, não um substituto do julgamento humano.
       </p>
       <div class="hero-actions">
-        <a href="https://linkedin.com/in/tony-branco-b069b097" target="_blank" rel="noopener" class="btn-linkedin">
+        <a href="https://linkedin.com/in/tonybranco-lexveritas" target="_blank" rel="noopener" class="btn-linkedin">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
           LinkedIn
         </a>
         <a href="/app" class="btn-site">Experimentar LexVeritas →</a>
       </div>
+
+      <!-- ── ARTIGO DESTAQUE ── -->
+      <a href="https://tek.sapo.pt/opiniao/artigos/quando-a-ia-inventa-jurisprudencia-o-caso-do-tribunal-portugues-que-apanhou-o-chatgpt-em-flagrante/" target="_blank" rel="noopener" class="artigo-destaque">
+        <div>
+          <div class="artigo-destaque-label">✦ Publicado no TEK Notícias</div>
+          <div class="artigo-destaque-title">Quando a IA inventa jurisprudência: o caso do tribunal português que apanhou o ChatGPT em flagrante</div>
+        </div>
+        <div class="artigo-destaque-arrow">→</div>
+      </a>
     </div>
+
     <div class="photo-wrap">
       <div class="photo-frame">
         <img src="/foto-tony.png" alt="Tony Branco — Fundador LexVeritas" class="photo-img">
@@ -206,7 +225,7 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
   </div>
 </section>
 
-<!-- ═══ STATS BAR — ALTERADO: removido "20+ Tribunais" por ser overclaim não validado; substituído por métricas mais defensáveis ═══ -->
+<!-- ═══ STATS BAR ═══ -->
 <div class="stats-bar">
   <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">Indicadores forenses</div></div>
   <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">Modos de análise</div></div>
@@ -222,7 +241,6 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
     <div class="story-card">
       <div class="story-card-icon">⚖️</div>
       <div class="story-card-title">O Problema Identificado</div>
-      <!-- ALTERADO: foco na lacuna real, sem referência a métricas não validadas -->
       <div class="story-card-text">Com a proliferação de ferramentas de IA generativa, emergiu uma preocupação crescente no sistema judicial e académico português: como avaliar a autenticidade de decisões judiciais e trabalhos jurídicos? As ferramentas existentes foram construídas para o inglês e desconhecem por completo a estrutura e o estilo dos tribunais portugueses.</div>
     </div>
     <div class="story-card">
@@ -232,7 +250,6 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
     </div>
     <div class="story-card">
       <div class="story-card-icon">🔬</div>
-      <!-- ALTERADO: card "O Fascínio pela IA" reescrito — removida referência a Teleperformance como elemento de credibilidade; foco na decisão de construir -->
       <div class="story-card-title">A Decisão de Construir</div>
       <div class="story-card-text">A combinação entre formação jurídica e especialização em integração de inteligência artificial criou uma perspetiva única: a de quem entende simultaneamente a linguagem dos tribunais e o funcionamento dos modelos de linguagem. Dessa intersecção nasceu o LexVeritas — construído por necessidade, não por tendência.</div>
     </div>
@@ -254,7 +271,6 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
           <span class="profile-item-label">Nome completo</span>
           <span class="profile-item-value">Tony de Almeida da Costa Branco</span>
         </div>
-        <!-- ALTERADO: cargo principal passa a ser Fundador; Teleperformance como contexto secundário -->
         <div class="profile-item">
           <span class="profile-item-label">Função principal</span>
           <span class="profile-item-value">Fundador &amp; Criador — LexVeritas</span>
@@ -271,19 +287,23 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
           <span class="profile-item-sub">Faculdade de Direito da Universidade de Lisboa</span>
         </div>
         <div class="profile-item">
+          <span class="profile-item-label">Publicações recentes</span>
+          <span class="profile-item-value">TEK Notícias · ANACOM (consulta pública EU AI Act)</span>
+          <span class="profile-item-sub">Contributo formal Art. 4.º Regulamento (UE) 2024/1689 · Maio 2026</span>
+        </div>
+        <div class="profile-item">
           <span class="profile-item-label">Localização</span>
           <span class="profile-item-value">Almada, Setúbal, Portugal</span>
         </div>
         <div class="profile-item">
           <span class="profile-item-label">LinkedIn</span>
           <span class="profile-item-value">
-            <a href="https://linkedin.com/in/tony-branco-b069b097" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none">tony-branco-b069b097</a>
+            <a href="https://linkedin.com/in/tonybranco-lexveritas" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none">linkedin.com/in/tonybranco-lexveritas</a>
           </span>
         </div>
       </div>
     </div>
     <div>
-      <!-- ALTERADO: barras com percentagens removidas — substituídas por tags de áreas de especialização, mais defensáveis e sérias num contexto jurídico -->
       <div class="section-eyebrow" style="margin-bottom:24px">Áreas de Especialização</div>
       <div class="expertise-wrap">
         <div class="expertise-group">
@@ -306,13 +326,28 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
             <span class="expertise-tag">Lean Six Sigma</span>
             <span class="expertise-tag">Modelos de Linguagem</span>
             <span class="expertise-tag">Detecção de IA Generativa</span>
+            <span class="expertise-tag">Prompt Injection</span>
+            <span class="expertise-tag">Integridade Documental</span>
           </div>
+        </div>
+      </div>
+
+      <!-- ── LINKEDIN BADGE ── -->
+      <div class="linkedin-badge-wrap">
+        <div class="linkedin-badge-label">Perfil LinkedIn</div>
+        <div class="badge-base LI-profile-badge"
+             data-locale="pt_PT"
+             data-size="medium"
+             data-theme="dark"
+             data-type="VERTICAL"
+             data-vanity="tonybranco-lexveritas"
+             data-version="v1">
         </div>
       </div>
     </div>
   </div>
 
-  <!-- NOVO: disclaimer strip dentro do perfil — reforça transparência e reduz risco jurídico -->
+  <!-- disclaimer strip -->
   <div style="max-width:1100px;margin:40px auto 0">
     <div class="disclaimer-strip">
       <div class="disclaimer-strip-icon">⚠</div>
@@ -323,7 +358,7 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
   </div>
 </section>
 
-<!-- ═══ CASOS DE USO — NOVO: secção adicionada conforme recomendação do feedback ═══ -->
+<!-- ═══ CASOS DE USO ═══ -->
 <section class="usecases-section">
   <div class="usecases-inner">
     <div class="section-eyebrow">Aplicações</div>
@@ -367,7 +402,6 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
 <section class="mission-section">
   <div class="mission-inner">
     <div class="section-eyebrow" style="justify-content:center;margin-bottom:32px"><span style="margin-left:auto">A Visão</span><span style="margin-right:auto"></span></div>
-    <!-- ALTERADO: quote revista — mais focada na lacuna e na responsabilidade, menos no percurso pessoal -->
     <div class="mission-quote">"Estudei Direito e percebi que a IA chegou aos tribunais antes de existir qualquer ferramenta portuguesa para a verificar. O LexVeritas nasceu dessa lacuna — e da convicção de que a transparência na justiça não é opcional."</div>
     <div class="mission-divider"></div>
     <div class="mission-author">Tony Branco · Fundador, LexVeritas</div>
@@ -382,7 +416,7 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
     <p class="cta-sub">5 análises por mês · Sem cartão de crédito · Dados na União Europeia</p>
     <div class="cta-buttons">
       <a href="/app" class="btn-linkedin">Criar conta gratuita →</a>
-      <a href="https://linkedin.com/in/tony-branco-b069b097" target="_blank" rel="noopener" class="btn-site">Seguir no LinkedIn</a>
+      <a href="https://linkedin.com/in/tonybranco-lexveritas" target="_blank" rel="noopener" class="btn-site">Seguir no LinkedIn</a>
     </div>
   </div>
 </section>
@@ -398,6 +432,9 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
     <a href="/termos">Termos</a>
   </div>
 </footer>
+
+<!-- ── LinkedIn Badge Script ── -->
+<script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
 
 </body>
 </html>
