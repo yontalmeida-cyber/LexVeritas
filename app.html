@@ -383,7 +383,7 @@
   <div style="display:flex;gap:20px;justify-content:center;margin-bottom:20px;flex-wrap:wrap">
     <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em"><span style="color:var(--gold)">⚖</span> 6 INDICADORES FORENSES</div>
     <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em"><span style="color:var(--gold)">📄</span> RELATÓRIO PDF</div>
-    <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em"><span style="color:var(--gold)">🏛</span> ANÁLISE CRÍTICA</div>
+    <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#888;letter-spacing:0.1em"><span style="color:var(--gold)">🏛</span> ANÁLISE DE RECURSO</div>
   </div>
   <div class="auth-card">
     <h2>Entrar na conta</h2>
@@ -486,9 +486,9 @@
 <div class="mode-toggle-bar">
   <span class="mode-toggle-label">Modo</span>
   <button class="mode-btn active" id="mode-btn-judicial" onclick="setModo('judicial')">⚖ Análise Judicial</button>
-  <button class="mode-btn critica" id="mode-btn-critica" onclick="setModo('critica')">🏛 Análise Crítica</button>
+  <button class="mode-btn critica" id="mode-btn-critica" onclick="setModo('critica')">🏛 Análise de Recurso</button>
   <button class="mode-btn" id="mode-btn-academico" onclick="setModo('academico')">🎓 Análise Académica</button>
-  <button class="mode-btn injection" id="mode-btn-injection" onclick="setModo('injection')">🛡 Injeção de Prompts</button>
+  <button class="mode-btn injection" id="mode-btn-injection" onclick="setModo('injection')">🛡 Análise de Integridade</button>
 </div>
 
 <!-- TAB ANÁLISE -->
@@ -692,7 +692,7 @@
         <!-- INJECTION -->
         <div id="ctx-injection" style="display:none">
           <div style="background:rgba(139,26,26,0.06);border:1px solid rgba(139,26,26,0.15);padding:12px 14px;margin-bottom:10px">
-            <strong style="display:block;font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:#8b1a1a;margin-bottom:4px">🛡 Detector de Prompt Injection</strong>
+            <strong style="display:block;font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:#8b1a1a;margin-bottom:4px">🛡 Análise de Integridade</strong>
             <p style="font-family:var(--sans);font-size:11px;color:#666;line-height:1.6">Analisa documentos jurídicos em busca de instruções ocultas para manipular sistemas de IA. Detecta caracteres invisíveis, padrões linguísticos suspeitos e anomalias estruturais.</p>
           </div>
           <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);padding:10px 12px;margin-bottom:8px;font-family:var(--sans);font-size:11px;color:#6b5a1e;line-height:1.6">
@@ -827,7 +827,7 @@
     <button class="dark-modal-close" onclick="document.getElementById('modal-upgrade').classList.remove('visible')">×</button>
     <div class="dark-modal-label">Plano Profissional</div>
     <h2 class="dark-modal-title">Actualizar Plano</h2>
-    <p class="dark-modal-sub">Mais análises · Análise Crítica de Nulidades · Histórico ilimitado</p>
+    <p class="dark-modal-sub">Mais análises · Análise de Recurso · Histórico ilimitado</p>
     <div style="background:rgba(201,168,76,0.06);border:1px solid var(--rule-dark);padding:20px;margin-bottom:20px">
       <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--gold);margin-bottom:12px">PROPOSTA PERSONALIZADA</div>
       <p style="font-size:13px;color:var(--grey);margin-bottom:16px;line-height:1.6">Contacte-nos para uma proposta adaptada ao seu perfil profissional ou institucional.</p>
@@ -903,8 +903,8 @@ function setModo(modo) {
   const titles = {
     judicial: 'Texto do Acórdão / Sentença / Peça Processual',
     academico: 'Tese / Dissertação / Trabalho Académico',
-    critica: 'Texto da Decisão Judicial a Atacar',
-    injection: 'Documento a Verificar — Prompt Injection'
+    critica: 'Texto da Decisão Judicial para Análise de Recurso',
+    injection: 'Documento a Verificar — Análise de Integridade'
   };
   const placeholders = {
     judicial: 'Cole aqui o texto completo do documento jurídico para análise forense...\n\nDecisões judiciais: acórdãos, sentenças, despachos\nPeças processuais: petições, contestações, recursos, alegações\n\nSuporta documentos extensos (até ~200 páginas). Pode também carregar um PDF abaixo.',
@@ -922,7 +922,7 @@ function setModo(modo) {
     judicial: 'Tribunal & Relator',
     academico: 'Instituição & Documento',
     critica: 'Contexto do Recurso',
-    injection: 'Sobre esta Análise'
+    injection: 'Análise de Integridade'
   };
 
   document.getElementById('input-card-title').textContent = titles[modo] || titles.judicial;
@@ -1212,7 +1212,7 @@ function showOverlay() {
     judicial: 'A analisar padrões linguísticos forenses<br>calibrados para os tribunais portugueses',
     academico: 'A analisar padrões de autoria académica<br>calibrados para o português jurídico',
     critica: 'A actuar como Consultor Jurídico Sénior<br>a identificar nulidades e vícios processuais',
-    injection: 'A verificar integridade do documento<br>e detectar prompt injection oculta'
+    injection: 'A verificar integridade do documento<br>e verificar integridade do documento'
   };
   document.getElementById('overlay-subtext').innerHTML = subTexts[modoActual] || subTexts.judicial;
   overlayMsgIdx = 0;
@@ -1899,7 +1899,7 @@ async function loadHistory() {
     const isCritica = a.modo === 'critica', isAcademico = a.modo === 'academico', isInjection = a.modo === 'injection';
     const cor = colors[a.veredicto] || '#888', label = labels[a.veredicto] || a.veredicto;
     const contexto = isInjection ? (a.tribunal ? a.tribunal : '') : [a.tribunal, a.relator].filter(Boolean).join(' · ');
-    const modoLabel = isCritica ? '🏛 Crítica' : isAcademico ? '🎓 Académico' : isInjection ? '🛡 Injection' : '⚖ Judicial';
+    const modoLabel = isCritica ? '🏛 Recurso' : isAcademico ? '🎓 Académico' : isInjection ? '🛡 Injection' : '⚖ Judicial';
     const bCls = bannerCls[a.veredicto] || 'uncertain';
     const bannerLabel = isCritica ? 'Avaliação de Recurso' : isInjection ? 'Análise de Segurança — Prompt Injection' : 'Veredicto Forense';
     const confidenceLabel = isCritica ? 'Grau de Fundamentação do Recurso' : isInjection ? 'Score de Risco de Injection' : 'Índice de Confiança na Detecção';
