@@ -66,6 +66,97 @@ function extrairTermosDoutrina(citacao) {
   return termosBrutos.length >= 5 ? termosBrutos : citacao.substring(0, 80);
 }
 
+
+// ══════════════════════════════════════════════════════════════════════════════
+// REPOSITÓRIOS DSPACE PORTUGUESES — dissertações e teses
+//
+// Todos os repositórios institucionais PT usam DSpace com URL estável.
+// Pesquisa em paralelo nos principais repositórios de Direito.
+// ══════════════════════════════════════════════════════════════════════════════
+
+const REPOSITORIOS_DSPACE = [
+  { nome: 'ULisboa',  url: 'https://repositorio.ul.pt/simple-search'          },
+  { nome: 'UPorto',   url: 'https://repositorio-aberto.up.pt/simple-search'   },
+  { nome: 'UNova',    url: 'https://run.unl.pt/simple-search'                 },
+  { nome: 'UC',       url: 'https://estudogeral.uc.pt/simple-search'          },
+  { nome: 'UA',       url: 'https://ria.ua.pt/simple-search'                  },
+  { nome: 'UMinho',   url: 'https://repositorium.sdum.uminho.pt/simple-search' },
+  { nome: 'UEvora',   url: 'https://dspace.uevora.pt/simple-search'           },
+  { nome: 'UCP',      url: 'https://repositorio.ucp.pt/simple-search'         },
+];
+
+async function verificarDoutrinaDSpace(citacaoTexto) {
+  const termos = extrairTermosDoutrina(citacaoTexto);
+  if (termos.length < 5) return null;
+
+  const enc = encodeURIComponent(termos);
+
+  // Tentar cada repositório em sequência (parar no primeiro positivo)
+  for (const repo of REPOSITORIOS_DSPACE) {
+    const url = `${repo.url}?query=${enc}&rpp=5&sort_by=score&order=desc`;
+    try {
+      const response = await comTimeout(
+        fetch(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (compatible; LexVeritas/1.0; +https://lexveritas.pt)',
+            'Accept': 'text/html',
+          },
+        }),
+        6000,
+        `${repo.nome} timeout`
+      );
+
+      if (!response.ok) continue;
+      const html = await response.text();
+
+      // Detectar ausência de resultados DSpace
+      const semResultados =
+        html.includes('did not match any documents') ||
+        html.includes('Your search did not return') ||
+        html.includes('nenhum resultado') ||
+        html.includes('Nenhum resultado') ||
+        html.includes('0 result') ||
+        (html.includes('discovery-result-results') && html.includes('ds-result-count">0'));
+
+      if (semResultados) continue;
+
+      // Detectar presença de resultados DSpace
+      const temResultados =
+        html.includes('ds-artifact-item') ||
+        html.includes('discovery-result-results') ||
+        html.includes('class="list-group-item"') ||
+        html.includes('artifact-description') ||
+        html.includes('ds-result-count') ||
+        html.includes('item-list') ||
+        (html.includes('handle') && html.includes(termos.split(' ')[0]));
+
+      if (temResultados) {
+        // Extrair título se disponível
+        let titulo = null;
+        const matchTit = html.match(/class="artifact-title"[^>]*>\s*(?:<[^>]+>)?([^<]{5,120})/i) ||
+                         html.match(/class="ds-preferred-item"[^>]*>([^<]{5,100})/i);
+        if (matchTit) titulo = matchTit[1].trim();
+
+        return {
+          encontrado: true,
+          fonte: `Repositório ${repo.nome}`,
+          url,
+          confianca: 'alta',
+          detalhe: [
+            `Encontrado no Repositório ${repo.nome}.`,
+            titulo ? `Título: ${titulo.substring(0, 80)}` : null,
+            'Verifique edição e página na obra original.',
+          ].filter(Boolean).join(' | '),
+        };
+      }
+    } catch {
+      continue; // Repositório indisponível — tenta o próximo
+    }
+  }
+
+  return null; // Nenhum repositório encontrou
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
 // VERIFICADOR DE DOUTRINA — BNP Catálogo + PORBASE
 //
@@ -237,21 +328,30 @@ async function verificarDoutrinaRcaap(citacaoTexto) {
 // ══════════════════════════════════════════════════════════════════════════════
 
 async function verificarDoutrina(citacaoTexto) {
+  const termos = extrairTermosDoutrina(citacaoTexto);
+
   // 1.ª tentativa — BNP + PORBASE (cobre livros comerciais)
   const resBNP = await verificarDoutrinaBNP(citacaoTexto);
   if (resBNP.encontrado === true) return resBNP;
 
-  // 2.ª tentativa — RCAAP (cobre artigos académicos em acesso aberto)
+  // 2.ª tentativa — Repositórios DSpace institucionais PT (dissertações e teses)
+  const resDSpace = await verificarDoutrinaDSpace(citacaoTexto);
+  if (resDSpace && resDSpace.encontrado === true) return resDSpace;
+
+  // 3.ª tentativa — RCAAP (repositório agregado de acesso aberto)
   const resRCAP = await verificarDoutrinaRcaap(citacaoTexto);
   if (resRCAP.encontrado === true) return resRCAP;
 
-  // Nenhuma fonte encontrou — devolver melhor resultado disponível com link BNP
+  // Nenhuma fonte encontrou — devolver links para verificação manual
+  const enc = encodeURIComponent(termos);
   return {
     encontrado: null,
-    fonte: 'BNP/PORBASE/RCAAP',
-    url: `https://catalogo.bnportugal.gov.pt/cgi-bin/koha/opac-search.pl?q=${encodeURIComponent(extrairTermosDoutrina(citacaoTexto))}`,
+    fonte: 'BNP/PORBASE/Repositórios PT/RCAAP',
+    url: `https://catalogo.bnportugal.gov.pt/cgi-bin/koha/opac-search.pl?q=${enc}`,
+    urlJuris: `https://www.rcaap.pt/search.jsp?query=${enc}`,
+    urlJP: `https://repositorio.ul.pt/simple-search?query=${enc}`,
     confianca: 'baixa',
-    detalhe: 'Não encontrado automaticamente em BNP, PORBASE ou RCAAP. Clique para pesquisar no catálogo BNP.',
+    detalhe: 'Não encontrado automaticamente. Verifique no catálogo BNP, RCAAP ou repositórios institucionais.',
   };
 }
 
