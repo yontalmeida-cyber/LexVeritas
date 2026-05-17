@@ -421,7 +421,7 @@
     <div style="display:flex;flex-direction:column;gap:6px">
       <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> 5 análises por mês sem custos</div>
       <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> 6 indicadores forenses calibrados para PT</div>
-      <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> Relatório PDF profissional com referência única</div>
+      <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> Relatório PDF profissional (plano Profissional)</div>
       <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> Histórico das suas análises</div>
       <div style="font-family:var(--sans);font-size:12px;color:#555;display:flex;gap:8px;align-items:center"><span style="color:var(--gold)">→</span> Sem cartão de crédito</div>
     </div>
@@ -622,7 +622,12 @@
 
       <!-- Botão PDF — apenas judicial e académico -->
       <div id="btn-pdf-wrapper" style="display:none">
-        <button class="btn-pdf" onclick="gerarPDF()">📄 Descarregar Relatório PDF Profissional</button>
+        <div id="pdf-pro-only" style="display:none;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);padding:14px 16px;margin-top:16px;text-align:center">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px">Relatório PDF — Plano Profissional</div>
+          <div style="font-family:var(--sans);font-size:12px;color:#666;margin-bottom:10px;line-height:1.6">O relatório PDF profissional está disponível no plano Profissional ou Institucional.</div>
+          <a href="https://lexveritas.pt/#planos" style="display:inline-block;background:var(--gold);color:var(--black);padding:8px 20px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none">Pedir Proposta →</a>
+        </div>
+        <button id="pdf-btn-real" class="btn-pdf" onclick="gerarPDF()" style="display:none">📄 Descarregar Relatório PDF Profissional</button>
         <div class="ref-number" id="ref-number"></div>
       </div>
     </div>
@@ -1475,6 +1480,9 @@ function renderResults(result) {// ── Aviso de domínio não reconhecido ─
   document.getElementById('results-standard').style.display = 'block';
   document.getElementById('results-critica').style.display = 'none';
   document.getElementById('btn-pdf-wrapper').style.display = 'block';
+  const isPro = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional';
+  document.getElementById('pdf-pro-only').style.display = isPro ? 'none' : 'block';
+  document.getElementById('pdf-btn-real').style.display = isPro ? 'flex' : 'none';
   document.getElementById('evidence-card').style.display = 'block';
   document.getElementById('narrative-card').style.display = 'block';
   document.getElementById('narrative-card-title').textContent = 'Fundamentação da Análise';
