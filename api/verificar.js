@@ -28,12 +28,13 @@ function comTimeout(promise, ms, mensagem) {
   ]);
 }
 
-// ── Gerar links DGSI directos (sempre disponíveis, sem fetch) ──
+// ── Gerar links de verificação manual (sempre disponíveis, sem fetch) ──
 function gerarLinksDGSI(numero) {
   const enc = encodeURIComponent(numero);
   return {
-    juris: `https://juris.stj.pt/pesquisa?q=${encodeURIComponent('"' + numero + '"')}`,
-    dgsi:  `https://www.dgsi.pt/jstj.nsf/954f0ce6ad9dd8b980256b5f003fa814?SearchView&Query=${enc}&SearchOrder=4&SearchMax=10`,
+    juris:         `https://juris.stj.pt/pesquisa?q=${encodeURIComponent('"' + numero + '"')}`,
+    dgsi:          `https://www.dgsi.pt/jstj.nsf/954f0ce6ad9dd8b980256b5f003fa814?SearchView&Query=${enc}&SearchOrder=4&SearchMax=10`,
+    jurisprudencia:`https://www.jurisprudencia.pt/pesquisa/?q=${enc}`,
   };
 }
 
@@ -280,8 +281,10 @@ async function verificarAcordaoJurisStj(numero) {
 
     if (!response.ok) {
       return {
-        encontrado: null, fonte: 'DGSI', url: links.dgsi, confianca: 'indisponivel',
-        detalhe: 'Serviço indisponível. Clique para verificar manualmente no DGSI.',
+        encontrado: null, fonte: 'DGSI',
+        url: links.dgsi, urlJuris: links.juris, urlJP: links.jurisprudencia,
+        confianca: 'indisponivel',
+        detalhe: 'Serviço indisponível. Verifique manualmente nos links abaixo.',
       };
     }
 
@@ -294,9 +297,10 @@ async function verificarAcordaoJurisStj(numero) {
 
     if (semResultados) {
       return {
-        encontrado: false, fonte: 'juris.stj.pt', url: links.juris, urlDGSI: links.dgsi,
+        encontrado: false, fonte: 'juris.stj.pt',
+        url: links.dgsi, urlJuris: links.juris, urlJP: links.jurisprudencia,
         confianca: 'alta',
-        detalhe: 'Número não encontrado no DGSI. Verifique também directamente no DGSI.',
+        detalhe: 'Não encontrado no DGSI. Verifique também nos outros links abaixo.',
       };
     }
 
@@ -322,14 +326,18 @@ async function verificarAcordaoJurisStj(numero) {
     }
 
     return {
-      encontrado: null, fonte: 'juris.stj.pt', url: links.dgsi, confianca: 'baixa',
-      detalhe: 'Resultado inconclusivo. Clique para verificar no DGSI.',
+      encontrado: null, fonte: 'juris.stj.pt',
+      url: links.dgsi, urlJuris: links.juris, urlJP: links.jurisprudencia,
+      confianca: 'baixa',
+      detalhe: 'Resultado inconclusivo. Verifique manualmente nos links abaixo.',
     };
 
   } catch {
     return {
-      encontrado: null, fonte: 'DGSI', url: links.dgsi, confianca: 'indisponivel',
-      detalhe: 'Verificação automática indisponível. Clique para pesquisar no DGSI.',
+      encontrado: null, fonte: 'DGSI',
+      url: links.dgsi, urlJuris: links.juris, urlJP: links.jurisprudencia,
+      confianca: 'indisponivel',
+      detalhe: 'Verificação automática indisponível. Verifique manualmente nos links abaixo.',
     };
   }
 }
@@ -506,8 +514,10 @@ module.exports = async function handler(req, res) {
           verificacao: {
             encontrado: null, fonte: 'DGSI',
             url: gerarLinksDGSI(c.citacao || '').dgsi,
+            urlJuris: gerarLinksDGSI(c.citacao || '').juris,
+            urlJP: gerarLinksDGSI(c.citacao || '').jurisprudencia,
             erro: err.message,
-            detalhe: 'Erro interno. Clique para verificar manualmente no DGSI.',
+            detalhe: 'Erro interno. Verifique manualmente nos links abaixo.',
           },
         }))
     );
