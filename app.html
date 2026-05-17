@@ -172,6 +172,11 @@
   .grav-baixa { background: rgba(0,0,0,0.05); color: #888; }
   .citacao-texto { font-family: var(--mono); font-size: 10px; color: #555; margin-bottom: 6px; font-style: italic; line-height: 1.5; }
   .citacao-problema { font-family: var(--sans); font-size: 12px; color: #444; line-height: 1.5; }
+  .citacao-web-badge { display: inline-flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 7px; margin-top: 8px; }
+  .citacao-web-badge.verificada { background: rgba(26,92,58,0.08); color: #1a5c2a; }
+  .citacao-web-badge.nao_encontrada { background: rgba(139,26,26,0.08); color: var(--red); }
+  .citacao-web-badge.inconclusivo { background: rgba(201,168,76,0.08); color: #8b5e1a; }
+  .citacao-web-badge.nao_verificado { background: rgba(0,0,0,0.04); color: #aaa; }
 
   /* ── VERIFICAÇÃO DE CITAÇÕES ── */
   .verificar-btn { width: 100%; background: #1a1a2e; color: white; border: 1px solid rgba(201,168,76,0.3); padding: 11px 20px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
@@ -1584,7 +1589,18 @@ function renderResults(result) {// ── Aviso de domínio não reconhecido ─
     const btn = document.getElementById('btn-verificar-citacoes');
     btn.disabled = false; btn.textContent = '🔍 Verificar Citações nas Fontes Oficiais';
     const tipoLabels = { acordao: 'Acórdão', diploma_legal: 'Diploma Legal', doutrina: 'Doutrina', jurisprudencia: 'Jurisprudência' };
-    citacoesList.innerHTML = citacoes.map(c => `
+    const webBadgeLabels = {
+      verificada:     { icon: '✓', texto: 'Encontrada nas fontes' },
+      nao_encontrada: { icon: '✗', texto: 'Não encontrada nas fontes' },
+      inconclusivo:   { icon: '?', texto: 'Inconclusivo' },
+      nao_verificado: { icon: '·', texto: 'Não verificada' },
+    };
+    citacoesList.innerHTML = citacoes.map(c => {
+      const wb = c.verificacao_web && webBadgeLabels[c.verificacao_web];
+      const badgeHtml = wb
+        ? `<div><span class="citacao-web-badge ${c.verificacao_web}">${wb.icon} Web — ${wb.texto}</span></div>`
+        : '';
+      return `
       <div class="citacao-card ${c.gravidade}">
         <div class="citacao-header">
           <span class="citacao-tipo">${tipoLabels[c.tipo] || c.tipo}</span>
@@ -1592,7 +1608,9 @@ function renderResults(result) {// ── Aviso de domínio não reconhecido ─
         </div>
         <div class="citacao-texto">"${c.citacao}"</div>
         <div class="citacao-problema">${c.problema}</div>
-      </div>`).join('');
+        ${badgeHtml}
+      </div>`;
+    }).join('');
   } else {
     citacoesCard.style.display = 'none';
     document.getElementById('verificar-btn-container').style.display = 'none';
