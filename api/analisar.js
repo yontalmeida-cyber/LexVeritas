@@ -482,7 +482,7 @@ module.exports = async function handler(req, res) {
   const isPro   = userPlano === 'profissional' || userPlano === 'institucional';
   const isAdmin = userPlano === 'admin';
   const LIMITE_CHARS           = (isPro || isAdmin) ? 300000 : 120000;
-  const LIMITE_CHARS_ACADEMICO = isPro ? 571000 : isAdmin ? 200000 : 200000;
+  const LIMITE_CHARS_ACADEMICO = isPro ? 700000 : isAdmin ? 200000 : 200000;
   const LIMITE_CHARS_CRITICA   = (isPro || isAdmin) ? 300000 : 120000;
 
   // ── CORPO ──
