@@ -931,13 +931,27 @@ Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É
         const okFormatoCit = ['ok','formato_invalido','nao_aplicavel'];
 
         let citacoesIA = Array.isArray(parsed.citacoes_suspeitas)
-          ? parsed.citacoes_suspeitas.slice(0, 6).map(c => ({
-              citacao:           String(c.citacao  || ''),
-              tipo:              okTipoCit.includes(c.tipo)                 ? c.tipo            : 'jurisprudencia',
-              problema:          String(c.problema || ''),
-              gravidade:         okGravCit.includes(c.gravidade)            ? c.gravidade       : 'media',
-              validacao_formato: okFormatoCit.includes(c.validacao_formato) ? c.validacao_formato : 'nao_aplicavel',
-            }))
+          ? parsed.citacoes_suspeitas.slice(0, 6).map(c => {
+              let gravidade = okGravCit.includes(c.gravidade) ? c.gravidade : 'media';
+              let problema  = String(c.problema || '');
+              // Suavizar falsos positivos de incoerência comarca/tribunal
+              // Processos transferidos mantêm número original — não é fabricação
+              if (
+                gravidade === 'alta' &&
+                problema.toLowerCase().includes('pertence') &&
+                (problema.toLowerCase().includes('comarca') || problema.toLowerCase().includes('relação'))
+              ) {
+                gravidade = 'media';
+                problema += ' (Nota: pode dever-se a transferência de processo — verifique antes de concluir fabricação.)';
+              }
+              return {
+                citacao:           String(c.citacao  || ''),
+                tipo:              okTipoCit.includes(c.tipo) ? c.tipo : 'jurisprudencia',
+                problema,
+                gravidade,
+                validacao_formato: okFormatoCit.includes(c.validacao_formato) ? c.validacao_formato : 'nao_aplicavel',
+              };
+            })
           : [];
 
         const numerosJaNaLista = new Set(citacoesIA.map(c => c.citacao.toUpperCase()));

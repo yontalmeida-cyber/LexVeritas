@@ -33,7 +33,7 @@ function gerarLinksDGSI(numero) {
   const enc = encodeURIComponent(numero);
   return {
     juris: `https://juris.stj.pt/pesquisa?q=${encodeURIComponent('"' + numero + '"')}`,
-    dgsi:  `https://www.dgsi.pt/jstj.nsf?SearchView&Query=%5BProcHier%5D%3D%22${enc}%22&SearchOrder=4&SearchMax=10`,
+    dgsi:  `https://www.dgsi.pt/jstj.nsf/954f0ce6ad9dd8b980256b5f003fa814?SearchView&Query=${enc}&SearchOrder=4&SearchMax=10`,
   };
 }
 
