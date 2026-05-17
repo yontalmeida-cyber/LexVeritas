@@ -1,1 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O que acontece ao seu documento jurídico quando usa IA? · LexVeritas</title>
+<meta name="description" content="A diferença fundamental entre submeter um documento ao ChatGPT, Gemini ou Copilot e analisá-lo com o LexVeritas. O que acontece aos seus dados, ao sigilo profissional e ao RGPD.">
+<meta property="og:title" content="O que acontece ao seu documento jurídico quando usa IA?">
+<meta property="og:description" content="A diferença que ninguém explica: o que acontece exactamente ao seu documento jurídico quando o submete a uma ferramenta de IA — e porque o LexVeritas é diferente.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://lexveritas.pt/blog/dados-documentos-juridicos-ia">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://lexveritas.pt/blog/dados-documentos-juridicos-ia">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23060608'/><text y='48' x='8' font-size='48' font-family='Georgia' fill='%23c9a84c'>⚖</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "O que acontece ao seu documento jurídico quando usa IA?",
+  "description": "A diferença fundamental entre submeter um documento ao ChatGPT, Gemini ou Copilot e analisá-lo com o LexVeritas.",
+  "author": { "@type": "Person", "name": "Tony de Almeida da Costa Branco" },
+  "publisher": { "@type": "Organization", "name": "LexVeritas" },
+  "datePublished": "2026-05-18",
+  "url": "https://lexveritas.pt/blog/dados-documentos-juridicos-ia"
+}
+</script>
+<style>
+:root{
+  --black:#060608;--dark:#0e0e12;--card:#13131a;
+  --gold:#c9a84c;--gold-light:#e8c96a;
+  --cream:#f8f6f1;--grey:#9a9a9a;
+  --red:#8b1a1a;--green:#1a5c3a;
+  --rule-dark:rgba(201,168,76,0.15);
+  --serif:'Instrument Serif',Georgia,serif;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Syne',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--cream);font-family:var(--sans);min-height:100vh}
 
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px clamp(20px,5vw,60px);display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,8,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule-dark)}
+.nav-logo{font-family:var(--serif);font-size:22px;font-style:italic;color:var(--cream);text-decoration:none}
+.nav-logo em{color:var(--gold)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{background:var(--gold);color:var(--black);padding:8px 18px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;transition:background 0.2s}
+.nav-cta:hover{background:var(--gold-light)}
+
+.hero{padding:140px clamp(20px,5vw,60px) 60px;max-width:1060px;margin:0 auto}
+.hero-back{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;align-items:center;gap:8px;margin-bottom:32px;transition:color 0.2s}
+.hero-back:hover{color:var(--gold)}
+.hero-category{font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);padding:4px 12px;display:inline-block;margin-bottom:20px}
+.hero-title{font-family:var(--serif);font-size:clamp(32px,5vw,58px);font-style:italic;line-height:1.1;color:var(--cream);margin-bottom:16px}
+.hero-title em{color:var(--gold)}
+.hero-subtitle{font-family:var(--serif);font-size:clamp(16px,2vw,20px);font-style:italic;color:var(--grey);margin-bottom:28px;line-height:1.5;max-width:680px}
+.hero-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-top:20px;border-top:1px solid var(--rule-dark)}
+.hero-author{font-family:var(--mono);font-size:9px;letter-spacing:0.15em;color:var(--grey)}
+.hero-date{font-family:var(--mono);font-size:9px;color:var(--grey);letter-spacing:0.1em}
+
+.article-body{max-width:740px;margin:0 auto;padding:0 clamp(20px,5vw,60px) 80px}
+.article-body p{font-size:16px;line-height:1.85;color:rgba(248,246,241,0.85);margin-bottom:24px;font-family:var(--sans)}
+.article-body h2{font-family:var(--serif);font-size:clamp(22px,3vw,30px);font-style:italic;color:var(--cream);margin:52px 0 16px;padding-bottom:10px;border-bottom:1px solid var(--rule-dark)}
+.article-body h2 em{color:var(--gold)}
+.article-body strong{color:var(--cream);font-weight:700}
+
+.lead-paragraph{font-size:18px!important;line-height:1.75!important;color:var(--cream)!important;font-weight:300}
+
+.callout{background:var(--card);border:1px solid var(--rule-dark);border-left:4px solid var(--gold);padding:20px 24px;margin:32px 0}
+.callout.danger{border-left-color:var(--red);border-color:rgba(139,26,26,0.3);background:rgba(139,26,26,0.05)}
+.callout.success{border-left-color:var(--green);border-color:rgba(26,92,58,0.3);background:rgba(26,92,58,0.05)}
+.callout-label{font-family:var(--mono);font-size:8px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:block}
+.callout.danger .callout-label{color:#c97850}
+.callout.success .callout-label{color:#4a9a6a}
+.callout p{font-size:15px!important;margin-bottom:0!important;line-height:1.65!important}
+
+.comparison-table{width:100%;border-collapse:collapse;margin:32px 0;font-size:14px}
+.comparison-table th{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;padding:12px 16px;text-align:left;border-bottom:2px solid var(--rule-dark)}
+.comparison-table th:first-child{color:var(--grey);background:rgba(255,255,255,0.02)}
+.comparison-table th.ia-gen{color:#c97850;background:rgba(139,26,26,0.08);border-color:rgba(139,26,26,0.3)}
+.comparison-table th.lv{color:#4a9a6a;background:rgba(26,92,58,0.08);border-color:rgba(26,92,58,0.3)}
+.comparison-table td{padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-family:var(--sans);font-size:13px;vertical-align:middle}
+.comparison-table tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+.comparison-table .label{color:var(--cream);font-weight:600}
+.comparison-table .bad{color:#c97850}
+.comparison-table .good{color:#4a9a6a}
+
+.steps{display:flex;flex-direction:column;gap:0;margin:32px 0}
+.step{display:flex;gap:20px;padding:20px 0;border-bottom:1px solid var(--rule-dark)}
+.step:last-child{border-bottom:none}
+.step-num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--black);background:var(--gold);width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-content h3{font-family:var(--sans);font-size:14px;font-weight:700;color:var(--cream);margin-bottom:6px;letter-spacing:0.05em}
+.step-content p{font-size:14px!important;margin-bottom:0!important;color:var(--grey)!important}
+
+.bullet-list{list-style:none;margin:16px 0 24px;display:flex;flex-direction:column;gap:8px}
+.bullet-list li{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:rgba(248,246,241,0.8);line-height:1.6}
+.bullet-list li::before{content:'→';color:var(--gold);font-family:var(--mono);flex-shrink:0;margin-top:1px}
+.bullet-list.danger li::before{content:'✗';color:#c97850}
+.bullet-list.success li::before{content:'✓';color:#4a9a6a}
+
+.cta-block{background:var(--card);border:1px solid var(--rule-dark);padding:40px;text-align:center;margin:48px 0;position:relative;overflow:hidden}
+.cta-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+.cta-block h3{font-family:var(--serif);font-size:28px;font-style:italic;color:var(--cream);margin-bottom:10px}
+.cta-block h3 em{color:var(--gold)}
+.cta-block p{font-size:14px;color:var(--grey);margin-bottom:24px;line-height:1.6}
+.cta-btn{display:inline-block;background:var(--gold);color:var(--black);padding:14px 32px;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;transition:background 0.2s}
+.cta-btn:hover{background:var(--gold-light)}
+
+footer{border-top:1px solid var(--rule-dark);padding:32px clamp(20px,5vw,60px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-brand{font-family:var(--serif);font-size:16px;font-style:italic;color:var(--cream)}
+.footer-brand em{color:var(--gold)}
+.footer-copy{font-family:var(--mono);font-size:9px;color:var(--grey);letter-spacing:0.1em}
+
+@media(max-width:680px){
+  .comparison-table{font-size:12px}
+  .comparison-table th,.comparison-table td{padding:8px 10px}
+  nav .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Lex<em>Veritas</em></a>
+  <div class="nav-links">
+    <a href="/">Início</a>
+    <a href="/blog">Blog</a>
+    <a href="/sobre">Sobre</a>
+    <a href="/app" class="nav-cta">Analisar →</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <a href="/blog" class="hero-back">← Blog</a>
+  <div class="hero-category">🔒 Dados & Segurança Jurídica</div>
+  <h1 class="hero-title">O que acontece ao seu documento jurídico<br><em>quando usa Inteligência Artificial?</em></h1>
+  <p class="hero-subtitle">A diferença que ninguém explica — e que pode mudar tudo para advogados, magistrados e académicos que trabalham com documentos sensíveis.</p>
+  <div class="hero-meta">
+    <span class="hero-author">Tony de Almeida da Costa Branco · FDUL · Fundador do LexVeritas</span>
+    <span class="hero-date">18 de Maio de 2026</span>
+  </div>
+</div>
+
+<div class="article-body">
+
+  <p class="lead-paragraph">Um advogado submete um acórdão ao ChatGPT. Recebe uma análise detalhada. Pensa: "que ferramenta útil." Mas em algum momento desse processo, o texto do processo — com os dados das partes, com a estratégia processual implícita, com a fundamentação — ficou guardado nos servidores de uma empresa americana. Pode ter sido visto por um colaborador. Pode vir a ser usado para treinar o próximo modelo de linguagem.</p>
+
+  <p>Não é ficção científica. É o modelo de negócio padrão das ferramentas de IA de uso geral. E as implicações para o profissional jurídico são sérias.</p>
+
+  <h2>A questão que <em>ninguém faz</em></h2>
+
+  <p>Quando os profissionais jurídicos começaram a usar IA para analisar documentos, a conversa centrou-se quase sempre na qualidade da análise: "É precisa? É fiável? Substitui o advogado?" São perguntas legítimas. Mas há uma questão anterior, mais fundamental, que raramente é feita:</p>
+
+  <div class="callout">
+    <span class="callout-label">A questão essencial</span>
+    <p>O que acontece exactamente ao meu documento depois de o submeter?</p>
+  </div>
+
+  <p>A resposta varia radicalmente consoante a ferramenta utilizada. E as implicações jurídicas, deontológicas e regulatórias dessa variação são enormes.</p>
+
+  <h2>O que acontece numa <em>IA de uso geral</em></h2>
+
+  <p>Ferramentas como ChatGPT (OpenAI), Gemini (Google), Copilot (Microsoft) ou a interface web do Claude.ai têm algo em comum: são serviços de consumo, desenhados para o grande público. Os seus termos de serviço reflectem isso.</p>
+
+  <p>Quando submete um documento nessas ferramentas — salvo configurações específicas de contas enterprise — acontece tipicamente o seguinte:</p>
+
+  <ul class="bullet-list danger">
+    <li>O texto é enviado para servidores da empresa, geralmente nos EUA</li>
+    <li>É processado pelo modelo de linguagem</li>
+    <li>Pode ser guardado para fins de segurança, melhoria do serviço ou treino de modelos futuros</li>
+    <li>Pode ser revisto por colaboradores humanos da empresa</li>
+    <li>A transferência de dados para os EUA pode não ter base legal clara ao abrigo do RGPD</li>
+  </ul>
+
+  <div class="callout danger">
+    <span class="callout-label">O problema jurídico</span>
+    <p>Para um advogado, magistrado ou investigador, submeter dados de clientes, processos ou documentos sensíveis a um serviço com este modelo pode constituir violação do sigilo profissional, do RGPD e, em casos extremos, do segredo de justiça.</p>
+  </div>
+
+  <h2>O que acontece <em>no LexVeritas</em></h2>
+
+  <p>O LexVeritas foi desenhado de raiz para o contexto jurídico português, com uma arquitectura que responde directamente a estas preocupações. Eis o que acontece passo a passo:</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h3>Extracção local no browser</h3>
+        <p>Quando carrega um PDF, o texto é extraído no seu próprio browser — pelo motor pdf.js, que corre localmente no seu dispositivo. O ficheiro PDF nunca é enviado para o servidor. Apenas o texto extraído é transmitido, e apenas a parte relevante para a análise.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h3>Transmissão encriptada</h3>
+        <p>O texto extraído é transmitido ao servidor via HTTPS — encriptação ponto a ponto, o mesmo protocolo que protege as transacções bancárias online.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h3>API Anthropic — condições contratuais distintas</h3>
+        <p>O LexVeritas não usa a interface web do Claude.ai — usa a API da Anthropic, sujeita a condições contratuais radicalmente diferentes. Por contrato, a Anthropic não treina modelos de IA com dados submetidos via API. Os dados são processados em memória isolada e descartados imediatamente após a resposta. Nenhum colaborador tem acesso ao conteúdo dos documentos.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <h3>Apenas o resultado é guardado</h3>
+        <p>O que fica no histórico é o resultado da análise: o veredicto, os indicadores, a fundamentação. O texto do documento nunca é guardado pelo LexVeritas. Está no seu dispositivo — e só lá.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout success">
+    <span class="callout-label">A distinção crítica</span>
+    <p>Usar o Claude.ai na web não tem as mesmas garantias que usar a API da Anthropic. O LexVeritas usa exclusivamente a API — com as garantias contratuais correspondentes.</p>
+  </div>
+
+  <h2>A comparação <em>directa</em></h2>
+
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Critério</th>
+        <th class="ia-gen">IA de Uso Geral</th>
+        <th class="lv">LexVeritas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label">Texto analisado guardado?</td>
+        <td class="bad">✗ Sim — nos servidores</td>
+        <td class="good">✓ Não — descartado imediatamente</td>
+      </tr>
+      <tr>
+        <td class="label">Usado para treinar IA?</td>
+        <td class="bad">✗ Pode ser</td>
+        <td class="good">✓ Nunca — por contrato</td>
+      </tr>
+      <tr>
+        <td class="label">Revisão humana possível?</td>
+        <td class="bad">✗ Sim</td>
+        <td class="good">✓ Não</td>
+      </tr>
+      <tr>
+        <td class="label">Transferência para EUA</td>
+        <td class="bad">✗ Sem SCCs claras</td>
+        <td class="good">✓ Cláusulas Contratuais Tipo UE</td>
+      </tr>
+      <tr>
+        <td class="label">Calibrado para jurisprudência PT</td>
+        <td class="bad">✗ Genérico</td>
+        <td class="good">✓ Exclusivo</td>
+      </tr>
+      <tr>
+        <td class="label">Segurança de dados — servidores</td>
+        <td class="bad">✗ EUA (variável)</td>
+        <td class="good">✓ UE — Irlanda (Supabase)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>A responsabilidade que <em>permanece</em></h2>
+
+  <p>Seria desonesto concluir sem deixar claro: mesmo com estas garantias técnicas e contratuais, a responsabilidade do utilizador não desaparece. O LexVeritas recomenda e, nos seus Termos de Serviço, exige:</p>
+
+  <ul class="bullet-list">
+    <li>Não submeter processos em segredo de justiça</li>
+    <li>Avaliar a existência de base legal RGPD para dados pessoais de terceiros nos documentos</li>
+    <li>Respeitar o sigilo profissional aplicável à sua profissão</li>
+    <li>Anonimizar os documentos sempre que possível antes de submeter</li>
+  </ul>
+
+  <p>A tecnologia pode oferecer garantias contratuais e arquitectónicas. A deontologia é sempre do profissional.</p>
+
+  <h2><em>Conclusão</em></h2>
+
+  <p>A questão não é se usar IA no trabalho jurídico. É qual ferramenta usar, com que garantias, e com que consciência das implicações.</p>
+
+  <p>Ferramentas de uso geral foram desenhadas para o consumidor médio — não para o advogado que submete dados protegidos pelo sigilo profissional, nem para o magistrado que trabalha com processos sensíveis. O LexVeritas foi desenhado precisamente para esse contexto.</p>
+
+  <div class="callout">
+    <span class="callout-label">Em síntese</span>
+    <p>Os seus documentos são seus. E devem continuar a sê-lo.</p>
+  </div>
+
+  <div class="cta-block">
+    <h3>Experimente o <em>LexVeritas</em></h3>
+    <p>Análise forense jurídica calibrada para Portugal. Conta gratuita — sem cartão de crédito.</p>
+    <a href="/app" class="cta-btn">Começar a Analisar →</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-brand">Lex<em>Veritas</em></div>
+  <div class="footer-copy">© 2026 LexVeritas · lexveritas.pt</div>
+</footer>
+
+</body>
+</html>
