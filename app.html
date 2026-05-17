@@ -1324,7 +1324,10 @@ async function analyzeDecision() {
     }
 
     // ── MODOS NORMAIS ──
-    let payload = { texto: text, modo: modoActual };
+    // Limitar texto antes de enviar ao servidor (Hobby timeout = 10s)
+    const LIMITE_FRONTEND = modoActual === 'academico' ? 50000 : modoActual === 'critica' ? 20000 : 20000;
+    const textoEnviar = text.length > LIMITE_FRONTEND ? text.substring(0, LIMITE_FRONTEND) : text;
+    let payload = { texto: textoEnviar, modo: modoActual };
     if (modoActual === 'judicial') { payload.tribunal = document.getElementById('tribunal-select').value || null; payload.relator = document.getElementById('relator-input').value || null; payload.tipoPeca = (document.getElementById('tipo-peca-select') || {}).value || null; }
     else if (modoActual === 'academico') { payload.instituicao = document.getElementById('instituicao-input').value || null; payload.tipoDoc = document.getElementById('tipo-doc-select').value || null; payload.orientador = document.getElementById('orientador-input').value || null; }
     else if (modoActual === 'critica') { payload.tribunal = document.getElementById('tribunal-critica-select').value || null; payload.tipoProcesso = document.getElementById('tipo-processo-select').value || null; payload.parteRecorrente = document.getElementById('parte-recorrente-select').value || null; }
