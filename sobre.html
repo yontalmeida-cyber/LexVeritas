@@ -57,7 +57,7 @@ h1 em{color:var(--gold);font-style:italic}
 .btn-site:hover{border-color:var(--gold);color:var(--cream)}
 
 /* ── PHOTO ── */
-.photo-wrap{position:relative;display:flex;justify-content:center;align-items:center}
+.photo-wrap{position:relative;display:flex;justify-content:center;align-items:flex-start;padding-top:20px}
 .photo-frame{position:relative;width:360px;height:420px}
 .photo-frame::before{content:'';position:absolute;top:-16px;left:-16px;right:16px;bottom:16px;border:1px solid rgba(201,168,76,0.2);z-index:0}
 .photo-frame::after{content:'';position:absolute;top:16px;left:16px;right:-16px;bottom:-16px;border:1px solid rgba(201,168,76,0.08);z-index:0}
@@ -156,7 +156,7 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
 @media(max-width:1024px){.nav-links{display:none}}
 @media(max-width:768px){
   .hero-inner{grid-template-columns:1fr;gap:40px}
-  .photo-wrap{order:2;margin-top:28px;justify-content:center}.photo-wrap .LI-profile-badge{max-width:260px !important;transform:scale(0.85);transform-origin:top left}
+  .photo-wrap{order:2;margin-top:28px;display:flex;justify-content:center}
   .photo-frame{width:280px;height:320px}
   .story-grid{grid-template-columns:1fr}
   .profile-inner{grid-template-columns:1fr}
@@ -211,7 +211,7 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
 
     </div>
 
-    <div class="photo-wrap" style="display:flex;justify-content:center;align-items:flex-start;padding-top:20px">
+    <div class="photo-wrap">
       <div class="badge-base LI-profile-badge"
            data-locale="pt_PT"
            data-size="medium"
