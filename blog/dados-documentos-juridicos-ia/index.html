@@ -138,7 +138,7 @@ footer{border-top:1px solid var(--rule-dark);padding:32px clamp(20px,5vw,60px);d
   <a href="/blog" class="hero-back">← Blog</a>
   <div class="hero-category">🔒 Dados & Segurança Jurídica</div>
   <h1 class="hero-title">O que acontece ao seu documento jurídico<br><em>quando usa Inteligência Artificial?</em></h1>
-  <p class="hero-subtitle">A diferença que ninguém explica — e que pode mudar tudo para advogados, magistrados e académicos que trabalham com documentos sensíveis.</p>
+  <p class="hero-subtitle">O que acontece exactamente ao documento quando o submete a uma ferramenta de IA. E porque a resposta importa para quem trabalha com documentos sensíveis.</p>
   <div class="hero-meta">
     <span class="hero-author">Tony de Almeida da Costa Branco · FDUL · Fundador do LexVeritas</span>
     <span class="hero-date">18 de Maio de 2026</span>
@@ -147,77 +147,28 @@ footer{border-top:1px solid var(--rule-dark);padding:32px clamp(20px,5vw,60px);d
 
 <div class="article-body">
 
-  <p class="lead-paragraph">Um advogado submete um acórdão ao ChatGPT. Recebe uma análise detalhada. Pensa: "que ferramenta útil." Mas em algum momento desse processo, o texto do processo — com os dados das partes, com a estratégia processual implícita, com a fundamentação — ficou guardado nos servidores de uma empresa americana. Pode ter sido visto por um colaborador. Pode vir a ser usado para treinar o próximo modelo de linguagem.</p>
+  <p class="lead-paragraph">Há algumas semanas, um advogado disse-me qualquer coisa que não consigo deixar de pensar. Estava a usar o ChatGPT para analisar um acórdão — recebeu uma análise detalhada, ficou impressionado — e quando lhe perguntei se tinha lido os termos de serviço da ferramenta, olhou para mim como se eu tivesse feito uma pergunta estranha. "Ninguém lê isso."</p>
 
-  <p>Não é ficção científica. É o modelo de negócio padrão das ferramentas de IA de uso geral. E as implicações para o profissional jurídico são sérias.</p>
+  <p>Tem razão, claro. Ninguém lê. Mas o que lá está importa bastante para quem trabalha com documentos jurídicos.</p>
 
-  <h2>A questão que <em>ninguém faz</em></h2>
+  <p>Deixe-me explicar o que acontece quando submete um documento ao ChatGPT, ao Gemini ou ao Copilot. Não o que devia acontecer — o que acontece de facto, de acordo com os próprios termos dessas ferramentas.</p>
 
-  <p>Quando os profissionais jurídicos começaram a usar IA para analisar documentos, a conversa centrou-se quase sempre na qualidade da análise: "É precisa? É fiável? Substitui o advogado?" São perguntas legítimas. Mas há uma questão anterior, mais fundamental, que raramente é feita:</p>
+  <p>O texto vai para servidores nos Estados Unidos. É processado pelo modelo. Pode ser guardado — para segurança, para melhoria do serviço, ou para treinar versões futuras. Pode, em determinadas circunstâncias, ser revisto por um colaborador humano da empresa. A transferência para os EUA pode não ter base legal clara ao abrigo do RGPD.</p>
 
-  <div class="callout">
-    <span class="callout-label">A questão essencial</span>
-    <p>O que acontece exactamente ao meu documento depois de o submeter?</p>
-  </div>
+  <p>Nenhuma destas coisas é um escândalo em si. Para a maioria dos usos, é perfeitamente razoável. O problema é que a maioria dos profissionais jurídicos não está a usar estas ferramentas para usos normais. Estão a submeter dados de clientes, fundamentações processuais, documentos com informação pessoal sensível. E não estão a fazer isso com má intenção — estão a fazer porque a ferramenta é útil e cómoda, e porque a questão dos dados simplesmente não lhes ocorreu.</p>
 
-  <p>A resposta varia radicalmente consoante a ferramenta utilizada. E as implicações jurídicas, deontológicas e regulatórias dessa variação são enormes.</p>
+  <h2>O que acontece <em>concretamente</em></h2>
 
-  <h2>O que acontece numa <em>IA de uso geral</em></h2>
+  <p>Quando comecei a construir o LexVeritas, tive de pensar nisto muito concretamente. Não como princípio abstracto — como decisão de engenharia. O que acontece ao documento de alguém quando o submete?</p>
 
-  <p>Ferramentas como ChatGPT (OpenAI), Gemini (Google), Copilot (Microsoft) ou a interface web do Claude.ai têm algo em comum: são serviços de consumo, desenhados para o grande público. Os seus termos de serviço reflectem isso.</p>
+  <p>A primeira decisão foi que o ficheiro PDF nunca sai do dispositivo do utilizador. O texto é extraído localmente, pelo browser, através do pdf.js. O servidor nunca vê o PDF — vê apenas o texto extraído, e só a parte relevante para a análise.</p>
 
-  <p>Quando submete um documento nessas ferramentas — salvo configurações específicas de contas enterprise — acontece tipicamente o seguinte:</p>
+  <p>A segunda foi não usar a interface web do Claude.ai. Esta distinção é menos óbvia mas é importante. A API da Anthropic — o que o LexVeritas usa — está sujeita a condições contratuais diferentes: por contrato, a Anthropic não treina modelos com dados submetidos via API. Os dados são processados e descartados. Nenhum colaborador acede ao conteúdo. Usar o Claude.ai na web e usar a API são coisas diferentes, com garantias diferentes.</p>
 
-  <ul class="bullet-list danger">
-    <li>O texto é enviado para servidores da empresa, geralmente nos EUA</li>
-    <li>É processado pelo modelo de linguagem</li>
-    <li>Pode ser guardado para fins de segurança, melhoria do serviço ou treino de modelos futuros</li>
-    <li>Pode ser revisto por colaboradores humanos da empresa</li>
-    <li>A transferência de dados para os EUA pode não ter base legal clara ao abrigo do RGPD</li>
-  </ul>
-
-  <div class="callout danger">
-    <span class="callout-label">O problema jurídico</span>
-    <p>Para um advogado, magistrado ou investigador, submeter dados de clientes, processos ou documentos sensíveis a um serviço com este modelo pode constituir violação do sigilo profissional, do RGPD e, em casos extremos, do segredo de justiça.</p>
-  </div>
-
-  <h2>O que acontece <em>no LexVeritas</em></h2>
-
-  <p>O LexVeritas foi desenhado de raiz para o contexto jurídico português, com uma arquitectura que responde directamente a estas preocupações. Eis o que acontece passo a passo:</p>
-
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">01</div>
-      <div class="step-content">
-        <h3>Extracção local no browser</h3>
-        <p>Quando carrega um PDF, o texto é extraído no seu próprio browser — pelo motor pdf.js, que corre localmente no seu dispositivo. O ficheiro PDF nunca é enviado para o servidor. Apenas o texto extraído é transmitido, e apenas a parte relevante para a análise.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <div class="step-content">
-        <h3>Transmissão encriptada</h3>
-        <p>O texto extraído é transmitido ao servidor via HTTPS — encriptação ponto a ponto, o mesmo protocolo que protege as transacções bancárias online.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <div class="step-content">
-        <h3>API Anthropic — condições contratuais distintas</h3>
-        <p>O LexVeritas não usa a interface web do Claude.ai — usa a API da Anthropic, sujeita a condições contratuais radicalmente diferentes. Por contrato, a Anthropic não treina modelos de IA com dados submetidos via API. Os dados são processados em memória isolada e descartados imediatamente após a resposta. Nenhum colaborador tem acesso ao conteúdo dos documentos.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">04</div>
-      <div class="step-content">
-        <h3>Apenas o resultado é guardado</h3>
-        <p>O que fica no histórico é o resultado da análise: o veredicto, os indicadores, a fundamentação. O texto do documento nunca é guardado pelo LexVeritas. Está no seu dispositivo — e só lá.</p>
-      </div>
-    </div>
-  </div>
+  <p>A terceira foi sobre o que fica guardado. O que o LexVeritas guarda no histórico é o resultado da análise — o veredicto, os indicadores, a fundamentação. O texto do documento não é guardado. Fica no dispositivo do utilizador, e só lá.</p>
 
   <div class="callout success">
-    <span class="callout-label">A distinção crítica</span>
+    <span class="callout-label">A distinção que importa</span>
     <p>Usar o Claude.ai na web não tem as mesmas garantias que usar a API da Anthropic. O LexVeritas usa exclusivamente a API — com as garantias contratuais correspondentes.</p>
   </div>
 
@@ -265,29 +216,13 @@ footer{border-top:1px solid var(--rule-dark);padding:32px clamp(20px,5vw,60px);d
     </tbody>
   </table>
 
-  <h2>A responsabilidade que <em>permanece</em></h2>
+  <h2>A responsabilidade que <em>não desaparece</em></h2>
 
-  <p>Seria desonesto concluir sem deixar claro: mesmo com estas garantias técnicas e contratuais, a responsabilidade do utilizador não desaparece. O LexVeritas recomenda e, nos seus Termos de Serviço, exige:</p>
+  <p>Não estou a dizer isto para fazer marketing. Estou a dizer porque me parece relevante para qualquer advogado ou magistrado que esteja a pensar usar IA para trabalhar com documentos sensíveis. A questão a fazer antes de usar qualquer ferramenta não é "funciona bem?" — essa resposta é normalmente sim. A questão é: o que acontece aos meus dados?</p>
 
-  <ul class="bullet-list">
-    <li>Não submeter processos em segredo de justiça</li>
-    <li>Avaliar a existência de base legal RGPD para dados pessoais de terceiros nos documentos</li>
-    <li>Respeitar o sigilo profissional aplicável à sua profissão</li>
-    <li>Anonimizar os documentos sempre que possível antes de submeter</li>
-  </ul>
+  <p>E uma última coisa, porque seria errado não dizê-la: mesmo com todas estas garantias técnicas, a responsabilidade do utilizador não desaparece. Não se devem submeter processos em segredo de justiça. Deve avaliar-se se existe base legal RGPD para os dados pessoais de terceiros que possam constar do documento. O sigilo profissional continua a ser do profissional, independentemente da ferramenta. A tecnologia resolve a parte técnica. A parte deontológica é sempre do advogado.</p>
 
-  <p>A tecnologia pode oferecer garantias contratuais e arquitectónicas. A deontologia é sempre do profissional.</p>
-
-  <h2><em>Conclusão</em></h2>
-
-  <p>A questão não é se usar IA no trabalho jurídico. É qual ferramenta usar, com que garantias, e com que consciência das implicações.</p>
-
-  <p>Ferramentas de uso geral foram desenhadas para o consumidor médio — não para o advogado que submete dados protegidos pelo sigilo profissional, nem para o magistrado que trabalha com processos sensíveis. O LexVeritas foi desenhado precisamente para esse contexto.</p>
-
-  <div class="callout">
-    <span class="callout-label">Em síntese</span>
-    <p>Os seus documentos são seus. E devem continuar a sê-lo.</p>
-  </div>
+  <p>A questão não é se usar IA no trabalho jurídico. É qual ferramenta usar, com que garantias, e com que consciência do que está a acontecer ao documento.</p>
 
   <div class="cta-block">
     <h3>Experimente o <em>LexVeritas</em></h3>
