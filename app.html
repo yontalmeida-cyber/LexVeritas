@@ -840,15 +840,15 @@
     <button class="dark-modal-close" onclick="document.getElementById('modal-upgrade').classList.remove('visible')">×</button>
     <div class="dark-modal-label">Plano Profissional</div>
     <h2 class="dark-modal-title">Actualizar Plano</h2>
-    <p class="dark-modal-sub">Mais análises · Análise de Recurso · Histórico ilimitado</p>
+    <p class="dark-modal-sub">Análise completa · Relatório PDF · Minuta de Recurso · Histórico ilimitado</p>
     <div style="background:rgba(201,168,76,0.06);border:1px solid var(--rule-dark);padding:20px;margin-bottom:20px">
       <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--gold);margin-bottom:12px">PROPOSTA PERSONALIZADA</div>
       <p style="font-size:13px;color:var(--grey);margin-bottom:16px;line-height:1.6">Contacte-nos para uma proposta adaptada ao seu perfil profissional ou institucional.</p>
       <a href="https://lexveritas.pt/#planos" style="display:inline-block;background:var(--gold);color:var(--black);border:none;padding:10px 20px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none">Pedir Proposta →</a>
     </div>
-    <div style="background:rgba(255,255,255,0.03);border:1px solid var(--rule-dark);padding:12px 14px;font-family:var(--sans);font-size:11px;color:var(--grey);line-height:1.6">
-      <strong style="display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:4px">Plano Gratuito actual</strong>
-      5 análises/mês · Relatório PDF · Histórico
+    <div id="modal-plano-actual" style="background:rgba(255,255,255,0.03);border:1px solid var(--rule-dark);padding:12px 14px;font-family:var(--sans);font-size:11px;color:var(--grey);line-height:1.6">
+      <strong style="display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:4px">Plano actual</strong>
+      <span id="modal-plano-actual-desc">5 análises/mês · Histórico 30 dias</span>
     </div>
   </div>
 </div>
@@ -963,7 +963,29 @@ function showTab(tab) {
   if (tab === 'historico') loadHistory();
   if (tab === 'perfil') loadPerfil();
 }
-function showModal(id) { document.getElementById('modal-' + id).classList.add('visible'); }
+function showModal(id) {
+  if (id === 'upgrade') {
+    const plano = userProfile?.plano || 'gratuito';
+    const descEl = document.getElementById('modal-plano-actual-desc');
+    const labelEl = document.querySelector('#modal-plano-actual strong');
+    if (descEl) {
+      if (plano === 'admin') {
+        descEl.textContent = 'Admin · 300k chars · PDF · Minuta · Académico 200k (testes)';
+        if (labelEl) labelEl.textContent = 'Plano actual — Admin';
+      } else if (plano === 'profissional') {
+        descEl.textContent = 'Profissional · Análise completa · PDF · Minuta de Recurso';
+        if (labelEl) labelEl.textContent = 'Plano actual — Profissional';
+      } else if (plano === 'institucional') {
+        descEl.textContent = 'Institucional · Utilizadores ilimitados · API · PDF · Minuta';
+        if (labelEl) labelEl.textContent = 'Plano actual — Institucional';
+      } else {
+        descEl.textContent = '5 análises/mês · Histórico 30 dias';
+        if (labelEl) labelEl.textContent = 'Plano actual — Gratuito';
+      }
+    }
+  }
+  document.getElementById('modal-' + id).classList.add('visible');
+}
 
 async function fazerLogin() {
   const email = document.getElementById('login-email').value.trim();
