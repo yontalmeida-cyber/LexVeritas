@@ -1366,7 +1366,7 @@ async function analyzeDecision() {
     //   Profissional: académico 571k (tese completa), judicial 300k, crítica 300k
     const isPro = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional' || userProfile?.plano === 'admin';
     const LIMITE_FRONTEND = isPro
-      ? (modoActual === 'academico' ? 571000 : 300000)
+      ? (modoActual === 'academico' ? 700000 : 300000)
       : (modoActual === 'academico' ? 200000 : 120000);
     const textoEnviar = text.length > LIMITE_FRONTEND ? text.substring(0, LIMITE_FRONTEND) : text;
     // Avisar utilizador gratuito que o documento foi truncado
