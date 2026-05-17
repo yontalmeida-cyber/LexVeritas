@@ -550,7 +550,8 @@
           <h3>⚠ Citações com Indícios de Fabricação</h3>
           <div id="citacoes-list"></div>
           <div id="verificar-btn-container" style="display:none;margin-top:14px">
-            <button class="verificar-btn" id="btn-verificar-citacoes" onclick="verificarCitacoes()">
+            <div id="aviso-truncagem" style="display:none;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-left:3px solid var(--gold);padding:10px 14px;margin-bottom:10px;font-family:var(--mono);font-size:10px;color:#c9a84c;line-height:1.6"></div>
+          <button class="verificar-btn" id="btn-verificar-citacoes" onclick="verificarCitacoes()">
               🔍 Verificar Citações nas Fontes Oficiais
             </button>
             <div style="font-family:var(--mono);font-size:9px;color:#aaa;text-align:center;margin-top:6px;letter-spacing:0.05em">
@@ -1296,7 +1297,14 @@ async function analyzeDecision() {
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
           body: JSON.stringify({ pdfBase64: base64, nomeFile: pdfFileObj.name })
         });
-        if (!resp.ok) { const err = await resp.json().catch(() => ({})); throw new Error(err.erro || 'Erro do servidor.'); }
+        if (!resp.ok) {
+          const err = await resp.json().catch(() => ({}));
+          if (resp.status === 413) {
+            const isProInj = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional';
+            throw new Error(isProInj ? 'PDF demasiado grande. Máximo 10MB.' : 'PDF demasiado grande para o plano gratuito (máximo 5MB). Actualize para Profissional para analisar PDFs até 10MB.');
+          }
+          throw new Error(err.erro || 'Erro do servidor.');
+        }
         result = await resp.json();
       } else {
         // Texto colado: endpoint de texto (preserva Unicode do clipboard)
@@ -1331,9 +1339,22 @@ async function analyzeDecision() {
     }
 
     // ── MODOS NORMAIS ──
-    // Limitar texto antes de enviar ao servidor (Hobby timeout = 10s)
-    const LIMITE_FRONTEND = modoActual === 'academico' ? 50000 : modoActual === 'critica' ? 20000 : 20000;
+    // Limites por plano:
+    //   Gratuito:     académico 200k, judicial 120k, crítica 120k
+    //   Profissional: académico 571k (tese completa), judicial 300k, crítica 300k
+    const isPro = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional';
+    const LIMITE_FRONTEND = isPro
+      ? (modoActual === 'academico' ? 571000 : 300000)
+      : (modoActual === 'academico' ? 200000 : 120000);
     const textoEnviar = text.length > LIMITE_FRONTEND ? text.substring(0, LIMITE_FRONTEND) : text;
+    // Avisar utilizador gratuito que o documento foi truncado
+    if (!isPro && text.length > LIMITE_FRONTEND) {
+      const aviso = document.getElementById('aviso-truncagem');
+      if (aviso) { aviso.style.display = 'block'; aviso.textContent = '\u26a0 Documento extenso — analisados ' + Math.round(LIMITE_FRONTEND/1000) + 'k de ' + Math.round(text.length/1000) + 'k caracteres. Actualize para Profissional para análise completa.'; }
+    } else {
+      const aviso = document.getElementById('aviso-truncagem');
+      if (aviso) aviso.style.display = 'none';
+    }
     let payload = { texto: textoEnviar, modo: modoActual };
     if (modoActual === 'judicial') { payload.tribunal = document.getElementById('tribunal-select').value || null; payload.relator = document.getElementById('relator-input').value || null; payload.tipoPeca = (document.getElementById('tipo-peca-select') || {}).value || null; }
     else if (modoActual === 'academico') { payload.instituicao = document.getElementById('instituicao-input').value || null; payload.tipoDoc = document.getElementById('tipo-doc-select').value || null; payload.orientador = document.getElementById('orientador-input').value || null; }
@@ -1612,7 +1633,10 @@ function renderResultsCritica(result) {
     container.innerHTML = '<div class="analysis-card"><h3>Fundamentos de Recurso</h3><p style="color:#888;font-style:italic">Não foram identificados fundamentos significativos para recurso.</p></div>';
   }
   document.getElementById('critica-conclusao').innerHTML = (result.conclusao || '').replace(/\n/g, '<br>');
-  document.getElementById('minuta-btn-container').style.display = 'block';
+  // Minuta: apenas para profissional/institucional
+  const isProMinuta = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional';
+  document.getElementById('minuta-btn-container').style.display = isProMinuta ? 'block' : 'none';
+  document.getElementById('minuta-upgrade-notice').style.display = isProMinuta ? 'none' : 'block';
   document.getElementById('minuta-container').style.display = 'none';
   document.getElementById('minuta-body').textContent = '';
   document.getElementById('results-area').classList.add('visible');
@@ -1827,6 +1851,20 @@ async function verificarCitacoes() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session || !session.access_token) { alert('Sessão expirada. Faça login novamente.'); logout(); return; }
 
+    // Limite de citações por plano: gratuito 4, profissional 12
+    const isProVerif = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional';
+    const LIMITE_CIT = isProVerif ? 12 : 4;
+    if (citacoes.length > LIMITE_CIT && !isProVerif) {
+      const notaEl = document.getElementById('verificar-btn-container');
+      let notaDiv = document.getElementById('nota-limite-citacoes');
+      if (!notaDiv) {
+        notaDiv = document.createElement('div');
+        notaDiv.id = 'nota-limite-citacoes';
+        notaDiv.style.cssText = 'font-family:var(--mono);font-size:10px;color:#c9a84c;padding:8px 10px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);margin-top:8px';
+        notaEl.appendChild(notaDiv);
+      }
+      notaDiv.textContent = '⚠ Plano gratuito: verificando as primeiras ' + LIMITE_CIT + ' citações de ' + citacoes.length + '. Actualize para verificar até 12.';
+    }
     const response = await fetch('/api/verificar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
