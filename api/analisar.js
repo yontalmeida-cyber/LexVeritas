@@ -1,6 +1,8 @@
 // /api/analisar.js — LexVeritas API Endpoint
 // Vercel Serverless Function — Node.js 18+ — CommonJS
-// v2.8 — citacoes_suspeitas no modo académico (Nível 1: prompt + schema; Nível 2: backend)
+// v2.9 — prompt caching activado (-66% custo input)
+//        limites por plano: gratuito 120k/200k/120k, pro 300k/700k/300k
+//        citacoes_suspeitas no modo académico (Nível 1: prompt + schema; Nível 2: backend)
 //        Nível 1: systemPrompt académico inclui citacoes_suspeitas com regras para notas
 //                 de rodapé, bibliografia, doutrina e acórdãos; max_tokens académico → 3000
 //        Nível 2: extrairEValidarProcessos() activo também para modo académico;
@@ -445,16 +447,41 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
 
-  // ── AUTENTICAÇÃO ──
+  // ── AUTENTICAÇÃO + PLANO ──
   const authHeader = (req.headers.authorization || '').trim();
   if (!authHeader.startsWith('Bearer ')) return res.status(401).json({ erro: 'Autenticação necessária.' });
   const token = authHeader.replace('Bearer ', '').trim();
+
+  let userPlano = 'gratuito';
   try {
     const authCheck = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
       headers: { 'Authorization': `Bearer ${token}`, 'apikey': SUPABASE_ANON_KEY },
     });
     if (!authCheck.ok) return res.status(401).json({ erro: 'Sessão inválida ou expirada.' });
+    const userData = await authCheck.json().catch(() => null);
+    const userId = userData?.id;
+    if (userId) {
+      // Ir buscar plano do utilizador ao Supabase
+      const perfilCheck = await fetch(
+        `${SUPABASE_URL}/rest/v1/perfis?id=eq.${userId}&select=plano`,
+        { headers: { 'Authorization': `Bearer ${token}`, 'apikey': SUPABASE_ANON_KEY } }
+      ).catch(() => null);
+      if (perfilCheck?.ok) {
+        const perfil = await perfilCheck.json().catch(() => null);
+        if (Array.isArray(perfil) && perfil[0]?.plano) {
+          userPlano = perfil[0].plano;
+        }
+      }
+    }
   } catch { return res.status(401).json({ erro: 'Erro de autenticação.' }); }
+
+  // ── LIMITES POR PLANO ──
+  // Gratuito:          judicial 120k,  académico 200k, crítica 120k
+  // Profissional/Inst: judicial 300k,  académico 700k, crítica 300k
+  const isPro = userPlano === 'profissional' || userPlano === 'institucional';
+  const LIMITE_CHARS           = isPro ? 300000 : 120000;
+  const LIMITE_CHARS_ACADEMICO = isPro ? 700000 : 200000;
+  const LIMITE_CHARS_CRITICA   = isPro ? 300000 : 120000;
 
   // ── CORPO ──
   const body = req.body || {};
@@ -468,14 +495,8 @@ module.exports = async function handler(req, res) {
   if (!ANTHROPIC_API_KEY) return res.status(500).json({ erro: 'Serviço indisponível.' });
 
   // ══════════════════════════════════════════════════════
-  // SELECÇÃO INTELIGENTE DE TEXTO
-  // Limites:
-  //   Judicial:  20.000 chars — extracção da fundamentação
-  //   Académico: 50.000 chars — extracção do corpo via heurística estrutural
-  //   Crítica:   20.000 chars — truncagem simples (acórdãos mais curtos)
+  // SELECÇÃO INTELIGENTE DE TEXTO — limites definidos acima por plano
   // ══════════════════════════════════════════════════════
-  const LIMITE_CHARS = 20000;
-  const LIMITE_CHARS_ACADEMICO = 50000;
 
   function extrairTextoRelevante(txt, modoAnalise) {
     if (!txt) return txt;
@@ -534,8 +555,8 @@ module.exports = async function handler(req, res) {
     // ── MODO CRÍTICA ────────────────────────────────────
     // Acórdãos são mais curtos; truncagem simples é suficiente.
     if (modoAnalise === 'critica') {
-      if (txt.length <= LIMITE_CHARS) return txt;
-      return txt.substring(0, LIMITE_CHARS) + '\n[texto truncado — ' + txt.length + ' chars total]';
+      if (txt.length <= LIMITE_CHARS_CRITICA) return txt;
+      return txt.substring(0, LIMITE_CHARS_CRITICA) + '\n[texto truncado — ' + txt.length + ' chars total]';
     }
 
     // ── MODO JUDICIAL ───────────────────────────────────
@@ -775,7 +796,9 @@ Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É
     userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}${alertasLocais}${labelDocumento}:\n\n${textoTruncado}\n\nJSON puro.`;
   }
 
-  // ── CHAMADA ANTHROPIC com retry ──
+  // ── CHAMADA ANTHROPIC com retry + prompt caching ──
+  // O system prompt é idêntico em todas as análises do mesmo modo —
+  // activar caching reduz o custo de input em ~90% na parte cached.
   const maxTokens = modo === 'minuta' ? 16000 : modo === 'critica' ? 5000 : (modo === 'judicial' || modo === 'academico') ? 3000 : 2000;
 
   async function chamarAnthropic() {
@@ -785,12 +808,19 @@ Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É
         'Content-Type': 'application/json',
         'x-api-key': ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'prompt-caching-2024-07-31',
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: maxTokens,
         temperature: 0,
-        system: systemPrompt,
+        system: [
+          {
+            type: 'text',
+            text: systemPrompt,
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
         messages: [{ role: 'user', content: userPrompt }],
       }),
     });
