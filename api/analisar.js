@@ -477,11 +477,13 @@ module.exports = async function handler(req, res) {
 
   // ── LIMITES POR PLANO ──
   // Gratuito:          judicial 120k,  académico 200k, crítica 120k
-  // Profissional/Inst: judicial 300k,  académico 700k, crítica 300k
-  const isPro = userPlano === 'profissional' || userPlano === 'institucional';
-  const LIMITE_CHARS           = isPro ? 300000 : 120000;
-  const LIMITE_CHARS_ACADEMICO = isPro ? 700000 : 200000;
-  const LIMITE_CHARS_CRITICA   = isPro ? 300000 : 120000;
+  // Profissional/Inst: judicial 300k,  académico 571k, crítica 300k
+  // Admin:             judicial 300k,  académico 200k (testes), crítica 300k — PDF e minuta incluídos
+  const isPro   = userPlano === 'profissional' || userPlano === 'institucional';
+  const isAdmin = userPlano === 'admin';
+  const LIMITE_CHARS           = (isPro || isAdmin) ? 300000 : 120000;
+  const LIMITE_CHARS_ACADEMICO = isPro ? 571000 : isAdmin ? 200000 : 200000;
+  const LIMITE_CHARS_CRITICA   = (isPro || isAdmin) ? 300000 : 120000;
 
   // ── CORPO ──
   const body = req.body || {};
