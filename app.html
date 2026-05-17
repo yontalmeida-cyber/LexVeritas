@@ -1514,7 +1514,7 @@ function renderResults(result) {// ── Aviso de domínio não reconhecido ─
   const citacoesCard = document.getElementById('citacoes-card');
   const citacoesList = document.getElementById('citacoes-list');
   const citacoes = result.citacoes_suspeitas || [];
-  if (citacoes.length > 0 && modoActual === 'judicial') {
+  if (citacoes.length > 0 && (modoActual === 'judicial' || modoActual === 'academico')) {
     citacoesCard.style.display = 'block';
     document.getElementById('verificar-btn-container').style.display = 'block';
     document.getElementById('verificacao-resultados').style.display = 'none';
