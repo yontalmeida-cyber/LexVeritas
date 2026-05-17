@@ -583,14 +583,33 @@ module.exports = async function handler(req, res) {
   if (!authHeader.startsWith('Bearer ')) return res.status(401).json({ erro: 'Autenticação necessária.' });
   const token = authHeader.replace('Bearer ', '').trim();
 
+  // ── AUTENTICAÇÃO + PLANO ──
+  let userPlano = 'gratuito';
   try {
     const authCheck = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
       headers: { 'Authorization': `Bearer ${token}`, 'apikey': SUPABASE_ANON_KEY },
     });
     if (!authCheck.ok) return res.status(401).json({ erro: 'Sessão inválida ou expirada.' });
+    const userData = await authCheck.json().catch(() => null);
+    const userId = userData?.id;
+    if (userId) {
+      const perfilCheck = await fetch(
+        `${SUPABASE_URL}/rest/v1/perfis?id=eq.${userId}&select=plano`,
+        { headers: { 'Authorization': `Bearer ${token}`, 'apikey': SUPABASE_ANON_KEY } }
+      ).catch(() => null);
+      if (perfilCheck?.ok) {
+        const perfil = await perfilCheck.json().catch(() => null);
+        if (Array.isArray(perfil) && perfil[0]?.plano) userPlano = perfil[0].plano;
+      }
+    }
   } catch {
     return res.status(401).json({ erro: 'Erro de autenticação.' });
   }
+
+  // ── LIMITES POR PLANO ──
+  // Gratuito: 4 citações | Profissional/Institucional: 12 citações
+  const isPro = userPlano === 'profissional' || userPlano === 'institucional';
+  const LIMITE_CITACOES = isPro ? 12 : 4;
 
   const { citacoes } = req.body || {};
   if (!Array.isArray(citacoes) || citacoes.length === 0) {
@@ -598,7 +617,7 @@ module.exports = async function handler(req, res) {
   }
 
   const citacoesAVerificar = citacoes
-    .slice(0, 8)
+    .slice(0, LIMITE_CITACOES)
     .filter(c => c && typeof c.citacao === 'string' && c.citacao.trim().length > 3)
     .map(suavizarGravidade);
 

@@ -815,19 +815,40 @@ module.exports = async function handler(req, res) {
   const authHeader = (req.headers.authorization || '').trim();
   if (!authHeader.startsWith('Bearer ')) return res.status(401).json({ erro: 'Autenticação necessária.' });
   const token = authHeader.replace('Bearer ', '').trim();
+
+  // ── AUTENTICAÇÃO + PLANO ──
+  let userPlano = 'gratuito';
   try {
     const authCheck = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
       headers: { 'Authorization': `Bearer ${token}`, 'apikey': SUPABASE_ANON_KEY },
     });
     if (!authCheck.ok) return res.status(401).json({ erro: 'Sessão inválida ou expirada.' });
+    const userData = await authCheck.json().catch(() => null);
+    const userId = userData?.id;
+    if (userId) {
+      const perfilCheck = await fetch(
+        `${SUPABASE_URL}/rest/v1/perfis?id=eq.${userId}&select=plano`,
+        { headers: { 'Authorization': `Bearer ${token}`, 'apikey': SUPABASE_ANON_KEY } }
+      ).catch(() => null);
+      if (perfilCheck?.ok) {
+        const perfil = await perfilCheck.json().catch(() => null);
+        if (Array.isArray(perfil) && perfil[0]?.plano) userPlano = perfil[0].plano;
+      }
+    }
   } catch { return res.status(401).json({ erro: 'Erro de autenticação.' }); }
+
+  // ── LIMITES POR PLANO ──
+  // Gratuito: 5MB | Profissional/Institucional: 10MB
+  const isPro = userPlano === 'profissional' || userPlano === 'institucional';
+  const LIMITE_PDF_BASE64 = isPro ? 14_000_000 : 7_000_000; // base64 ~33% maior que o ficheiro real
 
   const { pdfBase64, nomeFile } = req.body || {};
   if (!pdfBase64 || typeof pdfBase64 !== 'string') {
     return res.status(400).json({ erro: 'PDF em base64 não fornecido.' });
   }
-  if (pdfBase64.length > 14_000_000) {
-    return res.status(413).json({ erro: 'PDF demasiado grande. Máximo 10MB.' });
+  if (pdfBase64.length > LIMITE_PDF_BASE64) {
+    const limiteMsg = isPro ? '10MB' : '5MB';
+    return res.status(413).json({ erro: `PDF demasiado grande. Máximo ${limiteMsg} no plano ${userPlano}.` });
   }
 
   let pdfBuffer;

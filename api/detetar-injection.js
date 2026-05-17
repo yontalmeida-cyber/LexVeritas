@@ -276,20 +276,47 @@ module.exports = async function handler(req, res) {
   const authHeader = (req.headers.authorization || '').trim();
   if (!authHeader.startsWith('Bearer ')) return res.status(401).json({ erro: 'Autenticação necessária.' });
   const token = authHeader.replace('Bearer ', '').trim();
+
+  // ── AUTENTICAÇÃO + PLANO ──
+  let userPlano = 'gratuito';
   try {
     const authCheck = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
       headers: { 'Authorization': `Bearer ${token}`, 'apikey': SUPABASE_ANON_KEY },
     });
     if (!authCheck.ok) return res.status(401).json({ erro: 'Sessão inválida ou expirada.' });
+    const userData = await authCheck.json().catch(() => null);
+    const userId = userData?.id;
+    if (userId) {
+      const perfilCheck = await fetch(
+        `${SUPABASE_URL}/rest/v1/perfis?id=eq.${userId}&select=plano`,
+        { headers: { 'Authorization': `Bearer ${token}`, 'apikey': SUPABASE_ANON_KEY } }
+      ).catch(() => null);
+      if (perfilCheck?.ok) {
+        const perfil = await perfilCheck.json().catch(() => null);
+        if (Array.isArray(perfil) && perfil[0]?.plano) userPlano = perfil[0].plano;
+      }
+    }
   } catch { return res.status(401).json({ erro: 'Erro de autenticação.' }); }
+
+  // ── LIMITES POR PLANO ──
+  // Gratuito: 50k chars | Profissional/Institucional: 200k chars
+  const isPro = userPlano === 'profissional' || userPlano === 'institucional';
+  const LIMITE_CHARS_INJECTION = isPro ? 200000 : 50000;
 
   const { texto } = req.body || {};
   if (!texto || typeof texto !== 'string' || texto.trim().length < 20) {
     return res.status(400).json({ erro: 'Texto insuficiente.' });
   }
 
+  // Aplicar limite por plano
+  const textoLimitado = texto.length > LIMITE_CHARS_INJECTION
+    ? texto.substring(0, LIMITE_CHARS_INJECTION)
+    : texto;
+
+  const textoTruncado = texto.length > LIMITE_CHARS_INJECTION;
+
   // ── Validação de domínio — apenas documentos jurídicos PT-PT ──
-  const textoValidacao = texto.toLowerCase().substring(0, 6000);
+  const textoValidacao = textoLimitado.toLowerCase().substring(0, 6000);
   const indicadoresPortugues = [
     'stj', 'trl', 'trp', 'trc', 'trg', 'tre', 'sta',
     'supremo tribunal de justiça', 'tribunal da relação',
@@ -308,10 +335,10 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  const unicodeEncontrados = detectarUnicodeInvisivel(texto);
-  const padroesEncontrados = detectarPadroesLinguisticos(texto);
-  const anomaliasEncontradas = detectarAnomalias(texto);
-  const alertasEntropia = analisarEntropia(texto);
+  const unicodeEncontrados = detectarUnicodeInvisivel(textoLimitado);
+  const padroesEncontrados = detectarPadroesLinguisticos(textoLimitado);
+  const anomaliasEncontradas = detectarAnomalias(textoLimitado);
+  const alertasEntropia = analisarEntropia(textoLimitado);
 
   const todasAnomalias = [...anomaliasEncontradas, ...alertasEntropia];
   const score = calcularRisco(unicodeEncontrados, padroesEncontrados, todasAnomalias);
@@ -319,7 +346,7 @@ module.exports = async function handler(req, res) {
   const totalIndicadores = unicodeEncontrados.length + padroesEncontrados.length + todasAnomalias.length;
 
   // ── Detecção de jurisdição ──
-  const textoParaJurisdicao = texto.toLowerCase().substring(0, 5000);
+  const textoParaJurisdicao = textoLimitado.toLowerCase().substring(0, 5000);
   const tribunaisPortugueses = ['stj','trl','trp','trc','trg','tre','sta','supremo tribunal de justiça','tribunal da relação','tribunal constitucional','comarca','dgsi','tcas','tcan','tribunal de trabalho','tribunal administrativo'];
   const dominioPortugues = tribunaisPortugueses.some(t => textoParaJurisdicao.includes(t));
   const notaDominio = dominioPortugues
@@ -334,8 +361,12 @@ module.exports = async function handler(req, res) {
     padroes_linguisticos: padroesEncontrados,
     anomalias_estruturais: todasAnomalias,
     nota_dominio: notaDominio,
+    truncado: textoTruncado,
+    plano: userPlano,
     meta: {
       dominio_portugues: dominioPortugues,
+      chars_analisados: textoLimitado.length,
+      chars_total: texto.length,
     },
     recomendacao: veredicto === 'INJECTION_DETECTADA'
       ? 'Documento contém indícios fortes de prompt injection. Não processe com IA sem revisão humana completa.'
