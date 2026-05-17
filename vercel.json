@@ -28,8 +28,9 @@
     }
   ],
   "functions": {
-    "api/analisar.js": {
-      "maxDuration": 60
-    }
+    "api/analisar.js":          { "maxDuration": 300 },
+    "api/verificar.js":         { "maxDuration": 300 },
+    "api/detetar-injection.js": { "maxDuration": 120 },
+    "api/detetar-injection-pdf.js": { "maxDuration": 120 }
   }
 }
