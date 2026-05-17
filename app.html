@@ -1755,23 +1755,47 @@ function gerarPDFStandard() {
     function sectionHeader(title) { checkY(12); sc(cLight, 'fill'); doc.rect(margin, y, contentW + 4, 7, 'F'); sc(cGrey, 'draw'); doc.setLineWidth(0.1); doc.rect(margin, y, contentW + 4, 7, 'S'); sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'bold'); doc.text(safeStr(title), margin + 3, y + 5); y += 11; }
     function bodyText(text) { const safeW = contentW; const paras = safeStr(text).split('\n'); paras.forEach((para, pi) => { if (!para.trim()) { if (pi < paras.length - 1) { checkY(4); y += 3; } return; } doc.setFontSize(9); doc.setFont('helvetica', 'normal'); const lines = doc.splitTextToSize(para, safeW); lines.forEach(l => { checkY(6); sc(cInk, 'text'); doc.text(safeStr(l), margin, y); y += 5.5; }); if (pi < paras.length - 1) y += 2; }); }
 
+    const modoAtualPDF = lastResult._modo || 'judicial';
+    const tituloPDF = modoAtualPDF === 'academico'
+      ? 'RELATORIO FORENSE DE VERIFICACAO DE AUTORIA ACADEMICA'
+      : modoAtualPDF === 'injection'
+      ? 'RELATORIO FORENSE DE ANALISE DE INTEGRIDADE DOCUMENTAL'
+      : 'RELATORIO FORENSE DE ANALISE DE INTELIGENCIA ARTIFICIAL';
     sc(cGold, 'fill'); doc.rect(0, 0, W, 32, 'F');
     sc([255,255,255], 'text'); doc.setFontSize(30); doc.setFont('helvetica', 'bold'); doc.text('LexVeritas', margin, 18);
     doc.setFontSize(8); doc.setFont('helvetica', 'normal');
-    doc.text('RELATORIO FORENSE DE ANALISE DE INTELIGENCIA ARTIFICIAL', margin, 26);
+    doc.text(tituloPDF, margin, 26);
     doc.text(dateStr.toUpperCase() + ' - ' + timeStr, W - margin, 18, { align: 'right' });
     doc.text(safeStr(lastRef), W - margin, 26, { align: 'right' });
     y = 42;
 
+    // Cabeçalho adaptado por modo
+    let label1, label2, label3, val1, val2, val3;
+    if (modoAtualPDF === 'academico') {
+      label1 = 'INSTITUICAO'; label2 = 'TIPO DE DOCUMENTO'; label3 = 'UTILIZADOR';
+      val1 = safeStr(lastResult._tribunal || 'Nao indicada').substring(0, 28);
+      val2 = safeStr(lastResult._relator  || 'Nao indicado').substring(0, 22);
+      val3 = safeStr(userProfile?.nome || 'Utilizador').substring(0, 20);
+    } else if (modoAtualPDF === 'injection') {
+      label1 = 'DOCUMENTO'; label2 = 'MODO'; label3 = 'UTILIZADOR';
+      val1 = safeStr(lastResult._tribunal || 'Nao indicado').substring(0, 28);
+      val2 = 'Analise de Integridade';
+      val3 = safeStr(userProfile?.nome || 'Utilizador').substring(0, 20);
+    } else {
+      label1 = 'TRIBUNAL'; label2 = 'RELATOR'; label3 = 'UTILIZADOR';
+      val1 = safeStr(tribunalPDF || 'Nao indicado').substring(0, 28);
+      val2 = safeStr(relatorPDF  || 'Nao indicado').substring(0, 22);
+      val3 = safeStr(userProfile?.nome || 'Utilizador').substring(0, 20);
+    }
     sc(cLight, 'fill'); doc.rect(margin, y, contentW, 24, 'F');
     sc(cGold, 'draw'); doc.setLineWidth(0.5); doc.rect(margin, y, contentW, 24, 'S');
     const col1 = margin + 4, col2 = margin + 60, col3 = margin + 120;
     sc(cGrey, 'text'); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
-    doc.text('TRIBUNAL', col1, y + 6); doc.text('RELATOR', col2, y + 6); doc.text('UTILIZADOR', col3, y + 6);
+    doc.text(label1, col1, y + 6); doc.text(label2, col2, y + 6); doc.text(label3, col3, y + 6);
     sc(cInk, 'text'); doc.setFontSize(9); doc.setFont('helvetica', 'bold');
-    doc.text((tribunalPDF || 'Nao indicado').substring(0, 28), col1, y + 15);
-    doc.text((relatorPDF  || 'Nao indicado').substring(0, 22), col2, y + 15);
-    doc.text(safeStr(userProfile?.nome || 'Utilizador').substring(0, 20), col3, y + 15);
+    doc.text(val1, col1, y + 15);
+    doc.text(val2, col2, y + 15);
+    doc.text(val3, col3, y + 15);
     y += 32;
 
     sc(vColor, 'draw'); doc.setLineWidth(1.2); doc.line(margin, y, margin, y + 22);
