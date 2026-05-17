@@ -798,6 +798,67 @@ Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É
     userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}${alertasLocais}${labelDocumento}:\n\n${textoTruncado}\n\nJSON puro.`;
   }
 
+  // ── VERIFICAÇÃO WEB DE CITAÇÕES ──
+  // Activa apenas para modos judicial e académico, após análise principal.
+  // Para cada citação sinalizada, faz uma pesquisa Brave Search e devolve
+  // verificacao_web: 'verificada' | 'nao_encontrada' | 'discrepancia' | 'inconclusivo'
+  async function verificarCitacaoWeb(citacao, tipo) {
+    try {
+      // Construir query optimizada por tipo
+      let query = citacao.citacao;
+      if (tipo === 'acordao' || tipo === 'jurisprudencia') {
+        query = `"${citacao.citacao}" site:dgsi.pt OR site:tribunaisnet.mj.pt`;
+      } else if (tipo === 'doutrina') {
+        query = `${citacao.citacao} filetype:pdf OR site:almedina.net OR site:wook.pt`;
+      } else {
+        query = `${citacao.citacao} Portugal jurisprudência`;
+      }
+
+      const url = `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=3&country=pt&search_lang=pt`;
+      const r = await fetch(url, {
+        headers: {
+          'Accept': 'application/json',
+          'Accept-Encoding': 'gzip',
+          'X-Subscription-Token': process.env.BRAVE_SEARCH_API_KEY || '',
+        },
+      });
+
+      if (!r.ok) return 'inconclusivo';
+
+      const data = await r.json();
+      const resultados = data?.web?.results || [];
+
+      if (resultados.length === 0) return 'nao_encontrada';
+
+      // Verificar se algum resultado menciona a citação directamente
+      const textoResultados = resultados.map(r => (r.title + ' ' + (r.description || '')).toLowerCase()).join(' ');
+      const termosChave = citacao.citacao.toLowerCase().split(/\s+/).filter(t => t.length > 4);
+      const matches = termosChave.filter(t => textoResultados.includes(t));
+
+      if (matches.length >= Math.ceil(termosChave.length * 0.6)) return 'verificada';
+      if (matches.length > 0) return 'inconclusivo';
+      return 'nao_encontrada';
+
+    } catch {
+      return 'inconclusivo';
+    }
+  }
+
+  async function verificarCitacoesWeb(citacoes) {
+    if (!citacoes || citacoes.length === 0) return citacoes;
+    // Se a key não estiver configurada, devolver tudo como nao_verificado sem tentar pesquisa
+    if (!process.env.BRAVE_SEARCH_API_KEY) {
+      return citacoes.map(c => ({ ...c, verificacao_web: 'nao_verificado' }));
+    }
+    // Só verificar citações de gravidade alta ou média — baixa não justifica o custo
+    const promises = citacoes.map(async (c) => {
+      if (c.gravidade === 'baixa') return { ...c, verificacao_web: 'nao_verificado' };
+      const resultado = await verificarCitacaoWeb(c, c.tipo);
+      return { ...c, verificacao_web: resultado };
+    });
+    return Promise.all(promises);
+  }
+
   // ── CHAMADA ANTHROPIC com retry + prompt caching ──
   // O system prompt é idêntico em todas as análises do mesmo modo —
   // activar caching reduz o custo de input em ~90% na parte cached.
@@ -966,7 +1027,9 @@ Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É
             });
           }
         }
-        parsed.citacoes_suspeitas = citacoesIA.slice(0, 8);
+        const citacoesSliced = citacoesIA.slice(0, 8);
+        // Verificação web assíncrona — enriquece cada citação com verificacao_web
+        parsed.citacoes_suspeitas = await verificarCitacoesWeb(citacoesSliced);
       }
 
       parsed.marcadores = Array.isArray(parsed.marcadores)
