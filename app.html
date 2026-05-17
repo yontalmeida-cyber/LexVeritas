@@ -1300,7 +1300,7 @@ async function analyzeDecision() {
         if (!resp.ok) {
           const err = await resp.json().catch(() => ({}));
           if (resp.status === 413) {
-            const isProInj = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional';
+            const isProInj = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional' || userProfile?.plano === 'admin';
             throw new Error(isProInj ? 'PDF demasiado grande. Máximo 10MB.' : 'PDF demasiado grande para o plano gratuito (máximo 5MB). Actualize para Profissional para analisar PDFs até 10MB.');
           }
           throw new Error(err.erro || 'Erro do servidor.');
@@ -1342,7 +1342,7 @@ async function analyzeDecision() {
     // Limites por plano:
     //   Gratuito:     académico 200k, judicial 120k, crítica 120k
     //   Profissional: académico 571k (tese completa), judicial 300k, crítica 300k
-    const isPro = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional';
+    const isPro = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional' || userProfile?.plano === 'admin';
     const LIMITE_FRONTEND = isPro
       ? (modoActual === 'academico' ? 571000 : 300000)
       : (modoActual === 'academico' ? 200000 : 120000);
@@ -1511,7 +1511,7 @@ function renderResults(result) {// ── Aviso de domínio não reconhecido ─
   document.getElementById('results-standard').style.display = 'block';
   document.getElementById('results-critica').style.display = 'none';
   document.getElementById('btn-pdf-wrapper').style.display = 'block';
-  const isPro = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional';
+  const isPro = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional' || userProfile?.plano === 'admin';
   document.getElementById('pdf-pro-only').style.display = isPro ? 'none' : 'block';
   document.getElementById('pdf-btn-real').style.display = isPro ? 'flex' : 'none';
   document.getElementById('evidence-card').style.display = 'block';
@@ -1634,7 +1634,7 @@ function renderResultsCritica(result) {
   }
   document.getElementById('critica-conclusao').innerHTML = (result.conclusao || '').replace(/\n/g, '<br>');
   // Minuta: apenas para profissional/institucional
-  const isProMinuta = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional';
+  const isProMinuta = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional' || userProfile?.plano === 'admin';
   document.getElementById('minuta-btn-container').style.display = isProMinuta ? 'block' : 'none';
   document.getElementById('minuta-upgrade-notice').style.display = isProMinuta ? 'none' : 'block';
   document.getElementById('minuta-container').style.display = 'none';
@@ -1852,7 +1852,7 @@ async function verificarCitacoes() {
     if (!session || !session.access_token) { alert('Sessão expirada. Faça login novamente.'); logout(); return; }
 
     // Limite de citações por plano: gratuito 4, profissional 12
-    const isProVerif = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional';
+    const isProVerif = userProfile?.plano === 'profissional' || userProfile?.plano === 'institucional' || userProfile?.plano === 'admin';
     const LIMITE_CIT = isProVerif ? 12 : 4;
     if (citacoes.length > LIMITE_CIT && !isProVerif) {
       const notaEl = document.getElementById('verificar-btn-container');
