@@ -802,6 +802,14 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
         <div class="faq-answer">Não de forma fiável. O LexVeritas foi calibrado exclusivamente para a jurisprudência portuguesa — STJ, TRL, TRP, TRC, TRG, TRE, STA, TC e tribunais de primeira instância portugueses. Documentos de outras jurisdições (Brasil, Espanha, TJUE, etc.) podem produzir resultados incorrectos porque os perfis estilísticos, as convenções processuais e o vocabulário são diferentes dos padrões de calibração. Quando o sistema não reconhece um tribunal português no documento submetido, alerta que a análise tem fiabilidade reduzida.</div>
       </div>
       <div class="faq-item reveal">
+        <button class="faq-question"><h3>É seguro submeter documentos jurídicos? Qual a diferença para o ChatGPT?</h3><span class="faq-icon">+</span></button>
+        <div class="faq-answer">Existe uma diferença fundamental entre o LexVeritas e ferramentas de IA de uso geral (como ChatGPT, Gemini, Copilot ou similares). Nessas ferramentas, os dados submetidos podem ser usados para treinar os modelos de IA — os seus documentos ficam nos servidores dessas empresas e podem ser revistos por humanos. O LexVeritas usa a API da Anthropic: por contrato, os dados enviados via API <strong>nunca são usados para treino de modelos</strong>, são processados em memória e descartados após a análise. Apenas o resultado da análise é guardado no seu histórico. Contudo, o utilizador é sempre responsável por garantir que tem legitimidade para submeter os documentos: processos em segredo de justiça, dados de clientes sem consentimento ou documentos sujeitos a sigilo profissional não devem ser submetidos a qualquer plataforma externa.</div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question"><h3>Posso submeter documentos com dados pessoais de terceiros?</h3><span class="faq-icon">+</span></button>
+        <div class="faq-answer">Com cautela. O RGPD exige base legal adequada para o tratamento de dados pessoais de terceiros. Recomendamos anonimizar os documentos sempre que possível — substituindo nomes de partes, NIFs e moradas por placeholders — antes de submeter para análise. Processos em segredo de justiça nunca devem ser submetidos à plataforma.</div>
+      </div>
+      <div class="faq-item reveal">
         <button class="faq-question"><h3>Como funciona o processo de proposta?</h3><span class="faq-icon">+</span></button>
         <div class="faq-answer">Após receber o pedido através do formulário, respondemos em 48 horas com uma proposta adaptada ao perfil — número de utilizadores, volume de análises e funcionalidades necessárias. Não há compromissos nem custos nesta fase.</div>
       </div>
