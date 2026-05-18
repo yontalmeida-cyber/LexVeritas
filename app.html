@@ -366,6 +366,7 @@
   }
   @media(max-width:400px) { .indicators-grid { grid-template-columns: 1fr; } .masthead h1 { font-size: 26px; } }
 </style>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
@@ -443,6 +444,7 @@
     </div>
     <div class="form-group"><label>Email</label><input type="email" id="register-email" placeholder="o-seu@email.pt"></div>
     <div class="form-group"><label>Password</label><input type="password" id="register-password" placeholder="Mínimo 6 caracteres"></div>
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAADR50CLJj9ZmUyoU" data-theme="dark" data-size="flexible" id="register-turnstile" style="margin-bottom:10px"></div>
     <button class="btn-primary" id="btn-register" onclick="fazerRegisto()">Criar Conta Gratuita</button>
     <div class="auth-switch">Já tem conta? <a onclick="showPage('login')">Entrar →</a></div>
   </div>
@@ -1092,6 +1094,8 @@ async function fazerRegisto() {
   const succEl = document.getElementById('register-success');
   const btn = document.getElementById('btn-register');
   errEl.style.display = 'none'; succEl.style.display = 'none';
+  const tsToken = document.querySelector('#register-turnstile [name="cf-turnstile-response"]')?.value;
+  if (!tsToken) { errEl.textContent = 'Por favor complete a verificação de segurança.'; errEl.style.display = 'block'; return; }
   if (!nome || !email || !pass) { errEl.textContent = 'Preencha todos os campos.'; errEl.style.display = 'block'; return; }
   if (pass.length < 6) { errEl.textContent = 'Password com mínimo 6 caracteres.'; errEl.style.display = 'block'; return; }
   if (!email.includes('@') || !email.includes('.')) { errEl.textContent = 'Introduza um email válido.'; errEl.style.display = 'block'; return; }
