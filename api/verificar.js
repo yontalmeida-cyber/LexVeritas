@@ -359,6 +359,107 @@ async function verificarDoutrina(citacaoTexto) {
 // VERIFICADOR DE ACÓRDÃOS — juris.stj.pt com fallback DGSI
 // ══════════════════════════════════════════════════════════════════════════════
 
+
+// ══════════════════════════════════════════════════════════════════════════════
+// VERIFICAÇÃO DE JURISPRUDÊNCIA ESTRANGEIRA (EUA, Brasil, etc.) via Brave Search
+// ══════════════════════════════════════════════════════════════════════════════
+
+function detectarOrigem(texto) {
+  // Padrões americanos: F.3d, F.4th, F.Supp, S.D.N.Y., D. Wyo., 2d Cir., etc.
+  if (/\bF\.\d(th|rd|d)?\b|F\.Supp|S\.D\.N\.Y|D\. Wyo|\d(st|nd|rd|th) Cir|\bU\.S\.C\b|WL \d{5,}/i.test(texto)) return 'eua';
+  // Padrões brasileiros: TRT, STF, STJ Brasil, TJSP, etc.
+  if (/\bTRT\d*\b|\bTJSP\b|\bTJRJ\b|Vara do Trabalho|Parauapebas/i.test(texto)) return 'brasil';
+  // Padrões portugueses: número processo PT, TRG, TRL, TRP, STJ PT
+  if (/\d{3,5}\/\d{2}\.\d[A-Z]|\bTRG\b|\bTRL\b|\bTRP\b|DGSI|processo n/i.test(texto)) return 'portugal';
+  return 'desconhecida';
+}
+
+async function verificarJurisprudenciaEstrangeira(texto) {
+  const braveKey = process.env.BRAVE_SEARCH_API_KEY;
+  if (!braveKey) {
+    return {
+      encontrado: null, fonte: 'Web',
+      confianca: 'indisponivel',
+      detalhe: 'Verificação web não configurada.',
+    };
+  }
+
+  try {
+    // Construir query optimizada — extrair elementos chave da citação
+    const queryTexto = texto.replace(/["""]/g, '').trim().substring(0, 150);
+    const url = `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(queryTexto)}&count=5&search_lang=en`;
+
+    const r = await comTimeout(
+      fetch(url, {
+        headers: {
+          'Accept': 'application/json',
+          'Accept-Encoding': 'gzip',
+          'X-Subscription-Token': braveKey,
+        },
+      }),
+      8000, 'Brave Search timeout'
+    );
+
+    if (!r.ok) {
+      return {
+        encontrado: null, fonte: 'Web',
+        confianca: 'indisponivel',
+        detalhe: 'Verificação automática indisponível. Verifique manualmente.',
+      };
+    }
+
+    const data = await r.json();
+    const resultados = data?.web?.results || [];
+
+    if (resultados.length === 0) {
+      return {
+        encontrado: false, fonte: 'Web',
+        confianca: 'media',
+        detalhe: 'Não encontrado em pesquisa web.',
+      };
+    }
+
+    // Verificar se algum resultado menciona termos chave da citação
+    const textoResultados = resultados.map(r => (r.title + ' ' + (r.description || '') + ' ' + (r.url || '')).toLowerCase()).join(' ');
+    const termos = queryTexto.toLowerCase().split(/\s+/).filter(t => t.length > 4 && !/^(the|and|for|that|with|from|this|were|have|been|court|case|judge|filed)$/.test(t));
+    const matches = termos.filter(t => textoResultados.includes(t));
+    const ratio = termos.length > 0 ? matches.length / termos.length : 0;
+
+    // Pegar o melhor resultado como link
+    const melhorUrl = resultados[0]?.url || '';
+    const melhorTitulo = resultados[0]?.title || '';
+
+    if (ratio >= 0.5) {
+      return {
+        encontrado: true, fonte: 'Web',
+        url: melhorUrl,
+        confianca: 'media',
+        detalhe: `Encontrado via pesquisa web. Fonte: ${melhorTitulo.substring(0, 80)}`,
+      };
+    } else if (ratio > 0) {
+      return {
+        encontrado: null, fonte: 'Web',
+        url: melhorUrl,
+        confianca: 'baixa',
+        detalhe: 'Resultado parcial. Verifique manualmente.',
+      };
+    } else {
+      return {
+        encontrado: false, fonte: 'Web',
+        confianca: 'media',
+        detalhe: 'Não encontrado em pesquisa web.',
+      };
+    }
+
+  } catch {
+    return {
+      encontrado: null, fonte: 'Web',
+      confianca: 'indisponivel',
+      detalhe: 'Verificação automática indisponível.',
+    };
+  }
+}
+
 async function verificarAcordaoJurisStj(numero) {
   if (!numero || typeof numero !== 'string') {
     return { encontrado: false, fonte: 'juris.stj.pt', erro: 'Número inválido' };
@@ -534,10 +635,17 @@ async function verificarCitacao(citacao) {
   const { citacao: texto, tipo } = citacao;
   let verificacao;
 
+  // Detectar origem da citação
+  const origemCitacao = detectarOrigem(texto);
+
   switch (tipo) {
     case 'acordao':
     case 'jurisprudencia':
-      verificacao = await verificarAcordaoJurisStj(texto);
+      if (origemCitacao === 'eua' || origemCitacao === 'brasil') {
+        verificacao = await verificarJurisprudenciaEstrangeira(texto);
+      } else {
+        verificacao = await verificarAcordaoJurisStj(texto);
+      }
       break;
     case 'diploma_legal':
       verificacao = await verificarDiplomaLegalDre(texto);
@@ -547,11 +655,15 @@ async function verificarCitacao(citacao) {
       verificacao = await verificarDoutrina(texto);
       break;
     default:
-      if (/^\d{1,6}\/\d{2,4}\.\d/.test(texto)) {
+      if (origemCitacao === 'eua' || origemCitacao === 'brasil') {
+        verificacao = await verificarJurisprudenciaEstrangeira(texto);
+      } else if (/^\d{1,6}\/\d{2,4}\.\d/.test(texto)) {
         verificacao = await verificarAcordaoJurisStj(texto);
       } else if (/[A-Z][a-z]+,\s|—|–/.test(texto)) {
-        // Parece doutrina
         verificacao = await verificarDoutrina(texto);
+      } else if (origemCitacao === 'desconhecida' && texto.length > 20) {
+        // Tentar pesquisa web como fallback
+        verificacao = await verificarJurisprudenciaEstrangeira(texto);
       } else {
         verificacao = {
           encontrado: null, fonte: 'N/A',
