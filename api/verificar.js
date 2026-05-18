@@ -485,7 +485,7 @@ async function verificarAcordaoJurisStj(numero) {
         encontrado: null, fonte: 'DGSI',
         url: links.dgsi, urlJuris: links.juris, urlJP: links.jurisprudencia,
         confianca: 'indisponivel',
-        detalhe: 'Serviço indisponível. Verifique manualmente nos links abaixo.',
+        detalhe: 'Serviço indisponível. Verifique manualmente no Google.',
       };
     }
 
@@ -501,7 +501,7 @@ async function verificarAcordaoJurisStj(numero) {
         encontrado: false, fonte: 'juris.stj.pt',
         url: links.dgsi, urlJuris: links.juris, urlJP: links.jurisprudencia,
         confianca: 'alta',
-        detalhe: 'Não encontrado no DGSI. Verifique também nos outros links abaixo.',
+        detalhe: 'Não encontrado no DGSI. Verifique também no Google.',
       };
     }
 
@@ -530,7 +530,7 @@ async function verificarAcordaoJurisStj(numero) {
       encontrado: null, fonte: 'juris.stj.pt',
       url: links.dgsi, urlJuris: links.juris, urlJP: links.jurisprudencia,
       confianca: 'baixa',
-      detalhe: 'Resultado inconclusivo. Verifique manualmente nos links abaixo.',
+      detalhe: 'Resultado inconclusivo. Verifique manualmente no Google.',
     };
 
   } catch {
@@ -538,7 +538,7 @@ async function verificarAcordaoJurisStj(numero) {
       encontrado: null, fonte: 'DGSI',
       url: links.dgsi, urlJuris: links.juris, urlJP: links.jurisprudencia,
       confianca: 'indisponivel',
-      detalhe: 'Verificação automática indisponível. Verifique manualmente nos links abaixo.',
+      detalhe: 'Verificação automática indisponível. Verifique manualmente no Google.',
     };
   }
 }
@@ -744,11 +744,8 @@ module.exports = async function handler(req, res) {
           ...c,
           verificacao: {
             encontrado: null, fonte: 'DGSI',
-            url: gerarLinksDGSI(c.citacao || '').dgsi,
-            urlJuris: gerarLinksDGSI(c.citacao || '').juris,
-            urlJP: gerarLinksDGSI(c.citacao || '').jurisprudencia,
             erro: err.message,
-            detalhe: 'Erro interno. Verifique manualmente nos links abaixo.',
+            detalhe: 'Erro interno. Verifique manualmente no Google.',
           },
         }))
     );
