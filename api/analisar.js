@@ -763,7 +763,7 @@ CITAÇÕES — regras específicas para artigos doutrinários:
 - Estatísticas sem fonte concreta identificada podem ser assinaladas como BAIXA gravidade para verificação, não Alta
 - NÃO assinales fontes regulatórias recentes (CCBE, CSM, EU) apenas por data — são plausíveis como publicações recentes
 - Referências a casos judiciais documentados (Mata v. Avianca, Park v. Kim, Wadsworth v. Walmart) são verificáveis — não assinales
-- Referências a casos sem número de processo identificador podem ser assinaladas como BAIXA para verificação manual
+- Referências a casos sem número de processo identificador DEVEM ser assinaladas como BAIXA (nunca MÉDIA ou ALTA) — a ausência de identificador não é por si indício de fabricação, apenas de referência incompleta
 
 PRINCÍPIO: em artigos doutrinários, falsos positivos citacionais são muito piores. Array vazio [] é resposta válida.`;
 
