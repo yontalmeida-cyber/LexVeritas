@@ -745,6 +745,8 @@ IV. PEDIDO
 
 veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMANO | tipo: ai/humano | indicadores 0-100
 
+citacoes_suspeitas: [{\"citacao\":\"texto exacto da citação conforme aparece no artigo\",\"tipo\":\"acordao|diploma_legal|doutrina|jurisprudencia\",\"problema\":\"...\",\"gravidade\":\"alta|media|baixa\",\"validacao_formato\":\"ok|formato_invalido|nao_aplicavel\"}]
+
 CONTEXTO CRÍTICO: Este é um artigo doutrinário ou de opinião, não uma tese académica. As regras de análise são diferentes:
 
 AUTORIA — foca nestes indicadores:
