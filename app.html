@@ -448,6 +448,43 @@
   </div>
 </div>
 
+<!-- ONBOARDING -->
+<div id="page-onboarding" class="auth-page hidden">
+  <div class="auth-logo">Lex<em>Veritas</em></div>
+  <div class="auth-tagline">Conta criada com sucesso</div>
+  <div style="max-width:480px;width:100%;position:relative;z-index:1;text-align:center;margin-bottom:24px">
+    <div style="font-family:var(--serif);font-size:22px;font-style:italic;color:#f8f6f1;margin-bottom:8px">O que vai analisar hoje?</div>
+    <div style="font-family:var(--sans);font-size:13px;color:var(--grey);line-height:1.6">Seleccione o modo para começar directamente. Pode sempre mudar depois.</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:480px;width:100%;position:relative;z-index:1">
+    <button onclick="entrarComModo('judicial')" style="background:var(--card);border:1px solid rgba(201,168,76,0.2);padding:24px 20px;text-align:left;cursor:pointer;transition:all 0.2s;color:#f8f6f1" onmouseover="this.style.borderColor='var(--gold)';this.style.background='#1a1a24'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)';this.style.background='var(--card)'">
+      <div style="font-size:28px;margin-bottom:12px">⚖️</div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px">Análise Judicial</div>
+      <div style="font-family:var(--serif);font-size:15px;font-style:italic;margin-bottom:6px">Acórdãos e decisões judiciais</div>
+      <div style="font-family:var(--sans);font-size:11px;color:var(--grey);line-height:1.6">Detecta IA em decisões dos tribunais portugueses</div>
+    </button>
+    <button onclick="entrarComModo('critica')" style="background:var(--card);border:1px solid rgba(201,168,76,0.2);padding:24px 20px;text-align:left;cursor:pointer;transition:all 0.2s;color:#f8f6f1" onmouseover="this.style.borderColor='#c97850';this.style.background='#1a1a24'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)';this.style.background='var(--card)'">
+      <div style="font-size:28px;margin-bottom:12px">🏛️</div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#c97850;margin-bottom:6px">Análise de Recurso</div>
+      <div style="font-family:var(--serif);font-size:15px;font-style:italic;margin-bottom:6px">Nulidades e fundamentos</div>
+      <div style="font-family:var(--sans);font-size:11px;color:var(--grey);line-height:1.6">Identifica vícios processuais e argumentos para recurso</div>
+    </button>
+    <button onclick="entrarComModo('academico')" style="background:var(--card);border:1px solid rgba(201,168,76,0.2);padding:24px 20px;text-align:left;cursor:pointer;transition:all 0.2s;color:#f8f6f1" onmouseover="this.style.borderColor='#4c9ee8';this.style.background='#1a1a24'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)';this.style.background='var(--card)'">
+      <div style="font-size:28px;margin-bottom:12px">🎓</div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#4c9ee8;margin-bottom:6px">Análise Académica</div>
+      <div style="font-family:var(--serif);font-size:15px;font-style:italic;margin-bottom:6px">Teses e trabalhos académicos</div>
+      <div style="font-family:var(--sans);font-size:11px;color:var(--grey);line-height:1.6">Verifica autoria em dissertações e artigos jurídicos</div>
+    </button>
+    <button onclick="entrarComModo('injection')" style="background:var(--card);border:1px solid rgba(201,168,76,0.2);padding:24px 20px;text-align:left;cursor:pointer;transition:all 0.2s;color:#f8f6f1" onmouseover="this.style.borderColor='#c44';this.style.background='#1a1a24'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)';this.style.background='var(--card)'">
+      <div style="font-size:28px;margin-bottom:12px">🛡️</div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#c44;margin-bottom:6px">Análise de Integridade</div>
+      <div style="font-family:var(--serif);font-size:15px;font-style:italic;margin-bottom:6px">Documentos e contratos</div>
+      <div style="font-family:var(--sans);font-size:11px;color:var(--grey);line-height:1.6">Detecta prompt injection e conteúdo oculto</div>
+    </button>
+  </div>
+  <button onclick="entrarComModo('judicial')" style="margin-top:20px;background:none;border:none;font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);cursor:pointer;position:relative;z-index:1;text-decoration:underline" onmouseover="this.style.color='#f8f6f1'" onmouseout="this.style.color='var(--grey)'">Entrar sem seleccionar →</button>
+</div>
+
 <!-- APP PRINCIPAL -->
 <div id="page-app" class="hidden">
 
@@ -970,7 +1007,7 @@ function setModo(modo) {
 }
 
 function showPage(page) {
-  ['login','register','reset','app'].forEach(p => document.getElementById('page-' + p).classList.add('hidden'));
+  ['login','register','reset','app','onboarding'].forEach(p => document.getElementById('page-' + p).classList.add('hidden'));
   document.getElementById('page-' + page).classList.remove('hidden');
 }
 function showTab(tab) {
@@ -1029,6 +1066,23 @@ async function fazerLogin() {
   loginInProgress = false;
 }
 
+function entrarComModo(modo) {
+  showPage('login');
+  // Guardar modo escolhido no onboarding para aplicar após login automático
+  sessionStorage.setItem('lv_onboarding_modo', modo);
+  // Se o utilizador já tem sessão activa (registo com auto-login), entrar directamente
+  sb.auth.getSession().then(async ({ data }) => {
+    if (data.session?.user) {
+      currentUser = data.session.user;
+      await loadProfile();
+      initApp();
+      showPage('app');
+      setTimeout(() => setModo(modo), 150);
+      sessionStorage.removeItem('lv_onboarding_modo');
+    }
+  });
+}
+
 async function fazerRegisto() {
   const nome = document.getElementById('register-nome').value.trim();
   const prof = document.getElementById('register-profissao').value;
@@ -1046,8 +1100,10 @@ async function fazerRegisto() {
     const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data: { nome, profissao: prof } } });
     if (error) { errEl.textContent = 'Erro: ' + error.message; errEl.style.display = 'block'; btn.disabled = false; btn.textContent = 'Criar Conta Gratuita'; return; }
     if (data?.user) await sb.from('perfis').upsert({ id: data.user.id, email, nome, profissao: prof, mes_atual: new Date().toISOString().substring(0, 7), analises_mes: 0 });
-    succEl.textContent = 'Conta criada! Já pode entrar na sua conta.'; succEl.style.display = 'block'; btn.textContent = 'Conta criada!';
+    btn.textContent = 'Conta criada!';
     fetch('https://bsbgizaftamufmmxeyer.supabase.co/functions/v1/rapid-service', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ record: { email, raw_user_meta_data: { nome } } }) }).catch(() => {});
+    // Mostrar onboarding em vez de mensagem de sucesso
+    showPage('onboarding');
   } catch (e) { errEl.textContent = 'Erro: ' + e.message; errEl.style.display = 'block'; btn.disabled = false; btn.textContent = 'Criar Conta Gratuita'; }
 }
 
@@ -1135,10 +1191,37 @@ function initApp() {
   document.getElementById('usage-count').textContent = usado + ' / ' + limite;
   document.getElementById('stat-plano').textContent = plano.charAt(0).toUpperCase() + plano.slice(1);
   document.getElementById('stat-mes').textContent = usado + ' / ' + limite;
+
+  // Destacar barra de uso na primeira sessão
+  if (usado === 0) {
+    const usageBar = document.querySelector('.usage-bar-container');
+    if (usageBar) {
+      usageBar.style.background = 'rgba(201,168,76,0.06)';
+      usageBar.style.borderBottom = '1px solid rgba(201,168,76,0.3)';
+      setTimeout(() => { usageBar.style.background = ''; usageBar.style.borderBottom = ''; }, 4000);
+    }
+    const usageCount = document.getElementById('usage-count');
+    if (usageCount) { usageCount.style.color = 'var(--gold)'; usageCount.style.fontWeight = '700'; setTimeout(() => { usageCount.style.color = ''; usageCount.style.fontWeight = ''; }, 4000); }
+  }
+
+  // Modo pré-seleccionado pelo onboarding
+  const onboardingModo = sessionStorage.getItem('lv_onboarding_modo');
+  if (onboardingModo) { setTimeout(() => setModo(onboardingModo), 100); sessionStorage.removeItem('lv_onboarding_modo'); return; }
+
+  // Modo por URL
   const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('modo') === 'academico') setTimeout(() => setModo('academico'), 100);
-  if (urlParams.get('modo') === 'critica') setTimeout(() => setModo('critica'), 100);
-  if (urlParams.get('modo') === 'injection') setTimeout(() => setModo('injection'), 100);
+  if (urlParams.get('modo') === 'academico') { setTimeout(() => setModo('academico'), 100); return; }
+  if (urlParams.get('modo') === 'critica') { setTimeout(() => setModo('critica'), 100); return; }
+  if (urlParams.get('modo') === 'injection') { setTimeout(() => setModo('injection'), 100); return; }
+
+  // Modo por profissão
+  const prof = userProfile?.profissao || '';
+  const modosPorProfissao = {
+    'Investigador/a Académico': 'academico',
+    'Estudante de Direito': 'academico',
+  };
+  const modoProfissao = modosPorProfissao[prof];
+  if (modoProfissao) setTimeout(() => setModo(modoProfissao), 100);
 }
 
 async function loadPerfil() {
