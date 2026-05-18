@@ -411,6 +411,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
   .pricing-profiles, .pricing-form-panel { padding: 28px 20px; }
 }
 </style>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
@@ -632,6 +633,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
           <span>1 análise gratuita por hora · sem registo</span>
           <span id="demoCounter">0 / 3000</span>
         </div>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAADR50CLJj9ZmUyoU" data-theme="dark" data-size="flexible" id="demo-turnstile" style="margin-bottom:8px"></div>
         <button class="demo-btn" id="demoBtn" onclick="runDemo()">
           <div class="demo-btn-spinner" id="demoSpinner"></div>
           <span id="demoBtnText">⚖ Analisar Excerto</span>
@@ -754,6 +756,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
         <div style="font-family:var(--mono);font-size:9px;color:rgba(154,154,154,0.5);letter-spacing:0.06em;margin-bottom:8px;line-height:1.6">
           Ao enviar, aceita o tratamento dos seus dados conforme a nossa <a href="/privacidade" style="color:var(--gold);text-decoration:none">Política de Privacidade</a>.
         </div>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAADR50CLJj9ZmUyoU" data-theme="dark" data-size="flexible" id="proposta-turnstile" style="margin-bottom:8px"></div>
         <button class="pf-btn" id="pfBtn" onclick="enviarProposta()">Enviar Pedido de Proposta →</button>
         <div class="pf-msg" id="pfMsg"></div>
         <div class="pf-note">Sem compromisso · Sem cartão de crédito · Respondemos em 48horas</div>
@@ -975,6 +978,14 @@ async function runDemo() {
   errorEl.style.display = 'none';
   limitEl.style.display = 'none';
 
+  const tsToken = document.querySelector('#demo-turnstile [name="cf-turnstile-response"]')?.value;
+  if (!tsToken) {
+    errorEl.textContent = 'Por favor complete a verificação de segurança.';
+    errorEl.style.display = 'block';
+    emptyEl.style.display = 'none';
+    return;
+  }
+
   if (texto.length < 80) {
     errorEl.textContent = 'Insira pelo menos 80 caracteres para análise.';
     errorEl.style.display = 'block';
@@ -1081,6 +1092,12 @@ async function enviarProposta() {
   const mensagem    = document.getElementById('pf-mensagem').value.trim();
   const msg = document.getElementById('pfMsg');
   const btn = document.getElementById('pfBtn');
+
+  const tsTokenProposta = document.querySelector('#proposta-turnstile [name="cf-turnstile-response"]')?.value;
+  if (!tsTokenProposta) {
+    msg.textContent = 'Por favor complete a verificação de segurança.';
+    msg.style.color = '#ff9999'; msg.style.background = 'rgba(139,26,26,.1)'; msg.style.display = 'block'; return;
+  }
 
   if (!nome || !email || !perfil) {
     msg.textContent = 'Preencha o nome, email e perfil.';

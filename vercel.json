@@ -6,8 +6,7 @@
     { "source": "/privacidade",  "destination": "/privacidade.html" },
     { "source": "/termos",       "destination": "/termos.html" },
     { "source": "/manutencao",   "destination": "/manutencao.html" },
-    { "source": "/confirm",      "destination": "/confirm.html" },
-    { "source": "/landing",      "destination": "/landing.html" }
+    { "source": "/confirm",      "destination": "/confirm.html" }
   ],
   "headers": [
     {
@@ -21,16 +20,25 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options",        "value": "SAMEORIGIN" },
-        { "key": "Referrer-Policy",        "value": "strict-origin-when-cross-origin" }
+        { "key": "X-Content-Type-Options",      "value": "nosniff" },
+        { "key": "X-Frame-Options",             "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy",             "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy",          "value": "camera=(), microphone=(), geolocation=()" },
+        { "key": "Strict-Transport-Security",   "value": "max-age=63072000; includeSubDomains; preload" },
+        { "key": "X-Robots-Tag",                "value": "index, follow" }
+      ]
+    },
+    {
+      "source": "/app",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
       ]
     }
   ],
   "functions": {
-    "api/analisar.js":          { "maxDuration": 300 },
-    "api/verificar.js":         { "maxDuration": 300 },
-    "api/detetar-injection.js": { "maxDuration": 120 },
+    "api/analisar.js":              { "maxDuration": 300 },
+    "api/verificar.js":             { "maxDuration": 300 },
+    "api/detetar-injection.js":     { "maxDuration": 120 },
     "api/detetar-injection-pdf.js": { "maxDuration": 120 }
   }
 }
