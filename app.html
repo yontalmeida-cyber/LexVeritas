@@ -660,7 +660,28 @@
         </div>
         <!-- ACADÉMICO -->
         <div id="ctx-academico" style="display:none">
-          <input id="instituicao-input" type="text" placeholder="Universidade / Faculdade (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
+          <select id="instituicao-input" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
+            <option value="">— Faculdade de Direito (opcional) —</option>
+            <optgroup label="Universidades Públicas">
+              <option>Universidade de Lisboa — Faculdade de Direito (FDUL)</option>
+              <option>Universidade de Coimbra — Faculdade de Direito (FDUC)</option>
+              <option>Universidade do Porto — Faculdade de Direito (FDUP)</option>
+              <option>Universidade do Minho — Escola de Direito</option>
+              <option>Universidade Nova de Lisboa — Faculdade de Direito (FDUNL)</option>
+            </optgroup>
+            <optgroup label="Universidades Privadas">
+              <option>Universidade Católica Portuguesa — Faculdade de Direito (Lisboa)</option>
+              <option>Universidade Católica Portuguesa — Faculdade de Direito (Porto)</option>
+              <option>Universidade Lusíada — Lisboa</option>
+              <option>Universidade Lusíada — Porto</option>
+              <option>Universidade Autónoma de Lisboa Luís de Camões</option>
+              <option>Centro Universitário Lusófona — Lisboa</option>
+              <option>Centro Universitário Lusófona — Porto</option>
+              <option>Universidade Europeia</option>
+              <option>Instituto Superior Manuel Teixeira Gomes (ISMAT)</option>
+            </optgroup>
+            <option value="Outra">Outra instituição</option>
+          </select>
           <select id="tipo-doc-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tipo de documento —</option>
             <option>Dissertação de Mestrado</option><option>Tese de Doutoramento</option><option>Trabalho de Licenciatura</option><option>Artigo Académico</option><option value="Artigo Doutrinário">Artigo Doutrinário / Opinião</option><option>Monografia</option><option>Outro</option>
