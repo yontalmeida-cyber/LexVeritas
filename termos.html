@@ -199,7 +199,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; }
           </ul>
         </div>
       </div>
-      <p>Os planos profissionais e institucionais são estabelecidos por proposta personalizada, mediante <a onclick="abrirModal('Plano Profissional — informações')">contacto através do nosso formulário</a> ou por email para <a href="mailto:tonybranco@lexveritas.pt">tonybranco@lexveritas.pt</a>. O preço e condições são acordados individualmente com cada cliente.</p>
+      <p>Os planos profissionais e institucionais são estabelecidos por proposta personalizada, mediante <a onclick="abrirModal('Plano Profissional — informações')">contacto através do nosso formulário</a>. O preço e condições são acordados individualmente com cada cliente.</p>
       <p>Reservamo-nos o direito de alterar as condições dos planos com aviso prévio de 30 dias aos utilizadores afectados. Não são efectuados reembolsos de períodos já iniciados, salvo em casos de falha técnica grave da nossa parte.</p>
     </div>
   </div>
@@ -273,7 +273,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; }
     <span class="policy-num">09</span>
     <h2 class="policy-title">Rescisão e <span>Encerramento</span></h2>
     <div class="policy-body">
-      <p>O utilizador pode encerrar a sua conta a qualquer momento através do email <a href="mailto:tonybranco@lexveritas.pt">tonybranco@lexveritas.pt</a> ou <a onclick="abrirModal('Encerramento de conta')">através do nosso formulário de contacto</a>. Após o encerramento, todos os dados são eliminados no prazo de 30 dias.</p>
+      <p>O utilizador pode encerrar a sua conta a qualquer momento através do <a onclick="abrirModal('Encerramento de conta')">formulário de contacto</a>. Após o encerramento, todos os dados são eliminados no prazo de 30 dias.</p>
       <p>O LexVeritas pode suspender ou encerrar contas que violem estes termos, com ou sem aviso prévio consoante a gravidade da infracção.</p>
     </div>
   </div>
@@ -283,7 +283,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; }
     <h2 class="policy-title">Lei Aplicável e <span>Jurisdição</span></h2>
     <div class="policy-body">
       <p>Estes Termos de Serviço são regidos pela lei portuguesa. Qualquer litígio será submetido à jurisdição exclusiva dos tribunais portugueses competentes.</p>
-      <p>Para questões relacionadas com estes termos, contacte-nos por email para <a href="mailto:tonybranco@lexveritas.pt">tonybranco@lexveritas.pt</a> ou <a onclick="abrirModal('Questão sobre Termos de Serviço')">através do formulário</a>.</p>
+      <p>Para questões relacionadas com estes termos, contacte-nos através do <a onclick="abrirModal('Questão sobre Termos de Serviço')">formulário de contacto</a>.</p>
     </div>
   </div>
 
@@ -296,7 +296,6 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; }
       <a href="/privacidade">Política de Privacidade</a>
       <a href="/termos">Termos de Uso</a>
       <a href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener">📋 Livro de Reclamações</a>
-      <a href="mailto:tonybranco@lexveritas.pt">tonybranco@lexveritas.pt</a>
     </div>
     <div class="footer-copy">
       © 2026 LexVeritas · Tony de Almeida da Costa Branco · NIF 235 938 882 · Feijó, Almada, Portugal<br>
@@ -362,7 +361,7 @@ async function enviarTermos() {
       ['t-nome','t-email','t-assunto','t-mensagem'].forEach(function(id) { document.getElementById(id).value = ''; });
     } else throw new Error();
   } catch(e) {
-    msg.textContent = 'Erro ao enviar. Escreva para tonybranco@lexveritas.pt';
+    msg.textContent = 'Erro ao enviar. Use o formulário de contacto.';
     msg.style.color = '#c97850'; msg.style.background = 'rgba(139,26,26,0.15)'; msg.style.display = 'block';
   }
 }

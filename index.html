@@ -436,7 +436,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     <li><a href="#planos">Planos</a></li>
     <li><a href="/sobre">Sobre</a></li>
     <li><a href="/blog">Blog</a></li>
-    <li><a href="/app" class="nav-cta-link">Criar Conta / Entrar</a></li>
+    <li><a href="/app" class="nav-cta-link">Aceder ao App</a></li>
   </ul>
   <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false" type="button">
     <span></span><span></span><span></span>
@@ -456,7 +456,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     <li><a href="/blog">Blog</a></li>
     <li><a href="#planos">Contacto</a></li>
   </ul>
-  <a href="/app" class="nav-drawer-cta">Criar Conta / Entrar →</a>
+  <a href="/app" class="nav-drawer-cta">Aceder ao App →</a>
 </div>
 
 <!-- HERO -->
@@ -477,7 +477,6 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
       <a href="#demo" class="btn-primary"><span>Testar Agora — Grátis →</span></a>
       <a href="#modos" class="btn-secondary">Conhecer as Análises</a>
     </div>
-    <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(201,168,76,0.5);margin-top:-44px;margin-bottom:44px">Ou <a href="/app" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.4)">crie conta gratuita em 30 segundos</a> — sem cartão de crédito</p>
     <div class="stats-bar">
       <div class="stat-item"><span class="stat-number">20+</span><span class="stat-label">Tribunais Cobertos</span></div>
       <div class="stat-item"><span class="stat-number">6</span><span class="stat-label">Indicadores Forenses</span></div>
@@ -856,7 +855,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
         <a href="/privacidade">Política de Privacidade</a>
         <a href="/termos">Termos de Uso</a>
         <a href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener">📋 Livro de Reclamações</a>
-        <a href="mailto:info@lexveritas.pt">info@lexveritas.pt</a>
+        <a href="mailto:info@lexveritas.pt">Contacto</a>
       </div>
     </div>
   </div>
@@ -1101,7 +1100,7 @@ async function enviarProposta() {
       document.getElementById('pf-perfil').selectedIndex = 0;
     } else throw new Error();
   } catch {
-    msg.textContent = 'Erro ao enviar. Tente: info@lexveritas.pt';
+    msg.textContent = 'Erro ao enviar. Use o formulário de contacto.';
     msg.style.color = '#ff9999'; msg.style.background = 'rgba(139,26,26,.1)'; msg.style.display = 'block';
   }
   btn.disabled = false; btn.textContent = 'Enviar Pedido de Proposta →';
