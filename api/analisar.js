@@ -903,7 +903,7 @@ Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É
   // activar caching reduz o custo de input em ~90% na parte cached.
   const maxTokens = modo === 'minuta' ? 16000 : modo === 'critica' ? 5000 : (modo === 'judicial' || modo === 'academico') ? 3000 : 2000;
 
-  async function chamarAnthropic() {
+  async function chamarAnthropic(tentativa = 1) {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -929,6 +929,16 @@ Marcadores IA comuns em ambos os tipos: "Neste contexto","Importa salientar","É
     if (!r.ok) {
       const errText = await r.text().catch(() => '');
       console.error('Anthropic HTTP error:', r.status, errText.substring(0, 200));
+      // Retry automático para rate limit (429) e sobrecarga (529)
+      if ((r.status === 429 || r.status === 529) && tentativa < 3) {
+        const espera = tentativa === 1 ? 12000 : 25000; // 12s, depois 25s
+        console.warn(`Anthropic ${r.status} — retry ${tentativa}/2 após ${espera/1000}s`);
+        await new Promise(resolve => setTimeout(resolve, espera));
+        return chamarAnthropic(tentativa + 1);
+      }
+      if (r.status === 429 || r.status === 529) {
+        throw new Error('Serviço temporariamente sobrecarregado. Aguarde 30 segundos e tente novamente.');
+      }
       throw new Error(`Anthropic HTTP ${r.status}`);
     }
     const data = await r.json();
