@@ -1948,11 +1948,8 @@ async function verificarCitacoes() {
       const enc = v.encontrado;
       const k = enc === true ? 'true' : enc === false ? 'false' : 'null';
       const cls = enc === true ? 'encontrado' : enc === false ? 'nao-encontrado' : 'inconclusivo';
-      const urlHtml = v.url
-        ? '<a href="' + v.url + '" target="_blank" rel="noopener" class="verificar-card-link">→ DGSI</a>'
-        + (v.urlJuris ? ' &nbsp;<a href="' + v.urlJuris + '" target="_blank" rel="noopener" class="verificar-card-link">→ juris.stj.pt</a>' : '')
-        + (v.urlJP    ? ' &nbsp;<a href="' + v.urlJP    + '" target="_blank" rel="noopener" class="verificar-card-link">→ jurisprudencia.pt</a>' : '')
-        : '';
+      const googleQuery = encodeURIComponent((r.citacao || '').substring(0, 100));
+      const urlHtml = '<a href="https://www.google.com/search?q=' + googleQuery + '" target="_blank" rel="noopener" class="verificar-card-link">→ Pesquisar no Google</a>';
       const fonteHtml = v.fonte ? '<span class="verificar-card-fonte">via ' + v.fonte + '</span>' : '';
       const detalheHtml = v.detalhe ? '<div class="verificar-card-detalhe">' + v.detalhe + '</div>' : '';
       const erroHtml = v.erro ? '<div style="font-family:var(--mono);font-size:9px;color:#aaa;margin-top:4px">Erro: ' + v.erro + '</div>' : '';
