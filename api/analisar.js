@@ -730,6 +730,43 @@ IV. PEDIDO
 
     userPrompt = `${ctx ? ctx+'\n\n' : ''}FUNDAMENTOS:\n\n${fundamentosTexto}\n\nProposta COMPLETA em texto simples.`;
 
+  } else if (modo === 'academico' && (tipoDoc === 'Artigo Doutrinário' || tipoDoc === 'Artigo Académico')) {
+    // Artigo de opinião/doutrinário — calibração diferente de tese académica
+    const dataAnalise = new Date().getFullYear();
+    const ctx = [
+      instituicao ? `Instituição/Publicação: ${instituicao}` : null,
+      tipoDoc     ? `Tipo: ${tipoDoc}`                        : null,
+      orientador  ? `Autor: ${orientador}`                    : null,
+    ].filter(Boolean).join('\n');
+
+    systemPrompt = `Perito forense em análise linguística de IA em artigos jurídicos doutrinários e de opinião. JSON PURO apenas.
+
+{"veredicto":"IA_DETECTADA","confianca":80,"indicadores":{"perplexidade":75,"burstiness":60,"coesao_artificial":70,"uniformidade_sintatica":65,"riqueza_lexical":55,"marcadores_formulaicos":80},"humanizador_detectado":false,"citacoes_suspeitas":[],"narrativa":"...","relator_analise":"...","marcadores":[{"tipo":"ai","texto":"..."}]}
+
+veredicto: IA_DETECTADA/PROVAVELMENTE_IA/INCONCLUSIVO/PROVAVELMENTE_HUMANO/HUMANO | tipo: ai/humano | indicadores 0-100
+
+CONTEXTO CRÍTICO: Este é um artigo doutrinário ou de opinião, não uma tese académica. As regras de análise são diferentes:
+
+AUTORIA — foca nestes indicadores:
+- Burstiness: artigos humanos têm variação rítmica marcada; IA tende a uniformidade
+- Voz autoral: presença de primeira pessoa, ironia, posições pessoais, digressões
+- Coesão: transições humanas são irregulares; IA produz encadeamentos demasiado limpos
+- Marcadores formulaicos: "É importante notar", "Em conclusão", "Neste contexto" são sinais IA
+
+CITAÇÕES — regras específicas para artigos doutrinários:
+- Artigos de opinião PODEM citar eventos recentes (do mesmo ano ou ano anterior) — NÃO é suspeito
+- Fontes datadas de ${dataAnalise} são contemporâneas ao artigo — NÃO assinales apenas por data recente
+- Fontes de 2025-${dataAnalise} são legítimas em artigos publicados em ${dataAnalise}
+- Só assinala citação se: (a) número de processo tem formato manifestamente inválido, (b) atribuição é internamente contraditória, ou (c) a fonte é impossível independentemente da data
+- Estatísticas sem fonte concreta identificada podem ser assinaladas como BAIXA gravidade para verificação, não Alta
+- NÃO assinales fontes regulatórias recentes (CCBE, CSM, EU) apenas por data — são plausíveis como publicações recentes
+- Referências a casos judiciais documentados (Mata v. Avianca, Park v. Kim, Wadsworth v. Walmart) são verificáveis — não assinales
+- Referências a casos sem número de processo identificador podem ser assinaladas como BAIXA para verificação manual
+
+PRINCÍPIO: em artigos doutrinários, falsos positivos citacionais são muito piores. Array vazio [] é resposta válida.`;
+
+    userPrompt = `${ctx ? `CONTEXTO:\n${ctx}\n\n` : ''}ARTIGO DOUTRINÁRIO:\n\n${textoTruncado}\n\nJSON puro.`;
+
   } else if (modo === 'academico') {
     const ctx = [
       instituicao ? `Instituição: ${instituicao}` : null,
