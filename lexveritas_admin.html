@@ -423,7 +423,7 @@
 
 <script>
 const SUPABASE_URL = 'https://bsbgizaftamufmmxeyer.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3Nzc0OTM1MiwiZXhwIjoyMDkzMzI1MzUyfQ.0h1ZPsnSNg194PuAtQyRXVID9oRL7L812uwmN1oeRts';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -446,7 +446,7 @@ async function query(sql) {
 async function loadKPIs(allAnalises, perfis) {
   try {
     const total = allAnalises.length;
-    const users = new Set(allAnalises.map(a => a.user_id)).size;
+    const users = perfis.length;
 
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
@@ -478,14 +478,14 @@ async function loadTable(allAnalises, perfis) {
     const perfisMap = {};
     perfis.forEach(p => { perfisMap[p.id] = p; });
 
-    const rows = Object.entries(counts)
-      .map(([uid, count]) => ({
-        email: perfisMap[uid]?.email || uid,
-        nome: perfisMap[uid]?.nome || '—',
-        plano: perfisMap[uid]?.plano || 'gratuito',
-        count
-      }))
-      .sort((a, b) => b.count - a.count);
+    // Incluir TODOS os perfis, mesmo os que têm 0 análises
+    const rows = perfis.map(p => ({
+      email: p.email || p.id,
+      nome: p.nome || '—',
+      plano: p.plano || 'gratuito',
+      criado_em: p.criado_em,
+      count: counts[p.id] || 0
+    })).sort((a, b) => b.count - a.count);
 
     const maxCount = rows[0]?.count || 1;
 
@@ -501,7 +501,8 @@ async function loadTable(allAnalises, perfis) {
           <tr>
             <th>Email</th>
             <th>Plano</th>
-            <th style="width:40%">Análises</th>
+            <th>Registo</th>
+            <th style="width:35%">Análises</th>
           </tr>
         </thead>
         <tbody>
@@ -509,6 +510,7 @@ async function loadTable(allAnalises, perfis) {
             <tr>
               <td style="color:var(--text)">${r.email}</td>
               <td>${planoBadge(r.plano)}</td>
+              <td style="color:var(--muted);font-size:11px">${r.criado_em ? new Date(r.criado_em).toLocaleDateString('pt-PT') : '—'}</td>
               <td>
                 <div class="count-bar">
                   <div class="bar-track">
@@ -637,7 +639,7 @@ async function loadAll() {
     // Carregar tudo de uma vez
     const [analises, perfis] = await Promise.all([
       db.from('analises').select('*').order('criado_em', { ascending: false }),
-      db.from('perfis').select('id, email, nome, plano')
+      db.from('perfis').select('id, email, nome, plano, criado_em')
     ]);
 
     if (analises.error) throw analises.error;
@@ -668,13 +670,8 @@ async function loadAll() {
   }
 }
 
-// Protecção por password
-const pwd = prompt('Password:');
-if (pwd !== 'Yontgroove.87') {
-  document.body.innerHTML = '<div style="color:#e05c5c;font-family:monospace;padding:40px">Acesso negado.</div>';
-} else {
-  loadAll();
-}
+// Iniciar
+loadAll();
 
 // Auto-refresh cada 60 segundos
 setInterval(loadAll, 60000);
