@@ -1597,9 +1597,52 @@ let html = '';
     html += '</div>';
   }
 
-  if (result.anomalias_estruturais?.length > 0) {
+  // SNOW steganografia
+  const snowAlerts = result.anomalias_estruturais?.filter(a => a.tipo === 'snow_steganografia') || [];
+  if (snowAlerts.length > 0) {
+    html += '<div class="analysis-card" style="border-left:3px solid #8b1a1a;margin-bottom:16px"><h3>🌨 Steganografia SNOW Detectada</h3>';
+    snowAlerts.forEach(a => {
+      html += `<div style="padding:8px 0;font-family:var(--sans);font-size:12px;color:#444">${a.desc}</div>`;
+    });
+    html += '<div style="font-family:var(--sans);font-size:11px;color:#888;margin-top:8px;line-height:1.6">Técnica SNOW: espaços e tabs no fim de linhas codificam mensagens ocultas, invisíveis ao olho humano mas legíveis por sistemas de IA.</div></div>';
+  }
+
+  // Texto fora da área de impressão
+  const foraAreaAlerts = result.anomalias_estruturais?.filter(a => a.tipo === 'texto_fora_area') || [];
+  if (foraAreaAlerts.length > 0) {
+    html += '<div class="analysis-card" style="border-left:3px solid #8b1a1a;margin-bottom:16px"><h3>📐 Texto Fora da Área de Impressão</h3>';
+    foraAreaAlerts.forEach(a => {
+      html += `<div style="padding:8px 0;font-family:var(--sans);font-size:12px;color:#444">${a.desc}</div>`;
+    });
+    html += '<div style="font-family:var(--sans);font-size:11px;color:#888;margin-top:8px;line-height:1.6">Texto posicionado fora da área visível do documento — não imprimível, mas presente nos bytes do PDF e lido por sistemas de IA.</div></div>';
+  }
+
+  // XMP metadata injection
+  const xmpAlerts = result.anomalias_estruturais?.filter(a => a.tipo === 'xmp_injection' || a.tipo === 'xmp_anómalo') || [];
+  if (xmpAlerts.length > 0) {
+    html += '<div class="analysis-card" style="border-left:3px solid #8b1a1a;margin-bottom:16px"><h3>🏷 Injection nos Metadados XMP</h3>';
+    xmpAlerts.forEach(a => {
+      html += `<div style="padding:8px 0;font-family:var(--sans);font-size:12px;color:#444">${a.desc}</div>`;
+    });
+    html += '<div style="font-family:var(--sans);font-size:11px;color:#888;margin-top:8px;line-height:1.6">Os metadados XMP são campos XML embutidos no PDF (autor, título, palavras-chave) que podem conter instruções ocultas para sistemas de IA.</div></div>';
+  }
+
+  // Opacidade zero
+  const opacidadeAlerts = result.anomalias_estruturais?.filter(a => a.tipo === 'opacidade_zero' || a.tipo === 'extgstate_transparente') || [];
+  if (opacidadeAlerts.length > 0) {
+    html += '<div class="analysis-card" style="border-left:3px solid #8b1a1a;margin-bottom:16px"><h3>👻 Texto com Opacidade Zero</h3>';
+    opacidadeAlerts.forEach(a => {
+      html += `<div style="padding:8px 0;font-family:var(--sans);font-size:12px;color:#444">${a.desc}</div>`;
+    });
+    html += '<div style="font-family:var(--sans);font-size:11px;color:#888;margin-top:8px;line-height:1.6">Texto completamente transparente — invisível no ecrã e em impressão, mas presente no ficheiro e processado por sistemas de IA.</div></div>';
+  }
+
+  // Restantes anomalias estruturais (excluindo as já renderizadas)
+  const tiposJaRenderizados = ['snow_steganografia','texto_fora_area','xmp_injection','xmp_anómalo','opacidade_zero','extgstate_transparente'];
+  const outrasAnomalias = result.anomalias_estruturais?.filter(a => !tiposJaRenderizados.includes(a.tipo)) || [];
+  if (outrasAnomalias.length > 0) {
     html += '<div class="analysis-card" style="border-left:3px solid var(--gold);margin-bottom:16px"><h3>🔶 Anomalias Estruturais</h3>';
-    result.anomalias_estruturais.forEach(a => {
+    outrasAnomalias.forEach(a => {
       html += `<div style="padding:8px 0;border-bottom:1px solid var(--rule);font-family:var(--sans);font-size:12px;color:#444">${a.desc}</div>`;
     });
     html += '</div>';
