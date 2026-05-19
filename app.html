@@ -1598,9 +1598,13 @@ let html = '';
   }
 
   // Texto invisível — cor branca ou tamanho zero (o mais grave)
-  const textoInvisivelAlerts = result.anomalias_estruturais?.filter(a =>
+  // Deduplica por contexto para evitar duplicados UTF8/latin1
+  const textoInvisivelRaw = result.anomalias_estruturais?.filter(a =>
     a.tipo === 'texto_cor_branca' || a.tipo === 'texto_tamanho_zero'
   ) || [];
+  const textoInvisivelAlerts = textoInvisivelRaw.filter((a, i, arr) =>
+    arr.findIndex(b => b.tipo === a.tipo && (b.contexto || '').substring(0,20) === (a.contexto || '').substring(0,20)) === i
+  );
   if (textoInvisivelAlerts.length > 0) {
     html += '<div class="analysis-card" style="border-left:3px solid #8b1a1a;margin-bottom:16px"><h3>🔴 Texto Invisível Detectado — Padrão TRT8</h3>';
     textoInvisivelAlerts.forEach(a => {
