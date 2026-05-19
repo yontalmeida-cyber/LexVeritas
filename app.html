@@ -1637,8 +1637,32 @@ let html = '';
     html += '<div style="font-family:var(--sans);font-size:11px;color:#888;margin-top:8px;line-height:1.6">Texto completamente transparente — invisível no ecrã e em impressão, mas presente no ficheiro e processado por sistemas de IA.</div></div>';
   }
 
+  // RTL Override
+  const rtlAlerts = result.anomalias_estruturais?.filter(a => a.tipo === 'rtl_override') || [];
+  if (rtlAlerts.length > 0) {
+    html += '<div class="analysis-card" style="border-left:3px solid #8b1a1a;margin-bottom:16px"><h3>↩ RTL Override Detectado</h3>';
+    rtlAlerts.forEach(a => { html += `<div style="padding:8px 0;font-family:var(--sans);font-size:12px;color:#444">${a.desc}</div>`; });
+    html += '<div style="font-family:var(--sans);font-size:11px;color:#888;margin-top:8px;line-height:1.6">Caracteres de controlo de direcção de texto (RTL Override U+202E) invertem a ordem de leitura — usados para disfarçar nomes de ficheiros ou instruções escondidas.</div></div>';
+  }
+
+  // Base64 oculto
+  const base64Alerts = result.anomalias_estruturais?.filter(a => a.tipo === 'base64_injection') || [];
+  if (base64Alerts.length > 0) {
+    html += '<div class="analysis-card" style="border-left:3px solid #8b1a1a;margin-bottom:16px"><h3>🔐 Instrução Codificada em Base64</h3>';
+    base64Alerts.forEach(a => { html += `<div style="padding:8px 0;font-family:var(--sans);font-size:12px;color:#444">${a.desc}</div>`; });
+    html += '<div style="font-family:var(--sans);font-size:11px;color:#888;margin-top:8px;line-height:1.6">Instrução de prompt injection detectada após descodificação Base64 — técnica que tenta contornar filtros de texto simples.</div></div>';
+  }
+
+  // HTML/CSS injection
+  const htmlAlerts = result.anomalias_estruturais?.filter(a => a.tipo === 'html_css_injection') || [];
+  if (htmlAlerts.length > 0) {
+    html += '<div class="analysis-card" style="border-left:3px solid #c97850;margin-bottom:16px"><h3>🌐 Ocultação via HTML/CSS</h3>';
+    htmlAlerts.forEach(a => { html += `<div style="padding:8px 0;font-family:var(--sans);font-size:12px;color:#444">${a.desc}</div>`; });
+    html += '<div style="font-family:var(--sans);font-size:11px;color:#888;margin-top:8px;line-height:1.6">Conteúdo ocultado através de propriedades CSS (display:none, visibility:hidden, font-size:0) em documentos com conteúdo web.</div></div>';
+  }
+
   // Restantes anomalias estruturais (excluindo as já renderizadas)
-  const tiposJaRenderizados = ['snow_steganografia','texto_fora_area','xmp_injection','xmp_anómalo','opacidade_zero','extgstate_transparente'];
+  const tiposJaRenderizados = ['snow_steganografia','texto_fora_area','xmp_injection','xmp_anómalo','opacidade_zero','extgstate_transparente','rtl_override','base64_injection','html_css_injection'];
   const outrasAnomalias = result.anomalias_estruturais?.filter(a => !tiposJaRenderizados.includes(a.tipo)) || [];
   if (outrasAnomalias.length > 0) {
     html += '<div class="analysis-card" style="border-left:3px solid var(--gold);margin-bottom:16px"><h3>🔶 Anomalias Estruturais</h3>';
