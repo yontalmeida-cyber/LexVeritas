@@ -493,11 +493,19 @@ function detectarTextoInvisivel(streamContent) {
     }
   }
 
-  // Deduplica alertas (mantém máx 3 por tipo)
-  const vistos = {};
-  return alertas.filter(a => {
-    vistos[a.tipo] = (vistos[a.tipo] || 0) + 1;
-    return vistos[a.tipo] <= 3;
+  // Deduplica alertas — por tipo+contexto para evitar duplicados de UTF8/latin1
+  const vistosChave = new Set();
+  const dedupAlerts = alertas.filter(a => {
+    const chave = a.tipo + '|' + (a.contexto || '').substring(0, 30);
+    if (vistosChave.has(chave)) return false;
+    vistosChave.add(chave);
+    return true;
+  });
+  // Limitar a 3 por tipo
+  const vistosTipo = {};
+  return dedupAlerts.filter(a => {
+    vistosTipo[a.tipo] = (vistosTipo[a.tipo] || 0) + 1;
+    return vistosTipo[a.tipo] <= 3;
   });
 }
 
