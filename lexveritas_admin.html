@@ -1,1 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LexVeritas — Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #16161f;
+    --border: #1e1e2e;
+    --gold: #c9a84c;
+    --gold2: #e8c97a;
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+    --green: #4caf7d;
+    --red: #e05c5c;
+    --blue: #5c8ee0;
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 40% at 20% 20%, rgba(201,168,76,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 80% 80%, rgba(92,142,224,0.03) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--gold);
+    letter-spacing: -0.5px;
+  }
+
+  .logo span {
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-left: 8px;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+    margin-left: auto;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .status-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* KPI Cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  .kpi-card:hover { border-color: var(--gold); }
+
+  .kpi-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .kpi-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px;
+    color: var(--gold2);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* Sections */
+  .sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .sections { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .card-full { grid-column: 1 / -1; }
+
+  .card-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .card-body { padding: 24px; }
+
+  /* Table */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .data-table th {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 0 0 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .data-table td {
+    padding: 12px 0;
+    font-size: 12px;
+    border-bottom: 1px solid rgba(30,30,46,0.5);
+    vertical-align: middle;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+
+  .data-table tr:hover td { background: rgba(201,168,76,0.02); }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-gold { background: rgba(201,168,76,0.15); color: var(--gold2); }
+  .badge-blue { background: rgba(92,142,224,0.15); color: var(--blue); }
+  .badge-green { background: rgba(76,175,125,0.15); color: var(--green); }
+
+  .count-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+
+  .count-num {
+    font-size: 13px;
+    color: var(--gold2);
+    min-width: 30px;
+    text-align: right;
+  }
+
+  /* Chart */
+  .chart-wrap {
+    position: relative;
+    height: 220px;
+  }
+
+  /* Recent list */
+  .recent-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(30,30,46,0.5);
+  }
+
+  .recent-item:last-child { border-bottom: none; }
+
+  .recent-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .recent-email {
+    font-size: 12px;
+    color: var(--text);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .recent-time {
+    font-size: 10px;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  /* Loading */
+  .loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 20px 0;
+  }
+
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-msg {
+    color: var(--red);
+    font-size: 12px;
+    padding: 12px 0;
+  }
+
+  .refresh-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .refresh-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .last-update {
+    font-size: 10px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="logo">LexVeritas <span>Admin</span></div>
+    <div class="status-label" id="last-update">—</div>
+    <div class="status-dot"></div>
+  </header>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Utilizadores</div>
+      <div class="kpi-value" id="kpi-users"><span class="spinner" style="display:inline-block"></span></div>
+      <div class="kpi-sub">contas registadas</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Análises</div>
+      <div class="kpi-value" id="kpi-total"><span class="spinner" style="display:inline-block"></span></div>
+      <div class="kpi-sub">desde o início</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Este Mês</div>
+      <div class="kpi-value" id="kpi-month"><span class="spinner" style="display:inline-block"></span></div>
+      <div class="kpi-sub" id="kpi-month-label">análises em Mai 2026</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Média por User</div>
+      <div class="kpi-value" id="kpi-avg"><span class="spinner" style="display:inline-block"></span></div>
+      <div class="kpi-sub">análises por utilizador</div>
+    </div>
+  </div>
+
+  <!-- Tabela + Gráfico -->
+  <div class="sections">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Análises por Utilizador</div>
+      </div>
+      <div class="card-body">
+        <div id="table-container">
+          <div class="loading"><div class="spinner"></div> A carregar...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Evolução Mensal</div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap">
+          <canvas id="chart-monthly"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-full">
+      <div class="card-header">
+        <div class="card-title">Últimas Análises</div>
+        <button class="refresh-btn" onclick="loadAll()">↻ Actualizar</button>
+      </div>
+      <div class="card-body">
+        <div id="recent-container">
+          <div class="loading"><div class="spinner"></div> A carregar...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const SUPABASE_URL = 'https://bsbgizaftamufmmxeyer.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYmdpemFmdGFtdWZtbXhleWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDkzNTIsImV4cCI6MjA5MzMyNTM1Mn0._xBiw0VUa3FSnortYseUQPDc5xb--k15lYcylNmMEEQ';
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let chartInstance = null;
+
+async function query(sql) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ query: sql })
+  });
+  return res.json();
+}
+
+async function loadKPIs(allAnalises, perfis) {
+  try {
+    const total = allAnalises.length;
+    const users = new Set(allAnalises.map(a => a.user_id)).size;
+
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    const thisMonth = allAnalises.filter(a => a.created_at >= monthStart).length;
+
+    const avg = users > 0 ? Math.round(total / users) : 0;
+
+    document.getElementById('kpi-users').textContent = users;
+    document.getElementById('kpi-total').textContent = total;
+    document.getElementById('kpi-month').textContent = thisMonth;
+    document.getElementById('kpi-avg').textContent = avg;
+
+    const monthName = now.toLocaleString('pt-PT', { month: 'short' }).replace('.','') + ' ' + now.getFullYear();
+    document.getElementById('kpi-month-label').textContent = `análises em ${monthName}`;
+  } catch(e) {
+    console.error('KPI error', e);
+  }
+}
+
+async function loadTable(allAnalises, perfis) {
+  try {
+    // Agrupar por user_id
+    const counts = {};
+    allAnalises.forEach(a => {
+      counts[a.user_id] = (counts[a.user_id] || 0) + 1;
+    });
+
+    // Mapear email do perfil
+    const perfisMap = {};
+    perfis.forEach(p => { perfisMap[p.id] = p; });
+
+    const rows = Object.entries(counts)
+      .map(([uid, count]) => ({
+        email: perfisMap[uid]?.email || uid,
+        nome: perfisMap[uid]?.nome || '—',
+        plano: perfisMap[uid]?.plano || 'gratuito',
+        count
+      }))
+      .sort((a, b) => b.count - a.count);
+
+    const maxCount = rows[0]?.count || 1;
+
+    const planoBadge = (p) => {
+      if (p === 'admin') return `<span class="badge badge-gold">admin</span>`;
+      if (p === 'profissional') return `<span class="badge badge-blue">pro</span>`;
+      return `<span class="badge badge-green">free</span>`;
+    };
+
+    const html = `
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Plano</th>
+            <th style="width:40%">Análises</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td style="color:var(--text)">${r.email}</td>
+              <td>${planoBadge(r.plano)}</td>
+              <td>
+                <div class="count-bar">
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:${Math.round((r.count/maxCount)*100)}%"></div>
+                  </div>
+                  <span class="count-num">${r.count}</span>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+    document.getElementById('table-container').innerHTML = html;
+  } catch(e) {
+    document.getElementById('table-container').innerHTML = `<div class="error-msg">Erro ao carregar tabela</div>`;
+  }
+}
+
+async function loadChart(allAnalises) {
+  try {
+    // Agrupar por mês
+    const monthly = {};
+    allAnalises.forEach(a => {
+      if (!a.created_at) return;
+      const d = new Date(a.created_at);
+      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+      monthly[key] = (monthly[key] || 0) + 1;
+    });
+
+    const sorted = Object.entries(monthly).sort((a,b) => a[0].localeCompare(b[0]));
+    const labels = sorted.map(([k]) => {
+      const [y, m] = k.split('-');
+      return new Date(y, m-1).toLocaleString('pt-PT', { month: 'short', year: '2-digit' });
+    });
+    const values = sorted.map(([,v]) => v);
+
+    if (chartInstance) chartInstance.destroy();
+
+    const ctx = document.getElementById('chart-monthly').getContext('2d');
+    chartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          data: values,
+          backgroundColor: 'rgba(201,168,76,0.25)',
+          borderColor: 'rgba(201,168,76,0.8)',
+          borderWidth: 1,
+          borderRadius: 3,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#16161f',
+            borderColor: '#1e1e2e',
+            borderWidth: 1,
+            titleColor: '#c9a84c',
+            bodyColor: '#e8e8f0',
+            titleFont: { family: 'DM Mono', size: 11 },
+            bodyFont: { family: 'DM Mono', size: 12 },
+            callbacks: {
+              label: (ctx) => ` ${ctx.raw} análises`
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(30,30,46,0.8)' },
+            ticks: { color: '#6b6b8a', font: { family: 'DM Mono', size: 10 } }
+          },
+          y: {
+            grid: { color: 'rgba(30,30,46,0.8)' },
+            ticks: { color: '#6b6b8a', font: { family: 'DM Mono', size: 10 }, stepSize: 1 },
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  } catch(e) {
+    console.error('Chart error', e);
+  }
+}
+
+async function loadRecent(allAnalises, perfis) {
+  try {
+    const perfisMap = {};
+    perfis.forEach(p => { perfisMap[p.id] = p; });
+
+    const recent = [...allAnalises]
+      .filter(a => a.created_at)
+      .sort((a,b) => new Date(b.created_at) - new Date(a.created_at))
+      .slice(0, 10);
+
+    const timeAgo = (dateStr) => {
+      const diff = Date.now() - new Date(dateStr);
+      const mins = Math.floor(diff/60000);
+      const hrs = Math.floor(mins/60);
+      const days = Math.floor(hrs/24);
+      if (days > 0) return `há ${days}d`;
+      if (hrs > 0) return `há ${hrs}h`;
+      if (mins > 0) return `há ${mins}m`;
+      return 'agora';
+    };
+
+    const html = recent.map(a => `
+      <div class="recent-item">
+        <div class="recent-dot"></div>
+        <div class="recent-email">${perfisMap[a.user_id]?.email || a.user_id}</div>
+        <div class="recent-time">${timeAgo(a.created_at)}</div>
+      </div>
+    `).join('');
+
+    document.getElementById('recent-container').innerHTML = html || '<div class="loading">Sem dados recentes</div>';
+  } catch(e) {
+    document.getElementById('recent-container').innerHTML = `<div class="error-msg">Erro ao carregar</div>`;
+  }
+}
+
+async function loadAll() {
+  try {
+    // Carregar tudo de uma vez
+    const [analises, perfis] = await Promise.all([
+      db.from('analises').select('*').order('created_at', { ascending: false }),
+      db.from('perfis').select('id, email, nome, plano')
+    ]);
+
+    if (analises.error) throw analises.error;
+    const allAnalises = analises.data || [];
+    const allPerfis = perfis.data || [];
+
+    await Promise.all([
+      loadKPIs(allAnalises, allPerfis),
+      loadTable(allAnalises, allPerfis),
+      loadChart(allAnalises),
+      loadRecent(allAnalises, allPerfis)
+    ]);
+
+    const now = new Date();
+    document.getElementById('last-update').textContent =
+      `actualizado ${now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}`;
+
+  } catch(e) {
+    console.error('Load error:', e);
+    ['table-container','recent-container'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = `<div class="error-msg">Erro: ${e.message}</div>`;
+    });
+    ['kpi-users','kpi-total','kpi-month','kpi-avg'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '—';
+    });
+  }
+}
+
+// Iniciar
+loadAll();
+
+// Auto-refresh cada 60 segundos
+setInterval(loadAll, 60000);
+</script>
+</body>
+</html>
