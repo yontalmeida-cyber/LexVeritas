@@ -460,6 +460,16 @@ function detectarTextoInvisivel(streamContent) {
       }
     }
 
+    // Extracção de texto alternativa — regex sobre o bloco completo
+    // Necessária quando o texto tem espaços e é partido pelo split
+    if (textoNesseBloco.length === 0) {
+      const tjFullRegex = /\(([^)\\]*(?:\\.[^)\\]*)*)\)\s*(?:Tj|')/g;
+      let tm;
+      while ((tm = tjFullRegex.exec(bloco)) !== null) {
+        if (tm[1].trim()) textoNesseBloco.push(tm[1].substring(0, 80));
+      }
+    }
+
     // Verificar condições suspeitas
     const fontSizeZero = fontSizeActual !== null && fontSizeActual <= 0.01;
     const textoResumo = textoNesseBloco.join(' ').substring(0, 120) || '(texto não extraível)';
