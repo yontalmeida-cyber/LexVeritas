@@ -1068,6 +1068,58 @@ async function loadUserAnalises(uid) {
     document.getElementById('modal-body').innerHTML = `<div class="error-msg">Erro: ${e.message}</div>`;
   }
 }
+
+function closeModal2() {
+  document.getElementById('modal2-overlay').style.display = 'none';
+}
+
+function openAnalise(idx) {
+  const a = window._analiseData[idx];
+  if (!a) return;
+
+  const veredictoColor = (v) => {
+    if (!v) return 'var(--text)';
+    const vl = v.toLowerCase();
+    if (vl.includes('human') || vl.includes('autor')) return 'var(--green)';
+    if (vl.includes('ia') || vl.includes('artific') || vl.includes('gerado')) return 'var(--red)';
+    return 'var(--gold)';
+  };
+
+  let marcadoresHtml = '';
+  if (a.marcadores) {
+    try {
+      const arr = typeof a.marcadores === 'string' ? JSON.parse(a.marcadores) : a.marcadores;
+      if (Array.isArray(arr) && arr.length > 0) {
+        marcadoresHtml = '<div style="margin-bottom:16px;"><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Marcadores</div>' + arr.map(m => '<div style="font-size:11px;margin-bottom:6px;display:flex;gap:8px;"><span style="color:var(--gold)">\u2713</span><span>' + m + '</span></div>').join('') + '</div>';
+      }
+    } catch(e) { marcadoresHtml = '<div style="margin-bottom:16px;"><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Marcadores</div><div style="font-size:12px">' + a.marcadores + '</div></div>'; }
+  }
+
+  let indicadoresHtml = '';
+  if (a.indicadores) {
+    try {
+      const obj = typeof a.indicadores === 'string' ? JSON.parse(a.indicadores) : a.indicadores;
+      if (typeof obj === 'object' && !Array.isArray(obj)) {
+        indicadoresHtml = '<div style="margin-bottom:16px;"><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Indicadores</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">' + Object.entries(obj).map(([k,v]) => '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:8px 12px;"><div style="font-size:9px;color:var(--muted);margin-bottom:2px">' + k + '</div><div style="font-size:12px;color:var(--gold2)">' + v + '</div></div>').join('') + '</div></div>';
+      }
+    } catch(e) { indicadoresHtml = '<div style="margin-bottom:16px;"><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Indicadores</div><div style="font-size:12px">' + a.indicadores + '</div></div>'; }
+  }
+
+  const narrativaHtml = a.narrativa ? '<div style="margin-bottom:16px;"><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Fundamentação</div><div style="font-size:12px;line-height:1.7;color:var(--text);white-space:pre-wrap">' + a.narrativa + '</div></div>' : '';
+
+  document.getElementById('modal2-body').innerHTML =
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)">' +
+    '<div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Data</div><div style="font-size:13px">' + (a.criado_em ? new Date(a.criado_em).toLocaleDateString('pt-PT') : '—') + '</div></div>' +
+    '<div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Modo</div><div style="font-size:13px">' + (a.modo || '—') + '</div></div>' +
+    '<div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Tribunal</div><div style="font-size:13px">' + (a.tribunal || '—') + '</div></div>' +
+    '<div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Relator</div><div style="font-size:13px">' + (a.relator || '—') + '</div></div>' +
+    '<div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Veredicto</div><div style="font-size:14px;font-weight:500;color:' + veredictoColor(a.veredicto) + '">' + (a.veredicto || '—') + '</div></div>' +
+    '<div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Confiança</div><div style="font-size:24px;color:var(--gold2);font-family:DM Serif Display,serif">' + (a.confianca ? a.confianca + '%' : '—') + '</div></div>' +
+    '</div>' +
+    narrativaHtml + indicadoresHtml + marcadoresHtml;
+
+  document.getElementById('modal2-overlay').style.display = 'block';
+}
 </script>
 
 <!-- Modal drill-down -->
