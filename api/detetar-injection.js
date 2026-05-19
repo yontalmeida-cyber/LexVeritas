@@ -267,6 +267,65 @@ function veredictoRisco(score, unicodeEncontrados, padroesEncontrados, anomalias
 // HANDLER PRINCIPAL
 // ══════════════════════════════════════════════════════════════════════════════
 module.exports = async 
+
+// ── RTL OVERRIDE ──
+function detectarRTLOverride(texto) {
+  const alertas = [];
+  if (!texto) return alertas;
+  const rtlChars = ['‮','‭','‫','‪','‏','؜','⁦','⁧','⁨','⁩'];
+  let count = 0;
+  const encontrados = [];
+  for (const char of rtlChars) {
+    const matches = (texto.match(new RegExp(char, 'g')) || []).length;
+    if (matches > 0) { count += matches; encontrados.push(`U+${char.codePointAt(0).toString(16).toUpperCase().padStart(4,'0')} (${matches}x)`); }
+  }
+  if (count > 0) {
+    alertas.push({
+      tipo: 'rtl_override',
+      gravidade: count >= 3 ? 'critica' : 'alta',
+      desc: `${count} caractere(s) de controlo de direcção de texto: ${encontrados.join(', ')} — possível inversão/ocultação de conteúdo`,
+    });
+  }
+  return alertas;
+}
+
+// ── BASE64 ENCODING OCULTO ──
+function detectarEncodingOculto(texto) {
+  const alertas = [];
+  if (!texto) return alertas;
+  const base64Regex = /(?<![A-Za-z0-9+/])([A-Za-z0-9+/]{40,}={0,2})(?![A-Za-z0-9+/])/g;
+  const matches = [...texto.matchAll(base64Regex)];
+  for (const m of matches) {
+    try {
+      const decoded = Buffer.from(m[1], 'base64').toString('utf-8');
+      const injPatterns = [/ignore/i, /instruc/i, /assistant/i, /system/i, /prompt/i, /jailbreak/i, /bypass/i];
+      if (injPatterns.some(p => p.test(decoded))) {
+        alertas.push({ tipo: 'base64_injection', gravidade: 'critica', desc: `Instrução de injection detectada em Base64: "${decoded.substring(0, 60)}..."` });
+        break;
+      }
+    } catch(e) {}
+  }
+  return alertas;
+}
+
+// ── HTML/CSS INJECTION ──
+function detectarHTMLCSSInjection(texto) {
+  const alertas = [];
+  if (!texto) return alertas;
+  const padroes = [
+    { re: /style\s*=\s*["'][^"']*display\s*:\s*none/gi, desc: 'Elemento com display:none — conteúdo oculto via CSS' },
+    { re: /style\s*=\s*["'][^"']*visibility\s*:\s*hidden/gi, desc: 'Elemento com visibility:hidden — conteúdo invisível' },
+    { re: /style\s*=\s*["'][^"']*font-size\s*:\s*0/gi, desc: 'Texto com font-size:0 — dimensão zero' },
+    { re: /<!--[\s\S]{20,}?-->/g, desc: 'Comentário HTML com conteúdo substancial' },
+  ];
+  for (const p of padroes) {
+    if (p.re.test(texto)) {
+      alertas.push({ tipo: 'html_css_injection', gravidade: 'media', desc: p.desc });
+    }
+  }
+  return alertas;
+}
+
 // ── HOMÓGLIFOS ──
 const HOMOGLIFOS_MAP = {
   'а': 'a', 'е': 'e', 'о': 'o', 'р': 'p', 'с': 'c',
@@ -306,14 +365,13 @@ function detectarHomoglifos(texto) {
 function detectarSNOW(texto) {
   const alertas = [];
   if (!texto) return alertas;
-  const linhas = texto.split(/?
-/);
+  const linhas = texto.split(/\r?\n/);
   let suspeitas = 0;
   for (const linha of linhas) {
-    if (/[ 	]+$/.test(linha)) suspeitas++;
+    if (/[ \t]+$/.test(linha)) suspeitas++;
   }
   const pct = suspeitas / Math.max(linhas.length, 1);
-  if (pct > 0.15 && suspeitas > 5) {
+  if (pct > 0.35 && suspeitas > 15) {
     alertas.push({
       tipo: 'snow_steganografia',
       gravidade: pct > 0.4 ? 'alta' : 'media',
@@ -323,7 +381,7 @@ function detectarSNOW(texto) {
   return alertas;
 }
 
-function handler(req, res) {
+async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -396,8 +454,11 @@ function handler(req, res) {
   const alertasEntropia = analisarEntropia(textoLimitado);
   const homoglifosEncontrados = detectarHomoglifos(textoLimitado);
   const snowEncontrado = detectarSNOW(textoLimitado);
+  const rtlOverride = detectarRTLOverride(textoLimitado);
+  const base64Oculto = detectarEncodingOculto(textoLimitado);
+  const htmlCSSInject = detectarHTMLCSSInjection(textoLimitado);
 
-  const todasAnomalias = [...anomaliasEncontradas, ...alertasEntropia, ...homoglifosEncontrados, ...snowEncontrado];
+  const todasAnomalias = [...anomaliasEncontradas, ...alertasEntropia, ...homoglifosEncontrados, ...snowEncontrado, ...rtlOverride, ...base64Oculto, ...htmlCSSInject];
   const score = calcularRisco(unicodeEncontrados, padroesEncontrados, todasAnomalias);
   const veredicto = veredictoRisco(score, unicodeEncontrados, padroesEncontrados, todasAnomalias);
   const totalIndicadores = unicodeEncontrados.length + padroesEncontrados.length + todasAnomalias.length;

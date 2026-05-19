@@ -145,6 +145,92 @@ async function extrairStreams(pdfBuffer) {
 // Estado gráfico do PDF: parseia operadores scn/sc/g/rg e Tf
 // para detectar texto invisível por cor branca ou tamanho zero
 
+
+// ── RTL OVERRIDE (U+202E) — inversão de direcção de texto ──
+function detectarRTLOverride(texto) {
+  const alertas = [];
+  if (!texto) return alertas;
+  const rtlChars = [
+    '‮', // RIGHT-TO-LEFT OVERRIDE
+    '‭', // LEFT-TO-RIGHT OVERRIDE
+    '‫', // RIGHT-TO-LEFT EMBEDDING
+    '‪', // LEFT-TO-RIGHT EMBEDDING
+    '‏', // RIGHT-TO-LEFT MARK
+    '؜', // ARABIC LETTER MARK
+    '⁦', '⁧', '⁨', '⁩', // ISOLATES
+  ];
+  let count = 0;
+  const encontrados = [];
+  for (const char of rtlChars) {
+    const matches = (texto.match(new RegExp(char, 'g')) || []).length;
+    if (matches > 0) {
+      count += matches;
+      encontrados.push(`U+${char.codePointAt(0).toString(16).toUpperCase().padStart(4,'0')} (${matches}x)`);
+    }
+  }
+  if (count > 0) {
+    alertas.push({
+      tipo: 'rtl_override',
+      gravidade: count >= 3 ? 'critica' : 'alta',
+      desc: `${count} caractere(s) de controlo de direcção de texto detectado(s): ${encontrados.join(', ')} — possível inversão/ocultação de conteúdo`,
+    });
+  }
+  return alertas;
+}
+
+// ── BASE64 / ENCODING OCULTO ──
+function detectarEncodingOculto(texto) {
+  const alertas = [];
+  if (!texto) return alertas;
+  // Base64 com comprimento suspeito (>40 chars) em contexto não esperado
+  const base64Regex = /(?<![A-Za-z0-9+/])([A-Za-z0-9+/]{40,}={0,2})(?![A-Za-z0-9+/])/g;
+  const matches = [...texto.matchAll(base64Regex)];
+  const suspeitos = [];
+  for (const m of matches) {
+    try {
+      const decoded = Buffer.from(m[1], 'base64').toString('utf-8');
+      // Verificar se o decoded contém padrões de injection
+      const injPatterns = [/ignore/i, /instruc/i, /assistant/i, /system/i, /prompt/i, /jailbreak/i, /bypass/i];
+      if (injPatterns.some(p => p.test(decoded))) {
+        suspeitos.push({ encoded: m[1].substring(0, 30) + '...', decoded: decoded.substring(0, 80) });
+      }
+    } catch(e) {}
+  }
+  if (suspeitos.length > 0) {
+    alertas.push({
+      tipo: 'base64_injection',
+      gravidade: 'critica',
+      desc: `Instrução de injection detectada em conteúdo codificado em Base64: "${suspeitos[0].decoded.substring(0, 60)}..."`,
+    });
+  }
+  return alertas;
+}
+
+// ── HTML/CSS INJECTION em documentos com conteúdo web ──
+function detectarHTMLCSSInjection(texto) {
+  const alertas = [];
+  if (!texto) return alertas;
+  const padroes = [
+    { re: /style\s*=\s*["'][^"']*display\s*:\s*none[^"']*["']/gi, tipo: 'css_display_none', desc: 'Elemento HTML com display:none — conteúdo oculto via CSS' },
+    { re: /style\s*=\s*["'][^"']*visibility\s*:\s*hidden[^"']*["']/gi, tipo: 'css_visibility_hidden', desc: 'Elemento HTML com visibility:hidden — conteúdo invisível via CSS' },
+    { re: /style\s*=\s*["'][^"']*color\s*:\s*(?:white|#fff|#ffffff|rgba?\s*\(\s*255\s*,\s*255\s*,\s*255)[^"']*["']/gi, tipo: 'css_white_text', desc: 'Texto HTML com cor branca — invisível sobre fundo branco' },
+    { re: /style\s*=\s*["'][^"']*font-size\s*:\s*0[^"']*["']/gi, tipo: 'css_fontsize_zero', desc: 'Texto HTML com font-size:0 — texto de dimensão zero' },
+    { re: /<!--[\s\S]{20,}?-->/g, tipo: 'html_comment', desc: 'Comentário HTML com conteúdo substancial' },
+    { re: /<[^>]+\s+(?:data-[a-z-]+)\s*=\s*["'][^"']{20,}["']/gi, tipo: 'data_attribute', desc: 'Atributo data-* com conteúdo extenso — possível instrução oculta' },
+  ];
+  for (const p of padroes) {
+    const matches = texto.match(p.re) || [];
+    if (matches.length > 0) {
+      alertas.push({
+        tipo: p.tipo,
+        gravidade: 'media',
+        desc: p.desc,
+      });
+    }
+  }
+  return alertas;
+}
+
 // ── HOMÓGLIFOS — caracteres visualmente idênticos de outros alfabetos ──
 // Cirílico, Grego, Arménio, etc. substituídos por letras latinas
 const HOMOGLIFOS_MAP = {
@@ -155,7 +241,8 @@ const HOMOGLIFOS_MAP = {
   'α': 'a', 'ε': 'e', 'ο': 'o', 'ρ': 'p', 'ν': 'v',
   'ι': 'i', 'κ': 'k', 'ν': 'n', 'χ': 'x',
   // Unicode confusables comuns
-  '’': "'", '‚': ',', '"': '"', 'ʼ': "'",
+  // U+2019 e U+201A removidos — são pontuação tipográfica normal em PT
+  'ʼ': "'",
   'ａ': 'a', 'ｅ': 'e', 'ｏ': 'o', 'ｐ': 'p',
 };
 
@@ -200,7 +287,7 @@ function detectarSNOW(texto) {
     if (/[ \t]+$/.test(linha)) padrao += linha.match(/[ \t]+$/)[0];
   }
   const percentagem = (linhasComTrailingSpace + linhasComTab) / Math.max(linhas.length, 1);
-  if (percentagem > 0.15 && (linhasComTrailingSpace + linhasComTab) > 5) {
+  if (percentagem > 0.35 && (linhasComTrailingSpace + linhasComTab) > 15) {
     alertas.push({
       tipo: 'snow_steganografia',
       gravidade: percentagem > 0.4 ? 'alta' : 'media',
@@ -499,7 +586,7 @@ function detectarUnicodeInvisivelBruto(textoUTF8, textoExtraido) {
 
   // Combining chars em excesso (steganografia)
   const combiningCount = (textoUTF8.match(/[\u0300-\u036F]/g) || []).length;
-  if (combiningCount > 50) {
+  if (combiningCount > 200) {
     encontrados.push({
       tipo: 'unicode_invisivel',
       gravidade: 'alta',
@@ -1084,6 +1171,9 @@ module.exports = async function handler(req, res) {
   const textoForaAreaEncontrado  = detectarTextoForaDaArea(streamContents, pdfBuffer);
   const xmpInjectado             = detectarXMPInjection(pdfBuffer);
   const transparenciaOculta      = detectarTransparenciaOculta(streamContents);
+  const rtlOverride              = detectarRTLOverride(textoExtraido || textoUTF8.substring(0, 50000));
+  const base64Oculto             = detectarEncodingOculto(textoExtraido || textoUTF8.substring(0, 50000));
+  const htmlCSSInject            = detectarHTMLCSSInjection(textoExtraido || textoUTF8.substring(0, 50000));
 
   // ── 9. Score e veredicto ──
   const todasAnomalias = [
@@ -1097,6 +1187,9 @@ module.exports = async function handler(req, res) {
     ...textoForaAreaEncontrado,
     ...xmpInjectado,
     ...transparenciaOculta,
+    ...rtlOverride,
+    ...base64Oculto,
+    ...htmlCSSInject,
   ];
 
   const score = calcularRisco(unicodeEncontrados, padroesEncontrados, todasAnomalias, textoInvisivel);
