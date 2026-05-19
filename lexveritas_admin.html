@@ -450,7 +450,7 @@ async function loadKPIs(allAnalises, perfis) {
 
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-    const thisMonth = allAnalises.filter(a => a.created_at >= monthStart).length;
+    const thisMonth = allAnalises.filter(a => a.criado_em >= monthStart).length;
 
     const avg = users > 0 ? Math.round(total / users) : 0;
 
@@ -533,8 +533,8 @@ async function loadChart(allAnalises) {
     // Agrupar por mês
     const monthly = {};
     allAnalises.forEach(a => {
-      if (!a.created_at) return;
-      const d = new Date(a.created_at);
+      if (!a.criado_em) return;
+      const d = new Date(a.criado_em);
       const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
       monthly[key] = (monthly[key] || 0) + 1;
     });
@@ -603,8 +603,8 @@ async function loadRecent(allAnalises, perfis) {
     perfis.forEach(p => { perfisMap[p.id] = p; });
 
     const recent = [...allAnalises]
-      .filter(a => a.created_at)
-      .sort((a,b) => new Date(b.created_at) - new Date(a.created_at))
+      .filter(a => a.criado_em)
+      .sort((a,b) => new Date(b.criado_em) - new Date(a.criado_em))
       .slice(0, 10);
 
     const timeAgo = (dateStr) => {
@@ -622,7 +622,7 @@ async function loadRecent(allAnalises, perfis) {
       <div class="recent-item">
         <div class="recent-dot"></div>
         <div class="recent-email">${perfisMap[a.user_id]?.email || a.user_id}</div>
-        <div class="recent-time">${timeAgo(a.created_at)}</div>
+        <div class="recent-time">${timeAgo(a.criado_em)}</div>
       </div>
     `).join('');
 
@@ -636,7 +636,7 @@ async function loadAll() {
   try {
     // Carregar tudo de uma vez
     const [analises, perfis] = await Promise.all([
-      db.from('analises').select('*').order('created_at', { ascending: false }),
+      db.from('analises').select('*').order('criado_em', { ascending: false }),
       db.from('perfis').select('id, email, nome, plano')
     ]);
 
