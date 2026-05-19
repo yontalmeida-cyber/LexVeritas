@@ -1597,6 +1597,21 @@ let html = '';
     html += '</div>';
   }
 
+  // Texto invisível — cor branca ou tamanho zero (o mais grave)
+  const textoInvisivelAlerts = result.anomalias_estruturais?.filter(a =>
+    a.tipo === 'texto_cor_branca' || a.tipo === 'texto_tamanho_zero'
+  ) || [];
+  if (textoInvisivelAlerts.length > 0) {
+    html += '<div class="analysis-card" style="border-left:3px solid #8b1a1a;margin-bottom:16px"><h3>🔴 Texto Invisível Detectado — Padrão TRT8</h3>';
+    textoInvisivelAlerts.forEach(a => {
+      html += `<div style="padding:10px 0;border-bottom:1px solid var(--rule)">
+        <div style="font-family:var(--sans);font-size:12px;color:#333;font-weight:600;margin-bottom:4px">${a.desc}</div>
+        ${a.contexto ? `<div style="font-family:var(--mono);font-size:10px;color:#888;background:#f8f8f8;padding:6px 8px;margin-top:4px;line-height:1.5;word-break:break-all">"${a.contexto}"</div>` : ''}
+      </div>`;
+    });
+    html += '<div style="font-family:var(--sans);font-size:11px;color:#888;margin-top:8px;line-height:1.6">Técnica idêntica à usada no caso TRT-8 Parauapebas (Brasil, Maio 2026): texto em cor branca sobre fundo branco, invisível ao leitor humano mas lido por sistemas de IA.</div></div>';
+  }
+
   // SNOW steganografia
   const snowAlerts = result.anomalias_estruturais?.filter(a => a.tipo === 'snow_steganografia') || [];
   if (snowAlerts.length > 0) {
@@ -1662,7 +1677,7 @@ let html = '';
   }
 
   // Restantes anomalias estruturais (excluindo as já renderizadas)
-  const tiposJaRenderizados = ['snow_steganografia','texto_fora_area','xmp_injection','xmp_anómalo','opacidade_zero','extgstate_transparente','rtl_override','base64_injection','html_css_injection'];
+  const tiposJaRenderizados = ['texto_cor_branca','texto_tamanho_zero','snow_steganografia','texto_fora_area','xmp_injection','xmp_anómalo','opacidade_zero','extgstate_transparente','rtl_override','base64_injection','html_css_injection'];
   const outrasAnomalias = result.anomalias_estruturais?.filter(a => !tiposJaRenderizados.includes(a.tipo)) || [];
   if (outrasAnomalias.length > 0) {
     html += '<div class="analysis-card" style="border-left:3px solid var(--gold);margin-bottom:16px"><h3>🔶 Anomalias Estruturais</h3>';
