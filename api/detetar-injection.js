@@ -328,12 +328,10 @@ module.exports = async function handler(req, res) {
   ];
   const isDocumentoPortugues = indicadoresPortugues.some(t => textoValidacao.includes(t));
 
-  if (!isDocumentoPortugues && texto.trim().length > 200) {
-    return res.status(422).json({
-      erro: 'Documento fora do domínio de análise. O Detector de Prompt Injection do LexVeritas está calibrado exclusivamente para documentos jurídicos portugueses (acórdãos, contratos, requerimentos, pareceres PT-PT). Não é possível analisar documentos de outras jurisdições.',
-      codigo: 'DOMINIO_NAO_SUPORTADO',
-    });
-  }
+  // Domínio não reconhecido — analisar na mesma com nota de aviso
+  const avisoForeignDomain = (!isDocumentoPortugues && texto.trim().length > 500)
+    ? 'Domínio não confirmado automaticamente. Os resultados têm fiabilidade indeterminada para documentos fora do sistema jurídico português.'
+    : null;
 
   const unicodeEncontrados = detectarUnicodeInvisivel(textoLimitado);
   const padroesEncontrados = detectarPadroesLinguisticos(textoLimitado);
@@ -360,7 +358,7 @@ module.exports = async function handler(req, res) {
     unicode_invisivel: unicodeEncontrados,
     padroes_linguisticos: padroesEncontrados,
     anomalias_estruturais: todasAnomalias,
-    nota_dominio: notaDominio,
+    nota_dominio: notaDominio || avisoForeignDomain,
     truncado: textoTruncado,
     plano: userPlano,
     meta: {

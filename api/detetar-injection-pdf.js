@@ -904,12 +904,12 @@ module.exports = async function handler(req, res) {
   ];
   const isDocumentoPortugues = indicadoresPortugues.some(t => textoValidacao.includes(t));
 
-  if (!isDocumentoPortugues && textoExtraido.length > 200) {
-    return res.status(422).json({
-      erro: 'Documento fora do domínio de análise. O Detector de Prompt Injection do LexVeritas está calibrado exclusivamente para documentos jurídicos portugueses (acórdãos, contratos, requerimentos, pareceres PT-PT). Não é possível analisar documentos de outras jurisdições.',
-      codigo: 'DOMINIO_NAO_SUPORTADO',
-    });
-  }
+  // Domínio não reconhecido — analisar na mesma mas com nota de aviso
+  // Não bloquear: PDFs gerados por alguns exportadores não expõem o texto
+  // correctamente nos primeiros 6000 caracteres mesmo sendo documentos PT-PT
+  const avisoForeignDomain = (!isDocumentoPortugues && textoExtraido.length > 500)
+    ? 'Domínio não confirmado automaticamente. Os resultados têm fiabilidade indeterminada para documentos fora do sistema jurídico português.'
+    : null;
 
   // ── 5. Análise de entropia ──
   const alertasEntropia = analisarEntropia(textoExtraido || textoUTF8.substring(0, 20000));
@@ -957,7 +957,7 @@ module.exports = async function handler(req, res) {
     padroes_linguisticos: padroesEncontrados,
     anomalias_estruturais: todasAnomalias,
     metadados_pdf: metadados,
-    nota_dominio: notaDominio,
+    nota_dominio: notaDominio || avisoForeignDomain,
     meta: {
       fonte: 'bytes_brutos_pdf',
       nome_ficheiro: nomeFile || 'desconhecido',
