@@ -266,7 +266,64 @@ function veredictoRisco(score, unicodeEncontrados, padroesEncontrados, anomalias
 // ══════════════════════════════════════════════════════════════════════════════
 // HANDLER PRINCIPAL
 // ══════════════════════════════════════════════════════════════════════════════
-module.exports = async function handler(req, res) {
+module.exports = async 
+// ── HOMÓGLIFOS ──
+const HOMOGLIFOS_MAP = {
+  'а': 'a', 'е': 'e', 'о': 'o', 'р': 'p', 'с': 'c',
+  'х': 'x', 'і': 'i', 'ј': 'j', 'ӏ': 'l', 'ѕ': 's',
+  'α': 'a', 'ε': 'e', 'ο': 'o', 'ρ': 'p', 'ν': 'v',
+  'ι': 'i', 'κ': 'k', 'χ': 'x',
+  'ａ': 'a', 'ｅ': 'e', 'ｏ': 'o', 'ｐ': 'p',
+};
+
+function detectarHomoglifos(texto) {
+  const alertas = [];
+  if (!texto) return alertas;
+  let count = 0;
+  const exemplos = [];
+  for (const [char, equiv] of Object.entries(HOMOGLIFOS_MAP)) {
+    const matches = texto.match(new RegExp(char, 'g')) || [];
+    if (matches.length > 0) {
+      count += matches.length;
+      if (exemplos.length < 5) {
+        const idx = texto.indexOf(char);
+        exemplos.push(`U+${char.codePointAt(0).toString(16).toUpperCase().padStart(4,'0')} (≈'${equiv}') pos.${idx}`);
+      }
+    }
+  }
+  if (count >= 3) {
+    alertas.push({
+      tipo: 'homoglifo',
+      gravidade: count >= 10 ? 'critica' : 'alta',
+      desc: `${count} caracteres homóglifos detectados — possível substituição de letras latinas`,
+      exemplos,
+    });
+  }
+  return alertas;
+}
+
+// ── SNOW STEGANOGRAFIA ──
+function detectarSNOW(texto) {
+  const alertas = [];
+  if (!texto) return alertas;
+  const linhas = texto.split(/?
+/);
+  let suspeitas = 0;
+  for (const linha of linhas) {
+    if (/[ 	]+$/.test(linha)) suspeitas++;
+  }
+  const pct = suspeitas / Math.max(linhas.length, 1);
+  if (pct > 0.15 && suspeitas > 5) {
+    alertas.push({
+      tipo: 'snow_steganografia',
+      gravidade: pct > 0.4 ? 'alta' : 'media',
+      desc: `${suspeitas} linhas com espaços/tabs no fim — possível steganografia SNOW`,
+    });
+  }
+  return alertas;
+}
+
+function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -337,8 +394,10 @@ module.exports = async function handler(req, res) {
   const padroesEncontrados = detectarPadroesLinguisticos(textoLimitado);
   const anomaliasEncontradas = detectarAnomalias(textoLimitado);
   const alertasEntropia = analisarEntropia(textoLimitado);
+  const homoglifosEncontrados = detectarHomoglifos(textoLimitado);
+  const snowEncontrado = detectarSNOW(textoLimitado);
 
-  const todasAnomalias = [...anomaliasEncontradas, ...alertasEntropia];
+  const todasAnomalias = [...anomaliasEncontradas, ...alertasEntropia, ...homoglifosEncontrados, ...snowEncontrado];
   const score = calcularRisco(unicodeEncontrados, padroesEncontrados, todasAnomalias);
   const veredicto = veredictoRisco(score, unicodeEncontrados, padroesEncontrados, todasAnomalias);
   const totalIndicadores = unicodeEncontrados.length + padroesEncontrados.length + todasAnomalias.length;

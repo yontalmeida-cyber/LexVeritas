@@ -144,6 +144,159 @@ async function extrairStreams(pdfBuffer) {
 
 // Estado gráfico do PDF: parseia operadores scn/sc/g/rg e Tf
 // para detectar texto invisível por cor branca ou tamanho zero
+
+// ── HOMÓGLIFOS — caracteres visualmente idênticos de outros alfabetos ──
+// Cirílico, Grego, Arménio, etc. substituídos por letras latinas
+const HOMOGLIFOS_MAP = {
+  // Cirílico
+  'а': 'a', 'е': 'e', 'о': 'o', 'р': 'p', 'с': 'c',
+  'х': 'x', 'і': 'i', 'ј': 'j', 'ӏ': 'l', 'ѕ': 's',
+  // Grego
+  'α': 'a', 'ε': 'e', 'ο': 'o', 'ρ': 'p', 'ν': 'v',
+  'ι': 'i', 'κ': 'k', 'ν': 'n', 'χ': 'x',
+  // Unicode confusables comuns
+  '’': "'", '‚': ',', '"': '"', 'ʼ': "'",
+  'ａ': 'a', 'ｅ': 'e', 'ｏ': 'o', 'ｐ': 'p',
+};
+
+function detectarHomoglifos(texto) {
+  const alertas = [];
+  if (!texto) return alertas;
+  let count = 0;
+  const exemplos = [];
+  for (const [char, equiv] of Object.entries(HOMOGLIFOS_MAP)) {
+    const regex = new RegExp(char, 'g');
+    const matches = texto.match(regex) || [];
+    if (matches.length > 0) {
+      count += matches.length;
+      if (exemplos.length < 5) {
+        const idx = texto.indexOf(char);
+        exemplos.push(`U+${char.codePointAt(0).toString(16).toUpperCase().padStart(4,'0')} (≈'${equiv}') em pos.${idx}`);
+      }
+    }
+  }
+  if (count >= 3) {
+    alertas.push({
+      tipo: 'homoglifo',
+      gravidade: count >= 10 ? 'critica' : 'alta',
+      desc: `${count} caracteres homóglifos detectados — possível substituição de letras latinas por caracteres de outros alfabetos`,
+      exemplos,
+    });
+  }
+  return alertas;
+}
+
+// ── SNOW STEGANOGRAFIA — espaços e tabs no fim de linhas ──
+function detectarSNOW(texto) {
+  const alertas = [];
+  if (!texto) return alertas;
+  const linhas = texto.split(/\r?\n/);
+  let linhasComTrailingSpace = 0;
+  let linhasComTab = 0;
+  let padrao = '';
+  for (const linha of linhas) {
+    if (/ +$/.test(linha)) linhasComTrailingSpace++;
+    if (/\t+$/.test(linha)) linhasComTab++;
+    if (/[ \t]+$/.test(linha)) padrao += linha.match(/[ \t]+$/)[0];
+  }
+  const percentagem = (linhasComTrailingSpace + linhasComTab) / Math.max(linhas.length, 1);
+  if (percentagem > 0.15 && (linhasComTrailingSpace + linhasComTab) > 5) {
+    alertas.push({
+      tipo: 'snow_steganografia',
+      gravidade: percentagem > 0.4 ? 'alta' : 'media',
+      desc: `${linhasComTrailingSpace + linhasComTab} linhas com espaços/tabs no fim — possível steganografia SNOW`,
+    });
+  }
+  return alertas;
+}
+
+// ── TEXTO FORA DA ÁREA DE IMPRESSÃO ──
+function detectarTextoForaDaArea(streamContents, pdfBuffer) {
+  const alertas = [];
+  // Extrair MediaBox do PDF
+  const mediaBoxMatch = pdfBuffer.toString('latin1').match(/\/MediaBox\s*\[\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/);
+  if (!mediaBoxMatch) return alertas;
+  const [, x0, y0, x1, y1] = mediaBoxMatch.map(Number);
+
+  for (const stream of streamContents) {
+    // Procurar posicionamentos de texto com Td, TD, Tm
+    const tmMatches = stream.matchAll(/(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+Tm/g);
+    for (const m of tmMatches) {
+      const tx = parseFloat(m[5]);
+      const ty = parseFloat(m[6]);
+      if (tx < x0 - 10 || tx > x1 + 10 || ty < y0 - 10 || ty > y1 + 10) {
+        alertas.push({
+          tipo: 'texto_fora_area',
+          gravidade: 'alta',
+          desc: `Texto posicionado fora da área de impressão (x:${tx.toFixed(0)}, y:${ty.toFixed(0)}) — possível injection oculta`,
+        });
+        break;
+      }
+    }
+    if (alertas.length > 0) break;
+  }
+  return alertas;
+}
+
+// ── XMP METADATA — instruções nos metadados XML ──
+function detectarXMPInjection(pdfBuffer) {
+  const alertas = [];
+  const pdf = pdfBuffer.toString('latin1');
+  const xmpMatch = pdf.match(/<x:xmpmeta[\s\S]*?<\/x:xmpmeta>/i);
+  if (!xmpMatch) return alertas;
+  const xmp = xmpMatch[0];
+  const PADROES_XMP = [
+    /ignore.*instru/i, /system.*prompt/i, /assistant.*role/i,
+    /jailbreak/i, /bypass/i, /override/i, /forget.*previous/i,
+    /esqueça/i, /ignora.*anterior/i,
+  ];
+  for (const p of PADROES_XMP) {
+    if (p.test(xmp)) {
+      alertas.push({
+        tipo: 'xmp_injection',
+        gravidade: 'critica',
+        desc: 'Padrão de prompt injection detectado nos metadados XMP do PDF',
+      });
+      break;
+    }
+  }
+  // XMP com comprimento anómalo
+  if (xmp.length > 5000) {
+    alertas.push({
+      tipo: 'xmp_anómalo',
+      gravidade: 'media',
+      desc: `Metadados XMP com dimensão anómala (${xmp.length} chars) — possível dados ocultos`,
+    });
+  }
+  return alertas;
+}
+
+// ── TRANSPARÊNCIA / OPACIDADE ZERO ──
+function detectarTransparenciaOculta(streamContents) {
+  const alertas = [];
+  for (const stream of streamContents) {
+    // ca (fill opacity) ou CA (stroke opacity) a 0
+    if (/\b0(\.0+)?\s+ca\b/.test(stream) || /\b0(\.0+)?\s+CA\b/.test(stream)) {
+      alertas.push({
+        tipo: 'opacidade_zero',
+        gravidade: 'alta',
+        desc: 'Texto com opacidade zero detectado — completamente invisível mas presente no documento',
+      });
+      break;
+    }
+    // /GS com opacity 0 em ExtGState
+    if (/\/ca\s+0\b/.test(stream) || /\/CA\s+0\b/.test(stream)) {
+      alertas.push({
+        tipo: 'extgstate_transparente',
+        gravidade: 'alta',
+        desc: 'Estado gráfico com transparência total detectado (ExtGState ca=0)',
+      });
+      break;
+    }
+  }
+  return alertas;
+}
+
 function detectarTextoInvisivel(streamContent) {
   const alertas = [];
 
@@ -925,6 +1078,13 @@ module.exports = async function handler(req, res) {
   const padroesEncontrados   = detectarPadroesLinguisticos(textoCombinado);
   const anomaliasEncontradas = detectarAnomalias(textoExtraido || textoUTF8.substring(0, 30000));
 
+  // ── 8B. Técnicas avançadas ──
+  const homoglifosEncontrados    = detectarHomoglifos(textoExtraido || textoUTF8.substring(0, 50000));
+  const snowEncontrado           = detectarSNOW(textoExtraido || textoUTF8.substring(0, 50000));
+  const textoForaAreaEncontrado  = detectarTextoForaDaArea(streamContents, pdfBuffer);
+  const xmpInjectado             = detectarXMPInjection(pdfBuffer);
+  const transparenciaOculta      = detectarTransparenciaOculta(streamContents);
+
   // ── 9. Score e veredicto ──
   const todasAnomalias = [
     ...anomaliasEncontradas,
@@ -932,6 +1092,11 @@ module.exports = async function handler(req, res) {
     ...alertasMetadados,
     ...alertasCamadas,
     ...alertasEntropia,
+    ...homoglifosEncontrados,
+    ...snowEncontrado,
+    ...textoForaAreaEncontrado,
+    ...xmpInjectado,
+    ...transparenciaOculta,
   ];
 
   const score = calcularRisco(unicodeEncontrados, padroesEncontrados, todasAnomalias, textoInvisivel);
