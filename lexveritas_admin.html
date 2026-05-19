@@ -668,8 +668,13 @@ async function loadAll() {
   }
 }
 
-// Iniciar
-loadAll();
+// Protecção por password
+const pwd = prompt('Password:');
+if (pwd !== 'Yontgroove.87') {
+  document.body.innerHTML = '<div style="color:#e05c5c;font-family:monospace;padding:40px">Acesso negado.</div>';
+} else {
+  loadAll();
+}
 
 // Auto-refresh cada 60 segundos
 setInterval(loadAll, 60000);
