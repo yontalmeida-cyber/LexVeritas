@@ -747,6 +747,7 @@ async function loadTable(allAnalises, perfis) {
       uid: p.id,
       email: p.email || p.id,
       nome: p.nome || '—',
+      profissao: p.profissao || '—',
       plano: p.plano || 'gratuito',
       criado_em: p.criado_em,
       ultima: lastAnalise[p.id] || null,
@@ -768,6 +769,8 @@ async function loadTable(allAnalises, perfis) {
         <thead>
           <tr>
             <th>Email</th>
+            <th>Nome</th>
+            <th>Profissão</th>
             <th>Plano</th>
             <th>Registo</th>
             <th>Última Análise</th>
@@ -780,6 +783,12 @@ async function loadTable(allAnalises, perfis) {
             <tr style="${r.inactivo ? 'background:rgba(224,92,92,0.04)' : ''}">
               <td style="color:var(--gold);cursor:pointer;text-decoration:underline;text-underline-offset:3px;" onclick="openModal('${r.email}','${r.uid}')">
                 ${r.inactivo ? '<span style="color:var(--red);margin-right:6px;" title="Inactivo há +30 dias">⚠</span>' : ''}${r.email}
+              </td>
+              <td style="font-size:11px;color:var(--text)">
+                ${!r.nome || r.nome === '—' || r.nome.length < 3 ? '<span style="color:var(--red)" title="Nome suspeito">⚠ ' + (r.nome || '—') + '</span>' : r.nome}
+              </td>
+              <td style="font-size:11px;color:var(--muted)">
+                ${!r.profissao || r.profissao === '—' ? '<span style="color:var(--red)" title="Sem profissão">⚠ —</span>' : r.profissao}
               </td>
               <td>${planoBadge(r.plano)}</td>
               <td style="color:var(--muted);font-size:11px;white-space:nowrap">${r.criado_em ? new Date(r.criado_em).toLocaleDateString('pt-PT') : '—'}</td>
@@ -917,7 +926,7 @@ async function loadAll() {
     // Carregar tudo de uma vez
     const [analises, perfis] = await Promise.all([
       db.from('analises').select('*').order('criado_em', { ascending: false }),
-      db.from('perfis').select('id, email, nome, plano, criado_em')
+      db.from('perfis').select('id, email, nome, profissao, plano, criado_em')
     ]);
 
     if (analises.error) throw analises.error;
