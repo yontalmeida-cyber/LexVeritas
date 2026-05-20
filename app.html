@@ -360,18 +360,18 @@
   .admissivel-nao { background: rgba(139,26,26,0.08); color: #8b1a1a; }
 
   .minuta-card { background: white; border: 1px solid var(--rule); border-top: 3px solid var(--gold); margin-bottom: 16px; }
-  .minuta-header { padding: 14px 20px; background: var(--parchment); border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .minuta-header { padding: 14px 20px; background: var(--bg-dark); border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .minuta-title { font-family: var(--serif); font-size: 14px; font-weight: 700; }
   .minuta-disclaimer { font-family: var(--mono); font-size: 9px; color: #888; letter-spacing: 0.05em; }
   .minuta-body { padding: 20px; font-family: var(--serif); font-size: 13px; line-height: 1.9; color: #333; white-space: pre-wrap; max-height: 700px; overflow-y: auto; }
-  .minuta-footer { padding: 12px 20px; border-top: 1px solid var(--rule); background: var(--parchment); display: flex; gap: 10px; flex-wrap: wrap; }
+  .minuta-footer { padding: 12px 20px; border-top: 1px solid var(--rule); background: var(--bg-dark); display: flex; gap: 10px; flex-wrap: wrap; }
   .btn-copiar { background: var(--ink); color: white; border: none; padding: 8px 18px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
   .btn-copiar:hover { background: var(--gold); }
   .btn-copiar.copiado { background: var(--green); }
   @media(max-width:760px){ .meta-recurso { grid-template-columns: 1fr; } }
 
   .sidebar-widget { background: var(--analysis-card-bg); border: 1px solid var(--analysis-card-border); margin-bottom: 20px; overflow: hidden; transition: background 0.25s; }
-  .widget-header { padding: 12px 16px; background: var(--parchment); border-bottom: 1px solid var(--rule); }
+  .widget-header { padding: 12px 16px; background: var(--bg-dark); border-bottom: 1px solid var(--rule); }
   .widget-title { font-family: var(--serif); font-size: 13px; font-weight: 700; }
   .widget-body { padding: 16px; }
   .stat-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--rule); }
@@ -391,7 +391,7 @@
   .history-page { max-width: 800px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); }
   .history-item { background: white; border: 1px solid var(--rule); margin-bottom: 16px; overflow: hidden; }
   .history-item-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; transition: background 0.2s; }
-  .history-item-header:hover { background: var(--parchment); }
+  .history-item-header:hover { background: var(--bg-dark); }
   .history-veredicto { font-family: var(--serif); font-size: 15px; font-weight: 700; }
   .history-meta { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 3px; }
   .history-confianca { font-family: var(--mono); font-size: 18px; font-weight: 500; color: var(--gold); flex-shrink: 0; }
@@ -452,7 +452,7 @@
   .btn-dark-submit:hover { background: var(--gold-light); }
   .btn-dark-submit:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-pdf { display: flex; align-items: center; gap: 8px; background: white; color: var(--ink); border: 1px solid var(--rule); padding: 11px 20px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 16px; width: 100%; justify-content: center; }
-  .btn-pdf:hover { background: var(--parchment); border-color: var(--gold); color: var(--gold); }
+  .btn-pdf:hover { background: var(--bg-dark); border-color: var(--gold); color: var(--gold); }
   .ref-number { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 6px; text-align: center; }
 
   #lv-loading { position: fixed; inset: 0; background: #060608; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: opacity .6s ease; }
@@ -834,19 +834,19 @@
       <div class="widget-body" style="padding:14px">
         <!-- JUDICIAL -->
         <div id="ctx-judicial">
-          <select id="tribunal-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
+          <select id="tribunal-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--analysis-card-bg);font-family:var(--sans);font-size:12px;color:var(--text-main);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tribunal (opcional) —</option>
             <optgroup label="Supremos Tribunais"><option>STJ — Supremo Tribunal de Justiça</option><option>STA — Supremo Tribunal Administrativo</option><option>TC — Tribunal Constitucional</option></optgroup>
             <optgroup label="Tribunais da Relação"><option>TRL — Tribunal da Relação de Lisboa</option><option>TRP — Tribunal da Relação do Porto</option><option>TRC — Tribunal da Relação de Coimbra</option><option>TRG — Tribunal da Relação de Guimarães</option><option>TRE — Tribunal da Relação de Évora</option></optgroup>
             <optgroup label="Tribunais Administrativos"><option>TCAS — Tribunal Central Administrativo Sul</option><option>TCAN — Tribunal Central Administrativo Norte</option></optgroup>
             <optgroup label="Outros"><option>Tribunal de 1.ª Instância (Cível)</option><option>Tribunal de 1.ª Instância (Criminal)</option><option>Tribunal de Trabalho</option><option>Tribunal Administrativo e Fiscal</option></optgroup>
           </select>
-          <input id="relator-input" type="text" placeholder="Nome do relator (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
+          <input id="relator-input" type="text" placeholder="Nome do relator (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--analysis-card-bg);font-family:var(--sans);font-size:12px;color:var(--text-main);outline:none;margin-bottom:10px">
           <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>Cada tribunal e relator têm um estilo próprio. Indicar melhora a precisão e aparece no relatório PDF.</div>
         </div>
         <!-- ACADÉMICO -->
         <div id="ctx-academico" style="display:none">
-          <select id="instituicao-input" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
+          <select id="instituicao-input" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--analysis-card-bg);font-family:var(--sans);font-size:12px;color:var(--text-main);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Faculdade de Direito (opcional) —</option>
             <optgroup label="Universidades Públicas">
               <option>Universidade de Lisboa — Faculdade de Direito (FDUL)</option>
@@ -868,17 +868,17 @@
             </optgroup>
             <option value="Outra">Outra instituição</option>
           </select>
-          <select id="tipo-doc-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
+          <select id="tipo-doc-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--analysis-card-bg);font-family:var(--sans);font-size:12px;color:var(--text-main);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tipo de documento —</option>
             <option>Dissertação de Mestrado</option><option>Tese de Doutoramento</option><option>Trabalho de Licenciatura</option><option>Artigo Académico</option><option value="Artigo Doutrinário">Artigo Doutrinário / Opinião</option><option>Monografia</option><option>Outro</option>
           </select>
-          <input id="orientador-input" type="text" placeholder="Orientador (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;margin-bottom:10px">
+          <input id="orientador-input" type="text" placeholder="Orientador (opcional)" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--analysis-card-bg);font-family:var(--sans);font-size:12px;color:var(--text-main);outline:none;margin-bottom:10px">
           <div class="info-box note" style="margin:0;font-size:11px"><strong>Porquê indicar?</strong>O tipo de documento ajuda a calibrar a análise para o estilo académico-jurídico esperado.</div>
         </div>
         <!-- CRÍTICA -->
         <div id="ctx-critica" style="display:none">
           <div class="critica-banner" style="margin-bottom:10px"><strong>Consultor Jurídico Sénior</strong><p>Análise de nulidades, vícios processuais e erros de julgamento. Geração de argumentos para recurso e proposta de peça processual.</p></div>
-          <select id="tribunal-critica-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
+          <select id="tribunal-critica-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--analysis-card-bg);font-family:var(--sans);font-size:12px;color:var(--text-main);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tribunal de 1.ª Instância (opcional) —</option>
             <optgroup label="Supremos Tribunais"><option>STJ — Supremo Tribunal de Justiça</option><option>STA — Supremo Tribunal Administrativo</option><option>TC — Tribunal Constitucional</option></optgroup>
             <optgroup label="Tribunais da Relação"><option>TRL — Tribunal da Relação de Lisboa</option><option>TRP — Tribunal da Relação do Porto</option><option>TRC — Tribunal da Relação de Coimbra</option><option>TRG — Tribunal da Relação de Guimarães</option><option>TRE — Tribunal da Relação de Évora</option></optgroup>
@@ -899,11 +899,11 @@
             </optgroup>
             <optgroup label="Outros"><option>Tribunal de 1.ª Instância (Cível)</option><option>Tribunal de 1.ª Instância (Criminal)</option><option>Tribunal de Trabalho</option><option>Tribunal Administrativo e Fiscal</option></optgroup>
           </select>
-          <select id="tipo-processo-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
+          <select id="tipo-processo-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--analysis-card-bg);font-family:var(--sans);font-size:12px;color:var(--text-main);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Tipo de processo (opcional) —</option>
             <option>Processo Civil</option><option>Processo Penal</option><option>Processo Administrativo</option><option>Processo Laboral</option><option>Processo de Família</option><option>Processo de Insolvência</option>
           </select>
-          <select id="parte-recorrente-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--parchment);font-family:var(--sans);font-size:12px;color:var(--ink);outline:none;cursor:pointer;margin-bottom:10px">
+          <select id="parte-recorrente-select" style="width:100%;padding:9px 12px;border:1px solid var(--rule);background:var(--analysis-card-bg);font-family:var(--sans);font-size:12px;color:var(--text-main);outline:none;cursor:pointer;margin-bottom:10px">
             <option value="">— Parte recorrente (opcional) —</option>
             <option>Autor / Demandante</option><option>Réu / Demandado</option><option>Arguido</option><option>Ministério Público</option><option>Assistente</option><option>Interveniente</option>
           </select>
@@ -967,10 +967,10 @@
     <div class="input-card" style="margin-bottom:20px">
       <div class="input-card-header"><span class="input-card-title">Dados Pessoais</span></div>
       <div style="padding:20px;background:white;display:flex;flex-direction:column;gap:14px">
-        <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Nome</label><input id="perfil-nome" type="text" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:var(--ink);outline:none;background:var(--parchment)" placeholder="O seu nome"></div>
+        <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Nome</label><input id="perfil-nome" type="text" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:var(--text-main);outline:none;background:var(--analysis-card-bg)" placeholder="O seu nome"></div>
         <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Email</label><input id="perfil-email" type="text" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:#aaa;outline:none;background:#f8f8f8" disabled></div>
         <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Profissão</label>
-          <select id="perfil-profissao" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:var(--ink);outline:none;background:var(--parchment);cursor:pointer">
+          <select id="perfil-profissao" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:var(--text-main);outline:none;background:var(--analysis-card-bg);cursor:pointer">
             <option value="">— Seleccione —</option>
             <option>Advogado/a</option><option>Magistrado/a Judicial</option><option>Magistrado/a do MP</option><option>Solicitador/a</option><option>Notário/a</option><option>Investigador/a Académico</option><option>Estudante de Direito</option><option>Outro</option>
           </select>
