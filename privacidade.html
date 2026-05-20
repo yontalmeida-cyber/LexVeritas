@@ -144,6 +144,10 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; }
   body.light .nav-logo span, body.light .nav-logo em { color: var(--gold) !important; }
 
   body.light .page-hero { background: #1a1a2e !important; }
+  body.light .page-title { color: #f8f6f1 !important; }
+  body.light .page-title span { color: var(--gold) !important; }
+  body.light .page-meta { color: rgba(248,246,241,0.65) !important; }
+  body.light .page-eyebrow { color: var(--gold) !important; }
   body.light .form-group input,
   body.light .form-group select,
   body.light .form-group textarea {
@@ -468,13 +472,17 @@ function toggleTheme(){
 }
 (function(){
   var saved = localStorage.getItem('lv-theme');
-  if(saved === 'light'){
-    document.addEventListener('DOMContentLoaded', function(){
+  document.addEventListener('DOMContentLoaded', function(){
+    if(saved === 'light'){
       document.body.classList.add('light');
       var btn = document.getElementById('btn-theme');
       if(btn) btn.textContent = '☀️';
-    });
-  }
+    } else {
+      document.body.classList.remove('light');
+      var btn = document.getElementById('btn-theme');
+      if(btn) btn.textContent = '🌙';
+    }
+  });
 })();
 </script>
 </body>
