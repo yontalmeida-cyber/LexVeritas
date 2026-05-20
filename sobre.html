@@ -164,6 +164,41 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
   .usecases-grid{grid-template-columns:1fr}
   footer{flex-direction:column;text-align:center}
 }
+
+  /* ── THEME TOGGLE ── */
+  body.light { filter: none; }
+  .btn-theme {
+    background: none;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: rgba(201,168,76,0.7);
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 3px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-theme:hover { border-color: var(--gold); color: var(--gold); }
+
+  body.light {
+    background: #f5f0e8 !important;
+    color: #1a1a1a !important;
+  }
+  body.light nav, body.light .site-nav {
+    background: rgba(245,240,232,0.97) !important;
+    border-bottom-color: rgba(201,168,76,0.2) !important;
+  }
+  body.light nav a, body.light .site-nav a { color: #444 !important; }
+  body.light nav a:hover, body.light .site-nav a:hover { color: #1a1a1a !important; }
+  body.light .nav-logo, body.light .nav-logo em, body.light .nav-logo span { color: #1a1a1a !important; }
+  body.light .nav-logo span, body.light .nav-logo em { color: var(--gold) !important; }
+
+  body.light .hero { background: #1a1a2e !important; }
+  body.light section, body.light .sobre-section { background: #f5f0e8 !important; color: #1a1a1a !important; }
+  body.light h1, body.light h2, body.light h3, body.light p { color: #1a1a1a !important; }
+  body.light footer { background: #1a1a1a !important; }
+
 </style>
 </head>
 <body>
@@ -175,6 +210,7 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
     <a href="/blog">Blog</a>
     <a href="/sobre">Sobre</a>
     <a href="/app" class="nav-cta">Entrar</a>
+    <button class="btn-theme" id="btn-theme" onclick="toggleTheme()">🌙</button>
   </div>
 </nav>
 
@@ -419,5 +455,24 @@ footer{border-top:1px solid var(--rule-dark);padding:28px clamp(20px,5vw,60px);d
 <!-- LinkedIn Badge Script -->
 <script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
 
+
+<script>
+function toggleTheme(){
+  var isLight = document.body.classList.toggle('light');
+  var btn = document.getElementById('btn-theme');
+  if(btn) btn.textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('lv-theme', isLight ? 'light' : 'dark');
+}
+(function(){
+  var saved = localStorage.getItem('lv-theme');
+  if(saved === 'light'){
+    document.addEventListener('DOMContentLoaded', function(){
+      document.body.classList.add('light');
+      var btn = document.getElementById('btn-theme');
+      if(btn) btn.textContent = '☀️';
+    });
+  }
+})();
+</script>
 </body>
 </html>

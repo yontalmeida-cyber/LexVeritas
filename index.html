@@ -412,6 +412,43 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
   .demo-inds { grid-template-columns: 1fr; }
   .pricing-profiles, .pricing-form-panel { padding: 28px 20px; }
 }
+
+  /* ── THEME TOGGLE ── */
+  body.light { filter: none; }
+  .btn-theme {
+    background: none;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: rgba(201,168,76,0.7);
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 3px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-theme:hover { border-color: var(--gold); color: var(--gold); }
+
+  body.light {
+    background: #f5f0e8 !important;
+    color: #1a1a1a !important;
+  }
+  body.light nav, body.light .site-nav {
+    background: rgba(245,240,232,0.97) !important;
+    border-bottom-color: rgba(201,168,76,0.2) !important;
+  }
+  body.light nav a, body.light .site-nav a { color: #444 !important; }
+  body.light nav a:hover, body.light .site-nav a:hover { color: #1a1a1a !important; }
+  body.light .nav-logo, body.light .nav-logo em, body.light .nav-logo span { color: #1a1a1a !important; }
+  body.light .nav-logo span, body.light .nav-logo em { color: var(--gold) !important; }
+
+  body.light .hero-section, body.light #hero { background: #1a1a2e !important; }
+  body.light section:not(.hero-section):not(#hero) { background: #f5f0e8 !important; }
+  body.light h1, body.light h2, body.light h3, body.light p, body.light li { color: #1a1a1a !important; }
+  body.light .card, body.light .feature-card, body.light .plano-card, body.light .modo-card { background: #ffffff !important; border-color: rgba(0,0,0,0.08) !important; color: #1a1a1a !important; }
+  body.light footer { background: #111 !important; }
+  body.light .nav-cta-link, body.light .nav-cta { background: var(--gold) !important; color: #060608 !important; }
+
 </style>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
@@ -441,6 +478,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
     <li><a href="/blog">Blog</a></li>
     <li><a href="/app" class="nav-cta-link">Criar Conta / Entrar</a></li>
   </ul>
+  <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" style="margin-right:8px">🌙</button>
   <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false" type="button">
     <span></span><span></span><span></span>
   </button>
@@ -1150,6 +1188,25 @@ async function enviarProposta() {
   }
   btn.disabled = false; btn.textContent = 'Enviar Pedido de Proposta →';
 }
+</script>
+
+<script>
+function toggleTheme(){
+  var isLight = document.body.classList.toggle('light');
+  var btn = document.getElementById('btn-theme');
+  if(btn) btn.textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('lv-theme', isLight ? 'light' : 'dark');
+}
+(function(){
+  var saved = localStorage.getItem('lv-theme');
+  if(saved === 'light'){
+    document.addEventListener('DOMContentLoaded', function(){
+      document.body.classList.add('light');
+      var btn = document.getElementById('btn-theme');
+      if(btn) btn.textContent = '☀️';
+    });
+  }
+})();
 </script>
 </body>
 </html>

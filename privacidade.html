@@ -113,6 +113,41 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; }
   .data-table { font-size: 13px; }
   .data-table th, .data-table td { padding: 8px 10px; }
 }
+
+  /* ── THEME TOGGLE ── */
+  body.light { filter: none; }
+  .btn-theme {
+    background: none;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: rgba(201,168,76,0.7);
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 3px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-theme:hover { border-color: var(--gold); color: var(--gold); }
+
+  body.light {
+    background: #f5f0e8 !important;
+    color: #1a1a1a !important;
+  }
+  body.light nav, body.light .site-nav {
+    background: rgba(245,240,232,0.97) !important;
+    border-bottom-color: rgba(201,168,76,0.2) !important;
+  }
+  body.light nav a, body.light .site-nav a { color: #444 !important; }
+  body.light nav a:hover, body.light .site-nav a:hover { color: #1a1a1a !important; }
+  body.light .nav-logo, body.light .nav-logo em, body.light .nav-logo span { color: #1a1a1a !important; }
+  body.light .nav-logo span, body.light .nav-logo em { color: var(--gold) !important; }
+
+  body.light .page-hero { background: #1a1a2e !important; }
+  body.light .highlight-box { background: rgba(201,168,76,0.08) !important; border-color: rgba(201,168,76,0.25) !important; color: #1a1a1a !important; }
+  body.light .policy-section { background: #ffffff !important; border-color: rgba(0,0,0,0.08) !important; }
+  body.light .policy-body, body.light h2, body.light h3, body.light p, body.light li { color: #1a1a1a !important; }
+
 </style>
 </head>
 <body>
@@ -121,6 +156,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; }
 <nav>
   <a href="/" class="nav-logo">Lex<span>Veritas</span></a>
   <a href="/" class="nav-back">← Voltar ao site</a>
+  <button class="btn-theme" id="btn-theme" onclick="toggleTheme()">🌙</button>
 </nav>
 
 <!-- ═══ PAGE HERO ═══ -->
@@ -402,6 +438,25 @@ async function enviarPedido() {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') document.getElementById('priv-modal').classList.remove('visible');
 });
+</script>
+
+<script>
+function toggleTheme(){
+  var isLight = document.body.classList.toggle('light');
+  var btn = document.getElementById('btn-theme');
+  if(btn) btn.textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('lv-theme', isLight ? 'light' : 'dark');
+}
+(function(){
+  var saved = localStorage.getItem('lv-theme');
+  if(saved === 'light'){
+    document.addEventListener('DOMContentLoaded', function(){
+      document.body.classList.add('light');
+      var btn = document.getElementById('btn-theme');
+      if(btn) btn.textContent = '☀️';
+    });
+  }
+})();
 </script>
 </body>
 </html>
