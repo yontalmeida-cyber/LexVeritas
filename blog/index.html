@@ -85,6 +85,32 @@ footer{padding:40px clamp(20px,5vw,60px);border-top:1px solid var(--rule-dark);d
   .newsletter-input{width:100%}
   .featured-link{margin-left:0}
 }
+
+  /* ── THEME TOGGLE ── */
+  .btn-theme {
+    background: none;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: rgba(201,168,76,0.7);
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 3px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-theme:hover { border-color: var(--gold); color: var(--gold); }
+  body.light { background: #f5f0e8 !important; color: #1a1a1a !important; }
+  body.light nav { background: rgba(245,240,232,0.97) !important; border-bottom-color: rgba(201,168,76,0.2) !important; }
+  body.light nav a { color: #444 !important; }
+  body.light nav a:hover, body.light nav a.active { color: #1a1a1a !important; }
+  body.light .nav-logo em { color: var(--gold) !important; }
+  body.light .page-hero { background: #1a1a2e !important; }
+  body.light .blog-card { background: #ffffff !important; border-color: rgba(0,0,0,0.08) !important; color: #1a1a1a !important; }
+  body.light .blog-card-title, body.light .blog-card-excerpt { color: #1a1a1a !important; }
+  body.light h1, body.light h2, body.light p { color: #1a1a1a !important; }
+  body.light footer { background: #111 !important; }
+
 </style>
 </head>
 <body>
@@ -95,6 +121,7 @@ footer{padding:40px clamp(20px,5vw,60px);border-top:1px solid var(--rule-dark);d
     <a href="/">Início</a>
     <a href="/blog" class="active">Blog</a>
   </div>
+  <button class="btn-theme" id="btn-theme" onclick="toggleTheme()">🌙</button>
 </nav>
 
 <div class="page-hero">
@@ -190,6 +217,25 @@ async function subscreverNewsletter(){
   catch(e){msg.textContent='✓ Subscrito com sucesso!';msg.style.color='var(--gold)'}
   btn.textContent='Subscrever →';btn.style.pointerEvents='auto';msg.style.display='block';
 }
+</script>
+
+<script>
+function toggleTheme(){
+  var isLight = document.body.classList.toggle('light');
+  var btn = document.getElementById('btn-theme');
+  if(btn) btn.textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('lv-theme', isLight ? 'light' : 'dark');
+}
+(function(){
+  var saved = localStorage.getItem('lv-theme');
+  if(saved === 'light'){
+    document.addEventListener('DOMContentLoaded', function(){
+      document.body.classList.add('light');
+      var btn = document.getElementById('btn-theme');
+      if(btn) btn.textContent = '☀️';
+    });
+  }
+})();
 </script>
 </body>
 </html>
