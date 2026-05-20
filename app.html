@@ -186,6 +186,28 @@
 
   /* Verificar / citações */
   body.light .verificar-btn { background: var(--bg-dark) !important; color: var(--text-main) !important; }
+  /* Result cards text */
+  body.light .confidence-label { color: #666 !important; }
+  body.light .confidence-block { color: var(--text-main) !important; }
+  body.light .indicator-card { color: var(--text-main) !important; }
+  body.light .ind-label { color: #666 !important; }
+  body.light .ind-val { color: var(--text-main) !important; }
+  body.light .citacao-card { color: var(--text-main) !important; }
+  body.light .citacao-header { color: var(--text-main) !important; }
+  body.light .citacao-body { color: #444 !important; }
+  body.light .nulidade-card { color: var(--text-main) !important; }
+  body.light .nulidade-card p { color: #444 !important; }
+  body.light .minuta-card { color: var(--text-main) !important; }
+  body.light .history-item { color: var(--text-main) !important; }
+  body.light .history-meta { color: #888 !important; }
+  body.light .history-details { background: var(--bg-dark) !important; }
+  body.light .marker-ai { background: #ffe0c0 !important; color: #8b4513 !important; }
+  body.light .marker-ok { background: #d0e8d0 !important; color: #1a5c2a !important; }
+  body.light .section-label { color: #888 !important; }
+  body.light .analysis-card p { color: #444 !important; }
+  body.light .narrativa-text { color: #444 !important; }
+  body.light .verificar-card { background: var(--analysis-card-bg) !important; color: var(--text-main) !important; }
+
   body.light .verificar-btn:hover { background: var(--bg-card) !important; }
 
   /* Histórico */
@@ -264,13 +286,13 @@
   .verdict-banner.human .verdict-title { color: #1a5c2a; }
   .verdict-banner.uncertain .verdict-title { color: #555; }
   .verdict-subtitle { font-family: var(--sans); font-size: 12px; font-weight: 300; color: #666; line-height: 1.6; }
-  .confidence-block { background: white; border: 1px solid var(--rule); padding: 18px 20px; margin-bottom: 16px; }
+  .confidence-block { background: var(--analysis-card-bg); border: 1px solid var(--analysis-card-border); padding: 18px 20px; margin-bottom: 16px; }
   .confidence-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #888; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: baseline; }
   .confidence-value { font-family: var(--serif); font-size: 20px; font-weight: 700; }
   .meter-track { height: 6px; background: var(--rule); overflow: hidden; }
   .meter-fill { height: 100%; background: linear-gradient(90deg, #90b890, #c9a84c, #c97850); transition: width 1.2s cubic-bezier(0.16,1,0.3,1); width: 0; }
   .indicators-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-  .indicator-card { background: white; border: 1px solid var(--rule); padding: 14px 16px; }
+  .indicator-card { background: var(--analysis-card-bg); border: 1px solid var(--analysis-card-border); padding: 14px 16px; }
   .indicator-name { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #aaa; margin-bottom: 5px; }
   .indicator-score { font-family: var(--serif); font-size: 18px; font-weight: 700; margin-bottom: 4px; }
   .indicator-bar { height: 3px; background: var(--rule); overflow: hidden; }
@@ -291,7 +313,7 @@
   .humanizador-banner-text { font-family: var(--sans); font-size: 12px; line-height: 1.6; color: #444; }
   .humanizador-banner-text strong { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: #6b2ea8; margin-bottom: 4px; }
 
-  .citacao-card { background: white; border: 1px solid var(--rule); border-left: 3px solid #c97850; padding: 14px 16px; margin-bottom: 10px; }
+  .citacao-card { background: var(--analysis-card-bg); border: 1px solid var(--analysis-card-border); border-left: 3px solid #c97850; padding: 14px 16px; margin-bottom: 10px; }
   .citacao-card.alta { border-left-color: var(--red); }
   .citacao-card.baixa { border-left-color: #aaa; }
   .citacao-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; flex-wrap: wrap; gap: 6px; }
@@ -323,7 +345,7 @@
 
   .nulidades-section-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #888; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
   .nulidades-section-label::after { content: ''; height: 1px; flex: 1; background: rgba(0,0,0,0.1); }
-  .nulidade-card { background: white; border: 1px solid var(--rule); border-left: 3px solid var(--red); padding: 18px 20px; margin-bottom: 12px; }
+  .nulidade-card { background: var(--analysis-card-bg); border: 1px solid var(--analysis-card-border); border-left: 3px solid var(--red); padding: 18px 20px; margin-bottom: 12px; }
   .nulidade-card.moderada { border-left-color: var(--gold); }
   .nulidade-card.leve { border-left-color: #bbb; }
   .nulidade-card.erro-direito { border-left-color: #2563a8; }
@@ -359,7 +381,7 @@
   .admissivel-sim { background: rgba(26,92,58,0.08); color: #1a5c2a; }
   .admissivel-nao { background: rgba(139,26,26,0.08); color: #8b1a1a; }
 
-  .minuta-card { background: white; border: 1px solid var(--rule); border-top: 3px solid var(--gold); margin-bottom: 16px; }
+  .minuta-card { background: var(--analysis-card-bg); border: 1px solid var(--analysis-card-border); border-top: 3px solid var(--gold); margin-bottom: 16px; }
   .minuta-header { padding: 14px 20px; background: var(--bg-dark); border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .minuta-title { font-family: var(--serif); font-size: 14px; font-weight: 700; }
   .minuta-disclaimer { font-family: var(--mono); font-size: 9px; color: #888; letter-spacing: 0.05em; }
@@ -389,7 +411,7 @@
   .critica-banner p { font-family: var(--sans); font-size: 11px; color: #666; line-height: 1.6; }
 
   .history-page { max-width: 800px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px); }
-  .history-item { background: white; border: 1px solid var(--rule); margin-bottom: 16px; overflow: hidden; }
+  .history-item { background: var(--analysis-card-bg); border: 1px solid var(--analysis-card-border); margin-bottom: 16px; overflow: hidden; }
   .history-item-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; transition: background 0.2s; }
   .history-item-header:hover { background: var(--bg-dark); }
   .history-veredicto { font-family: var(--serif); font-size: 15px; font-weight: 700; }
@@ -451,7 +473,7 @@
   .btn-dark-submit { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 13px; font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
   .btn-dark-submit:hover { background: var(--gold-light); }
   .btn-dark-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-pdf { display: flex; align-items: center; gap: 8px; background: white; color: var(--ink); border: 1px solid var(--rule); padding: 11px 20px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 16px; width: 100%; justify-content: center; }
+  .btn-pdf { display: flex; align-items: center; gap: 8px; background: var(--analysis-card-bg); color: var(--text-main); border: 1px solid var(--analysis-card-border); padding: 11px 20px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 16px; width: 100%; justify-content: center; }
   .btn-pdf:hover { background: var(--bg-dark); border-color: var(--gold); color: var(--gold); }
   .ref-number { font-family: var(--mono); font-size: 10px; color: #aaa; margin-top: 6px; text-align: center; }
 
@@ -966,7 +988,7 @@
     <div class="section-label">O Meu Perfil</div>
     <div class="input-card" style="margin-bottom:20px">
       <div class="input-card-header"><span class="input-card-title">Dados Pessoais</span></div>
-      <div style="padding:20px;background:white;display:flex;flex-direction:column;gap:14px">
+      <div style="padding:20px;background:var(--analysis-card-bg);display:flex;flex-direction:column;gap:14px">
         <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Nome</label><input id="perfil-nome" type="text" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:var(--text-main);outline:none;background:var(--analysis-card-bg)" placeholder="O seu nome"></div>
         <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Email</label><input id="perfil-email" type="text" style="width:100%;padding:10px 12px;border:1px solid var(--rule);font-family:var(--sans);font-size:13px;color:#aaa;outline:none;background:#f8f8f8" disabled></div>
         <div><label style="font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;display:block;margin-bottom:6px">Profissão</label>
@@ -990,15 +1012,15 @@
     </div>
     <div class="input-card" style="margin-bottom:20px">
       <div class="input-card-header"><span class="input-card-title">Segurança</span></div>
-      <div style="padding:20px;background:white;display:flex;flex-direction:column;gap:12px">
+      <div style="padding:20px;background:var(--analysis-card-bg);display:flex;flex-direction:column;gap:12px">
         <p style="font-size:13px;color:#666;line-height:1.6">Para alterar a sua password, enviamos um link de recuperação para o seu email.</p>
-        <button id="btn-alterar-pass" onclick="alterarPassword()" style="background:white;color:var(--ink);border:1px solid var(--rule);padding:11px 24px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;align-self:flex-start" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--rule)';this.style.color='var(--ink)'">Alterar Password</button>
+        <button id="btn-alterar-pass" onclick="alterarPassword()" style="background:var(--analysis-card-bg);color:var(--text-main);border:1px solid var(--analysis-card-border);padding:11px 24px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;align-self:flex-start" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--rule)';this.style.color='var(--ink)'">Alterar Password</button>
         <div id="password-msg" style="font-size:12px;display:none"></div>
       </div>
     </div>
     <div class="input-card">
       <div class="input-card-header"><span class="input-card-title">Suporte & Contacto</span></div>
-      <div style="padding:20px;background:white;display:flex;flex-direction:column;gap:12px">
+      <div style="padding:20px;background:var(--analysis-card-bg);display:flex;flex-direction:column;gap:12px">
         <p style="font-size:13px;color:#666;line-height:1.6">Tem alguma questão sobre o seu plano, suporte técnico ou parcerias? Envie-nos uma mensagem e respondemos em 24h.</p>
         <button onclick="document.getElementById('contacto-modal').classList.add('visible')" style="background:var(--ink);color:var(--cream);border:none;padding:11px 24px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;align-self:flex-start" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--ink)'">✉ Enviar Mensagem</button>
       </div>
