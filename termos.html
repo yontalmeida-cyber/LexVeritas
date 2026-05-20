@@ -431,13 +431,17 @@ function toggleTheme(){
 }
 (function(){
   var saved = localStorage.getItem('lv-theme');
-  if(saved === 'light'){
-    document.addEventListener('DOMContentLoaded', function(){
+  document.addEventListener('DOMContentLoaded', function(){
+    if(saved === 'light'){
       document.body.classList.add('light');
       var btn = document.getElementById('btn-theme');
       if(btn) btn.textContent = '☀️';
-    });
-  }
+    } else {
+      document.body.classList.remove('light');
+      var btn = document.getElementById('btn-theme');
+      if(btn) btn.textContent = '🌙';
+    }
+  });
 })();
 </script>
 </body>
