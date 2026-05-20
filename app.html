@@ -131,6 +131,100 @@
   textarea { width: 100%; height: 320px; border: none; outline: none; resize: vertical; padding: 20px; font-family: var(--mono); font-size: 12px; line-height: 1.8; color: var(--textarea-color); background: var(--textarea-bg); transition: background 0.25s, color 0.25s; min-height: 160px; max-height: 600px; }
   textarea::placeholder { color: rgba(120,120,120,0.7); font-style: italic; font-family: var(--serif); font-size: 13px; }
   body.light textarea::placeholder { color: rgba(80,80,80,0.5); }
+
+  /* ── APP LIGHT MODE — overrides abrangentes ── */
+
+  /* Auth page — mantém escuro (página de login) */
+  body.light .auth-page { background: var(--black) !important; }
+  body.light .auth-card { background: #1a1a24 !important; }
+  body.light .auth-card h2, body.light .auth-logo { color: #f8f6f1 !important; }
+
+  /* Header e nav */
+  body.light header { background: var(--bg-header) !important; }
+  body.light nav a { color: var(--text-muted) !important; }
+  body.light nav a:hover { color: var(--text-main) !important; }
+  body.light nav a.active { color: var(--gold) !important; }
+  body.light .masthead h1 { color: var(--text-main) !important; }
+  body.light .masthead-sub { color: var(--text-muted) !important; }
+
+  /* Usage bar */
+  body.light .usage-bar-container { background: var(--bg-dark) !important; }
+  body.light .usage-label, body.light .usage-count { color: var(--text-muted) !important; }
+  body.light .usage-track { background: rgba(0,0,0,0.1) !important; }
+
+  /* Mode toggle */
+  body.light .mode-toggle-bar { background: var(--bg-header) !important; }
+  body.light .mode-btn { color: var(--text-muted) !important; border-color: rgba(0,0,0,0.1) !important; }
+  body.light .mode-btn:hover { color: var(--text-main) !important; }
+  body.light .mode-btn.active { background: var(--gold) !important; color: #060608 !important; border-color: var(--gold) !important; }
+
+  /* Input card */
+  body.light .input-card { background: #ffffff !important; }
+  body.light .input-card-header { background: var(--bg-dark) !important; }
+  body.light .input-card-title { color: var(--text-main) !important; }
+  body.light .input-card-footer { background: var(--bg-dark) !important; }
+  body.light .char-count { color: var(--text-muted) !important; }
+
+  /* Sidebar e widgets */
+  body.light .sidebar-widget { background: #ffffff !important; }
+  body.light .widget-header { background: var(--bg-dark) !important; color: var(--text-main) !important; }
+  body.light .section-label { color: var(--text-muted) !important; }
+
+  /* Botão analisar */
+  body.light .btn-analyze { background: var(--ink) !important; color: var(--cream) !important; }
+  body.light .btn-analyze.critica-mode { background: #c97850 !important; }
+  body.light .btn-analyze.injection-mode { background: #8b1a1a !important; }
+
+  /* Analysis cards */
+  body.light .analysis-card { background: #ffffff !important; color: var(--text-main) !important; }
+  body.light .analysis-card h3 { color: var(--text-main) !important; border-bottom-color: rgba(0,0,0,0.08) !important; }
+  body.light .analysis-card p { color: #444 !important; }
+
+  /* Minuta */
+  body.light .minuta-header { background: var(--bg-dark) !important; }
+  body.light .minuta-footer { background: var(--bg-dark) !important; }
+
+  /* Verificar / citações */
+  body.light .verificar-btn { background: var(--bg-dark) !important; color: var(--text-main) !important; }
+  body.light .verificar-btn:hover { background: var(--bg-card) !important; }
+
+  /* Histórico */
+  body.light .history-item { background: #ffffff !important; border-color: rgba(0,0,0,0.08) !important; }
+  body.light .history-item-header:hover { background: var(--bg-dark) !important; }
+  body.light .history-veredicto, body.light .history-meta { color: var(--text-main) !important; }
+
+  /* Perfil — inputs inline */
+  body.light #perfil-nome,
+  body.light #perfil-profissao { background: #ffffff !important; color: var(--text-main) !important; border-color: rgba(0,0,0,0.12) !important; }
+  body.light #perfil-email { background: #f0ece4 !important; color: var(--text-muted) !important; }
+
+  /* Selects inline no sidebar */
+  body.light select[style*="parchment"],
+  body.light input[style*="parchment"] { background: #ffffff !important; color: var(--text-main) !important; border-color: rgba(0,0,0,0.12) !important; }
+
+  /* Info boxes */
+  body.light .info-box { background: #f0ece4 !important; border-color: rgba(0,0,0,0.1) !important; color: var(--text-main) !important; }
+
+  /* Modal escuro — mantém escuro */
+  body.light .dark-modal-box { background: #1a1a24 !important; }
+  body.light .dark-modal-title { color: #f8f6f1 !important; }
+  body.light .dark-form-group input,
+  body.light .dark-form-group select,
+  body.light .dark-form-group textarea { background: rgba(255,255,255,0.07) !important; color: #f8f6f1 !important; }
+
+  /* Onboarding buttons */
+  body.light #page-onboarding button[style] { background: #ffffff !important; color: var(--text-main) !important; border-color: rgba(0,0,0,0.1) !important; }
+
+  /* PDF button */
+  body.light .btn-pdf { background: var(--bg-dark) !important; color: var(--text-main) !important; border-color: rgba(0,0,0,0.15) !important; }
+  body.light .btn-pdf:hover { background: #ffffff !important; border-color: var(--gold) !important; color: var(--gold) !important; }
+
+  /* Ref number */
+  body.light .ref-number { color: var(--text-muted) !important; }
+
+  /* Contexto injection results */
+  body.light div[style*="#f8f8f8"] { background: var(--bg-dark) !important; color: var(--text-muted) !important; }
+
   .input-card-footer { padding: 14px 20px; border-top: 1px solid var(--analysis-card-border); display: flex; align-items: center; justify-content: space-between; background: var(--bg-dark); }
   .file-hint { font-family: var(--sans); font-size: 11px; color: #aaa; display: flex; align-items: center; gap: 5px; }
   .btn-analyze { background: var(--ink); color: var(--cream); border: none; padding: 11px 28px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 8px; }
