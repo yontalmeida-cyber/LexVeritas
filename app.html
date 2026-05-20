@@ -1021,7 +1021,7 @@
     <div class="input-card">
       <div class="input-card-header"><span class="input-card-title">Suporte & Contacto</span></div>
       <div style="padding:20px;background:var(--analysis-card-bg);display:flex;flex-direction:column;gap:12px">
-        <p style="font-size:13px;color:#666;line-height:1.6">Tem alguma questão sobre o seu plano, suporte técnico ou parcerias? Envie-nos uma mensagem e respondemos em 24h.</p>
+        <p style="font-size:13px;color:#666;line-height:1.6">Tem alguma questão sobre o seu plano, suporte técnico ou parcerias? Envie-nos uma mensagem e respondemos em 48h.</p>
         <button onclick="document.getElementById('contacto-modal').classList.add('visible')" style="background:var(--ink);color:var(--cream);border:none;padding:11px 24px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;align-self:flex-start" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--ink)'">✉ Enviar Mensagem</button>
       </div>
     </div>
@@ -1088,7 +1088,7 @@
     <button class="dark-modal-close" onclick="document.getElementById('contacto-modal').classList.remove('visible')">×</button>
     <div class="dark-modal-label">Suporte & Contacto</div>
     <h2 class="dark-modal-title">Fale connosco</h2>
-    <p class="dark-modal-sub">Questões sobre o seu plano, suporte técnico ou parcerias. Respondemos em 24h.</p>
+    <p class="dark-modal-sub">Questões sobre o seu plano, suporte técnico ou parcerias. Respondemos em 48h.</p>
     <div class="dark-form-group"><label>Nome</label><input type="text" id="cm-nome" placeholder="O seu nome"></div>
     <div class="dark-form-group"><label>Email</label><input type="email" id="cm-email" placeholder="o-seu@email.pt"></div>
     <div class="dark-form-group">
@@ -1462,7 +1462,7 @@ async function enviarContacto() {
   try {
     const r = await fetch('https://formspree.io/f/mzdornkq', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ nome, email, assunto: assunto || 'Questão geral', mensagem, user_id: currentUser?.id || '—' }) });
     if (r.ok) {
-      msg.textContent = '✓ Mensagem enviada! Respondemos em 24h.'; msg.style.color = '#99ffbb'; msg.style.background = 'rgba(26,92,58,0.15)'; msg.style.display = 'block';
+      msg.textContent = '✓ Mensagem enviada! Respondemos em 48h.'; msg.style.color = '#99ffbb'; msg.style.background = 'rgba(26,92,58,0.15)'; msg.style.display = 'block';
       ['cm-nome','cm-email','cm-assunto','cm-mensagem'].forEach(id => { document.getElementById(id).value = ''; });
     } else throw new Error();
   } catch (e) { msg.textContent = 'Erro ao enviar. Tente novamente.'; msg.style.color = '#ff9999'; msg.style.background = 'rgba(139,26,26,0.15)'; msg.style.display = 'block'; }
