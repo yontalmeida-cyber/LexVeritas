@@ -25,14 +25,14 @@
     --text-main: #f8f6f1;
     --text-muted: var(--grey);
     --border: var(--rule-dark);
-    --textarea-bg: rgba(255,255,255,0.05);
+    --textarea-bg: #0e0e12;
     --textarea-color: #f8f6f1;
     --input-placeholder: rgba(255,255,255,0.2);
     --select-bg: var(--dark);
     --select-color: #f8f6f1;
-    --analysis-card-bg: #f8f6f1;
-    --analysis-card-border: rgba(13,13,13,0.1);
-    --analysis-card-color: #1a1a1a;
+    --analysis-card-bg: #13131a;
+    --analysis-card-border: rgba(201,168,76,0.12);
+    --analysis-card-color: #f8f6f1;
   }
 
   /* ── LIGHT MODE ── */
@@ -125,11 +125,12 @@
   .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
   .section-label::after { content: ''; height: 1px; flex: 1; background: var(--gold); opacity: 0.4; }
   .input-card { background: var(--analysis-card-bg); border: 1px solid var(--analysis-card-border); box-shadow: 0 2px 16px rgba(0,0,0,0.04); }
-  .input-card-header { padding: 16px 20px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; background: var(--bg-dark); }
+  .input-card-header { padding: 16px 20px; border-bottom: 1px solid var(--analysis-card-border); display: flex; align-items: center; justify-content: space-between; background: var(--bg-dark); }
   .input-card-title { font-family: var(--serif); font-size: 14px; font-weight: 700; }
   .char-count { font-family: var(--mono); font-size: 11px; color: #aaa; }
   textarea { width: 100%; height: 320px; border: none; outline: none; resize: vertical; padding: 20px; font-family: var(--mono); font-size: 12px; line-height: 1.8; color: var(--textarea-color); background: var(--textarea-bg); transition: background 0.25s, color 0.25s; min-height: 160px; max-height: 600px; }
-  textarea::placeholder { color: #ccc; font-style: italic; font-family: var(--serif); font-size: 13px; }
+  textarea::placeholder { color: rgba(120,120,120,0.7); font-style: italic; font-family: var(--serif); font-size: 13px; }
+  body.light textarea::placeholder { color: rgba(80,80,80,0.5); }
   .input-card-footer { padding: 14px 20px; border-top: 1px solid var(--analysis-card-border); display: flex; align-items: center; justify-content: space-between; background: var(--bg-dark); }
   .file-hint { font-family: var(--sans); font-size: 11px; color: #aaa; display: flex; align-items: center; gap: 5px; }
   .btn-analyze { background: var(--ink); color: var(--cream); border: none; padding: 11px 28px; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 8px; }

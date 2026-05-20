@@ -448,6 +448,89 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
   body.light .card, body.light .feature-card, body.light .plano-card, body.light .modo-card { background: #ffffff !important; border-color: rgba(0,0,0,0.08) !important; color: #1a1a1a !important; }
   body.light footer { background: #111 !important; }
   body.light .nav-cta-link, body.light .nav-cta { background: var(--gold) !important; color: #060608 !important; }
+  /* ── LIGHT MODE — elementos adicionais ── */
+  body.light { color: #1a1a1a !important; }
+
+  /* Demo textarea */
+  body.light .demo-textarea {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    border-color: rgba(201,168,76,0.3) !important;
+  }
+  body.light .demo-textarea::placeholder { color: rgba(0,0,0,0.3) !important; }
+
+  /* Formulário pré-inscrição */
+  body.light .pf-input,
+  body.light .pf-textarea {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    border-color: rgba(201,168,76,0.3) !important;
+  }
+  body.light .pf-input option { background: #ffffff !important; color: #1a1a1a !important; }
+  body.light .pf-textarea::placeholder { color: rgba(0,0,0,0.3) !important; }
+  body.light .pf-title { color: #1a1a1a !important; }
+
+  /* Botão secundário */
+  body.light .btn-secondary {
+    color: #1a1a1a !important;
+    border-color: rgba(0,0,0,0.2) !important;
+  }
+  body.light .btn-secondary:hover { background: rgba(0,0,0,0.05) !important; }
+
+  /* Nav hamburger */
+  body.light .nav-hamburger span { background: #1a1a1a !important; }
+
+  /* FAQ */
+  body.light .faq-question h3 { color: #1a1a1a !important; }
+  body.light .faq-answer { color: #444 !important; }
+
+  /* Demo indicadores e valores */
+  body.light .demo-ind-val { color: #1a1a1a !important; }
+  body.light .demo-cta-box p strong { color: #1a1a1a !important; }
+
+  /* Modo cards — elementos internos */
+  body.light .modo-card h3 { color: #1a1a1a !important; }
+  body.light .modo-para-val { color: #1a1a1a !important; }
+  body.light .modo-card p,
+  body.light .modo-card span,
+  body.light .modo-card div { color: #1a1a1a !important; }
+
+  /* Drawer menu */
+  body.light .nav-drawer { background: #f5f0e8 !important; }
+  body.light .nav-drawer a { color: #1a1a1a !important; }
+
+  /* Intro overlay — manter escuro */
+  body.light .intro-overlay { background: var(--black) !important; }
+
+  /* Secção hero — texto */
+  body.light .hero-section h1,
+  body.light .hero-section h2,
+  body.light .hero-section p,
+  body.light #hero h1,
+  body.light #hero p { color: #f8f6f1 !important; }
+
+  /* Footer — texto */
+  body.light footer,
+  body.light footer p,
+  body.light footer a,
+  body.light footer span { color: rgba(255,255,255,0.7) !important; }
+  body.light footer a:hover { color: var(--gold) !important; }
+
+  /* Planos — badges e preços */
+  body.light .plano-card h3 { color: #1a1a1a !important; }
+  body.light .plano-card .price,
+  body.light .plano-card [class*="preco"],
+  body.light .plano-card [class*="price"] { color: #1a1a1a !important; }
+
+  /* Newsletter / subscrição */
+  body.light .nl-input,
+  body.light input[type="email"],
+  body.light input[type="text"] {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    border-color: rgba(201,168,76,0.3) !important;
+  }
+
 
 </style>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
