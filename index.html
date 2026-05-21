@@ -531,7 +531,7 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
   body.light .faq-answer { color: #444 !important; }
 
   /* Footer nav links */
-  body.light .footer-nav a { color: rgba(255,255,255,0.6) !important; }
+  body.light .footer-nav a { color: rgba(255,255,255,0.6) !important; background: transparent !important; }
   body.light .footer-nav a:hover { color: var(--gold) !important; }
 
   /* Secções genéricas com var(--dark) ou var(--black) inline */
@@ -568,10 +568,15 @@ footer { border-top: 1px solid var(--border); padding: clamp(40px,6vw,60px) clam
 
   /* Botão secundário */
   body.light .btn-secondary {
-    color: #1a1a1a !important;
-    border-color: rgba(0,0,0,0.2) !important;
+    color: #f8f6f1 !important;
+    border-color: rgba(255,255,255,0.3) !important;
+    background: transparent !important;
   }
-  body.light .btn-secondary:hover { background: rgba(0,0,0,0.05) !important; }
+  body.light .btn-secondary:hover {
+    border-color: var(--gold) !important;
+    color: var(--gold) !important;
+    background: transparent !important;
+  }
 
   /* Nav hamburger */
   body.light .nav-hamburger span { background: #1a1a1a !important; }
